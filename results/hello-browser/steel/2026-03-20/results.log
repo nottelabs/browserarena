@@ -1,0 +1,103 @@
+[LOG] Saving logs to results/hello-browser/steel/2026-03-20/results.log
+
+[CONFIG] provider=STEEL runs=10
+[WARMUP] 1/10
+[Session created] provider=STEEL id=3d921ed8-1d2d-4407-9162-a8608cecb149 914ms
+[Browser connected] 546ms
+[Page loaded] 666ms
+[Session released] 351ms
+[WARMUP] 2/10
+[Session created] provider=STEEL id=af10c8b9-256f-4d19-b7c5-04cf5e037bbd 185ms
+[Browser connected] 646ms
+[Page loaded] 646ms
+[Session released] 83ms
+[WARMUP] 3/10
+[Session created] provider=STEEL id=25a1d7ea-7537-44ad-af9f-e4ba55edde83 453ms
+[Browser connected] 759ms
+[Page loaded] 889ms
+[Session released] 74ms
+[WARMUP] 4/10
+[Session created] provider=STEEL id=45fbede4-f00a-404f-a79d-55a8aba2a4c1 907ms
+[Browser connected] 581ms
+[Page loaded] 598ms
+[Session released] 71ms
+[WARMUP] 5/10
+[Session created] provider=STEEL id=2dbb8c21-fe2f-46a1-911e-20ac29e0bf9d 461ms
+[Browser connected] 707ms
+[Page loaded] 809ms
+[Session released] 67ms
+[WARMUP] 6/10
+[Session created] provider=STEEL id=cc43de93-8fbe-467f-8179-21e00dd504ba 566ms
+[Browser connected] 1925ms
+[Page loaded] 855ms
+[Session released] 69ms
+[WARMUP] 7/10
+[Session created] provider=STEEL id=b098ce87-ecc0-4ba7-96ff-bbefe1e27154 127ms
+[Browser connected] 2532ms
+[Page loaded] 698ms
+[Session released] 102ms
+[WARMUP] 8/10
+[Session created] provider=STEEL id=8fbb93c6-8692-435e-acd4-65a3fb299278 241ms
+[Browser connected] 857ms
+[Page loaded] 843ms
+[Session released] 67ms
+[WARMUP] 9/10
+[Session created] provider=STEEL id=316bf158-0c35-4c79-953e-d3c8d6802e52 232ms
+[Browser connected] 605ms
+[Page loaded] 704ms
+[Session released] 74ms
+[WARMUP] 10/10
+[Session created] provider=STEEL id=e79683e3-fc69-4081-bae1-0b049bde07de 369ms
+[Browser connected] 730ms
+[Page loaded] 776ms
+[Session released] 93ms
+[RUN] 1/10
+[Session created] provider=STEEL id=2a51fdb6-af9d-40c1-86b0-1dca5972c729 195ms
+[Browser connected] 824ms
+[Page loaded] 813ms
+[Session released] 74ms
+[RUN] 2/10
+[Session created] provider=STEEL id=21a0038d-15ee-4abc-bec5-54e580d3f0e5 169ms
+[Browser connected] 665ms
+[Page loaded] 2073ms
+[Session released] 74ms
+[RUN] 3/10
+[Session created] provider=STEEL id=7abe4023-0799-4e05-afcb-3567326808df 141ms
+[Browser connected] 777ms
+[Page loaded] 905ms
+[Session released] 1181ms
+[RUN] 4/10
+[Session created] provider=STEEL id=ddd22861-e2ab-4bfe-9355-51bbffc24a23 177ms
+[Browser connected] 719ms
+[Page loaded] 738ms
+[Session released] 66ms
+[RUN] 5/10
+[Session created] provider=STEEL id=587be03a-4b31-4fba-bd01-5ad5e775a450 323ms
+[Browser connected] 554ms
+[Page loaded] 625ms
+[Session released] 73ms
+[RUN] 6/10
+[Session created] provider=STEEL id=33baf5b5-6e18-417f-ba9e-b4c85fbf6dbe 129ms
+[Browser connected] 576ms
+[Page loaded] 729ms
+[Session released] 69ms
+[RUN] 7/10
+[Session created] provider=STEEL id=5130a963-f3d4-4692-b770-4365034b3773 356ms
+[Browser connected] 580ms
+[Page loaded] 832ms
+[Session released] 82ms
+[RUN] 8/10
+[Session created] provider=STEEL id=0fc3f245-7e64-4a1a-ad7a-2540964953a9 426ms
+[Browser connected] 495ms
+[Page loaded] 771ms
+[Session released] 65ms
+[RUN] 9/10
+[Session created] provider=STEEL id=b71a3e18-f73c-4d92-a409-c544d0d7421c 182ms
+[Browser connected] 693ms
+[Page loaded] 809ms
+[Session released] 71ms
+[RUN] 10/10
+[Session created] provider=STEEL id=ee033ab3-3a3a-4287-a399-8135eb45305d 1856ms
+[Browser connected] 273ms
+[Page loaded] 652ms
+[Session released] 67ms

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+!results/.gitkeep
+.env
+*.local
+*.db
+*.css
+!web-app/**/*.css
+.vercel
+.next/
+TODO.md

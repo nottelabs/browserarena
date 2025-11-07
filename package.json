@@ -1,0 +1,30 @@
+{
+  "name": "browserbench",
+  "version": "0.1.0",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "description": "remote browser benchmark",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsx src/cli.ts",
+    "build": "tsc -p tsconfig.json",
+    "bench": "node dist/cli.js"
+  },
+  "author": "junhsss <junhsssr@gmail.com>",
+  "devDependencies": {
+    "@types/node": "^24.10.0",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@browserbasehq/sdk": "^2.6.0",
+    "anchorbrowser": "^0.8.3",
+    "steel-sdk": "^0.14.0",
+    "@hyperbrowser/sdk": "^0.71.0",
+    "@onkernel/sdk": "^0.18.0",
+    "dotenv": "^17.2.3",
+    "playwright-core": "^1.56.1"
+  }
+}

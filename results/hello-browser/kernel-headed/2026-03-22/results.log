@@ -1,0 +1,5055 @@
+[LOG] Saving logs to results/hello-browser/kernel-headed/2026-03-22/results.log
+
+[CONFIG] provider=KERNEL_HEADFUL runs=1000
+[RATE_LIMIT] Throttling to 10 sessions/min (6.0s interval)
+[WARMUP] 1/10
+[Session created] provider=KERNEL_HEADFUL id=d1zg2t53466kcgw7jyk2wlkn 140ms
+[Browser connected] 403ms
+[Page loaded] 410ms
+[Session released] 57ms
+[WARMUP] 2/10
+[Session created] provider=KERNEL_HEADFUL id=kf9pn93jnnnhn2tmyixjacpu 59ms
+[Browser connected] 484ms
+[Page loaded] 495ms
+[Session released] 45ms
+[WARMUP] 3/10
+[Session created] provider=KERNEL_HEADFUL id=jqqpccogv9tuirud9wvg5a3v 61ms
+[Browser connected] 307ms
+[Page loaded] 402ms
+[Session released] 41ms
+[WARMUP] 4/10
+[Session created] provider=KERNEL_HEADFUL id=sb4bkm5m7ja3lgik6pwtr69y 40ms
+[Browser connected] 392ms
+[Page loaded] 403ms
+[Session released] 72ms
+[WARMUP] 5/10
+[Session created] provider=KERNEL_HEADFUL id=bwymd7y4fmvkkkc8di64rm9a 28ms
+[Browser connected] 390ms
+[Page loaded] 482ms
+[Session released] 67ms
+[WARMUP] 6/10
+[Session created] provider=KERNEL_HEADFUL id=oq54092arr0gb9cy3bhpgqim 23ms
+[Browser connected] 474ms
+[Page loaded] 405ms
+[Session released] 40ms
+[WARMUP] 7/10
+[Session created] provider=KERNEL_HEADFUL id=gvnyc8ucofrqwml99ea7ezbk 38ms
+[Browser connected] 456ms
+[Page loaded] 456ms
+[Session released] 44ms
+[WARMUP] 8/10
+[Session created] provider=KERNEL_HEADFUL id=ctruclivnwga8qz4esdvot0e 52ms
+[Browser connected] 433ms
+[Page loaded] 406ms
+[Session released] 66ms
+[WARMUP] 9/10
+[Session created] provider=KERNEL_HEADFUL id=xfab9g7tmaemli85i6xttlds 29ms
+[Browser connected] 459ms
+[Page loaded] 394ms
+[Session released] 59ms
+[WARMUP] 10/10
+[Session created] provider=KERNEL_HEADFUL id=kn91ltxzzxm0gpwtqje47uve 33ms
+[Browser connected] 386ms
+[Page loaded] 369ms
+[Session released] 47ms
+[RUN] 1/1000
+[Session created] provider=KERNEL_HEADFUL id=g39ducdphxr82phw7kyef9h9 41ms
+[Browser connected] 440ms
+[Page loaded] 556ms
+[Session released] 39ms
+[RUN] 2/1000
+[Session created] provider=KERNEL_HEADFUL id=cnydkrq5w9yg0vk1h62op8u9 71ms
+[Browser connected] 580ms
+[Page loaded] 471ms
+[Session released] 37ms
+[RUN] 3/1000
+[Session created] provider=KERNEL_HEADFUL id=zpd332do5a8y3wrzrj0ysv2x 61ms
+[Browser connected] 558ms
+[Page loaded] 530ms
+[Session released] 37ms
+[RUN] 4/1000
+[Session created] provider=KERNEL_HEADFUL id=ocwdbna0md8ednmlej40hdiy 53ms
+[Browser connected] 361ms
+[Page loaded] 347ms
+[Session released] 34ms
+[RUN] 5/1000
+[Session created] provider=KERNEL_HEADFUL id=hgjuyvc8teajq9ju0ll284b7 60ms
+[Browser connected] 383ms
+[Page loaded] 388ms
+[Session released] 41ms
+[RUN] 6/1000
+[Session created] provider=KERNEL_HEADFUL id=cqw91gcbkev6enyggjtn8txd 34ms
+[Browser connected] 362ms
+[Page loaded] 324ms
+[Session released] 36ms
+[RUN] 7/1000
+[Session created] provider=KERNEL_HEADFUL id=d1i6iqd14akdscp7tgbvgpur 43ms
+[Browser connected] 380ms
+[Page loaded] 339ms
+[Session released] 46ms
+[RUN] 8/1000
+[Session created] provider=KERNEL_HEADFUL id=xhfc71q5wvwpb8s4ekv3zdf3 71ms
+[Browser connected] 405ms
+[Page loaded] 413ms
+[Session released] 63ms
+[RUN] 9/1000
+[Session created] provider=KERNEL_HEADFUL id=pj5xuhtv9l3tg5z2vj5f0dy5 26ms
+[Browser connected] 370ms
+[Page loaded] 515ms
+[Session released] 39ms
+[RUN] 10/1000
+[Session created] provider=KERNEL_HEADFUL id=cgu50a5sarf41296icn2nmcd 26ms
+[Browser connected] 502ms
+[Page loaded] 495ms
+[Session released] 36ms
+[RUN] 11/1000
+[Session created] provider=KERNEL_HEADFUL id=sf637e3enhqdtpl3v9c444ns 45ms
+[Browser connected] 411ms
+[Page loaded] 383ms
+[Session released] 32ms
+[RUN] 12/1000
+[Session created] provider=KERNEL_HEADFUL id=m7y5g2d8daqz2nkcklpmyjwk 52ms
+[Browser connected] 395ms
+[Page loaded] 372ms
+[Session released] 61ms
+[RUN] 13/1000
+[Session created] provider=KERNEL_HEADFUL id=g1bo059ctxkg8awz0bfrw3pl 30ms
+[Browser connected] 570ms
+[Page loaded] 492ms
+[Session released] 38ms
+[RUN] 14/1000
+[Session created] provider=KERNEL_HEADFUL id=rivikqcbczcbk6awyktneaal 37ms
+[Browser connected] 397ms
+[Page loaded] 481ms
+[Session released] 38ms
+[RUN] 15/1000
+[Session created] provider=KERNEL_HEADFUL id=furwaypfwo3p1a1p96wwmwmr 23ms
+[Browser connected] 430ms
+[Page loaded] 353ms
+[Session released] 47ms
+[RUN] 16/1000
+[Session created] provider=KERNEL_HEADFUL id=lh1niqes8wyulpx2ymd1vto9 27ms
+[Browser connected] 363ms
+[Page loaded] 359ms
+[Session released] 40ms
+[RUN] 17/1000
+[Session created] provider=KERNEL_HEADFUL id=wx6zhlavmn0eintnbaph0erm 38ms
+[Browser connected] 483ms
+[Page loaded] 419ms
+[Session released] 34ms
+[RUN] 18/1000
+[Session created] provider=KERNEL_HEADFUL id=wp55cf2hi9t9svhtozu6nwyw 25ms
+[Browser connected] 472ms
+[Page loaded] 484ms
+[Session released] 47ms
+[RUN] 19/1000
+[Session created] provider=KERNEL_HEADFUL id=uhttr3hm9pr36ew9cxmyfb0m 24ms
+[Browser connected] 621ms
+[Page loaded] 465ms
+[Session released] 37ms
+[RUN] 20/1000
+[Session created] provider=KERNEL_HEADFUL id=f6spwlur327l7dhzrej5gof1 18ms
+[Browser connected] 390ms
+[Page loaded] 359ms
+[Session released] 44ms
+[RUN] 21/1000
+[Session created] provider=KERNEL_HEADFUL id=gzca1fxwzkr4evbjnm4ogfkv 30ms
+[Browser connected] 548ms
+[Page loaded] 445ms
+[Session released] 34ms
+[RUN] 22/1000
+[Session created] provider=KERNEL_HEADFUL id=gc9799gb4pinowjg7xn3s02e 25ms
+[Browser connected] 498ms
+[Page loaded] 461ms
+[Session released] 38ms
+[RUN] 23/1000
+[Session created] provider=KERNEL_HEADFUL id=ac5stt3pdhgao0ppwkdltckd 43ms
+[Browser connected] 471ms
+[Page loaded] 464ms
+[Session released] 40ms
+[RUN] 24/1000
+[Session created] provider=KERNEL_HEADFUL id=fw02igxqz5v4cy8kld58tu8t 25ms
+[Browser connected] 307ms
+[Page loaded] 294ms
+[Session released] 30ms
+[RUN] 25/1000
+[Session created] provider=KERNEL_HEADFUL id=n8mmx1gapqw75xqta67tq5ev 30ms
+[Browser connected] 392ms
+[Page loaded] 394ms
+[Session released] 42ms
+[RUN] 26/1000
+[Session created] provider=KERNEL_HEADFUL id=mxy3f8zbfdb22fydzkn223uh 18ms
+[Browser connected] 593ms
+[Page loaded] 496ms
+[Session released] 38ms
+[RUN] 27/1000
+[Session created] provider=KERNEL_HEADFUL id=swg9jdjmufil08i94uwu69lo 31ms
+[Browser connected] 369ms
+[Page loaded] 316ms
+[Session released] 40ms
+[RUN] 28/1000
+[Session created] provider=KERNEL_HEADFUL id=gqq6grg8czg5b6f3kfxihqzt 25ms
+[Browser connected] 335ms
+[Page loaded] 573ms
+[Session released] 33ms
+[RUN] 29/1000
+[Session created] provider=KERNEL_HEADFUL id=hip6ba2k0g0byxzj1jjit5ge 33ms
+[Browser connected] 399ms
+[Page loaded] 320ms
+[Session released] 35ms
+[RUN] 30/1000
+[Session created] provider=KERNEL_HEADFUL id=iizdl0pd6diae3hje5oee1z6 36ms
+[Browser connected] 412ms
+[Page loaded] 397ms
+[Session released] 41ms
+[RUN] 31/1000
+[Session created] provider=KERNEL_HEADFUL id=a50ufr19gbir2988d89pup2t 26ms
+[Browser connected] 432ms
+[Page loaded] 380ms
+[Session released] 40ms
+[RUN] 32/1000
+[Session created] provider=KERNEL_HEADFUL id=t4lhb4fvre0nmhvdshzozaj7 28ms
+[Browser connected] 393ms
+[Page loaded] 385ms
+[Session released] 35ms
+[RUN] 33/1000
+[Session created] provider=KERNEL_HEADFUL id=b4lx8somt8gp6m3w2jtdbb3x 35ms
+[Browser connected] 389ms
+[Page loaded] 368ms
+[Session released] 46ms
+[RUN] 34/1000
+[Session created] provider=KERNEL_HEADFUL id=gg8fvf0fuc3h5715vs997xki 32ms
+[Browser connected] 413ms
+[Page loaded] 382ms
+[Session released] 40ms
+[RUN] 35/1000
+[Session created] provider=KERNEL_HEADFUL id=yck70nfiifq8d5s18r0b91cr 25ms
+[Browser connected] 619ms
+[Page loaded] 625ms
+[Session released] 44ms
+[RUN] 36/1000
+[Session created] provider=KERNEL_HEADFUL id=tnu1jqgocnqjy8ll5b62ip3b 33ms
+[Browser connected] 435ms
+[Page loaded] 354ms
+[Session released] 34ms
+[RUN] 37/1000
+[Session created] provider=KERNEL_HEADFUL id=pa38z1l6ih5j585xtdua6new 34ms
+[Browser connected] 360ms
+[Page loaded] 522ms
+[Session released] 44ms
+[RUN] 38/1000
+[Session created] provider=KERNEL_HEADFUL id=ehdw0eqwxi1zcuq0xfd50c07 25ms
+[Browser connected] 370ms
+[Page loaded] 365ms
+[Session released] 40ms
+[RUN] 39/1000
+[Session created] provider=KERNEL_HEADFUL id=ecs5w2z6gia851h78soc6gow 26ms
+[Browser connected] 417ms
+[Page loaded] 363ms
+[Session released] 45ms
+[RUN] 40/1000
+[Session created] provider=KERNEL_HEADFUL id=j318z8ds1sbqmur2m56i47oo 32ms
+[Browser connected] 400ms
+[Page loaded] 426ms
+[Session released] 33ms
+[RUN] 41/1000
+[Session created] provider=KERNEL_HEADFUL id=ed4ahpxave4l4btmqpsf4q0g 31ms
+[Browser connected] 384ms
+[Page loaded] 520ms
+[Session released] 37ms
+[RUN] 42/1000
+[Session created] provider=KERNEL_HEADFUL id=jzjs55w8wm823bt6ghm4dgel 27ms
+[Browser connected] 423ms
+[Page loaded] 457ms
+[Session released] 37ms
+[RUN] 43/1000
+[Session created] provider=KERNEL_HEADFUL id=ecy7rxs5kudrlkypd0m7rzrl 29ms
+[Browser connected] 382ms
+[Page loaded] 364ms
+[Session released] 36ms
+[RUN] 44/1000
+[Session created] provider=KERNEL_HEADFUL id=p07g3d48xxe8y5ovvns9moim 24ms
+[Browser connected] 438ms
+[Page loaded] 366ms
+[Session released] 39ms
+[RUN] 45/1000
+[Session created] provider=KERNEL_HEADFUL id=iws7k25eind25n6enyxvg2kr 23ms
+[Browser connected] 397ms
+[Page loaded] 417ms
+[Session released] 52ms
+[RUN] 46/1000
+[Session created] provider=KERNEL_HEADFUL id=lmuc5mbqj8vkgov8crj2vhbb 20ms
+[Browser connected] 422ms
+[Page loaded] 349ms
+[Session released] 34ms
+[RUN] 47/1000
+[Session created] provider=KERNEL_HEADFUL id=th0lydb5yxtp1ryjpjv2k3ja 26ms
+[Browser connected] 383ms
+[Page loaded] 376ms
+[Session released] 35ms
+[RUN] 48/1000
+[Session created] provider=KERNEL_HEADFUL id=numr5suokdbg6uyh0zpl11sc 16ms
+[Browser connected] 363ms
+[Page loaded] 554ms
+[Session released] 41ms
+[RUN] 49/1000
+[Session created] provider=KERNEL_HEADFUL id=um55jp84hggmuetof9xg3g7s 26ms
+[Browser connected] 426ms
+[Page loaded] 462ms
+[Session released] 41ms
+[RUN] 50/1000
+[Session created] provider=KERNEL_HEADFUL id=spmkcfctb718vuy44315wn30 27ms
+[Browser connected] 459ms
+[Page loaded] 466ms
+[Session released] 37ms
+[RUN] 51/1000
+[Session created] provider=KERNEL_HEADFUL id=gcuptgdi12f3ur57kmtqu0d0 36ms
+[Browser connected] 399ms
+[Page loaded] 346ms
+[Session released] 38ms
+[RUN] 52/1000
+[Session created] provider=KERNEL_HEADFUL id=auihqmxppmsk5gfb2fgdxnlh 44ms
+[Browser connected] 432ms
+[Page loaded] 380ms
+[Session released] 44ms
+[RUN] 53/1000
+[Session created] provider=KERNEL_HEADFUL id=c2wlphrbqelmb795puos2ehx 48ms
+[Browser connected] 355ms
+[Page loaded] 448ms
+[Session released] 37ms
+[RUN] 54/1000
+[Session created] provider=KERNEL_HEADFUL id=pdfotr8h97a8v1twb0qksmwy 32ms
+[Browser connected] 347ms
+[Page loaded] 365ms
+[Session released] 38ms
+[RUN] 55/1000
+[Session created] provider=KERNEL_HEADFUL id=ioejayjifxqdp2d65qipyr1x 29ms
+[Browser connected] 351ms
+[Page loaded] 393ms
+[Session released] 42ms
+[RUN] 56/1000
+[Session created] provider=KERNEL_HEADFUL id=eip65lga1kanx2l3enjbiohh 24ms
+[Browser connected] 404ms
+[Page loaded] 389ms
+[Session released] 41ms
+[RUN] 57/1000
+[Session created] provider=KERNEL_HEADFUL id=dabxgn1r24tpgixohga48qr1 31ms
+[Browser connected] 422ms
+[Page loaded] 426ms
+[Session released] 41ms
+[RUN] 58/1000
+[Session created] provider=KERNEL_HEADFUL id=nz2fex85uu6tgtuv04v5djq6 31ms
+[Browser connected] 384ms
+[Page loaded] 379ms
+[Session released] 44ms
+[RUN] 59/1000
+[Session created] provider=KERNEL_HEADFUL id=g3eo6g3zqk9f2rknnpdq679j 26ms
+[Browser connected] 490ms
+[Page loaded] 494ms
+[Session released] 37ms
+[RUN] 60/1000
+[Session created] provider=KERNEL_HEADFUL id=nk62niqivrb20uigpbhu0wqn 21ms
+[Browser connected] 376ms
+[Page loaded] 382ms
+[Session released] 40ms
+[RUN] 61/1000
+[Session created] provider=KERNEL_HEADFUL id=qzmvhz44z8d9u8rfznfts7l7 42ms
+[Browser connected] 353ms
+[Page loaded] 420ms
+[Session released] 44ms
+[RUN] 62/1000
+[Session created] provider=KERNEL_HEADFUL id=y1mmoykam9m2w74kw3rya8nh 31ms
+[Browser connected] 662ms
+[Page loaded] 472ms
+[Session released] 49ms
+[RUN] 63/1000
+[Session created] provider=KERNEL_HEADFUL id=tgrgmys892pdnco13kithyq3 34ms
+[Browser connected] 422ms
+[Page loaded] 401ms
+[Session released] 39ms
+[RUN] 64/1000
+[Session created] provider=KERNEL_HEADFUL id=kqoxmmw7wb5ts2aoo5qzd0pe 25ms
+[Browser connected] 389ms
+[Page loaded] 469ms
+[Session released] 34ms
+[RUN] 65/1000
+[Session created] provider=KERNEL_HEADFUL id=owzrk5yayzjdxpc5oozs0v0b 36ms
+[Browser connected] 273ms
+[Page loaded] 398ms
+[Session released] 35ms
+[RUN] 66/1000
+[Session created] provider=KERNEL_HEADFUL id=nlpcpe8nttjp86s3y8j2kafi 22ms
+[Browser connected] 420ms
+[Page loaded] 434ms
+[Session released] 36ms
+[RUN] 67/1000
+[Session created] provider=KERNEL_HEADFUL id=hvf27lu2kt8wpmcqhkfoje1j 29ms
+[Browser connected] 392ms
+[Page loaded] 384ms
+[Session released] 37ms
+[RUN] 68/1000
+[Session created] provider=KERNEL_HEADFUL id=hgem96ctlu9f1zzzm6zasoq0 30ms
+[Browser connected] 387ms
+[Page loaded] 518ms
+[Session released] 39ms
+[RUN] 69/1000
+[Session created] provider=KERNEL_HEADFUL id=vskqwv8tu1tc8cxldc4udvqj 23ms
+[Browser connected] 464ms
+[Page loaded] 752ms
+[Session released] 38ms
+[RUN] 70/1000
+[Session created] provider=KERNEL_HEADFUL id=to4stm3zhpebu2iyy3wqa16d 26ms
+[Browser connected] 503ms
+[Page loaded] 852ms
+[Session released] 37ms
+[RUN] 71/1000
+[Session created] provider=KERNEL_HEADFUL id=mac7314amkntvei9l8ej44k4 19ms
+[Browser connected] 436ms
+[Page loaded] 529ms
+[Session released] 40ms
+[RUN] 72/1000
+[Session created] provider=KERNEL_HEADFUL id=r3k0iln0y5g9solkn5xz3hgd 24ms
+[Browser connected] 456ms
+[Page loaded] 503ms
+[Session released] 35ms
+[RUN] 73/1000
+[Session created] provider=KERNEL_HEADFUL id=xsbrdtyfzid390v03jtynjm1 31ms
+[Browser connected] 458ms
+[Page loaded] 490ms
+[Session released] 41ms
+[RUN] 74/1000
+[Session created] provider=KERNEL_HEADFUL id=pm2hzeotcdwtw5hyhor31iu0 30ms
+[Browser connected] 391ms
+[Page loaded] 351ms
+[Session released] 45ms
+[RUN] 75/1000
+[Session created] provider=KERNEL_HEADFUL id=ptneqqlhmmkgui95jjd2ru9u 24ms
+[Browser connected] 355ms
+[Page loaded] 373ms
+[Session released] 44ms
+[RUN] 76/1000
+[Session created] provider=KERNEL_HEADFUL id=u6wk8llc06juceurncyv0zqf 21ms
+[Browser connected] 418ms
+[Page loaded] 386ms
+[Session released] 38ms
+[RUN] 77/1000
+[Session created] provider=KERNEL_HEADFUL id=jhqyz8fp2kniet8lvte3dm82 22ms
+[Browser connected] 294ms
+[Page loaded] 305ms
+[Session released] 40ms
+[RUN] 78/1000
+[Session created] provider=KERNEL_HEADFUL id=j5rqp5437kp5ufyj33n90gvo 31ms
+[Browser connected] 419ms
+[Page loaded] 374ms
+[Session released] 36ms
+[RUN] 79/1000
+[Session created] provider=KERNEL_HEADFUL id=vtlxeoqsp6c13osyp9nso8zn 42ms
+[Browser connected] 453ms
+[Page loaded] 388ms
+[Session released] 40ms
+[RUN] 80/1000
+[Session created] provider=KERNEL_HEADFUL id=mwbmw9a681itr4d67g08fthc 30ms
+[Browser connected] 383ms
+[Page loaded] 384ms
+[Session released] 36ms
+[RUN] 81/1000
+[Session created] provider=KERNEL_HEADFUL id=tp4tlxy1yzc1qytwum1s6gvk 32ms
+[Browser connected] 428ms
+[Page loaded] 813ms
+[Session released] 30ms
+[RUN] 82/1000
+[Session created] provider=KERNEL_HEADFUL id=gdl0yofqpjzkscdqjckuyz48 33ms
+[Browser connected] 419ms
+[Page loaded] 410ms
+[Session released] 41ms
+[RUN] 83/1000
+[Session created] provider=KERNEL_HEADFUL id=argaxqi4rqq8hnr0w4k9yjyf 29ms
+[Browser connected] 444ms
+[Page loaded] 480ms
+[Session released] 35ms
+[RUN] 84/1000
+[Session created] provider=KERNEL_HEADFUL id=nt12u81n40ic9gr6n4zwg4oq 28ms
+[Browser connected] 414ms
+[Page loaded] 369ms
+[Session released] 39ms
+[RUN] 85/1000
+[Session created] provider=KERNEL_HEADFUL id=pcvlhs3xieiiybkok2kvogqj 49ms
+[Browser connected] 437ms
+[Page loaded] 389ms
+[Session released] 42ms
+[RUN] 86/1000
+[Session created] provider=KERNEL_HEADFUL id=zibnx1y09bxn0l07s85vxz24 22ms
+[Browser connected] 352ms
+[Page loaded] 441ms
+[Session released] 37ms
+[RUN] 87/1000
+[Session created] provider=KERNEL_HEADFUL id=aj6o45leuigk4r4meotv2kjh 38ms
+[Browser connected] 451ms
+[Page loaded] 446ms
+[Session released] 35ms
+[RUN] 88/1000
+[Session created] provider=KERNEL_HEADFUL id=vsczt4ycx7brkskitoh8myss 19ms
+[Browser connected] 414ms
+[Page loaded] 395ms
+[Session released] 36ms
+[RUN] 89/1000
+[Session created] provider=KERNEL_HEADFUL id=m9pz5f1hqzs9jj215j3zrwbc 30ms
+[Browser connected] 473ms
+[Page loaded] 504ms
+[Session released] 44ms
+[RUN] 90/1000
+[Session created] provider=KERNEL_HEADFUL id=vxwsmerz2oaw7a1yfcmp2203 34ms
+[Browser connected] 352ms
+[Page loaded] 357ms
+[Session released] 44ms
+[RUN] 91/1000
+[Session created] provider=KERNEL_HEADFUL id=ypw3abbw9164qzammvpl01zp 27ms
+[Browser connected] 3938ms
+[Page loaded] 668ms
+[Session released] 55ms
+[RUN] 92/1000
+[Session created] provider=KERNEL_HEADFUL id=ef9sl4t0eyxxa5k0jvx34a2y 12ms
+[Browser connected] 341ms
+[Page loaded] 277ms
+[Session released] 45ms
+[RUN] 93/1000
+[Session created] provider=KERNEL_HEADFUL id=y7hnw2h6yk19zduicnm4xs0f 28ms
+[Browser connected] 436ms
+[Page loaded] 487ms
+[Session released] 40ms
+[RUN] 94/1000
+[Session created] provider=KERNEL_HEADFUL id=fgo2e8bp8irwwiaejbdqk49i 34ms
+[Browser connected] 617ms
+[Page loaded] 509ms
+[Session released] 42ms
+[RUN] 95/1000
+[Session created] provider=KERNEL_HEADFUL id=q6k3ew18i4imtitc2g89sx1s 31ms
+[Browser connected] 501ms
+[Page loaded] 600ms
+[Session released] 38ms
+[RUN] 96/1000
+[Session created] provider=KERNEL_HEADFUL id=pe9v1tvg1iblerw098vy7cu3 25ms
+[Browser connected] 435ms
+[Page loaded] 435ms
+[Session released] 33ms
+[RUN] 97/1000
+[Session created] provider=KERNEL_HEADFUL id=uywgdmem7vl8t80ar5lhg8el 29ms
+[Browser connected] 410ms
+[Page loaded] 428ms
+[Session released] 35ms
+[RUN] 98/1000
+[Session created] provider=KERNEL_HEADFUL id=dv1be246ngfbnl6zy7omgbog 28ms
+[Browser connected] 326ms
+[Page loaded] 284ms
+[Session released] 36ms
+[RUN] 99/1000
+[Session created] provider=KERNEL_HEADFUL id=i3u6t3wy3zsv1w8m0103nrnt 31ms
+[Browser connected] 417ms
+[Page loaded] 394ms
+[Session released] 43ms
+[RUN] 100/1000
+[Session created] provider=KERNEL_HEADFUL id=tw3cuyi4t1d1cp4yw3v4h4x2 27ms
+[Browser connected] 448ms
+[Page loaded] 424ms
+[Session released] 34ms
+[RUN] 101/1000
+[Session created] provider=KERNEL_HEADFUL id=xugxqgo0td75jamw1hmeqbpe 30ms
+[Browser connected] 412ms
+[Page loaded] 657ms
+[Session released] 36ms
+[RUN] 102/1000
+[Session created] provider=KERNEL_HEADFUL id=obaep263om3thfo6t9muq1yu 43ms
+[Browser connected] 387ms
+[Page loaded] 490ms
+[Session released] 36ms
+[RUN] 103/1000
+[Session created] provider=KERNEL_HEADFUL id=qx5l6t0wsrjzpbbh5el73jwp 20ms
+[Browser connected] 420ms
+[Page loaded] 368ms
+[Session released] 36ms
+[RUN] 104/1000
+[Session created] provider=KERNEL_HEADFUL id=brzrb5e1i9xg5svcabmc6e2c 31ms
+[Browser connected] 432ms
+[Page loaded] 396ms
+[Session released] 30ms
+[RUN] 105/1000
+[Session created] provider=KERNEL_HEADFUL id=x90tbtzvrtkdjn0pvismpqd1 38ms
+[Browser connected] 619ms
+[Page loaded] 626ms
+[Session released] 52ms
+[RUN] 106/1000
+[Session created] provider=KERNEL_HEADFUL id=mt4owz5nzhq86iv5axt9y365 28ms
+[Browser connected] 410ms
+[Page loaded] 361ms
+[Session released] 40ms
+[RUN] 107/1000
+[Session created] provider=KERNEL_HEADFUL id=m8hce30e47n1f9opsvphuklu 31ms
+[Browser connected] 372ms
+[Page loaded] 492ms
+[Session released] 40ms
+[RUN] 108/1000
+[Session created] provider=KERNEL_HEADFUL id=lpag6s5rk0jakz4tsc3nn3k1 42ms
+[Browser connected] 400ms
+[Page loaded] 464ms
+[Session released] 38ms
+[RUN] 109/1000
+[Session created] provider=KERNEL_HEADFUL id=lqna588fago3tw2vye1snrzg 25ms
+[Browser connected] 418ms
+[Page loaded] 526ms
+[Session released] 39ms
+[RUN] 110/1000
+[Session created] provider=KERNEL_HEADFUL id=s0mf2vazfmv87af2ve0l4bff 20ms
+[Browser connected] 411ms
+[Page loaded] 489ms
+[Session released] 37ms
+[RUN] 111/1000
+[Session created] provider=KERNEL_HEADFUL id=bl1g75gkn9iskk4r2lno0pc1 23ms
+[Browser connected] 404ms
+[Page loaded] 360ms
+[Session released] 38ms
+[RUN] 112/1000
+[Session created] provider=KERNEL_HEADFUL id=wmkftytvvrljxicehdjk2h4p 29ms
+[Browser connected] 456ms
+[Page loaded] 460ms
+[Session released] 43ms
+[RUN] 113/1000
+[Session created] provider=KERNEL_HEADFUL id=hh1kg3iro9yqsi9yphv6mnud 28ms
+[Browser connected] 424ms
+[Page loaded] 372ms
+[Session released] 43ms
+[RUN] 114/1000
+[Session created] provider=KERNEL_HEADFUL id=ryvqp8e8k2rn5a2ou54j650o 29ms
+[Browser connected] 342ms
+[Page loaded] 376ms
+[Session released] 36ms
+[RUN] 115/1000
+[Session created] provider=KERNEL_HEADFUL id=ao5b80637wycao3dgl95wj8x 29ms
+[Browser connected] 418ms
+[Page loaded] 398ms
+[Session released] 29ms
+[RUN] 116/1000
+[Session created] provider=KERNEL_HEADFUL id=h23wd4ua3mif6vgz91f9jv1p 28ms
+[Browser connected] 387ms
+[Page loaded] 386ms
+[Session released] 39ms
+[RUN] 117/1000
+[Session created] provider=KERNEL_HEADFUL id=iyncjx7mkclckeal3qakn1iy 27ms
+[Browser connected] 682ms
+[Page loaded] 522ms
+[Session released] 28ms
+[RUN] 118/1000
+[Session created] provider=KERNEL_HEADFUL id=rbz4vybtjqv88ckfpiyctqbl 22ms
+[Browser connected] 411ms
+[Page loaded] 375ms
+[Session released] 40ms
+[RUN] 119/1000
+[Session created] provider=KERNEL_HEADFUL id=czimik2nvgqbbatw9sktdlpg 23ms
+[Browser connected] 423ms
+[Page loaded] 463ms
+[Session released] 34ms
+[RUN] 120/1000
+[Session created] provider=KERNEL_HEADFUL id=d6z1hnrugmdmp3c1ifr5v6hj 25ms
+[Browser connected] 430ms
+[Page loaded] 478ms
+[Session released] 34ms
+[RUN] 121/1000
+[Session created] provider=KERNEL_HEADFUL id=c1lhcuju694kjom8c9zu0al0 30ms
+[Browser connected] 430ms
+[Page loaded] 418ms
+[Session released] 37ms
+[RUN] 122/1000
+[Session created] provider=KERNEL_HEADFUL id=dy988gc1ukrhp6t5kslomxnu 27ms
+[Browser connected] 415ms
+[Page loaded] 398ms
+[Session released] 44ms
+[RUN] 123/1000
+[Session created] provider=KERNEL_HEADFUL id=nnsristcw19gn0s31ake2pms 20ms
+[Browser connected] 398ms
+[Page loaded] 442ms
+[Session released] 37ms
+[RUN] 124/1000
+[Session created] provider=KERNEL_HEADFUL id=bg2qyqbcrpagtvgzg4q02ptn 18ms
+[Browser connected] 368ms
+[Page loaded] 342ms
+[Session released] 39ms
+[RUN] 125/1000
+[Session created] provider=KERNEL_HEADFUL id=r78e77noy1j5imgnzpdkt61v 34ms
+[Browser connected] 408ms
+[Page loaded] 366ms
+[Session released] 43ms
+[RUN] 126/1000
+[Session created] provider=KERNEL_HEADFUL id=fnnkcd31qgncgjqpenvrewrg 21ms
+[Browser connected] 371ms
+[Page loaded] 366ms
+[Session released] 50ms
+[RUN] 127/1000
+[Session created] provider=KERNEL_HEADFUL id=r1wu6jcwf9mptflehx2g9962 21ms
+[Browser connected] 364ms
+[Page loaded] 502ms
+[Session released] 38ms
+[RUN] 128/1000
+[Session created] provider=KERNEL_HEADFUL id=cpzq1mk8rrtoi1vea85lpyrv 30ms
+[Browser connected] 417ms
+[Page loaded] 395ms
+[Session released] 40ms
+[RUN] 129/1000
+[Session created] provider=KERNEL_HEADFUL id=ynqt4re4p65px2pbsciicoxd 30ms
+[Browser connected] 603ms
+[Page loaded] 496ms
+[Session released] 39ms
+[RUN] 130/1000
+[Session created] provider=KERNEL_HEADFUL id=nhqnuxorrk27htlnocxe0xxr 38ms
+[Browser connected] 411ms
+[Page loaded] 487ms
+[Session released] 46ms
+[RUN] 131/1000
+[Session created] provider=KERNEL_HEADFUL id=fct91awy1raqmk1wyru0tgts 33ms
+[Browser connected] 353ms
+[Page loaded] 335ms
+[Session released] 39ms
+[RUN] 132/1000
+[Session created] provider=KERNEL_HEADFUL id=d2dk94u0pu6htjwyjyvlhbj8 21ms
+[Browser connected] 350ms
+[Page loaded] 616ms
+[Session released] 44ms
+[RUN] 133/1000
+[Session created] provider=KERNEL_HEADFUL id=xfmw0x2dyza60mg7ba7vc63v 22ms
+[Browser connected] 628ms
+[Page loaded] 965ms
+[Session released] 49ms
+[RUN] 134/1000
+[Session created] provider=KERNEL_HEADFUL id=keuk14po53fmp2zq0fgs2ua1 26ms
+[Browser connected] 301ms
+[Page loaded] 440ms
+[Session released] 38ms
+[RUN] 135/1000
+[Session created] provider=KERNEL_HEADFUL id=bd4rkoosm049ybvdak9psfvn 32ms
+[Browser connected] 433ms
+[Page loaded] 405ms
+[Session released] 36ms
+[RUN] 136/1000
+[Session created] provider=KERNEL_HEADFUL id=aveidr20xdqd4bfp7mk5w72j 37ms
+[Browser connected] 425ms
+[Page loaded] 404ms
+[Session released] 39ms
+[RUN] 137/1000
+[Session created] provider=KERNEL_HEADFUL id=f8tqp7m5jei3be5ogj02pfay 26ms
+[Browser connected] 422ms
+[Page loaded] 418ms
+[Session released] 37ms
+[RUN] 138/1000
+[Session created] provider=KERNEL_HEADFUL id=h3rw9fmubrncqo1z1v1hkdop 38ms
+[Browser connected] 413ms
+[Page loaded] 409ms
+[Session released] 40ms
+[RUN] 139/1000
+[Session created] provider=KERNEL_HEADFUL id=k3yap8fr0p10eqg6oja9thcw 36ms
+[Browser connected] 492ms
+[Page loaded] 496ms
+[Session released] 33ms
+[RUN] 140/1000
+[Session created] provider=KERNEL_HEADFUL id=z7mmtdu6jmt6hrejhjqyzhj9 17ms
+[Browser connected] 388ms
+[Page loaded] 404ms
+[Session released] 38ms
+[RUN] 141/1000
+[Session created] provider=KERNEL_HEADFUL id=w33em2vk5ajkznkroj8luvw6 34ms
+[Browser connected] 407ms
+[Page loaded] 427ms
+[Session released] 44ms
+[RUN] 142/1000
+[Session created] provider=KERNEL_HEADFUL id=zdw2fvz60md7i210jgdrtryd 21ms
+[Browser connected] 387ms
+[Page loaded] 357ms
+[Session released] 45ms
+[RUN] 143/1000
+[Session created] provider=KERNEL_HEADFUL id=zqbavwwip95bhqezvqj11nvl 31ms
+[Browser connected] 426ms
+[Page loaded] 551ms
+[Session released] 41ms
+[RUN] 144/1000
+[Session created] provider=KERNEL_HEADFUL id=f0lku6kptj3fmmcyqqkpz8vd 28ms
+[Browser connected] 382ms
+[Page loaded] 367ms
+[Session released] 44ms
+[RUN] 145/1000
+[Session created] provider=KERNEL_HEADFUL id=x08pssw4hoxmhljqnsj957ag 29ms
+[Browser connected] 418ms
+[Page loaded] 370ms
+[Session released] 29ms
+[RUN] 146/1000
+[Session created] provider=KERNEL_HEADFUL id=s8g9mg24djs1mbt5t7hr57uw 37ms
+[Browser connected] 365ms
+[Page loaded] 433ms
+[Session released] 39ms
+[RUN] 147/1000
+[Session created] provider=KERNEL_HEADFUL id=fhln1yssgsk1a1picc3hc8md 26ms
+[Browser connected] 416ms
+[Page loaded] 454ms
+[Session released] 40ms
+[RUN] 148/1000
+[Session created] provider=KERNEL_HEADFUL id=apbo5s0hz5dzzuickk6cju9v 43ms
+[Browser connected] 335ms
+[Page loaded] 310ms
+[Session released] 39ms
+[RUN] 149/1000
+[Session created] provider=KERNEL_HEADFUL id=mlt75xeih8k9i2753wsiifzk 33ms
+[Browser connected] 413ms
+[Page loaded] 402ms
+[Session released] 40ms
+[RUN] 150/1000
+[Session created] provider=KERNEL_HEADFUL id=j94o7mpiiq7aep0pyb2wi2d2 19ms
+[Browser connected] 413ms
+[Page loaded] 352ms
+[Session released] 43ms
+[RUN] 151/1000
+[Session created] provider=KERNEL_HEADFUL id=c7d83ixi5wbxq8nw3q2fswn5 27ms
+[Browser connected] 373ms
+[Page loaded] 372ms
+[Session released] 41ms
+[RUN] 152/1000
+[Session created] provider=KERNEL_HEADFUL id=emkvmwuvc2u5hh9a2rrz6z1p 26ms
+[Browser connected] 361ms
+[Page loaded] 426ms
+[Session released] 39ms
+[RUN] 153/1000
+[Session created] provider=KERNEL_HEADFUL id=b2og16oyz40krfhnbkb0ebkv 21ms
+[Browser connected] 404ms
+[Page loaded] 403ms
+[Session released] 43ms
+[RUN] 154/1000
+[Session created] provider=KERNEL_HEADFUL id=aby1q88pceneinmkatsv4xev 56ms
+[Browser connected] 377ms
+[Page loaded] 466ms
+[Session released] 35ms
+[RUN] 155/1000
+[Session created] provider=KERNEL_HEADFUL id=bjvn9llbprt58ox8sh44we32 35ms
+[Browser connected] 404ms
+[Page loaded] 404ms
+[Session released] 42ms
+[RUN] 156/1000
+[Session created] provider=KERNEL_HEADFUL id=unw651zce0u330uomd9a20is 32ms
+[Browser connected] 428ms
+[Page loaded] 690ms
+[Session released] 43ms
+[RUN] 157/1000
+[Session created] provider=KERNEL_HEADFUL id=wqk73smpbk2qf0stwes1howi 47ms
+[Browser connected] 409ms
+[Page loaded] 378ms
+[Session released] 35ms
+[RUN] 158/1000
+[Session created] provider=KERNEL_HEADFUL id=t609ttpolh9lvuzui83mtul9 21ms
+[Browser connected] 369ms
+[Page loaded] 426ms
+[Session released] 35ms
+[RUN] 159/1000
+[Session created] provider=KERNEL_HEADFUL id=mqz2l3sqi3g0nm03l2prhwb4 37ms
+[Browser connected] 305ms
+[Page loaded] 381ms
+[Session released] 37ms
+[RUN] 160/1000
+[Session created] provider=KERNEL_HEADFUL id=g6nskdi5hldhqbrupfozx1k3 24ms
+[Browser connected] 394ms
+[Page loaded] 326ms
+[Session released] 35ms
+[RUN] 161/1000
+[Session created] provider=KERNEL_HEADFUL id=vkl77tn6dgl97u5a71122yy0 40ms
+[Browser connected] 642ms
+[Page loaded] 504ms
+[Session released] 42ms
+[RUN] 162/1000
+[Session created] provider=KERNEL_HEADFUL id=ikuz7cdyg5i835o7kxbonrcu 26ms
+[Browser connected] 337ms
+[Page loaded] 371ms
+[Session released] 40ms
+[RUN] 163/1000
+[Session created] provider=KERNEL_HEADFUL id=uvq505busx5oqjgjhecekidh 30ms
+[Browser connected] 398ms
+[Page loaded] 446ms
+[Session released] 41ms
+[RUN] 164/1000
+[Session created] provider=KERNEL_HEADFUL id=xht8n5y0dxgglt2olpn80330 35ms
+[Browser connected] 424ms
+[Page loaded] 414ms
+[Session released] 42ms
+[RUN] 165/1000
+[Session created] provider=KERNEL_HEADFUL id=ovqx2y4rdyumrrd6gbpaa40e 28ms
+[Browser connected] 366ms
+[Page loaded] 456ms
+[Session released] 37ms
+[RUN] 166/1000
+[Session created] provider=KERNEL_HEADFUL id=uc587gxfidzso1b6j1fkgb8e 41ms
+[Browser connected] 383ms
+[Page loaded] 378ms
+[Session released] 48ms
+[RUN] 167/1000
+[Session created] provider=KERNEL_HEADFUL id=lauer8ys0eqdjs6hdzibh0rc 51ms
+[Browser connected] 400ms
+[Page loaded] 307ms
+[Session released] 40ms
+[RUN] 168/1000
+[Session created] provider=KERNEL_HEADFUL id=v4wfonf9s5worr2snn2ce149 29ms
+[Browser connected] 401ms
+[Page loaded] 420ms
+[Session released] 37ms
+[RUN] 169/1000
+[Session created] provider=KERNEL_HEADFUL id=f8oxpmwzpsjinhnunfyk9llj 30ms
+[Browser connected] 431ms
+[Page loaded] 427ms
+[Session released] 39ms
+[RUN] 170/1000
+[Session created] provider=KERNEL_HEADFUL id=wxiiybdndx0utackvkjd1o7b 19ms
+[Browser connected] 420ms
+[Page loaded] 448ms
+[Session released] 39ms
+[RUN] 171/1000
+[Session created] provider=KERNEL_HEADFUL id=s2d76pgvtzuv6vmgp2dd93pf 42ms
+[Browser connected] 413ms
+[Page loaded] 346ms
+[Session released] 39ms
+[RUN] 172/1000
+[Session created] provider=KERNEL_HEADFUL id=raigbfra256hpe5z7bpr5uoz 37ms
+[Browser connected] 391ms
+[Page loaded] 425ms
+[Session released] 40ms
+[RUN] 173/1000
+[Session created] provider=KERNEL_HEADFUL id=il9vkyouw0i8zggw1eu2hi5a 23ms
+[Browser connected] 319ms
+[Page loaded] 289ms
+[Session released] 44ms
+[RUN] 174/1000
+[Session created] provider=KERNEL_HEADFUL id=vf070ayoslhg3sy47k5bpo32 38ms
+[Browser connected] 376ms
+[Page loaded] 293ms
+[Session released] 37ms
+[RUN] 175/1000
+[Session created] provider=KERNEL_HEADFUL id=cd4xkb3d0knolflel7cwlm83 34ms
+[Browser connected] 388ms
+[Page loaded] 360ms
+[Session released] 35ms
+[RUN] 176/1000
+[Session created] provider=KERNEL_HEADFUL id=iqf07i5ng42j1q3tq9j7h2lr 39ms
+[Browser connected] 392ms
+[Page loaded] 355ms
+[Session released] 37ms
+[RUN] 177/1000
+[Session created] provider=KERNEL_HEADFUL id=aifepyz11ub33635iet2p3xx 20ms
+[Browser connected] 379ms
+[Page loaded] 332ms
+[Session released] 38ms
+[RUN] 178/1000
+[Session created] provider=KERNEL_HEADFUL id=akddi2moorod944spr1gyppx 33ms
+[Browser connected] 3895ms
+[Page loaded] 399ms
+[Session released] 64ms
+[RUN] 179/1000
+[Session created] provider=KERNEL_HEADFUL id=jxviwxiqbahzj4jkx9kpzm5s 12ms
+[Browser connected] 486ms
+[Page loaded] 456ms
+[Session released] 43ms
+[RUN] 180/1000
+[Session created] provider=KERNEL_HEADFUL id=y5fi7xtfjs5c2005jecy9qlw 34ms
+[Browser connected] 636ms
+[Page loaded] 463ms
+[Session released] 47ms
+[RUN] 181/1000
+[Session created] provider=KERNEL_HEADFUL id=ck6be325deoaaqx01nn200uk 25ms
+[Browser connected] 365ms
+[Page loaded] 474ms
+[Session released] 43ms
+[RUN] 182/1000
+[Session created] provider=KERNEL_HEADFUL id=sosozxz7ymbt91ykl1ipia5y 36ms
+[Browser connected] 323ms
+[Page loaded] 308ms
+[Session released] 41ms
+[RUN] 183/1000
+[Session created] provider=KERNEL_HEADFUL id=bwx0tzvg0loz1u5yezdt7l80 34ms
+[Browser connected] 451ms
+[Page loaded] 435ms
+[Session released] 40ms
+[RUN] 184/1000
+[Session created] provider=KERNEL_HEADFUL id=duuhhy9hfrthx56bketvrdd4 30ms
+[Browser connected] 529ms
+[Page loaded] 516ms
+[Session released] 34ms
+[RUN] 185/1000
+[Session created] provider=KERNEL_HEADFUL id=p9ff319yajhcn9awx7rqkwbu 36ms
+[Browser connected] 595ms
+[Page loaded] 519ms
+[Session released] 42ms
+[RUN] 186/1000
+[Session created] provider=KERNEL_HEADFUL id=msx3plhhl2zzrf547enkksqd 31ms
+[Browser connected] 399ms
+[Page loaded] 357ms
+[Session released] 39ms
+[RUN] 187/1000
+[Session created] provider=KERNEL_HEADFUL id=zqaevph562j9m2lujqgscjor 38ms
+[Browser connected] 415ms
+[Page loaded] 394ms
+[Session released] 36ms
+[RUN] 188/1000
+[Session created] provider=KERNEL_HEADFUL id=dj5nc9o2vrz6v0z4spt6l96r 36ms
+[Browser connected] 548ms
+[Page loaded] 481ms
+[Session released] 38ms
+[RUN] 189/1000
+[Session created] provider=KERNEL_HEADFUL id=f7fhgm834hhuw706taxx9nfk 29ms
+[Browser connected] 416ms
+[Page loaded] 368ms
+[Session released] 42ms
+[RUN] 190/1000
+[Session created] provider=KERNEL_HEADFUL id=aqe2nt4rga5a069g5aa88ot2 28ms
+[Browser connected] 466ms
+[Page loaded] 390ms
+[Session released] 38ms
+[RUN] 191/1000
+[Session created] provider=KERNEL_HEADFUL id=z33ek16o405ijz9minbr34il 31ms
+[Browser connected] 336ms
+[Page loaded] 283ms
+[Session released] 43ms
+[RUN] 192/1000
+[Session created] provider=KERNEL_HEADFUL id=b915fnpdbqju8oa7naqvy0he 46ms
+[Browser connected] 351ms
+[Page loaded] 327ms
+[Session released] 43ms
+[RUN] 193/1000
+[Session created] provider=KERNEL_HEADFUL id=ujrgfq9vvk3iqi36kof5rqpz 22ms
+[Browser connected] 370ms
+[Page loaded] 412ms
+[Session released] 39ms
+[RUN] 194/1000
+[Session created] provider=KERNEL_HEADFUL id=zpfhz1lesgi09v6d7c0wlrd5 29ms
+[Browser connected] 404ms
+[Page loaded] 403ms
+[Session released] 33ms
+[RUN] 195/1000
+[Session created] provider=KERNEL_HEADFUL id=ao6ov7zylgbtmtn8ib7u3w8t 29ms
+[Browser connected] 384ms
+[Page loaded] 411ms
+[Session released] 30ms
+[RUN] 196/1000
+[Session created] provider=KERNEL_HEADFUL id=pbm6smyr0kr9t7rxov6yxvw0 27ms
+[Browser connected] 391ms
+[Page loaded] 393ms
+[Session released] 40ms
+[RUN] 197/1000
+[Session created] provider=KERNEL_HEADFUL id=xu0gujw8f4y8pnizpsxjqu7w 41ms
+[Browser connected] 494ms
+[Page loaded] 448ms
+[Session released] 38ms
+[RUN] 198/1000
+[Session created] provider=KERNEL_HEADFUL id=bo8iu6wssm7d6woc8aupqauk 25ms
+[Browser connected] 372ms
+[Page loaded] 398ms
+[Session released] 41ms
+[RUN] 199/1000
+[Session created] provider=KERNEL_HEADFUL id=lhf2vj26nver5jn2n4c7sl90 44ms
+[Browser connected] 313ms
+[Page loaded] 397ms
+[Session released] 36ms
+[RUN] 200/1000
+[Session created] provider=KERNEL_HEADFUL id=tjeltkconyvv8oxxfxq76ccp 38ms
+[Browser connected] 466ms
+[Page loaded] 425ms
+[Session released] 40ms
+[RUN] 201/1000
+[Session created] provider=KERNEL_HEADFUL id=a308d9iye2d0kzrigt8ckdrh 25ms
+[Browser connected] 463ms
+[Page loaded] 416ms
+[Session released] 43ms
+[RUN] 202/1000
+[Session created] provider=KERNEL_HEADFUL id=n79lf6z63flz9i7o2392s6ly 25ms
+[Browser connected] 405ms
+[Page loaded] 552ms
+[Session released] 43ms
+[RUN] 203/1000
+[Session created] provider=KERNEL_HEADFUL id=qo5fwcaiee9jl23f1rv0c1ir 25ms
+[Browser connected] 435ms
+[Page loaded] 379ms
+[Session released] 37ms
+[RUN] 204/1000
+[Session created] provider=KERNEL_HEADFUL id=te6ltmzeffcetqbzqrjakyfj 21ms
+[Browser connected] 490ms
+[Page loaded] 494ms
+[Session released] 46ms
+[RUN] 205/1000
+[Session created] provider=KERNEL_HEADFUL id=i5iph50gaf5d3loj7qmp11e4 22ms
+[Browser connected] 431ms
+[Page loaded] 424ms
+[Session released] 42ms
+[RUN] 206/1000
+[Session created] provider=KERNEL_HEADFUL id=hiukm1rmazyk91md1s3hxwzt 18ms
+[Browser connected] 381ms
+[Page loaded] 423ms
+[Session released] 39ms
+[RUN] 207/1000
+[Session created] provider=KERNEL_HEADFUL id=lfkouyzk9y82habghn64wku3 31ms
+[Browser connected] 559ms
+[Page loaded] 491ms
+[Session released] 43ms
+[RUN] 208/1000
+[Session created] provider=KERNEL_HEADFUL id=nddbbxf1x5xhyvbvyhx2cp1q 21ms
+[Browser connected] 396ms
+[Page loaded] 463ms
+[Session released] 41ms
+[RUN] 209/1000
+[Session created] provider=KERNEL_HEADFUL id=qr92u519ixgp5ra6cxguk3at 18ms
+[Browser connected] 437ms
+[Page loaded] 501ms
+[Session released] 30ms
+[RUN] 210/1000
+[Session created] provider=KERNEL_HEADFUL id=q4v9nlow5s62dip0mvj5axtn 29ms
+[Browser connected] 640ms
+[Page loaded] 459ms
+[Session released] 39ms
+[RUN] 211/1000
+[Session created] provider=KERNEL_HEADFUL id=cw3b6agto3x6qie9yb8t7p66 19ms
+[Browser connected] 410ms
+[Page loaded] 486ms
+[Session released] 44ms
+[RUN] 212/1000
+[Session created] provider=KERNEL_HEADFUL id=u4epr9ojesdjxoyubggkslj8 27ms
+[Browser connected] 4023ms
+[Page loaded] 426ms
+[Session released] 49ms
+[RUN] 213/1000
+[Session created] provider=KERNEL_HEADFUL id=fupier83golbsiisxo663812 16ms
+[Browser connected] 323ms
+[Page loaded] 362ms
+[Session released] 37ms
+[RUN] 214/1000
+[Session created] provider=KERNEL_HEADFUL id=b9khdecqpq609eod3upxoebg 25ms
+[Browser connected] 572ms
+[Page loaded] 423ms
+[Session released] 36ms
+[RUN] 215/1000
+[Session created] provider=KERNEL_HEADFUL id=l1e2ebw74yzajqenby9nvk2k 34ms
+[Browser connected] 573ms
+[Page loaded] 506ms
+[Session released] 38ms
+[RUN] 216/1000
+[Session created] provider=KERNEL_HEADFUL id=iwbi9pni6emc7jx7m7vwzbud 27ms
+[Browser connected] 308ms
+[Page loaded] 297ms
+[Session released] 35ms
+[RUN] 217/1000
+[Session created] provider=KERNEL_HEADFUL id=m0o245edm3e64ry58nqh5zc6 42ms
+[Browser connected] 380ms
+[Page loaded] 300ms
+[Session released] 33ms
+[RUN] 218/1000
+[Session created] provider=KERNEL_HEADFUL id=qkdbyap636hmzry76we48mz7 35ms
+[Browser connected] 352ms
+[Page loaded] 420ms
+[Session released] 34ms
+[RUN] 219/1000
+[Session created] provider=KERNEL_HEADFUL id=hh0v4t7v44uk9637pvsjlvzs 22ms
+[Browser connected] 357ms
+[Page loaded] 418ms
+[Session released] 40ms
+[RUN] 220/1000
+[Session created] provider=KERNEL_HEADFUL id=fup204droci82ph841fv92hk 32ms
+[Browser connected] 565ms
+[Page loaded] 502ms
+[Session released] 38ms
+[RUN] 221/1000
+[Session created] provider=KERNEL_HEADFUL id=d95cuwloz7jtjvo7kvhhh1h9 37ms
+[Browser connected] 380ms
+[Page loaded] 325ms
+[Session released] 38ms
+[RUN] 222/1000
+[Session created] provider=KERNEL_HEADFUL id=kwmwtj3k1t7gm6l7ea0y0cfg 37ms
+[Browser connected] 351ms
+[Page loaded] 425ms
+[Session released] 33ms
+[RUN] 223/1000
+[Session created] provider=KERNEL_HEADFUL id=bo661tpzhu9osdmkvbzwlhot 30ms
+[Browser connected] 384ms
+[Page loaded] 360ms
+[Session released] 48ms
+[RUN] 224/1000
+[Session created] provider=KERNEL_HEADFUL id=gjmk4ksdxq9e4wulvtekvikg 30ms
+[Browser connected] 349ms
+[Page loaded] 320ms
+[Session released] 37ms
+[RUN] 225/1000
+[Session created] provider=KERNEL_HEADFUL id=t8rtq2juk8u9kg97zptw35ku 48ms
+[Browser connected] 573ms
+[Page loaded] 1094ms
+[Session released] 33ms
+[RUN] 226/1000
+[Session created] provider=KERNEL_HEADFUL id=xomov5qn4di7g7cdg4cta94v 32ms
+[Browser connected] 370ms
+[Page loaded] 329ms
+[Session released] 35ms
+[RUN] 227/1000
+[Session created] provider=KERNEL_HEADFUL id=ymyt296anrud5hi8f15x5z52 23ms
+[Browser connected] 401ms
+[Page loaded] 410ms
+[Session released] 43ms
+[RUN] 228/1000
+[Session created] provider=KERNEL_HEADFUL id=ngygbgcsy74atb0h9vbrw2de 32ms
+[Browser connected] 395ms
+[Page loaded] 396ms
+[Session released] 38ms
+[RUN] 229/1000
+[Session created] provider=KERNEL_HEADFUL id=vic6q1vhg3x96qa4k6ohfmgw 27ms
+[Browser connected] 348ms
+[Page loaded] 276ms
+[Session released] 37ms
+[RUN] 230/1000
+[Session created] provider=KERNEL_HEADFUL id=i56o0kgedrq71m3ofswp8ix6 24ms
+[Browser connected] 388ms
+[Page loaded] 426ms
+[Session released] 40ms
+[RUN] 231/1000
+[Session created] provider=KERNEL_HEADFUL id=y546fke8m6jfzng6b1h2fpl9 24ms
+[Browser connected] 469ms
+[Page loaded] 467ms
+[Session released] 40ms
+[RUN] 232/1000
+[Session created] provider=KERNEL_HEADFUL id=duxgnkyzi7y1i036tnyiut7h 33ms
+[Browser connected] 359ms
+[Page loaded] 422ms
+[Session released] 43ms
+[RUN] 233/1000
+[Session created] provider=KERNEL_HEADFUL id=pzwovnyeednbqtylgox0y94h 22ms
+[Browser connected] 367ms
+[Page loaded] 396ms
+[Session released] 41ms
+[RUN] 234/1000
+[Session created] provider=KERNEL_HEADFUL id=i6twyt3hd4p8j0yevyl15ou9 26ms
+[Browser connected] 319ms
+[Page loaded] 357ms
+[Session released] 36ms
+[RUN] 235/1000
+[Session created] provider=KERNEL_HEADFUL id=lfrhw8w5uf2jbdt1beebjxam 19ms
+[Browser connected] 407ms
+[Page loaded] 360ms
+[Session released] 48ms
+[RUN] 236/1000
+[Session created] provider=KERNEL_HEADFUL id=x0puuo4y63m61rrh5vfeza9p 18ms
+[Browser connected] 559ms
+[Page loaded] 483ms
+[Session released] 37ms
+[RUN] 237/1000
+[Session created] provider=KERNEL_HEADFUL id=xprhluqssc92r7b22wuf9euw 31ms
+[Browser connected] 397ms
+[Page loaded] 376ms
+[Session released] 51ms
+[RUN] 238/1000
+[Session created] provider=KERNEL_HEADFUL id=cimq0iqhbo9flsct0tytbnmc 22ms
+[Browser connected] 406ms
+[Page loaded] 395ms
+[Session released] 41ms
+[RUN] 239/1000
+[Session created] provider=KERNEL_HEADFUL id=lb4wpx8br0x86jff2x6dznrg 44ms
+[Browser connected] 557ms
+[Page loaded] 439ms
+[Session released] 41ms
+[RUN] 240/1000
+[Session created] provider=KERNEL_HEADFUL id=mvd3ca0uulgra5lk9lx3us0a 19ms
+[Browser connected] 388ms
+[Page loaded] 465ms
+[Session released] 36ms
+[RUN] 241/1000
+[Session created] provider=KERNEL_HEADFUL id=zdeqagxfskva5mr20rqhpdp1 20ms
+[Browser connected] 576ms
+[Page loaded] 461ms
+[Session released] 37ms
+[RUN] 242/1000
+[Session created] provider=KERNEL_HEADFUL id=d7h8lwp1z196wrdp7ty6pep3 26ms
+[Browser connected] 345ms
+[Page loaded] 279ms
+[Session released] 43ms
+[RUN] 243/1000
+[Session created] provider=KERNEL_HEADFUL id=tos14bowa4y0wwt7p3qx51sg 36ms
+[Browser connected] 398ms
+[Page loaded] 394ms
+[Session released] 42ms
+[RUN] 244/1000
+[Session created] provider=KERNEL_HEADFUL id=sj74qrd42lo5tcswzr64r7mp 40ms
+[Browser connected] 325ms
+[Page loaded] 370ms
+[Session released] 47ms
+[RUN] 245/1000
+[Session created] provider=KERNEL_HEADFUL id=fawupb4dlov8qlr1tbda8i1b 39ms
+[Browser connected] 417ms
+[Page loaded] 367ms
+[Session released] 51ms
+[RUN] 246/1000
+[Session created] provider=KERNEL_HEADFUL id=w2gp06lg9vmtcvw0n8n7ig2u 31ms
+[Browser connected] 608ms
+[Page loaded] 466ms
+[Session released] 38ms
+[RUN] 247/1000
+[Session created] provider=KERNEL_HEADFUL id=weplqd07yjs5g7f8tilqs0ex 40ms
+[Browser connected] 543ms
+[Page loaded] 536ms
+[Session released] 48ms
+[RUN] 248/1000
+[Session created] provider=KERNEL_HEADFUL id=rmg8uz5nker2s2rcmci63rn8 21ms
+[Browser connected] 463ms
+[Page loaded] 522ms
+[Session released] 39ms
+[RUN] 249/1000
+[Session created] provider=KERNEL_HEADFUL id=d5uaavbql3ie9alldcaj2eb3 22ms
+[Browser connected] 387ms
+[Page loaded] 422ms
+[Session released] 34ms
+[RUN] 250/1000
+[Session created] provider=KERNEL_HEADFUL id=d0u26u385idi8hs5ts4oo733 22ms
+[Browser connected] 371ms
+[Page loaded] 405ms
+[Session released] 45ms
+[RUN] 251/1000
+[Session created] provider=KERNEL_HEADFUL id=x0h4taw8lwwdmi68kihrl7x4 33ms
+[Browser connected] 351ms
+[Page loaded] 457ms
+[Session released] 39ms
+[RUN] 252/1000
+[Session created] provider=KERNEL_HEADFUL id=rd6uja4ffis1upj4mz235o44 27ms
+[Browser connected] 375ms
+[Page loaded] 363ms
+[Session released] 43ms
+[RUN] 253/1000
+[Session created] provider=KERNEL_HEADFUL id=q1c1qdbky4k0pns9egs6aw19 28ms
+[Browser connected] 416ms
+[Page loaded] 428ms
+[Session released] 40ms
+[RUN] 254/1000
+[Session created] provider=KERNEL_HEADFUL id=z1krz543wa5aqbg400m3jwbz 24ms
+[Browser connected] 380ms
+[Page loaded] 364ms
+[Session released] 44ms
+[RUN] 255/1000
+[Session created] provider=KERNEL_HEADFUL id=jqmu373g7kg3uly9nfntijf2 24ms
+[Browser connected] 415ms
+[Page loaded] 369ms
+[Session released] 40ms
+[RUN] 256/1000
+[Session created] provider=KERNEL_HEADFUL id=hgilygbzy0795wr6q3on029u 29ms
+[Browser connected] 399ms
+[Page loaded] 388ms
+[Session released] 40ms
+[RUN] 257/1000
+[Session created] provider=KERNEL_HEADFUL id=qk8hv6o2byiwqmtp0ivw9zpz 35ms
+[Browser connected] 295ms
+[Page loaded] 304ms
+[Session released] 37ms
+[RUN] 258/1000
+[Session created] provider=KERNEL_HEADFUL id=wymxqi17nqeekhzre7rpjr1h 32ms
+[Browser connected] 635ms
+[Page loaded] 497ms
+[Session released] 40ms
+[RUN] 259/1000
+[Session created] provider=KERNEL_HEADFUL id=j27cgplafk5u2s304g0sti54 29ms
+[Browser connected] 421ms
+[Page loaded] 368ms
+[Session released] 35ms
+[RUN] 260/1000
+[Session created] provider=KERNEL_HEADFUL id=ai24ngyf2nqe366hjpaq40pf 32ms
+[Browser connected] 405ms
+[Page loaded] 385ms
+[Session released] 44ms
+[RUN] 261/1000
+[Session created] provider=KERNEL_HEADFUL id=fv1pxe35zd8s3j94r3rxepz2 21ms
+[Browser connected] 434ms
+[Page loaded] 414ms
+[Session released] 34ms
+[RUN] 262/1000
+[Session created] provider=KERNEL_HEADFUL id=f5hetr6j8cfprh7lznm9vq4y 34ms
+[Browser connected] 363ms
+[Page loaded] 409ms
+[Session released] 43ms
+[RUN] 263/1000
+[Session created] provider=KERNEL_HEADFUL id=u35t6md1imc1qz0s7tl204cb 29ms
+[Browser connected] 414ms
+[Page loaded] 391ms
+[Session released] 49ms
+[RUN] 264/1000
+[Session created] provider=KERNEL_HEADFUL id=kd4ns65vmj55c4e2xl406u9q 29ms
+[Browser connected] 347ms
+[Page loaded] 319ms
+[Session released] 34ms
+[RUN] 265/1000
+[Session created] provider=KERNEL_HEADFUL id=jet1y1on1a4euqjji2s9jx9d 26ms
+[Browser connected] 368ms
+[Page loaded] 394ms
+[Session released] 35ms
+[RUN] 266/1000
+[Session created] provider=KERNEL_HEADFUL id=sq59st2mna6ieehawgpa96jt 22ms
+[Browser connected] 363ms
+[Page loaded] 326ms
+[Session released] 33ms
+[RUN] 267/1000
+[Session created] provider=KERNEL_HEADFUL id=tnjr2kdqtdldj1rl2qrzvb23 23ms
+[Browser connected] 371ms
+[Page loaded] 336ms
+[Session released] 47ms
+[RUN] 268/1000
+[Session created] provider=KERNEL_HEADFUL id=jfapqbb1vajd0emqqig9adg2 44ms
+[Browser connected] 472ms
+[Page loaded] 432ms
+[Session released] 36ms
+[RUN] 269/1000
+[Session created] provider=KERNEL_HEADFUL id=q2kvk4axckiok2q4dsor7595 40ms
+[Browser connected] 370ms
+[Page loaded] 466ms
+[Session released] 40ms
+[RUN] 270/1000
+[Session created] provider=KERNEL_HEADFUL id=hzjcuzmhxtp630cv8129x85y 36ms
+[Browser connected] 407ms
+[Page loaded] 331ms
+[Session released] 36ms
+[RUN] 271/1000
+[Session created] provider=KERNEL_HEADFUL id=bz31w6jlwfzj5o7bu3bwwxue 34ms
+[Browser connected] 333ms
+[Page loaded] 509ms
+[Session released] 38ms
+[RUN] 272/1000
+[Session created] provider=KERNEL_HEADFUL id=hc3oubz0dqsna2rrigz2vfnz 37ms
+[Browser connected] 615ms
+[Page loaded] 508ms
+[Session released] 41ms
+[RUN] 273/1000
+[Session created] provider=KERNEL_HEADFUL id=ecjior38m3rtfcqxy0knwe0s 21ms
+[Browser connected] 355ms
+[Page loaded] 334ms
+[Session released] 43ms
+[RUN] 274/1000
+[Session created] provider=KERNEL_HEADFUL id=nbgpipnomym4j0o35urcuhks 20ms
+[Browser connected] 357ms
+[Page loaded] 373ms
+[Session released] 40ms
+[RUN] 275/1000
+[Session created] provider=KERNEL_HEADFUL id=ativ855ecqm7jcf05dz9y8dn 37ms
+[Browser connected] 545ms
+[Page loaded] 488ms
+[Session released] 43ms
+[RUN] 276/1000
+[Session created] provider=KERNEL_HEADFUL id=w8nvtwi2akp89uqebbykm4kp 30ms
+[Browser connected] 469ms
+[Page loaded] 544ms
+[Session released] 40ms
+[RUN] 277/1000
+[Session created] provider=KERNEL_HEADFUL id=ly95i169bkxcqpevouywlh0d 20ms
+[Browser connected] 417ms
+[Page loaded] 337ms
+[Session released] 39ms
+[RUN] 278/1000
+[Session created] provider=KERNEL_HEADFUL id=rfuqxv4rrq5bandfn2ocak1n 20ms
+[Browser connected] 3915ms
+[Page loaded] 505ms
+[Session released] 82ms
+[RUN] 279/1000
+[Session created] provider=KERNEL_HEADFUL id=vriv4f5jdqjy2iuufmzg6fkf 28ms
+[Browser connected] 409ms
+[Page loaded] 388ms
+[Session released] 50ms
+[RUN] 280/1000
+[Session created] provider=KERNEL_HEADFUL id=l7pr7gt15smzuevnw75zvf0u 30ms
+[Browser connected] 356ms
+[Page loaded] 414ms
+[Session released] 40ms
+[RUN] 281/1000
+[Session created] provider=KERNEL_HEADFUL id=b9erwx45nl8nz41hpc2axdn6 30ms
+[Browser connected] 446ms
+[Page loaded] 453ms
+[Session released] 40ms
+[RUN] 282/1000
+[Session created] provider=KERNEL_HEADFUL id=fea86nrrcnybms3aqrywzoi9 33ms
+[Browser connected] 400ms
+[Page loaded] 463ms
+[Session released] 37ms
+[RUN] 283/1000
+[Session created] provider=KERNEL_HEADFUL id=we8hlg17kde0isavlemziiwe 22ms
+[Browser connected] 389ms
+[Page loaded] 427ms
+[Session released] 42ms
+[RUN] 284/1000
+[Session created] provider=KERNEL_HEADFUL id=iq4xgkasngxewzy4qz38fq2b 29ms
+[Browser connected] 320ms
+[Page loaded] 327ms
+[Session released] 37ms
+[RUN] 285/1000
+[Session created] provider=KERNEL_HEADFUL id=h3k2hu76t91u8dvfrz00ivkm 42ms
+[Browser connected] 287ms
+[Page loaded] 312ms
+[Session released] 29ms
+[RUN] 286/1000
+[Session created] provider=KERNEL_HEADFUL id=zei1q5xovwj42xkrngadhetx 29ms
+[Browser connected] 349ms
+[Page loaded] 302ms
+[Session released] 38ms
+[RUN] 287/1000
+[Session created] provider=KERNEL_HEADFUL id=c0cdk3mh0b89ym781uif4y0f 34ms
+[Browser connected] 397ms
+[Page loaded] 355ms
+[Session released] 35ms
+[RUN] 288/1000
+[Session created] provider=KERNEL_HEADFUL id=dz8y681v7c2hib1824km7dd9 22ms
+[Browser connected] 416ms
+[Page loaded] 357ms
+[Session released] 44ms
+[RUN] 289/1000
+[Session created] provider=KERNEL_HEADFUL id=vm8lilfqhwsg1kdt3z9w0dz1 35ms
+[Browser connected] 335ms
+[Page loaded] 321ms
+[Session released] 40ms
+[RUN] 290/1000
+[Session created] provider=KERNEL_HEADFUL id=shjyxa3sy3y978wrop8xgd48 30ms
+[Browser connected] 374ms
+[Page loaded] 387ms
+[Session released] 39ms
+[RUN] 291/1000
+[Session created] provider=KERNEL_HEADFUL id=gstzl18jcghrs5ra9o7lo5cm 20ms
+[Browser connected] 459ms
+[Page loaded] 440ms
+[Session released] 39ms
+[RUN] 292/1000
+[Session created] provider=KERNEL_HEADFUL id=ejmjku8tvlwl5l7j9go5gbpi 24ms
+[Browser connected] 558ms
+[Page loaded] 436ms
+[Session released] 44ms
+[RUN] 293/1000
+[Session created] provider=KERNEL_HEADFUL id=po5rc8t4maltrlkn5v3j3e7l 22ms
+[Browser connected] 331ms
+[Page loaded] 383ms
+[Session released] 42ms
+[RUN] 294/1000
+[Session created] provider=KERNEL_HEADFUL id=tpoz7w9iu6672a6xewxki0rb 21ms
+[Browser connected] 353ms
+[Page loaded] 362ms
+[Session released] 42ms
+[RUN] 295/1000
+[Session created] provider=KERNEL_HEADFUL id=hnjyc50azcbuqiqabu7qhh14 24ms
+[Browser connected] 365ms
+[Page loaded] 408ms
+[Session released] 38ms
+[RUN] 296/1000
+[Session created] provider=KERNEL_HEADFUL id=jtn2bx0t3u7cznzijkqvr2l1 24ms
+[Browser connected] 367ms
+[Page loaded] 332ms
+[Session released] 30ms
+[RUN] 297/1000
+[Session created] provider=KERNEL_HEADFUL id=c46ln0rf5g1oo6jhazx98zcs 28ms
+[Browser connected] 372ms
+[Page loaded] 324ms
+[Session released] 51ms
+[RUN] 298/1000
+[Session created] provider=KERNEL_HEADFUL id=uf40ndn3m9meexr9m2jckosr 31ms
+[Browser connected] 437ms
+[Page loaded] 448ms
+[Session released] 43ms
+[RUN] 299/1000
+[Session created] provider=KERNEL_HEADFUL id=w4o07ry11ymdk3c5ei313afh 33ms
+[Browser connected] 472ms
+[Page loaded] 442ms
+[Session released] 43ms
+[RUN] 300/1000
+[Session created] provider=KERNEL_HEADFUL id=evynatp4f54k6cbpqwzn2y8d 25ms
+[Browser connected] 407ms
+[Page loaded] 381ms
+[Session released] 42ms
+[RUN] 301/1000
+[Session created] provider=KERNEL_HEADFUL id=fbw25vm1jplr90ra3wi390ux 50ms
+[Browser connected] 348ms
+[Page loaded] 477ms
+[Session released] 37ms
+[RUN] 302/1000
+[Session created] provider=KERNEL_HEADFUL id=r30coa74v0uwll5s5mguujs9 33ms
+[Browser connected] 346ms
+[Page loaded] 617ms
+[Session released] 44ms
+[RUN] 303/1000
+[Session created] provider=KERNEL_HEADFUL id=vglpynid5u3u65rkt4hlup11 27ms
+[Browser connected] 400ms
+[Page loaded] 321ms
+[Session released] 47ms
+[RUN] 304/1000
+[Session created] provider=KERNEL_HEADFUL id=q8r4esekve0fxy2b9vjajiiw 25ms
+[Browser connected] 348ms
+[Page loaded] 349ms
+[Session released] 32ms
+[RUN] 305/1000
+[Session created] provider=KERNEL_HEADFUL id=utqt2c3ct0khy84fscuhsht3 54ms
+[Browser connected] 394ms
+[Page loaded] 368ms
+[Session released] 34ms
+[RUN] 306/1000
+[Session created] provider=KERNEL_HEADFUL id=ufypeq6q8wyl9g3mwwrkvd5r 21ms
+[Browser connected] 402ms
+[Page loaded] 407ms
+[Session released] 42ms
+[RUN] 307/1000
+[Session created] provider=KERNEL_HEADFUL id=q3stjks88fe9n4136v4pekoa 24ms
+[Browser connected] 382ms
+[Page loaded] 428ms
+[Session released] 35ms
+[RUN] 308/1000
+[Session created] provider=KERNEL_HEADFUL id=v0rnbk25z1t4tvmg8c5emm3i 38ms
+[Browser connected] 388ms
+[Page loaded] 392ms
+[Session released] 41ms
+[RUN] 309/1000
+[Session created] provider=KERNEL_HEADFUL id=lpm7ydlydg9cx8x03wbzip4r 39ms
+[Browser connected] 323ms
+[Page loaded] 499ms
+[Session released] 51ms
+[RUN] 310/1000
+[Session created] provider=KERNEL_HEADFUL id=fp3yeck9k4oiagl6irx0ppzc 32ms
+[Browser connected] 387ms
+[Page loaded] 545ms
+[Session released] 42ms
+[RUN] 311/1000
+[Session created] provider=KERNEL_HEADFUL id=tmet1jg0k4kd03djv3irorqt 22ms
+[Browser connected] 364ms
+[Page loaded] 365ms
+[Session released] 46ms
+[RUN] 312/1000
+[Session created] provider=KERNEL_HEADFUL id=vw5xkwvwyxcblxyvgqnykv1o 21ms
+[Browser connected] 407ms
+[Page loaded] 424ms
+[Session released] 40ms
+[RUN] 313/1000
+[Session created] provider=KERNEL_HEADFUL id=ubgmw42gj1k48gcny262w2z5 28ms
+[Browser connected] 384ms
+[Page loaded] 391ms
+[Session released] 40ms
+[RUN] 314/1000
+[Session created] provider=KERNEL_HEADFUL id=epmt9k0qcouhs3pxcdw0mnr8 21ms
+[Browser connected] 457ms
+[Page loaded] 429ms
+[Session released] 43ms
+[RUN] 315/1000
+[Session created] provider=KERNEL_HEADFUL id=p0x46lgpq70jevtmevt4ot9d 27ms
+[Browser connected] 282ms
+[Page loaded] 311ms
+[Session released] 46ms
+[RUN] 316/1000
+[Session created] provider=KERNEL_HEADFUL id=o3czpsmxlowcz1eqr37aqr9c 20ms
+[Browser connected] 326ms
+[Page loaded] 306ms
+[Session released] 42ms
+[RUN] 317/1000
+[Session created] provider=KERNEL_HEADFUL id=li67fyyhardhn7u1eur1557k 24ms
+[Browser connected] 387ms
+[Page loaded] 371ms
+[Session released] 36ms
+[RUN] 318/1000
+[Session created] provider=KERNEL_HEADFUL id=my2ty38ljl7k40uwydj5hjtx 40ms
+[Browser connected] 459ms
+[Page loaded] 485ms
+[Session released] 39ms
+[RUN] 319/1000
+[Session created] provider=KERNEL_HEADFUL id=rx7r6sl65men30r63ivvwmx8 21ms
+[Browser connected] 575ms
+[Page loaded] 494ms
+[Session released] 43ms
+[RUN] 320/1000
+[Session created] provider=KERNEL_HEADFUL id=kid2vnoyk9wcka3yx05duzki 28ms
+[Browser connected] 448ms
+[Page loaded] 563ms
+[Session released] 47ms
+[RUN] 321/1000
+[Session created] provider=KERNEL_HEADFUL id=ovym681fxc9nvdtw723mq7qa 31ms
+[Browser connected] 344ms
+[Page loaded] 381ms
+[Session released] 38ms
+[RUN] 322/1000
+[Session created] provider=KERNEL_HEADFUL id=bzdufsy7kmfpeaf5hm7jc0bi 19ms
+[Browser connected] 467ms
+[Page loaded] 511ms
+[Session released] 43ms
+[RUN] 323/1000
+[Session created] provider=KERNEL_HEADFUL id=jb8zftwtggtt8oa0zmznyj0d 23ms
+[Browser connected] 309ms
+[Page loaded] 605ms
+[Session released] 49ms
+[RUN] 324/1000
+[Session created] provider=KERNEL_HEADFUL id=eh3j7xjweg9r0gcqvzeh3qej 19ms
+[Browser connected] 360ms
+[Page loaded] 265ms
+[Session released] 38ms
+[RUN] 325/1000
+[Session created] provider=KERNEL_HEADFUL id=dqeelbxckga4dkheisdb6w63 41ms
+[Browser connected] 430ms
+[Page loaded] 457ms
+[Session released] 36ms
+[RUN] 326/1000
+[Session created] provider=KERNEL_HEADFUL id=ftja94ot8rse4fpib6bczn13 28ms
+[Browser connected] 335ms
+[Page loaded] 363ms
+[Session released] 31ms
+[RUN] 327/1000
+[Session created] provider=KERNEL_HEADFUL id=mprkhuijwwwunrc2sl4ib3f4 23ms
+[Browser connected] 312ms
+[Page loaded] 322ms
+[Session released] 39ms
+[RUN] 328/1000
+[Session created] provider=KERNEL_HEADFUL id=grfqy86znsdlkv4sq4xum6gh 34ms
+[Browser connected] 521ms
+[Page loaded] 534ms
+[Session released] 49ms
+[RUN] 329/1000
+[Session created] provider=KERNEL_HEADFUL id=mgva71ovuymbcscwks7i4iii 24ms
+[Browser connected] 425ms
+[Page loaded] 405ms
+[Session released] 39ms
+[RUN] 330/1000
+[Session created] provider=KERNEL_HEADFUL id=svnbtpybwt2cxhfbhgc4coae 34ms
+[Browser connected] 287ms
+[Page loaded] 297ms
+[Session released] 42ms
+[RUN] 331/1000
+[Session created] provider=KERNEL_HEADFUL id=mz6y8ryg36epvfytegdeb5mm 39ms
+[Browser connected] 573ms
+[Page loaded] 556ms
+[Session released] 34ms
+[RUN] 332/1000
+[Session created] provider=KERNEL_HEADFUL id=za3nfz02669r2qgebs9k67oa 30ms
+[Browser connected] 492ms
+[Page loaded] 535ms
+[Session released] 40ms
+[RUN] 333/1000
+[Session created] provider=KERNEL_HEADFUL id=wkih2ag16gd4gd2dp9dpfvwc 26ms
+[Browser connected] 350ms
+[Page loaded] 489ms
+[Session released] 42ms
+[RUN] 334/1000
+[Session created] provider=KERNEL_HEADFUL id=ct56cukqff786a0q4ly75t3x 25ms
+[Browser connected] 341ms
+[Page loaded] 359ms
+[Session released] 38ms
+[RUN] 335/1000
+[Session created] provider=KERNEL_HEADFUL id=qsq108mk4tyy936jc4amqv4b 49ms
+[Browser connected] 537ms
+[Page loaded] 504ms
+[Session released] 38ms
+[RUN] 336/1000
+[Session created] provider=KERNEL_HEADFUL id=vszqy3r1e6rvwo1kh8zvcqor 30ms
+[Browser connected] 432ms
+[Page loaded] 378ms
+[Session released] 41ms
+[RUN] 337/1000
+[Session created] provider=KERNEL_HEADFUL id=e5q3r43kjwy2z3xoxn2zr45y 45ms
+[Browser connected] 324ms
+[Page loaded] 307ms
+[Session released] 39ms
+[RUN] 338/1000
+[Session created] provider=KERNEL_HEADFUL id=d8eifd22tcy9t4ds7b8347i6 40ms
+[Browser connected] 376ms
+[Page loaded] 309ms
+[Session released] 38ms
+[RUN] 339/1000
+[Session created] provider=KERNEL_HEADFUL id=gar7bny3gevbv4dy1gd42atr 38ms
+[Browser connected] 624ms
+[Page loaded] 422ms
+[Session released] 42ms
+[RUN] 340/1000
+[Session created] provider=KERNEL_HEADFUL id=y7c4hblu3iklgl6nmfdvv4cx 31ms
+[Browser connected] 354ms
+[Page loaded] 375ms
+[Session released] 39ms
+[RUN] 341/1000
+[Session created] provider=KERNEL_HEADFUL id=coj0zlu6tsv94o0agm0xgiew 34ms
+[Browser connected] 340ms
+[Page loaded] 309ms
+[Session released] 37ms
+[RUN] 342/1000
+[Session created] provider=KERNEL_HEADFUL id=i9cz9aigmtd6xqbdww1vnno2 28ms
+[Browser connected] 417ms
+[Page loaded] 370ms
+[Session released] 38ms
+[RUN] 343/1000
+[Session created] provider=KERNEL_HEADFUL id=kfvg4lb8e8faw8ys7cmxmnc3 29ms
+[Browser connected] 369ms
+[Page loaded] 367ms
+[Session released] 33ms
+[RUN] 344/1000
+[Session created] provider=KERNEL_HEADFUL id=end4tief08zl856ezfx9qqct 27ms
+[Browser connected] 317ms
+[Page loaded] 342ms
+[Session released] 59ms
+[RUN] 345/1000
+[Session created] provider=KERNEL_HEADFUL id=jv2nhk2sd34chab5q7inxyff 27ms
+[Browser connected] 370ms
+[Page loaded] 370ms
+[Session released] 35ms
+[RUN] 346/1000
+[Session created] provider=KERNEL_HEADFUL id=hfpjyr99lrb2rzc0pj0hrz6x 25ms
+[Browser connected] 294ms
+[Page loaded] 311ms
+[Session released] 51ms
+[RUN] 347/1000
+[Session created] provider=KERNEL_HEADFUL id=zs5zyqb339u5py2ojilfrmej 29ms
+[Browser connected] 603ms
+[Page loaded] 426ms
+[Session released] 40ms
+[RUN] 348/1000
+[Session created] provider=KERNEL_HEADFUL id=z13qgxuwnpzlzjpphwm8d4qm 36ms
+[Browser connected] 360ms
+[Page loaded] 393ms
+[Session released] 41ms
+[RUN] 349/1000
+[Session created] provider=KERNEL_HEADFUL id=ftpqm8etkhw7jvib0ujuehtm 39ms
+[Browser connected] 350ms
+[Page loaded] 388ms
+[Session released] 35ms
+[RUN] 350/1000
+[Session created] provider=KERNEL_HEADFUL id=u3110202ak6wfstwzxatxbg9 23ms
+[Browser connected] 363ms
+[Page loaded] 364ms
+[Session released] 39ms
+[RUN] 351/1000
+[Session created] provider=KERNEL_HEADFUL id=cdbhev2fj1tquaxcp8ky348q 34ms
+[Browser connected] 619ms
+[Page loaded] 452ms
+[Session released] 44ms
+[RUN] 352/1000
+[Session created] provider=KERNEL_HEADFUL id=ibhq8df6smfgv3w9wa6306wm 24ms
+[Browser connected] 389ms
+[Page loaded] 397ms
+[Session released] 40ms
+[RUN] 353/1000
+[Session created] provider=KERNEL_HEADFUL id=v08cg83o0nqxneqsuec2xt4j 27ms
+[Browser connected] 403ms
+[Page loaded] 333ms
+[Session released] 36ms
+[RUN] 354/1000
+[Session created] provider=KERNEL_HEADFUL id=c8nl5h06sb1g873xp9lrzxm8 28ms
+[Browser connected] 561ms
+[Page loaded] 435ms
+[Session released] 40ms
+[RUN] 355/1000
+[Session created] provider=KERNEL_HEADFUL id=ib6i6909undl6kdlh5aj0ffu 22ms
+[Browser connected] 401ms
+[Page loaded] 371ms
+[Session released] 39ms
+[RUN] 356/1000
+[Session created] provider=KERNEL_HEADFUL id=v70cglbvkzfr704rie0zag2i 25ms
+[Browser connected] 305ms
+[Page loaded] 301ms
+[Session released] 41ms
+[RUN] 357/1000
+[Session created] provider=KERNEL_HEADFUL id=pdati3bixohvvr35mjncra2j 44ms
+[Browser connected] 431ms
+[Page loaded] 388ms
+[Session released] 48ms
+[RUN] 358/1000
+[Session created] provider=KERNEL_HEADFUL id=rm8utyifmxiaj6l4hdh0f1pn 25ms
+[Browser connected] 368ms
+[Page loaded] 380ms
+[Session released] 41ms
+[RUN] 359/1000
+[Session created] provider=KERNEL_HEADFUL id=w8ec9tjiudd2grywm7x9drfl 28ms
+[Browser connected] 329ms
+[Page loaded] 328ms
+[Session released] 36ms
+[RUN] 360/1000
+[Session created] provider=KERNEL_HEADFUL id=l42e1qe87b3z9d7ndw5obqbu 33ms
+[Browser connected] 335ms
+[Page loaded] 371ms
+[Session released] 75ms
+[RUN] 361/1000
+[Session created] provider=KERNEL_HEADFUL id=utrpe0nw20hv5vl07bhsdg6m 22ms
+[Browser connected] 377ms
+[Page loaded] 382ms
+[Session released] 36ms
+[RUN] 362/1000
+[Session created] provider=KERNEL_HEADFUL id=t6rruijs4id5e9ck615s0140 24ms
+[Browser connected] 386ms
+[Page loaded] 394ms
+[Session released] 42ms
+[RUN] 363/1000
+[Session created] provider=KERNEL_HEADFUL id=lxz08ump8lz9qsahgmjn8gv2 24ms
+[Browser connected] 311ms
+[Page loaded] 304ms
+[Session released] 41ms
+[RUN] 364/1000
+[Session created] provider=KERNEL_HEADFUL id=ux9cj0htgi52pca7jmyxv7r7 30ms
+[Browser connected] 588ms
+[Page loaded] 431ms
+[Session released] 38ms
+[RUN] 365/1000
+[Session created] provider=KERNEL_HEADFUL id=cyk9tqogbihujuvgr4w868b0 35ms
+[Browser connected] 384ms
+[Page loaded] 379ms
+[Session released] 40ms
+[RUN] 366/1000
+[Session created] provider=KERNEL_HEADFUL id=yx99fbcvnuc3vjlxwv1yd9ww 29ms
+[Browser connected] 354ms
+[Page loaded] 347ms
+[Session released] 38ms
+[RUN] 367/1000
+[Session created] provider=KERNEL_HEADFUL id=wmp5m6xja2hs8iqwp49q0jbu 26ms
+[Browser connected] 391ms
+[Page loaded] 462ms
+[Session released] 33ms
+[RUN] 368/1000
+[Session created] provider=KERNEL_HEADFUL id=pm8vuz5mnefnyuwsdfibn0iy 33ms
+[Browser connected] 398ms
+[Page loaded] 340ms
+[Session released] 38ms
+[RUN] 369/1000
+[Session created] provider=KERNEL_HEADFUL id=xwqrol5ctqytz7rjgs288o3o 43ms
+[Browser connected] 436ms
+[Page loaded] 428ms
+[Session released] 40ms
+[RUN] 370/1000
+[Session created] provider=KERNEL_HEADFUL id=fwtketk3sufgw72m528tgvr4 31ms
+[Browser connected] 348ms
+[Page loaded] 392ms
+[Session released] 41ms
+[RUN] 371/1000
+[Session created] provider=KERNEL_HEADFUL id=te20y256zf752tiof209vx1a 30ms
+[Browser connected] 305ms
+[Page loaded] 344ms
+[Session released] 39ms
+[RUN] 372/1000
+[Session created] provider=KERNEL_HEADFUL id=q9dkavpyowiyrx5wdljnsvk4 29ms
+[Browser connected] 372ms
+[Page loaded] 357ms
+[Session released] 40ms
+[RUN] 373/1000
+[Session created] provider=KERNEL_HEADFUL id=mdcney5p7ueo6l7crn895l65 24ms
+[Browser connected] 410ms
+[Page loaded] 434ms
+[Session released] 39ms
+[RUN] 374/1000
+[Session created] provider=KERNEL_HEADFUL id=g28kxsyubetkld6ox76sjslm 28ms
+[Browser connected] 392ms
+[Page loaded] 446ms
+[Session released] 46ms
+[RUN] 375/1000
+[Session created] provider=KERNEL_HEADFUL id=ev82hzfot0zf42peq6ghqigy 24ms
+[Browser connected] 374ms
+[Page loaded] 410ms
+[Session released] 36ms
+[RUN] 376/1000
+[Session created] provider=KERNEL_HEADFUL id=vkocst5864e6wtvhkunkl2rg 38ms
+[Browser connected] 312ms
+[Page loaded] 429ms
+[Session released] 37ms
+[RUN] 377/1000
+[Session created] provider=KERNEL_HEADFUL id=cbwfnn7086d2dlnylilu36id 42ms
+[Browser connected] 427ms
+[Page loaded] 414ms
+[Session released] 43ms
+[RUN] 378/1000
+[Session created] provider=KERNEL_HEADFUL id=r248cw3y7ciwqv56gzocimb4 27ms
+[Browser connected] 380ms
+[Page loaded] 357ms
+[Session released] 39ms
+[RUN] 379/1000
+[Session created] provider=KERNEL_HEADFUL id=ymcpa37f76r65df3fda5kbmp 32ms
+[Browser connected] 378ms
+[Page loaded] 366ms
+[Session released] 33ms
+[RUN] 380/1000
+[Session created] provider=KERNEL_HEADFUL id=mbczrn5bwwzvok8x5dfbrcng 30ms
+[Browser connected] 420ms
+[Page loaded] 372ms
+[Session released] 39ms
+[RUN] 381/1000
+[Session created] provider=KERNEL_HEADFUL id=tu345p6ro9o7w60fvkxb23qd 25ms
+[Browser connected] 536ms
+[Page loaded] 430ms
+[Session released] 36ms
+[RUN] 382/1000
+[Session created] provider=KERNEL_HEADFUL id=pd8fdtys999o5evi8w4xkdyw 16ms
+[Browser connected] 384ms
+[Page loaded] 591ms
+[Session released] 46ms
+[RUN] 383/1000
+[Session created] provider=KERNEL_HEADFUL id=ocyn3gc67kw0srgmx1dndozg 22ms
+[Browser connected] 400ms
+[Page loaded] 317ms
+[Session released] 39ms
+[RUN] 384/1000
+[Session created] provider=KERNEL_HEADFUL id=sgbj7ppdl4zahqi24nucjb9y 23ms
+[Browser connected] 372ms
+[Page loaded] 406ms
+[Session released] 38ms
+[RUN] 385/1000
+[Session created] provider=KERNEL_HEADFUL id=yx7tqu6594g9i1b927vht01p 40ms
+[Browser connected] 441ms
+[Page loaded] 430ms
+[Session released] 38ms
+[RUN] 386/1000
+[Session created] provider=KERNEL_HEADFUL id=h9iixzkmlk58c4hjbf7ktmpe 21ms
+[Browser connected] 327ms
+[Page loaded] 397ms
+[Session released] 33ms
+[RUN] 387/1000
+[Session created] provider=KERNEL_HEADFUL id=wc8druijt9kqf7qgrgydvryv 39ms
+[Browser connected] 369ms
+[Page loaded] 379ms
+[Session released] 36ms
+[RUN] 388/1000
+[Session created] provider=KERNEL_HEADFUL id=jr6nyrwr7suxg4hxpiygau4z 26ms
+[Browser connected] 388ms
+[Page loaded] 481ms
+[Session released] 41ms
+[RUN] 389/1000
+[Session created] provider=KERNEL_HEADFUL id=s2ahmwb4o2rwjwehdm2cckwo 28ms
+[Browser connected] 261ms
+[Page loaded] 288ms
+[Session released] 39ms
+[RUN] 390/1000
+[Session created] provider=KERNEL_HEADFUL id=qp6hk8hu74serct6582hgvrc 28ms
+[Browser connected] 328ms
+[Page loaded] 323ms
+[Session released] 37ms
+[RUN] 391/1000
+[Session created] provider=KERNEL_HEADFUL id=okylt7dblfvaegxjueovsq4s 34ms
+[Browser connected] 569ms
+[Page loaded] 465ms
+[Session released] 38ms
+[RUN] 392/1000
+[Session created] provider=KERNEL_HEADFUL id=tzaeslro6kw1cj070ud01t7n 31ms
+[Browser connected] 388ms
+[Page loaded] 383ms
+[Session released] 39ms
+[RUN] 393/1000
+[Session created] provider=KERNEL_HEADFUL id=wh3r9yge0t9mcdaqv8pmagp2 26ms
+[Browser connected] 416ms
+[Page loaded] 459ms
+[Session released] 46ms
+[RUN] 394/1000
+[Session created] provider=KERNEL_HEADFUL id=dwz6hajdprhksshs3yqk4m86 21ms
+[Browser connected] 407ms
+[Page loaded] 469ms
+[Session released] 54ms
+[RUN] 395/1000
+[Session created] provider=KERNEL_HEADFUL id=detznlx03mrlea32862jdbdd 29ms
+[Browser connected] 391ms
+[Page loaded] 529ms
+[Session released] 38ms
+[RUN] 396/1000
+[Session created] provider=KERNEL_HEADFUL id=paxrvdub2hqz1hffck5gvc0b 44ms
+[Browser connected] 253ms
+[Page loaded] 332ms
+[Session released] 38ms
+[RUN] 397/1000
+[Session created] provider=KERNEL_HEADFUL id=xd49k1be2mbif3y8qdurxyng 30ms
+[Browser connected] 356ms
+[Page loaded] 700ms
+[Session released] 42ms
+[RUN] 398/1000
+[Session created] provider=KERNEL_HEADFUL id=j96vjrroyokg1mdtrqrs56zv 23ms
+[Browser connected] 363ms
+[Page loaded] 407ms
+[Session released] 38ms
+[RUN] 399/1000
+[Session created] provider=KERNEL_HEADFUL id=odheo7kygthuq3f4ltv4r7ib 34ms
+[Browser connected] 360ms
+[Page loaded] 387ms
+[Session released] 44ms
+[RUN] 400/1000
+[Session created] provider=KERNEL_HEADFUL id=h5t27vyvrffzurt0aih9xcwh 22ms
+[Browser connected] 379ms
+[Page loaded] 304ms
+[Session released] 38ms
+[RUN] 401/1000
+[Session created] provider=KERNEL_HEADFUL id=n4dc0gfe4zu7kzocys69mogb 30ms
+[Browser connected] 449ms
+[Page loaded] 460ms
+[Session released] 35ms
+[RUN] 402/1000
+[Session created] provider=KERNEL_HEADFUL id=xp3phpgwo0di255yfy3cg2lk 24ms
+[Browser connected] 319ms
+[Page loaded] 320ms
+[Session released] 34ms
+[RUN] 403/1000
+[Session created] provider=KERNEL_HEADFUL id=pnb11mze2id8l4ml1ouj1f6c 39ms
+[Browser connected] 571ms
+[Page loaded] 454ms
+[Session released] 43ms
+[RUN] 404/1000
+[Session created] provider=KERNEL_HEADFUL id=zznysijunn6fpycj82339g5m 28ms
+[Browser connected] 412ms
+[Page loaded] 392ms
+[Session released] 40ms
+[RUN] 405/1000
+[Session created] provider=KERNEL_HEADFUL id=beqvjfjol8fyl6m1d2oo49zt 19ms
+[Browser connected] 362ms
+[Page loaded] 381ms
+[Session released] 39ms
+[RUN] 406/1000
+[Session created] provider=KERNEL_HEADFUL id=yg8z44h7r07l0da5446adns7 36ms
+[Browser connected] 555ms
+[Page loaded] 441ms
+[Session released] 41ms
+[RUN] 407/1000
+[Session created] provider=KERNEL_HEADFUL id=xgp53on2y45jrrt3grckn0nk 26ms
+[Browser connected] 371ms
+[Page loaded] 388ms
+[Session released] 40ms
+[RUN] 408/1000
+[Session created] provider=KERNEL_HEADFUL id=emy0acyaf7n5dmjkhewxorek 31ms
+[Browser connected] 380ms
+[Page loaded] 445ms
+[Session released] 39ms
+[RUN] 409/1000
+[Session created] provider=KERNEL_HEADFUL id=y76mwxo6qonqaz3inkh40equ 34ms
+[Browser connected] 442ms
+[Page loaded] 442ms
+[Session released] 35ms
+[RUN] 410/1000
+[Session created] provider=KERNEL_HEADFUL id=z56z116mwxkvu2l2o9yv8x1g 42ms
+[Browser connected] 371ms
+[Page loaded] 348ms
+[Session released] 42ms
+[RUN] 411/1000
+[Session created] provider=KERNEL_HEADFUL id=xe23ndffp8zsnh1k29ltpswr 19ms
+[Browser connected] 313ms
+[Page loaded] 332ms
+[Session released] 43ms
+[RUN] 412/1000
+[Session created] provider=KERNEL_HEADFUL id=ulph8595udy9ma405mpnexwr 19ms
+[Browser connected] 397ms
+[Page loaded] 354ms
+[Session released] 36ms
+[RUN] 413/1000
+[Session created] provider=KERNEL_HEADFUL id=tyh2hp6y0m8h5bhwzi2oowe0 19ms
+[Browser connected] 375ms
+[Page loaded] 345ms
+[Session released] 30ms
+[RUN] 414/1000
+[Session created] provider=KERNEL_HEADFUL id=u5aastgp7a6px5ogb9tunrnl 23ms
+[Browser connected] 399ms
+[Page loaded] 504ms
+[Session released] 34ms
+[RUN] 415/1000
+[Session created] provider=KERNEL_HEADFUL id=txdw63kaitpvln0v2aqmf1lb 25ms
+[Browser connected] 420ms
+[Page loaded] 472ms
+[Session released] 38ms
+[RUN] 416/1000
+[Session created] provider=KERNEL_HEADFUL id=ray0f36mee0fddl2ndj70k5d 20ms
+[Browser connected] 463ms
+[Page loaded] 425ms
+[Session released] 37ms
+[RUN] 417/1000
+[Session created] provider=KERNEL_HEADFUL id=ovcqa0epq5ai6xfgl1dbu6fr 38ms
+[Browser connected] 413ms
+[Page loaded] 412ms
+[Session released] 36ms
+[RUN] 418/1000
+[Session created] provider=KERNEL_HEADFUL id=vq1tird66brnjbq4j5yx5iwi 28ms
+[Browser connected] 404ms
+[Page loaded] 417ms
+[Session released] 38ms
+[RUN] 419/1000
+[Session created] provider=KERNEL_HEADFUL id=cndenbbcogoix7nxot5rwowl 34ms
+[Browser connected] 432ms
+[Page loaded] 402ms
+[Session released] 60ms
+[RUN] 420/1000
+[Session created] provider=KERNEL_HEADFUL id=w0d61tysgvxdsk6cndbrl5x6 35ms
+[Browser connected] 474ms
+[Page loaded] 455ms
+[Session released] 33ms
+[RUN] 421/1000
+[Session created] provider=KERNEL_HEADFUL id=cvhhkzbnrqfgpjmquoi0m0je 25ms
+[Browser connected] 374ms
+[Page loaded] 357ms
+[Session released] 39ms
+[RUN] 422/1000
+[Session created] provider=KERNEL_HEADFUL id=vm5jyhpn78sdqn8py7woegc0 29ms
+[Browser connected] 417ms
+[Page loaded] 381ms
+[Session released] 42ms
+[RUN] 423/1000
+[Session created] provider=KERNEL_HEADFUL id=hg9pw2a7d6o1rh692rfksqq5 20ms
+[Browser connected] 388ms
+[Page loaded] 357ms
+[Session released] 41ms
+[RUN] 424/1000
+[Session created] provider=KERNEL_HEADFUL id=mkxsaaus9oqtrdyije7duatj 20ms
+[Browser connected] 292ms
+[Page loaded] 415ms
+[Session released] 39ms
+[RUN] 425/1000
+[Session created] provider=KERNEL_HEADFUL id=p76r2f1f2g719qkw2yj68a7c 30ms
+[Browser connected] 354ms
+[Page loaded] 495ms
+[Session released] 42ms
+[RUN] 426/1000
+[Session created] provider=KERNEL_HEADFUL id=anhaphv10sdm0df2kzqirpi0 21ms
+[Browser connected] 400ms
+[Page loaded] 494ms
+[Session released] 39ms
+[RUN] 427/1000
+[Session created] provider=KERNEL_HEADFUL id=jorum2hwn23m2ua153dq4b4f 23ms
+[Browser connected] 568ms
+[Page loaded] 564ms
+[Session released] 37ms
+[RUN] 428/1000
+[Session created] provider=KERNEL_HEADFUL id=vwcs9dsorse1lvpcfdfjzpqu 43ms
+[Browser connected] 378ms
+[Page loaded] 410ms
+[Session released] 45ms
+[RUN] 429/1000
+[Session created] provider=KERNEL_HEADFUL id=yfdxs4vqjfjdm6ab4pzn2x7m 25ms
+[Browser connected] 344ms
+[Page loaded] 307ms
+[Session released] 36ms
+[RUN] 430/1000
+[Session created] provider=KERNEL_HEADFUL id=cakgxvtro3bc11emh5hby0w3 27ms
+[Browser connected] 379ms
+[Page loaded] 395ms
+[Session released] 37ms
+[RUN] 431/1000
+[Session created] provider=KERNEL_HEADFUL id=qrhc04x0wl9wafmx8twen5wr 49ms
+[Browser connected] 378ms
+[Page loaded] 420ms
+[Session released] 39ms
+[RUN] 432/1000
+[Session created] provider=KERNEL_HEADFUL id=jszh9txt5o2xbfc86herget7 23ms
+[Browser connected] 393ms
+[Page loaded] 428ms
+[Session released] 36ms
+[RUN] 433/1000
+[Session created] provider=KERNEL_HEADFUL id=xc8u1be2zp0we4z8econpwky 27ms
+[Browser connected] 428ms
+[Page loaded] 476ms
+[Session released] 39ms
+[RUN] 434/1000
+[Session created] provider=KERNEL_HEADFUL id=t1744i8t92wxvm2anid6769s 26ms
+[Browser connected] 339ms
+[Page loaded] 461ms
+[Session released] 39ms
+[RUN] 435/1000
+[Session created] provider=KERNEL_HEADFUL id=nytigldf02vpi8hn634bntwo 19ms
+[Browser connected] 567ms
+[Page loaded] 727ms
+[Session released] 39ms
+[RUN] 436/1000
+[Session created] provider=KERNEL_HEADFUL id=smxsevtd90bml691x3lemmvi 36ms
+[Browser connected] 383ms
+[Page loaded] 363ms
+[Session released] 41ms
+[RUN] 437/1000
+[Session created] provider=KERNEL_HEADFUL id=r4iv5hx5ql7gmv6jq3cjhjcl 45ms
+[Browser connected] 325ms
+[Page loaded] 376ms
+[Session released] 37ms
+[RUN] 438/1000
+[Session created] provider=KERNEL_HEADFUL id=fommvgzs9nfryxdruqjpdvim 35ms
+[Browser connected] 374ms
+[Page loaded] 375ms
+[Session released] 38ms
+[RUN] 439/1000
+[Session created] provider=KERNEL_HEADFUL id=c1th2yga3z1pd2ncrmd3o9py 32ms
+[Browser connected] 331ms
+[Page loaded] 368ms
+[Session released] 38ms
+[RUN] 440/1000
+[Session created] provider=KERNEL_HEADFUL id=jotkmopmgml4hf6egtdgaph2 30ms
+[Browser connected] 373ms
+[Page loaded] 383ms
+[Session released] 39ms
+[RUN] 441/1000
+[Session created] provider=KERNEL_HEADFUL id=f4hcsal7csfjeyt75ke3gwec 24ms
+[Browser connected] 430ms
+[Page loaded] 358ms
+[Session released] 32ms
+[RUN] 442/1000
+[Session created] provider=KERNEL_HEADFUL id=tyvr73svzzpjd932mj1s15q7 22ms
+[Browser connected] 393ms
+[Page loaded] 352ms
+[Session released] 35ms
+[RUN] 443/1000
+[Session created] provider=KERNEL_HEADFUL id=ii7xwv4rckh884x9bs4m22n6 29ms
+[Browser connected] 300ms
+[Page loaded] 280ms
+[Session released] 50ms
+[RUN] 444/1000
+[Session created] provider=KERNEL_HEADFUL id=uce7nslbu7sqio4fj2zik2ns 26ms
+[Browser connected] 312ms
+[Page loaded] 308ms
+[Session released] 38ms
+[RUN] 445/1000
+[Session created] provider=KERNEL_HEADFUL id=gwox709ctm5z7r3hs1n245rl 20ms
+[Browser connected] 386ms
+[Page loaded] 508ms
+[Session released] 36ms
+[RUN] 446/1000
+[Session created] provider=KERNEL_HEADFUL id=ga6y6h8si4eg4crjb94d5m5j 20ms
+[Browser connected] 403ms
+[Page loaded] 378ms
+[Session released] 42ms
+[RUN] 447/1000
+[Session created] provider=KERNEL_HEADFUL id=mnfhhg7l23s3vvqo4ue7zamq 29ms
+[Browser connected] 382ms
+[Page loaded] 500ms
+[Session released] 36ms
+[RUN] 448/1000
+[Session created] provider=KERNEL_HEADFUL id=acokm2c2n8qsolqacwgtvj6g 23ms
+[Browser connected] 458ms
+[Page loaded] 476ms
+[Session released] 46ms
+[RUN] 449/1000
+[Session created] provider=KERNEL_HEADFUL id=aohby03kvfco0yp30mtohano 30ms
+[Browser connected] 373ms
+[Page loaded] 321ms
+[Session released] 37ms
+[RUN] 450/1000
+[Session created] provider=KERNEL_HEADFUL id=ftt7ak9mgk6kbmwl0taujo7e 34ms
+[Browser connected] 565ms
+[Page loaded] 529ms
+[Session released] 44ms
+[RUN] 451/1000
+[Session created] provider=KERNEL_HEADFUL id=u0v904xth1vj433v8vm4aleg 32ms
+[Browser connected] 437ms
+[Page loaded] 362ms
+[Session released] 39ms
+[RUN] 452/1000
+[Session created] provider=KERNEL_HEADFUL id=hg32b1akn9bv8ji96plm8kgh 24ms
+[Browser connected] 433ms
+[Page loaded] 442ms
+[Session released] 36ms
+[RUN] 453/1000
+[Session created] provider=KERNEL_HEADFUL id=oiyrf7o04v3kv6p0t8bcdgnm 19ms
+[Browser connected] 391ms
+[Page loaded] 372ms
+[Session released] 42ms
+[RUN] 454/1000
+[Session created] provider=KERNEL_HEADFUL id=edafuhxie7aw0bqbzg3xqzzo 23ms
+[Browser connected] 421ms
+[Page loaded] 470ms
+[Session released] 40ms
+[RUN] 455/1000
+[Session created] provider=KERNEL_HEADFUL id=c5f9i6jb8kqrxkswmyxn627s 30ms
+[Browser connected] 455ms
+[Page loaded] 482ms
+[Session released] 40ms
+[RUN] 456/1000
+[Session created] provider=KERNEL_HEADFUL id=g5uj35hz0sk44o4v85cs9tbe 19ms
+[Browser connected] 346ms
+[Page loaded] 370ms
+[Session released] 40ms
+[RUN] 457/1000
+[Session created] provider=KERNEL_HEADFUL id=b69x31zxosy0m5f68fo4e5um 47ms
+[Browser connected] 562ms
+[Page loaded] 685ms
+[Session released] 42ms
+[RUN] 458/1000
+[Session created] provider=KERNEL_HEADFUL id=dtkg0gcdzjznbhvl5evgll1h 20ms
+[Browser connected] 378ms
+[Page loaded] 409ms
+[Session released] 55ms
+[RUN] 459/1000
+[Session created] provider=KERNEL_HEADFUL id=jkgelqs64z8dyey3bez6ijnx 29ms
+[Browser connected] 449ms
+[Page loaded] 457ms
+[Session released] 35ms
+[RUN] 460/1000
+[Session created] provider=KERNEL_HEADFUL id=egvbxg1ifu0pzvhzc8gfnnf9 33ms
+[Browser connected] 371ms
+[Page loaded] 383ms
+[Session released] 40ms
+[RUN] 461/1000
+[Session created] provider=KERNEL_HEADFUL id=unwyvq9l42xyl9i0fsl2h7w3 23ms
+[Browser connected] 307ms
+[Page loaded] 840ms
+[Session released] 34ms
+[RUN] 462/1000
+[Session created] provider=KERNEL_HEADFUL id=sah16dm55syxxep2orrjs488 30ms
+[Browser connected] 283ms
+[Page loaded] 446ms
+[Session released] 38ms
+[RUN] 463/1000
+[Session created] provider=KERNEL_HEADFUL id=j71pl2fs2rl8s10og3qoth20 21ms
+[Browser connected] 294ms
+[Page loaded] 331ms
+[Session released] 36ms
+[RUN] 464/1000
+[Session created] provider=KERNEL_HEADFUL id=zyhxkomxzrz89pzzs8jx8qr4 20ms
+[Browser connected] 419ms
+[Page loaded] 424ms
+[Session released] 36ms
+[RUN] 465/1000
+[Session created] provider=KERNEL_HEADFUL id=a0lujaghvg6n4jza2iqs2ekm 29ms
+[Browser connected] 560ms
+[Page loaded] 474ms
+[Session released] 37ms
+[RUN] 466/1000
+[Session created] provider=KERNEL_HEADFUL id=lsxyx3vosi5a767ee1ids5yw 25ms
+[Browser connected] 340ms
+[Page loaded] 329ms
+[Session released] 38ms
+[RUN] 467/1000
+[Session created] provider=KERNEL_HEADFUL id=xzfldedjtot1sjqnvcnya7bd 28ms
+[Browser connected] 372ms
+[Page loaded] 361ms
+[Session released] 35ms
+[RUN] 468/1000
+[Session created] provider=KERNEL_HEADFUL id=eo23kgpxj4ei9kxzme8cnseb 18ms
+[Browser connected] 405ms
+[Page loaded] 501ms
+[Session released] 42ms
+[RUN] 469/1000
+[Session created] provider=KERNEL_HEADFUL id=a21mwetpycronm2hsizvgpmc 30ms
+[Browser connected] 324ms
+[Page loaded] 370ms
+[Session released] 40ms
+[RUN] 470/1000
+[Session created] provider=KERNEL_HEADFUL id=erlet25h77gulw3h7hp3md0h 41ms
+[Browser connected] 401ms
+[Page loaded] 396ms
+[Session released] 35ms
+[RUN] 471/1000
+[Session created] provider=KERNEL_HEADFUL id=b45rp5cr5jyidik1zzixc5mz 42ms
+[Browser connected] 377ms
+[Page loaded] 362ms
+[Session released] 43ms
+[RUN] 472/1000
+[Session created] provider=KERNEL_HEADFUL id=ifp7walsp43mupssigs0a6vb 18ms
+[Browser connected] 427ms
+[Page loaded] 308ms
+[Session released] 40ms
+[RUN] 473/1000
+[Session created] provider=KERNEL_HEADFUL id=wxgeutog7hmiwo723b0tyevp 29ms
+[Browser connected] 369ms
+[Page loaded] 397ms
+[Session released] 41ms
+[RUN] 474/1000
+[Session created] provider=KERNEL_HEADFUL id=vtjjzb4k30pwrwfi6n9jja9n 15ms
+[Browser connected] 3970ms
+[Page loaded] 504ms
+[Session released] 40ms
+[RUN] 475/1000
+[Session created] provider=KERNEL_HEADFUL id=gq2abh4ofjoi9orxlpx8weq3 23ms
+[Browser connected] 347ms
+[Page loaded] 283ms
+[Session released] 31ms
+[RUN] 476/1000
+[Session created] provider=KERNEL_HEADFUL id=k3c2doodfko4ku5z219eaogq 37ms
+[Browser connected] 412ms
+[Page loaded] 405ms
+[Session released] 42ms
+[RUN] 477/1000
+[Session created] provider=KERNEL_HEADFUL id=h0ajw9vaci2h12srx44hl40g 22ms
+[Browser connected] 366ms
+[Page loaded] 369ms
+[Session released] 35ms
+[RUN] 478/1000
+[Session created] provider=KERNEL_HEADFUL id=uaz3jxrco9xgvx0idlonhgvy 27ms
+[Browser connected] 423ms
+[Page loaded] 421ms
+[Session released] 40ms
+[RUN] 479/1000
+[Session created] provider=KERNEL_HEADFUL id=v59i75hl7srpvurtfyb7kh1r 30ms
+[Browser connected] 340ms
+[Page loaded] 432ms
+[Session released] 41ms
+[RUN] 480/1000
+[Session created] provider=KERNEL_HEADFUL id=zt6esb48xoierlrz81kz6coq 29ms
+[Browser connected] 395ms
+[Page loaded] 369ms
+[Session released] 38ms
+[RUN] 481/1000
+[Session created] provider=KERNEL_HEADFUL id=h6sc6glob7rqie1jvkdz4kmm 30ms
+[Browser connected] 355ms
+[Page loaded] 328ms
+[Session released] 42ms
+[RUN] 482/1000
+[Session created] provider=KERNEL_HEADFUL id=zn623ga4raxg96glrmf5yd4k 26ms
+[Browser connected] 325ms
+[Page loaded] 296ms
+[Session released] 44ms
+[RUN] 483/1000
+[Session created] provider=KERNEL_HEADFUL id=pe4g92xnp7j6ps15wlqszq48 27ms
+[Browser connected] 389ms
+[Page loaded] 376ms
+[Session released] 38ms
+[RUN] 484/1000
+[Session created] provider=KERNEL_HEADFUL id=k0saprc2aar5ec8clerpa6cg 31ms
+[Browser connected] 390ms
+[Page loaded] 351ms
+[Session released] 39ms
+[RUN] 485/1000
+[Session created] provider=KERNEL_HEADFUL id=i6flaixtlttqsxcxo3fx4w4t 30ms
+[Browser connected] 457ms
+[Page loaded] 446ms
+[Session released] 43ms
+[RUN] 486/1000
+[Session created] provider=KERNEL_HEADFUL id=esvi05vuty37yocp2ize6ylt 23ms
+[Browser connected] 396ms
+[Page loaded] 505ms
+[Session released] 32ms
+[RUN] 487/1000
+[Session created] provider=KERNEL_HEADFUL id=iwp29rlz1gegivmp7qfkrv7l 26ms
+[Browser connected] 394ms
+[Page loaded] 300ms
+[Session released] 38ms
+[RUN] 488/1000
+[Session created] provider=KERNEL_HEADFUL id=eyscpylu183lmu66aw50bmsz 29ms
+[Browser connected] 367ms
+[Page loaded] 308ms
+[Session released] 47ms
+[RUN] 489/1000
+[Session created] provider=KERNEL_HEADFUL id=c89nurna068um9cxpe7an4x8 34ms
+[Browser connected] 531ms
+[Page loaded] 512ms
+[Session released] 42ms
+[RUN] 490/1000
+[Session created] provider=KERNEL_HEADFUL id=ydldesbgqgsnxmgken0l9gvi 36ms
+[Browser connected] 403ms
+[Page loaded] 449ms
+[Session released] 38ms
+[RUN] 491/1000
+[Session created] provider=KERNEL_HEADFUL id=qiq7xrxjg5r7923aferftgd8 28ms
+[Browser connected] 375ms
+[Page loaded] 487ms
+[Session released] 32ms
+[RUN] 492/1000
+[Session created] provider=KERNEL_HEADFUL id=l5f83rsmzlif2pjic1sauwh0 31ms
+[Browser connected] 334ms
+[Page loaded] 523ms
+[Session released] 34ms
+[RUN] 493/1000
+[Session created] provider=KERNEL_HEADFUL id=sisrp0q7s13kr9bw9l34eiqm 30ms
+[Browser connected] 404ms
+[Page loaded] 526ms
+[Session released] 35ms
+[RUN] 494/1000
+[Session created] provider=KERNEL_HEADFUL id=kdyntzfnsq1ds9g5c5luvt4y 33ms
+[Browser connected] 423ms
+[Page loaded] 374ms
+[Session released] 37ms
+[RUN] 495/1000
+[Session created] provider=KERNEL_HEADFUL id=z81nj7tkupzuc7q6fmotlrd3 34ms
+[Browser connected] 367ms
+[Page loaded] 282ms
+[Session released] 40ms
+[RUN] 496/1000
+[Session created] provider=KERNEL_HEADFUL id=f3awbyn4wf09spl4ni8hi0ea 25ms
+[Browser connected] 357ms
+[Page loaded] 400ms
+[Session released] 39ms
+[RUN] 497/1000
+[Session created] provider=KERNEL_HEADFUL id=n6i918fqzaz9a5tmbg9tqjri 37ms
+[Browser connected] 419ms
+[Page loaded] 389ms
+[Session released] 33ms
+[RUN] 498/1000
+[Session created] provider=KERNEL_HEADFUL id=hgniqo9ewsqh2vmnnphh7yxu 26ms
+[Browser connected] 277ms
+[Page loaded] 274ms
+[Session released] 44ms
+[RUN] 499/1000
+[Session created] provider=KERNEL_HEADFUL id=nmkdj1c845usmwb5fjfmd9dd 51ms
+[Browser connected] 562ms
+[Page loaded] 455ms
+[Session released] 43ms
+[RUN] 500/1000
+[Session created] provider=KERNEL_HEADFUL id=cjiq4qtng936goujimsmf5qz 35ms
+[Browser connected] 410ms
+[Page loaded] 434ms
+[Session released] 44ms
+[RUN] 501/1000
+[Session created] provider=KERNEL_HEADFUL id=o8qhzyuggkkbrj2r87eyvbw7 33ms
+[Browser connected] 323ms
+[Page loaded] 416ms
+[Session released] 38ms
+[RUN] 502/1000
+[Session created] provider=KERNEL_HEADFUL id=vwm4pf70hqb6tll1546jlbwe 20ms
+[Browser connected] 398ms
+[Page loaded] 419ms
+[Session released] 36ms
+[RUN] 503/1000
+[Session created] provider=KERNEL_HEADFUL id=q9otcit8mys29x0c6y0gdhli 19ms
+[Browser connected] 429ms
+[Page loaded] 542ms
+[Session released] 32ms
+[RUN] 504/1000
+[Session created] provider=KERNEL_HEADFUL id=icwiw83kwk7nt1spux2oa92t 23ms
+[Browser connected] 369ms
+[Page loaded] 370ms
+[Session released] 45ms
+[RUN] 505/1000
+[Session created] provider=KERNEL_HEADFUL id=c1avz28fcmm0tpflz99v9twl 26ms
+[Browser connected] 359ms
+[Page loaded] 388ms
+[Session released] 31ms
+[RUN] 506/1000
+[Session created] provider=KERNEL_HEADFUL id=vdmysymly9oasn0n5yliyip9 34ms
+[Browser connected] 364ms
+[Page loaded] 404ms
+[Session released] 44ms
+[RUN] 507/1000
+[Session created] provider=KERNEL_HEADFUL id=ov9s2z2at7yjobauk8993k1k 27ms
+[Browser connected] 434ms
+[Page loaded] 375ms
+[Session released] 46ms
+[RUN] 508/1000
+[Session created] provider=KERNEL_HEADFUL id=d2qb7ady0u3bxy8dawl5mrms 25ms
+[Browser connected] 591ms
+[Page loaded] 463ms
+[Session released] 37ms
+[RUN] 509/1000
+[Session created] provider=KERNEL_HEADFUL id=e7kllhswibv1e3gdguv4gyvm 50ms
+[Browser connected] 404ms
+[Page loaded] 436ms
+[Session released] 44ms
+[RUN] 510/1000
+[Session created] provider=KERNEL_HEADFUL id=carlcfpgi4h8kvfnqse3yvfn 33ms
+[Browser connected] 374ms
+[Page loaded] 436ms
+[Session released] 46ms
+[RUN] 511/1000
+[Session created] provider=KERNEL_HEADFUL id=hmwcvzqhib0kcg7reeg7qegt 40ms
+[Browser connected] 296ms
+[Page loaded] 269ms
+[Session released] 31ms
+[RUN] 512/1000
+[Session created] provider=KERNEL_HEADFUL id=urpjsvifrt3q5sawsbic8425 30ms
+[Browser connected] 383ms
+[Page loaded] 380ms
+[Session released] 40ms
+[RUN] 513/1000
+[Session created] provider=KERNEL_HEADFUL id=g6yo1e7gtn61nsra3gjho9px 26ms
+[Browser connected] 481ms
+[Page loaded] 452ms
+[Session released] 38ms
+[RUN] 514/1000
+[Session created] provider=KERNEL_HEADFUL id=em82io9xtdxxnini8g2kvgvo 27ms
+[Browser connected] 396ms
+[Page loaded] 364ms
+[Session released] 35ms
+[RUN] 515/1000
+[Session created] provider=KERNEL_HEADFUL id=gssqppfhlhf8v591szc17cty 27ms
+[Browser connected] 472ms
+[Page loaded] 426ms
+[Session released] 44ms
+[RUN] 516/1000
+[Session created] provider=KERNEL_HEADFUL id=lnzzx1qv1sznjiqzgxyxs40y 34ms
+[Browser connected] 327ms
+[Page loaded] 404ms
+[Session released] 41ms
+[RUN] 517/1000
+[Session created] provider=KERNEL_HEADFUL id=l3yb72h0ghjf70htdxq4wouo 28ms
+[Browser connected] 436ms
+[Page loaded] 439ms
+[Session released] 38ms
+[RUN] 518/1000
+[Session created] provider=KERNEL_HEADFUL id=xo6km1yogfxg1xd4lehbsr9x 22ms
+[Browser connected] 421ms
+[Page loaded] 383ms
+[Session released] 35ms
+[RUN] 519/1000
+[Session created] provider=KERNEL_HEADFUL id=udhutfjspwcbgkx1j50fxw0x 28ms
+[Browser connected] 356ms
+[Page loaded] 299ms
+[Session released] 30ms
+[RUN] 520/1000
+[Session created] provider=KERNEL_HEADFUL id=zfp02d9iwxj6i4auqj7pwkbr 24ms
+[Browser connected] 393ms
+[Page loaded] 373ms
+[Session released] 40ms
+[RUN] 521/1000
+[Session created] provider=KERNEL_HEADFUL id=fiaw82ymtzf4iylr7sfzim3l 39ms
+[Browser connected] 372ms
+[Page loaded] 413ms
+[Session released] 43ms
+[RUN] 522/1000
+[Session created] provider=KERNEL_HEADFUL id=rhlyrt4608b7893eq696xhee 25ms
+[Browser connected] 407ms
+[Page loaded] 384ms
+[Session released] 42ms
+[RUN] 523/1000
+[Session created] provider=KERNEL_HEADFUL id=yhljayslvfwdl091iqj78oeq 29ms
+[Browser connected] 370ms
+[Page loaded] 415ms
+[Session released] 46ms
+[RUN] 524/1000
+[Session created] provider=KERNEL_HEADFUL id=ffqxff1v0teiqempaixgifzr 31ms
+[Browser connected] 397ms
+[Page loaded] 411ms
+[Session released] 37ms
+[RUN] 525/1000
+[Session created] provider=KERNEL_HEADFUL id=cxmodjttypyxttl7o1xm6g44 19ms
+[Browser connected] 388ms
+[Page loaded] 366ms
+[Session released] 37ms
+[RUN] 526/1000
+[Session created] provider=KERNEL_HEADFUL id=pujwjdcmxzfywb1ngwdbli00 38ms
+[Browser connected] 284ms
+[Page loaded] 371ms
+[Session released] 36ms
+[RUN] 527/1000
+[Session created] provider=KERNEL_HEADFUL id=gbqjo3msggn8zghzpjnm9w9v 21ms
+[Browser connected] 376ms
+[Page loaded] 368ms
+[Session released] 35ms
+[RUN] 528/1000
+[Session created] provider=KERNEL_HEADFUL id=rg11l49jjd1n6bfnrke4rv81 25ms
+[Browser connected] 396ms
+[Page loaded] 380ms
+[Session released] 38ms
+[RUN] 529/1000
+[Session created] provider=KERNEL_HEADFUL id=iyiy11xekksagelhygszoilz 37ms
+[Browser connected] 391ms
+[Page loaded] 393ms
+[Session released] 38ms
+[RUN] 530/1000
+[Session created] provider=KERNEL_HEADFUL id=o5cfb185lr6ey0hm70up3twt 51ms
+[Browser connected] 413ms
+[Page loaded] 380ms
+[Session released] 43ms
+[RUN] 531/1000
+[Session created] provider=KERNEL_HEADFUL id=qi40baffzlv5o3da8yr3ti18 24ms
+[Browser connected] 371ms
+[Page loaded] 404ms
+[Session released] 36ms
+[RUN] 532/1000
+[Session created] provider=KERNEL_HEADFUL id=fzfhgdh7wyr20k2qswsgqvld 53ms
+[Browser connected] 569ms
+[Page loaded] 913ms
+[Session released] 38ms
+[RUN] 533/1000
+[Session created] provider=KERNEL_HEADFUL id=agqei5hcxrnr6doye8tp4i4m 29ms
+[Browser connected] 358ms
+[Page loaded] 380ms
+[Session released] 33ms
+[RUN] 534/1000
+[Session created] provider=KERNEL_HEADFUL id=n5zcmbii69zxjqbkpmnece07 20ms
+[Browser connected] 558ms
+[Page loaded] 479ms
+[Session released] 40ms
+[RUN] 535/1000
+[Session created] provider=KERNEL_HEADFUL id=p36jznbxpu1fwfr94h76x3u7 26ms
+[Browser connected] 369ms
+[Page loaded] 392ms
+[Session released] 38ms
+[RUN] 536/1000
+[Session created] provider=KERNEL_HEADFUL id=b7nm4jnrddd4sh2kiggzdtvk 36ms
+[Browser connected] 418ms
+[Page loaded] 414ms
+[Session released] 36ms
+[RUN] 537/1000
+[Session created] provider=KERNEL_HEADFUL id=z7i50tmd8bua6lul1nxkknp9 23ms
+[Browser connected] 393ms
+[Page loaded] 367ms
+[Session released] 38ms
+[RUN] 538/1000
+[Session created] provider=KERNEL_HEADFUL id=xavdo47cm3q4u3j74e3o75dg 30ms
+[Browser connected] 299ms
+[Page loaded] 462ms
+[Session released] 41ms
+[RUN] 539/1000
+[Session created] provider=KERNEL_HEADFUL id=x3n0x13lpflfah30j9zvqyqt 20ms
+[Browser connected] 281ms
+[Page loaded] 274ms
+[Session released] 37ms
+[RUN] 540/1000
+[Session created] provider=KERNEL_HEADFUL id=cp7fo527gfg98mbjhof8kvwu 44ms
+[Browser connected] 531ms
+[Page loaded] 440ms
+[Session released] 44ms
+[RUN] 541/1000
+[Session created] provider=KERNEL_HEADFUL id=z7wmwmxsfn61yj9o20n2vmp5 41ms
+[Browser connected] 358ms
+[Page loaded] 350ms
+[Session released] 36ms
+[RUN] 542/1000
+[Session created] provider=KERNEL_HEADFUL id=ddtdyy4h94mlb31lwuz0qi6u 18ms
+[Browser connected] 348ms
+[Page loaded] 356ms
+[Session released] 43ms
+[RUN] 543/1000
+[Session created] provider=KERNEL_HEADFUL id=ekrfecho92wu82bpjucfrwyy 21ms
+[Browser connected] 591ms
+[Page loaded] 433ms
+[Session released] 40ms
+[RUN] 544/1000
+[Session created] provider=KERNEL_HEADFUL id=je6liwu2ciw8q8861xbsocyw 21ms
+[Browser connected] 328ms
+[Page loaded] 303ms
+[Session released] 37ms
+[RUN] 545/1000
+[Session created] provider=KERNEL_HEADFUL id=mw9h33lnv2go2auu9rum7dnm 29ms
+[Browser connected] 345ms
+[Page loaded] 369ms
+[Session released] 37ms
+[RUN] 546/1000
+[Session created] provider=KERNEL_HEADFUL id=kd3iu6tp9skl87jwvg2wx47j 46ms
+[Browser connected] 418ms
+[Page loaded] 371ms
+[Session released] 39ms
+[RUN] 547/1000
+[Session created] provider=KERNEL_HEADFUL id=e4rvluzn6gvtnl3x7se4vqqd 43ms
+[Browser connected] 401ms
+[Page loaded] 383ms
+[Session released] 44ms
+[RUN] 548/1000
+[Session created] provider=KERNEL_HEADFUL id=qiky06ki9454pqhrqs3mtt9w 28ms
+[Browser connected] 367ms
+[Page loaded] 447ms
+[Session released] 47ms
+[RUN] 549/1000
+[Session created] provider=KERNEL_HEADFUL id=b9yhkjrtaa7ckd5rt5funyoc 25ms
+[Browser connected] 409ms
+[Page loaded] 384ms
+[Session released] 33ms
+[RUN] 550/1000
+[Session created] provider=KERNEL_HEADFUL id=h945wfawdlkkc0zthheh9kiy 33ms
+[Browser connected] 486ms
+[Page loaded] 412ms
+[Session released] 43ms
+[RUN] 551/1000
+[Session created] provider=KERNEL_HEADFUL id=af39y3gfc2uwlu0rxf0bo2e9 41ms
+[Browser connected] 360ms
+[Page loaded] 313ms
+[Session released] 38ms
+[RUN] 552/1000
+[Session created] provider=KERNEL_HEADFUL id=qav9xl566fgmm3m6x42f0vtw 48ms
+[Browser connected] 405ms
+[Page loaded] 388ms
+[Session released] 36ms
+[RUN] 553/1000
+[Session created] provider=KERNEL_HEADFUL id=wt3muciqduvi2hxo2sefi62i 28ms
+[Browser connected] 431ms
+[Page loaded] 374ms
+[Session released] 40ms
+[RUN] 554/1000
+[Session created] provider=KERNEL_HEADFUL id=cw3kiug4d43vqmgte1vjgerm 19ms
+[Browser connected] 390ms
+[Page loaded] 363ms
+[Session released] 57ms
+[RUN] 555/1000
+[Session created] provider=KERNEL_HEADFUL id=ctasensjdan7648xhvitl4w4 22ms
+[Browser connected] 392ms
+[Page loaded] 431ms
+[Session released] 43ms
+[RUN] 556/1000
+[Session created] provider=KERNEL_HEADFUL id=dpv2twgzgcpx4icnoxw2duu4 20ms
+[Browser connected] 435ms
+[Page loaded] 396ms
+[Session released] 42ms
+[RUN] 557/1000
+[Session created] provider=KERNEL_HEADFUL id=cxs4c6jdrgxsnquhfaoca76g 30ms
+[Browser connected] 343ms
+[Page loaded] 371ms
+[Session released] 37ms
+[RUN] 558/1000
+[Session created] provider=KERNEL_HEADFUL id=maujosivmvdsp1sjjc3tsx6o 24ms
+[Browser connected] 295ms
+[Page loaded] 300ms
+[Session released] 62ms
+[RUN] 559/1000
+[Session created] provider=KERNEL_HEADFUL id=inwm1t98ys5kdetzkoxvhw0q 27ms
+[Browser connected] 427ms
+[Page loaded] 494ms
+[Session released] 39ms
+[RUN] 560/1000
+[Session created] provider=KERNEL_HEADFUL id=o5w32pzqjdoyrr4dkzmhadq9 22ms
+[Browser connected] 437ms
+[Page loaded] 411ms
+[Session released] 45ms
+[RUN] 561/1000
+[Session created] provider=KERNEL_HEADFUL id=d30qeuncgnppac6zgsfwfvm4 36ms
+[Browser connected] 399ms
+[Page loaded] 370ms
+[Session released] 40ms
+[RUN] 562/1000
+[Session created] provider=KERNEL_HEADFUL id=qgiw0xz6x84iac9gy7irrdrz 33ms
+[Browser connected] 346ms
+[Page loaded] 351ms
+[Session released] 42ms
+[RUN] 563/1000
+[Session created] provider=KERNEL_HEADFUL id=o1oc3yww28lzb68oyz2ipw0p 28ms
+[Browser connected] 412ms
+[Page loaded] 391ms
+[Session released] 49ms
+[RUN] 564/1000
+[Session created] provider=KERNEL_HEADFUL id=ot35fsl1u6kegnr1uop6f1hw 32ms
+[Browser connected] 333ms
+[Page loaded] 331ms
+[Session released] 44ms
+[RUN] 565/1000
+[Session created] provider=KERNEL_HEADFUL id=tyg0dgd7mmnsps8u7sv6shgl 23ms
+[Browser connected] 436ms
+[Page loaded] 525ms
+[Session released] 42ms
+[RUN] 566/1000
+[Session created] provider=KERNEL_HEADFUL id=uoncnlhp50afid2mbip0r6xu 31ms
+[Browser connected] 310ms
+[Page loaded] 363ms
+[Session released] 35ms
+[RUN] 567/1000
+[Session created] provider=KERNEL_HEADFUL id=epxczj6yr9nn3l7490jpbthu 34ms
+[Browser connected] 338ms
+[Page loaded] 320ms
+[Session released] 49ms
+[RUN] 568/1000
+[Session created] provider=KERNEL_HEADFUL id=ffub4gschn0go7aaxwlgffxy 44ms
+[Browser connected] 383ms
+[Page loaded] 433ms
+[Session released] 45ms
+[RUN] 569/1000
+[Session created] provider=KERNEL_HEADFUL id=lgd5x5xjw8uovhwo9xv8qyzx 28ms
+[Browser connected] 422ms
+[Page loaded] 400ms
+[Session released] 44ms
+[RUN] 570/1000
+[Session created] provider=KERNEL_HEADFUL id=x6akvfofajhu5tgjep0vx7d8 21ms
+[Browser connected] 387ms
+[Page loaded] 400ms
+[Session released] 42ms
+[RUN] 571/1000
+[Session created] provider=KERNEL_HEADFUL id=h5tee3hol2xac0bgx93wujk9 23ms
+[Browser connected] 4033ms
+[Page loaded] 450ms
+[Session released] 51ms
+[RUN] 572/1000
+[Session created] provider=KERNEL_HEADFUL id=l5a1d96j65hecjmy2cvky1hu 11ms
+[Browser connected] 354ms
+[Page loaded] 364ms
+[Session released] 38ms
+[RUN] 573/1000
+[Session created] provider=KERNEL_HEADFUL id=b2g5oj0bdqkeyx0spjbhyjo1 29ms
+[Browser connected] 332ms
+[Page loaded] 362ms
+[Session released] 37ms
+[RUN] 574/1000
+[Session created] provider=KERNEL_HEADFUL id=etctr3yfrpojb8z4ug155kmz 27ms
+[Browser connected] 414ms
+[Page loaded] 366ms
+[Session released] 40ms
+[RUN] 575/1000
+[Session created] provider=KERNEL_HEADFUL id=wfi2mgem8z6vxq97ur6kcejj 29ms
+[Browser connected] 417ms
+[Page loaded] 456ms
+[Session released] 36ms
+[RUN] 576/1000
+[Session created] provider=KERNEL_HEADFUL id=df2n8craumi6vv3mn1hu8zhv 30ms
+[Browser connected] 431ms
+[Page loaded] 502ms
+[Session released] 36ms
+[RUN] 577/1000
+[Session created] provider=KERNEL_HEADFUL id=jvkn8ysmj3mkggyteaydm709 22ms
+[Browser connected] 392ms
+[Page loaded] 374ms
+[Session released] 42ms
+[RUN] 578/1000
+[Session created] provider=KERNEL_HEADFUL id=ut5sk1dp7vq3nqoe3pih1z24 41ms
+[Browser connected] 439ms
+[Page loaded] 436ms
+[Session released] 42ms
+[RUN] 579/1000
+[Session created] provider=KERNEL_HEADFUL id=o96rlp17k6whqqdwav4sk5ga 38ms
+[Browser connected] 370ms
+[Page loaded] 386ms
+[Session released] 36ms
+[RUN] 580/1000
+[Session created] provider=KERNEL_HEADFUL id=l3t1gwk197iyvjx50oiyis81 40ms
+[Browser connected] 394ms
+[Page loaded] 340ms
+[Session released] 43ms
+[RUN] 581/1000
+[Session created] provider=KERNEL_HEADFUL id=spp9pq9lm7fhjqagcsanylom 30ms
+[Browser connected] 414ms
+[Page loaded] 362ms
+[Session released] 46ms
+[RUN] 582/1000
+[Session created] provider=KERNEL_HEADFUL id=nfu1ojhy75jv0n7tfosz2eof 31ms
+[Browser connected] 548ms
+[Page loaded] 479ms
+[Session released] 30ms
+[RUN] 583/1000
+[Session created] provider=KERNEL_HEADFUL id=flbemmxm2jr9tuo3jk5mcnvx 31ms
+[Browser connected] 450ms
+[Page loaded] 428ms
+[Session released] 38ms
+[RUN] 584/1000
+[Session created] provider=KERNEL_HEADFUL id=x52buxtkcvu9cypfoiie9rm1 31ms
+[Browser connected] 495ms
+[Page loaded] 570ms
+[Session released] 43ms
+[RUN] 585/1000
+[Session created] provider=KERNEL_HEADFUL id=v7d7jbqx1x8qjjtcg66dofn7 27ms
+[Browser connected] 366ms
+[Page loaded] 387ms
+[Session released] 44ms
+[RUN] 586/1000
+[Session created] provider=KERNEL_HEADFUL id=yefs3whux5wta05li4fgopeh 39ms
+[Browser connected] 396ms
+[Page loaded] 390ms
+[Session released] 43ms
+[RUN] 587/1000
+[Session created] provider=KERNEL_HEADFUL id=klpyab8m8n5a8751heq6kxtq 214ms
+[Browser connected] 440ms
+[Page loaded] 539ms
+[Session released] 43ms
+[RUN] 588/1000
+[Session created] provider=KERNEL_HEADFUL id=w64h9m4pksux0osusx5k0min 19ms
+[Browser connected] 410ms
+[Page loaded] 348ms
+[Session released] 43ms
+[RUN] 589/1000
+[Session created] provider=KERNEL_HEADFUL id=lfj208fl8yxo5kfqsrq09u27 17ms
+[Browser connected] 390ms
+[Page loaded] 429ms
+[Session released] 222ms
+[RUN] 590/1000
+[Session created] provider=KERNEL_HEADFUL id=oix64n798mk7x4jya448n9j4 30ms
+[Browser connected] 438ms
+[Page loaded] 410ms
+[Session released] 47ms
+[RUN] 591/1000
+[Session created] provider=KERNEL_HEADFUL id=ovewnu50dwgpnl2cgbqv1byw 37ms
+[Browser connected] 441ms
+[Page loaded] 348ms
+[Session released] 37ms
+[RUN] 592/1000
+[Session created] provider=KERNEL_HEADFUL id=rurwtnt1syjd4sjiwboz6l6l 28ms
+[Browser connected] 397ms
+[Page loaded] 503ms
+[Session released] 38ms
+[RUN] 593/1000
+[Session created] provider=KERNEL_HEADFUL id=jlxhnz7tvo4bils6lktxcu8z 25ms
+[Browser connected] 397ms
+[Page loaded] 490ms
+[Session released] 47ms
+[RUN] 594/1000
+[Session created] provider=KERNEL_HEADFUL id=uhm52eybyby9k1q37ulh3fvy 26ms
+[Browser connected] 637ms
+[Page loaded] 514ms
+[Session released] 28ms
+[RUN] 595/1000
+[Session created] provider=KERNEL_HEADFUL id=k9n838s3tc870jrqmnans997 31ms
+[Browser connected] 489ms
+[Page loaded] 400ms
+[Session released] 47ms
+[RUN] 596/1000
+[Session created] provider=KERNEL_HEADFUL id=n9l0vtjl6wr2g23ft9tyrd8r 33ms
+[Browser connected] 378ms
+[Page loaded] 441ms
+[Session released] 37ms
+[RUN] 597/1000
+[Session created] provider=KERNEL_HEADFUL id=f5pixpty01p6wkg1anmgt0vr 26ms
+[Browser connected] 427ms
+[Page loaded] 396ms
+[Session released] 41ms
+[RUN] 598/1000
+[Session created] provider=KERNEL_HEADFUL id=ui8zbfeh5wm64yritobz1yw9 60ms
+[Browser connected] 392ms
+[Page loaded] 373ms
+[Session released] 42ms
+[RUN] 599/1000
+[Session created] provider=KERNEL_HEADFUL id=s9t5pdn4i6uc23v9otpnkfel 27ms
+[Browser connected] 631ms
+[Page loaded] 553ms
+[Session released] 42ms
+[RUN] 600/1000
+[Session created] provider=KERNEL_HEADFUL id=wxnxtw9iy32h5w0z1y58bte9 23ms
+[Browser connected] 713ms
+[Page loaded] 551ms
+[Session released] 43ms
+[RUN] 601/1000
+[Session created] provider=KERNEL_HEADFUL id=hjtcs3rgiewywaxu17f4o3ma 33ms
+[Browser connected] 723ms
+[Page loaded] 526ms
+[Session released] 32ms
+[RUN] 602/1000
+[Session created] provider=KERNEL_HEADFUL id=skndpq5znm3qqxfjpwv2n0w9 40ms
+[Browser connected] 675ms
+[Page loaded] 536ms
+[Session released] 33ms
+[RUN] 603/1000
+[Session created] provider=KERNEL_HEADFUL id=vkhoc19x7ijnjynhurhup43s 23ms
+[Browser connected] 387ms
+[Page loaded] 364ms
+[Session released] 39ms
+[RUN] 604/1000
+[Session created] provider=KERNEL_HEADFUL id=cibeszrr89q2331xe74bztfy 47ms
+[Browser connected] 412ms
+[Page loaded] 413ms
+[Session released] 36ms
+[RUN] 605/1000
+[Session created] provider=KERNEL_HEADFUL id=w802vkydoys75cg6hmwcse5b 33ms
+[Browser connected] 414ms
+[Page loaded] 384ms
+[Session released] 38ms
+[RUN] 606/1000
+[Session created] provider=KERNEL_HEADFUL id=xr2cgf5azkur2axxp2zlmldl 34ms
+[Browser connected] 410ms
+[Page loaded] 387ms
+[Session released] 38ms
+[RUN] 607/1000
+[Session created] provider=KERNEL_HEADFUL id=no3dxal8hy03jbq0i18div0a 26ms
+[Browser connected] 551ms
+[Page loaded] 573ms
+[Session released] 34ms
+[RUN] 608/1000
+[Session created] provider=KERNEL_HEADFUL id=zndwiwbcqvi4w7fxiy5n1qws 27ms
+[Browser connected] 428ms
+[Page loaded] 418ms
+[Session released] 44ms
+[RUN] 609/1000
+[Session created] provider=KERNEL_HEADFUL id=ktyomoq0w99j1ra4atlgka5h 32ms
+[Browser connected] 399ms
+[Page loaded] 364ms
+[Session released] 33ms
+[RUN] 610/1000
+[Session created] provider=KERNEL_HEADFUL id=rofppj1jnl33c22x0k1fzak6 30ms
+[Browser connected] 414ms
+[Page loaded] 453ms
+[Session released] 45ms
+[RUN] 611/1000
+[Session created] provider=KERNEL_HEADFUL id=cxxgoshj4g4qxzwcpf1voxcv 31ms
+[Browser connected] 577ms
+[Page loaded] 481ms
+[Session released] 38ms
+[RUN] 612/1000
+[Session created] provider=KERNEL_HEADFUL id=m6qxkfz0jxm6ca7jfjpcdd53 26ms
+[Browser connected] 595ms
+[Page loaded] 504ms
+[Session released] 36ms
+[RUN] 613/1000
+[Session created] provider=KERNEL_HEADFUL id=t5tg5nlqfxa61cyz3cbkrwwp 36ms
+[Browser connected] 565ms
+[Page loaded] 465ms
+[Session released] 35ms
+[RUN] 614/1000
+[Session created] provider=KERNEL_HEADFUL id=a88lw95nk982l5hgqkxjrl93 29ms
+[Browser connected] 388ms
+[Page loaded] 398ms
+[Session released] 44ms
+[RUN] 615/1000
+[Session created] provider=KERNEL_HEADFUL id=m4rrtlxilrwwe0ybneyvjh7k 31ms
+[Browser connected] 552ms
+[Page loaded] 500ms
+[Session released] 45ms
+[RUN] 616/1000
+[Session created] provider=KERNEL_HEADFUL id=gf9qhjq9fw1ctmarfgbft59i 33ms
+[Browser connected] 440ms
+[Page loaded] 507ms
+[Session released] 57ms
+[RUN] 617/1000
+[Session created] provider=KERNEL_HEADFUL id=trz4sdd74n2e5xos2l6dcwoc 22ms
+[Browser connected] 396ms
+[Page loaded] 491ms
+[Session released] 45ms
+[RUN] 618/1000
+[Session created] provider=KERNEL_HEADFUL id=n6qtp1ykfhif3rsbb27l1pnq 28ms
+[Browser connected] 384ms
+[Page loaded] 674ms
+[Session released] 40ms
+[RUN] 619/1000
+[Session created] provider=KERNEL_HEADFUL id=bf5nevbpp4bcavo6jezwpb9o 30ms
+[Browser connected] 419ms
+[Page loaded] 499ms
+[Session released] 37ms
+[RUN] 620/1000
+[Session created] provider=KERNEL_HEADFUL id=kyuhb4mg9cgb3ta0glacjxwy 25ms
+[Browser connected] 345ms
+[Page loaded] 311ms
+[Session released] 45ms
+[RUN] 621/1000
+[Session created] provider=KERNEL_HEADFUL id=ntjk0gq1dsakt88d8anogtm6 28ms
+[Browser connected] 347ms
+[Page loaded] 311ms
+[Session released] 44ms
+[RUN] 622/1000
+[Session created] provider=KERNEL_HEADFUL id=nmfztd4d0um6ns573lx4blek 22ms
+[Browser connected] 355ms
+[Page loaded] 327ms
+[Session released] 38ms
+[RUN] 623/1000
+[Session created] provider=KERNEL_HEADFUL id=ywzjp9zn2294lnggz58zzhcb 47ms
+[Browser connected] 599ms
+[Page loaded] 499ms
+[Session released] 45ms
+[RUN] 624/1000
+[Session created] provider=KERNEL_HEADFUL id=xxzguph1mw60sqbtvvemramx 30ms
+[Browser connected] 363ms
+[Page loaded] 377ms
+[Session released] 35ms
+[RUN] 625/1000
+[Session created] provider=KERNEL_HEADFUL id=ra2pltf2r59w3uew45ut412y 17ms
+[Browser connected] 373ms
+[Page loaded] 409ms
+[Session released] 37ms
+[RUN] 626/1000
+[Session created] provider=KERNEL_HEADFUL id=q997e18trw9o9drdd5aadsfu 25ms
+[Browser connected] 412ms
+[Page loaded] 382ms
+[Session released] 39ms
+[RUN] 627/1000
+[Session created] provider=KERNEL_HEADFUL id=eginj9v6v76a990oif5j3mjc 24ms
+[Browser connected] 417ms
+[Page loaded] 405ms
+[Session released] 35ms
+[RUN] 628/1000
+[Session created] provider=KERNEL_HEADFUL id=qsyo1v7pm583b1ezyv7td6tk 25ms
+[Browser connected] 472ms
+[Page loaded] 467ms
+[Session released] 48ms
+[RUN] 629/1000
+[Session created] provider=KERNEL_HEADFUL id=eu1a3kc1rd6oducuuol7a974 24ms
+[Browser connected] 469ms
+[Page loaded] 567ms
+[Session released] 35ms
+[RUN] 630/1000
+[Session created] provider=KERNEL_HEADFUL id=z3lvamudktgb4rq1h1775682 22ms
+[Browser connected] 367ms
+[Page loaded] 302ms
+[Session released] 39ms
+[RUN] 631/1000
+[Session created] provider=KERNEL_HEADFUL id=vfc7id73ypco5b0p6ba2tfcg 25ms
+[Browser connected] 381ms
+[Page loaded] 427ms
+[Session released] 42ms
+[RUN] 632/1000
+[Session created] provider=KERNEL_HEADFUL id=lw5rp2k67es9qi0tutdp1zqy 25ms
+[Browser connected] 345ms
+[Page loaded] 353ms
+[Session released] 42ms
+[RUN] 633/1000
+[Session created] provider=KERNEL_HEADFUL id=otx8hax1vuekbgc7pmtex2t3 32ms
+[Browser connected] 393ms
+[Page loaded] 426ms
+[Session released] 38ms
+[RUN] 634/1000
+[Session created] provider=KERNEL_HEADFUL id=aeo9hqwsnbo987k473acd4f5 29ms
+[Browser connected] 367ms
+[Page loaded] 347ms
+[Session released] 45ms
+[RUN] 635/1000
+[Session created] provider=KERNEL_HEADFUL id=m94655l6f7zb3dt5k4gu7f3i 22ms
+[Browser connected] 402ms
+[Page loaded] 415ms
+[Session released] 40ms
+[RUN] 636/1000
+[Session created] provider=KERNEL_HEADFUL id=haqn10yh0p7h8k57vobc3wkf 29ms
+[Browser connected] 366ms
+[Page loaded] 468ms
+[Session released] 41ms
+[RUN] 637/1000
+[Session created] provider=KERNEL_HEADFUL id=exsv152ue5pck2x0wizxjfb0 25ms
+[Browser connected] 574ms
+[Page loaded] 485ms
+[Session released] 39ms
+[RUN] 638/1000
+[Session created] provider=KERNEL_HEADFUL id=b7jy6t6jl51u78h16hzanp3d 23ms
+[Browser connected] 396ms
+[Page loaded] 383ms
+[Session released] 41ms
+[RUN] 639/1000
+[Session created] provider=KERNEL_HEADFUL id=bn2ng09uw6zks130gay65fqj 20ms
+[Browser connected] 447ms
+[Page loaded] 371ms
+[Session released] 45ms
+[RUN] 640/1000
+[Session created] provider=KERNEL_HEADFUL id=m6sm29u4rioq43s02iy4ym8v 37ms
+[Browser connected] 381ms
+[Page loaded] 307ms
+[Session released] 30ms
+[RUN] 641/1000
+[Session created] provider=KERNEL_HEADFUL id=imv002hktmepkxhi0do1j5da 23ms
+[Browser connected] 421ms
+[Page loaded] 357ms
+[Session released] 41ms
+[RUN] 642/1000
+[Session created] provider=KERNEL_HEADFUL id=gu7ozfxn36s9ifeev9zvdzwi 27ms
+[Browser connected] 407ms
+[Page loaded] 446ms
+[Session released] 44ms
+[RUN] 643/1000
+[Session created] provider=KERNEL_HEADFUL id=rdqozn1lop2conx2jqvwe6ms 26ms
+[Browser connected] 355ms
+[Page loaded] 326ms
+[Session released] 31ms
+[RUN] 644/1000
+[Session created] provider=KERNEL_HEADFUL id=rj7ge16n5xqdb7l5lnsu8q8s 29ms
+[Browser connected] 356ms
+[Page loaded] 324ms
+[Session released] 39ms
+[RUN] 645/1000
+[Session created] provider=KERNEL_HEADFUL id=pyx2pzqmkgpv5l9t7edn4r5p 17ms
+[Browser connected] 397ms
+[Page loaded] 355ms
+[Session released] 42ms
+[RUN] 646/1000
+[Session created] provider=KERNEL_HEADFUL id=tlbn0lt95oaztkwo9yhnpvbv 21ms
+[Browser connected] 393ms
+[Page loaded] 318ms
+[Session released] 40ms
+[RUN] 647/1000
+[Session created] provider=KERNEL_HEADFUL id=yof0n3ml5n3d4oc8mkp0qqef 21ms
+[Browser connected] 376ms
+[Page loaded] 362ms
+[Session released] 38ms
+[RUN] 648/1000
+[Session created] provider=KERNEL_HEADFUL id=scj6o6oef7a2kidat6fx7j3t 22ms
+[Browser connected] 361ms
+[Page loaded] 350ms
+[Session released] 37ms
+[RUN] 649/1000
+[Session created] provider=KERNEL_HEADFUL id=x2elj2s195cckmzqc41qoxox 34ms
+[Browser connected] 398ms
+[Page loaded] 589ms
+[Session released] 43ms
+[RUN] 650/1000
+[Session created] provider=KERNEL_HEADFUL id=twgj7kh12u9mw84ruixwpnb9 20ms
+[Browser connected] 393ms
+[Page loaded] 337ms
+[Session released] 38ms
+[RUN] 651/1000
+[Session created] provider=KERNEL_HEADFUL id=f0yw8zmthwe1h6wu57yygzwj 42ms
+[Browser connected] 423ms
+[Page loaded] 409ms
+[Session released] 61ms
+[RUN] 652/1000
+[Session created] provider=KERNEL_HEADFUL id=aik79sehgc4i7w2j63x0j3m7 33ms
+[Browser connected] 381ms
+[Page loaded] 622ms
+[Session released] 37ms
+[RUN] 653/1000
+[Session created] provider=KERNEL_HEADFUL id=lmubzzaewgjy0jc8owqef181 46ms
+[Browser connected] 392ms
+[Page loaded] 373ms
+[Session released] 30ms
+[RUN] 654/1000
+[Session created] provider=KERNEL_HEADFUL id=jvlepoz323axowt6rpr9y0c4 25ms
+[Browser connected] 590ms
+[Page loaded] 486ms
+[Session released] 43ms
+[RUN] 655/1000
+[Session created] provider=KERNEL_HEADFUL id=zc8rnp84j11ac9n8c7wt9wx5 27ms
+[Browser connected] 371ms
+[Page loaded] 308ms
+[Session released] 42ms
+[RUN] 656/1000
+[Session created] provider=KERNEL_HEADFUL id=nxqefknajpgseuwgduzzr6mj 28ms
+[Browser connected] 557ms
+[Page loaded] 462ms
+[Session released] 34ms
+[RUN] 657/1000
+[Session created] provider=KERNEL_HEADFUL id=n5bbbcqw5uh5uaaepxaivzpd 26ms
+[Browser connected] 403ms
+[Page loaded] 372ms
+[Session released] 35ms
+[RUN] 658/1000
+[Session created] provider=KERNEL_HEADFUL id=slepr4bqv2vuxh1rs3o4w9dr 21ms
+[Browser connected] 359ms
+[Page loaded] 448ms
+[Session released] 39ms
+[RUN] 659/1000
+[Session created] provider=KERNEL_HEADFUL id=ryapw9bvayg252sl63f96tit 22ms
+[Browser connected] 389ms
+[Page loaded] 410ms
+[Session released] 37ms
+[RUN] 660/1000
+[Session created] provider=KERNEL_HEADFUL id=iei9chienbsxu2awdn0qeixw 22ms
+[Browser connected] 471ms
+[Page loaded] 536ms
+[Session released] 42ms
+[RUN] 661/1000
+[Session created] provider=KERNEL_HEADFUL id=oupi60y722mnqoy30pfhc6jp 21ms
+[Browser connected] 427ms
+[Page loaded] 395ms
+[Session released] 38ms
+[RUN] 662/1000
+[Session created] provider=KERNEL_HEADFUL id=t2m5evsf5f296f1n72ryeyye 37ms
+[Browser connected] 422ms
+[Page loaded] 403ms
+[Session released] 60ms
+[RUN] 663/1000
+[Session created] provider=KERNEL_HEADFUL id=a83iba0h9o86g7j99lon8v1f 37ms
+[Browser connected] 372ms
+[Page loaded] 393ms
+[Session released] 33ms
+[RUN] 664/1000
+[Session created] provider=KERNEL_HEADFUL id=fa6mps2uu6ojznpemi1lvp6h 21ms
+[Browser connected] 428ms
+[Page loaded] 416ms
+[Session released] 38ms
+[RUN] 665/1000
+[Session created] provider=KERNEL_HEADFUL id=ysbcbskm8rjrrrcxvi7kli03 28ms
+[Browser connected] 611ms
+[Page loaded] 484ms
+[Session released] 49ms
+[RUN] 666/1000
+[Session created] provider=KERNEL_HEADFUL id=ch2ivqimlbyg2os7wp6fawe6 54ms
+[Browser connected] 615ms
+[Page loaded] 478ms
+[Session released] 44ms
+[RUN] 667/1000
+[Session created] provider=KERNEL_HEADFUL id=gpxmx7vi0u01wgpz20phxmy0 31ms
+[Browser connected] 589ms
+[Page loaded] 510ms
+[Session released] 40ms
+[RUN] 668/1000
+[Session created] provider=KERNEL_HEADFUL id=a51ngekwx6ktek0emjb2sz4p 32ms
+[Browser connected] 412ms
+[Page loaded] 483ms
+[Session released] 37ms
+[RUN] 669/1000
+[Session created] provider=KERNEL_HEADFUL id=eorxr1w821jp4vlk27k6pjgc 34ms
+[Browser connected] 381ms
+[Page loaded] 375ms
+[Session released] 39ms
+[RUN] 670/1000
+[Session created] provider=KERNEL_HEADFUL id=cbo93u2cls7fz0hg3n7keq4u 33ms
+[Browser connected] 553ms
+[Page loaded] 557ms
+[Session released] 28ms
+[RUN] 671/1000
+[Session created] provider=KERNEL_HEADFUL id=q5v37719h5knmii9c2i3m3ln 29ms
+[Browser connected] 572ms
+[Page loaded] 536ms
+[Session released] 44ms
+[RUN] 672/1000
+[Session created] provider=KERNEL_HEADFUL id=csi4na7x9lelqsf3sxbygma5 21ms
+[Browser connected] 396ms
+[Page loaded] 335ms
+[Session released] 36ms
+[RUN] 673/1000
+[Session created] provider=KERNEL_HEADFUL id=mppbc1pnitjgx29hrxzxcf7t 38ms
+[Browser connected] 404ms
+[Page loaded] 480ms
+[Session released] 37ms
+[RUN] 674/1000
+[Session created] provider=KERNEL_HEADFUL id=x6fc479fy1i3wrzflnl5gxnt 17ms
+[Browser connected] 383ms
+[Page loaded] 457ms
+[Session released] 42ms
+[RUN] 675/1000
+[Session created] provider=KERNEL_HEADFUL id=exnyyc5qqr2lyejqazb1wo4h 25ms
+[Browser connected] 407ms
+[Page loaded] 459ms
+[Session released] 34ms
+[RUN] 676/1000
+[Session created] provider=KERNEL_HEADFUL id=yte2rb0illg8zr2k89aefkla 42ms
+[Browser connected] 579ms
+[Page loaded] 558ms
+[Session released] 41ms
+[RUN] 677/1000
+[Session created] provider=KERNEL_HEADFUL id=w41t2wxjssv3iwes8u9bscbf 31ms
+[Browser connected] 422ms
+[Page loaded] 417ms
+[Session released] 39ms
+[RUN] 678/1000
+[Session created] provider=KERNEL_HEADFUL id=vutp6pqcghpohf0pz8815tty 30ms
+[Browser connected] 391ms
+[Page loaded] 534ms
+[Session released] 34ms
+[RUN] 679/1000
+[Session created] provider=KERNEL_HEADFUL id=zt4isiz3bpjlnrd57bq5viya 26ms
+[Browser connected] 347ms
+[Page loaded] 311ms
+[Session released] 41ms
+[RUN] 680/1000
+[Session created] provider=KERNEL_HEADFUL id=tllkw3xxbsxr0on9impcni9y 26ms
+[Browser connected] 405ms
+[Page loaded] 427ms
+[Session released] 35ms
+[RUN] 681/1000
+[Session created] provider=KERNEL_HEADFUL id=fnys0z7f30n0lvfu08ks2wfx 30ms
+[Browser connected] 398ms
+[Page loaded] 425ms
+[Session released] 38ms
+[RUN] 682/1000
+[Session created] provider=KERNEL_HEADFUL id=c8ehc8ab4xz3eooj1k6tl72h 25ms
+[Browser connected] 418ms
+[Page loaded] 462ms
+[Session released] 36ms
+[RUN] 683/1000
+[Session created] provider=KERNEL_HEADFUL id=jpycjgckvj9jjr8lcw3yxyi6 31ms
+[Browser connected] 333ms
+[Page loaded] 449ms
+[Session released] 38ms
+[RUN] 684/1000
+[Session created] provider=KERNEL_HEADFUL id=ntqslgmb42n9jclnjtqrj3do 30ms
+[Browser connected] 697ms
+[Page loaded] 517ms
+[Session released] 50ms
+[RUN] 685/1000
+[Session created] provider=KERNEL_HEADFUL id=ymlr7jb23gkfjql3thq37kzv 32ms
+[Browser connected] 370ms
+[Page loaded] 403ms
+[Session released] 43ms
+[RUN] 686/1000
+[Session created] provider=KERNEL_HEADFUL id=x3qf89yyjqp035zgo0g24lgr 21ms
+[Browser connected] 414ms
+[Page loaded] 406ms
+[Session released] 30ms
+[RUN] 687/1000
+[Session created] provider=KERNEL_HEADFUL id=s91q5qdtcc4ax2ofuxskr1zr 30ms
+[Browser connected] 315ms
+[Page loaded] 301ms
+[Session released] 41ms
+[RUN] 688/1000
+[Session created] provider=KERNEL_HEADFUL id=ybxunj9cfo0bhe5cjkwyr76c 32ms
+[Browser connected] 393ms
+[Page loaded] 355ms
+[Session released] 43ms
+[RUN] 689/1000
+[Session created] provider=KERNEL_HEADFUL id=w4wvr9y0ym2b3ktl3f5de4yc 34ms
+[Browser connected] 361ms
+[Page loaded] 341ms
+[Session released] 38ms
+[RUN] 690/1000
+[Session created] provider=KERNEL_HEADFUL id=adj0zlaoa8xqfzjxnrxdwzse 28ms
+[Browser connected] 410ms
+[Page loaded] 367ms
+[Session released] 35ms
+[RUN] 691/1000
+[Session created] provider=KERNEL_HEADFUL id=bb90srvgmxvhtcofvfk79gg3 37ms
+[Browser connected] 428ms
+[Page loaded] 527ms
+[Session released] 38ms
+[RUN] 692/1000
+[Session created] provider=KERNEL_HEADFUL id=ef41jjcuhgjnk1idvexnt8gk 28ms
+[Browser connected] 352ms
+[Page loaded] 342ms
+[Session released] 42ms
+[RUN] 693/1000
+[Session created] provider=KERNEL_HEADFUL id=ap2dvl0i2sef18z6kxt9wh33 23ms
+[Browser connected] 426ms
+[Page loaded] 360ms
+[Session released] 44ms
+[RUN] 694/1000
+[Session created] provider=KERNEL_HEADFUL id=d123e052cnvv75ufd4cdshf1 39ms
+[Browser connected] 389ms
+[Page loaded] 520ms
+[Session released] 40ms
+[RUN] 695/1000
+[Session created] provider=KERNEL_HEADFUL id=oyz64pvdebjga066p2w2pxbr 21ms
+[Browser connected] 396ms
+[Page loaded] 404ms
+[Session released] 37ms
+[RUN] 696/1000
+[Session created] provider=KERNEL_HEADFUL id=x9ucmskpctyldx9texsjgv00 30ms
+[Browser connected] 408ms
+[Page loaded] 380ms
+[Session released] 47ms
+[RUN] 697/1000
+[Session created] provider=KERNEL_HEADFUL id=mfi9dx23ire84f0n396o42rv 40ms
+[Browser connected] 416ms
+[Page loaded] 551ms
+[Session released] 48ms
+[RUN] 698/1000
+[Session created] provider=KERNEL_HEADFUL id=dihjt2z01r3kffr7kgwn3yfq 20ms
+[Browser connected] 553ms
+[Page loaded] 513ms
+[Session released] 43ms
+[RUN] 699/1000
+[Session created] provider=KERNEL_HEADFUL id=gfs65txpwghl8v99cv5vlpd1 27ms
+[Browser connected] 470ms
+[Page loaded] 455ms
+[Session released] 40ms
+[RUN] 700/1000
+[Session created] provider=KERNEL_HEADFUL id=uazy4lr0xt3eoe4c9lub3t52 28ms
+[Browser connected] 439ms
+[Page loaded] 456ms
+[Session released] 45ms
+[RUN] 701/1000
+[Session created] provider=KERNEL_HEADFUL id=jw2dd7gjnroz6ll211f3r5fz 24ms
+[Browser connected] 418ms
+[Page loaded] 424ms
+[Session released] 40ms
+[RUN] 702/1000
+[Session created] provider=KERNEL_HEADFUL id=nfcb68le4abg34ddgx2u3769 36ms
+[Browser connected] 478ms
+[Page loaded] 490ms
+[Session released] 37ms
+[RUN] 703/1000
+[Session created] provider=KERNEL_HEADFUL id=mpp4yent7u7pgghgbsid07rf 37ms
+[Browser connected] 369ms
+[Page loaded] 409ms
+[Session released] 40ms
+[RUN] 704/1000
+[Session created] provider=KERNEL_HEADFUL id=qokpnu6di11jz7vhcrgz4yjd 26ms
+[Browser connected] 485ms
+[Page loaded] 627ms
+[Session released] 38ms
+[RUN] 705/1000
+[Session created] provider=KERNEL_HEADFUL id=yhvmhsv3cdjei3bsr9i8ggqa 29ms
+[Browser connected] 375ms
+[Page loaded] 425ms
+[Session released] 41ms
+[RUN] 706/1000
+[Session created] provider=KERNEL_HEADFUL id=ljpx0fm9qujygavy44939zzo 35ms
+[Browser connected] 394ms
+[Page loaded] 402ms
+[Session released] 43ms
+[RUN] 707/1000
+[Session created] provider=KERNEL_HEADFUL id=bx813datec0ncv0kge4xln2w 16ms
+[Browser connected] 308ms
+[Page loaded] 284ms
+[Session released] 46ms
+[RUN] 708/1000
+[Session created] provider=KERNEL_HEADFUL id=ne29s5iizckzh014ydtgt08m 24ms
+[Browser connected] 387ms
+[Page loaded] 367ms
+[Session released] 40ms
+[RUN] 709/1000
+[Session created] provider=KERNEL_HEADFUL id=bxncjl2ywl89h7fv94g1bqwb 35ms
+[Browser connected] 442ms
+[Page loaded] 511ms
+[Session released] 56ms
+[RUN] 710/1000
+[Session created] provider=KERNEL_HEADFUL id=cwm4hlg7zc5hcksxicyqhytv 37ms
+[Browser connected] 384ms
+[Page loaded] 361ms
+[Session released] 30ms
+[RUN] 711/1000
+[Session created] provider=KERNEL_HEADFUL id=l0f1miz6bdu8gpsgnq1qvedy 30ms
+[Browser connected] 323ms
+[Page loaded] 296ms
+[Session released] 45ms
+[RUN] 712/1000
+[Session created] provider=KERNEL_HEADFUL id=seek3r57zlvs2zqv8ij6p2r4 18ms
+[Browser connected] 443ms
+[Page loaded] 425ms
+[Session released] 46ms
+[RUN] 713/1000
+[Session created] provider=KERNEL_HEADFUL id=hfgwwt0644mg4qbu4hbeopbv 32ms
+[Browser connected] 429ms
+[Page loaded] 394ms
+[Session released] 43ms
+[RUN] 714/1000
+[Session created] provider=KERNEL_HEADFUL id=qw6q0ve8oyco9iwcx52ja08n 28ms
+[Browser connected] 467ms
+[Page loaded] 445ms
+[Session released] 39ms
+[RUN] 715/1000
+[Session created] provider=KERNEL_HEADFUL id=qd1bi5ftevoq3jw75e89hlvj 21ms
+[Browser connected] 609ms
+[Page loaded] 468ms
+[Session released] 42ms
+[RUN] 716/1000
+[Session created] provider=KERNEL_HEADFUL id=qgso7sp4h4n05y2qgvp4ukwq 32ms
+[Browser connected] 371ms
+[Page loaded] 392ms
+[Session released] 40ms
+[RUN] 717/1000
+[Session created] provider=KERNEL_HEADFUL id=vtl68bgs4pnt122pjy767cwx 22ms
+[Browser connected] 438ms
+[Page loaded] 411ms
+[Session released] 38ms
+[RUN] 718/1000
+[Session created] provider=KERNEL_HEADFUL id=k6q0zni314j89rqc1eq8d0xg 23ms
+[Browser connected] 399ms
+[Page loaded] 443ms
+[Session released] 40ms
+[RUN] 719/1000
+[Session created] provider=KERNEL_HEADFUL id=r240qclw0p4m2wl4b74iq250 23ms
+[Browser connected] 444ms
+[Page loaded] 561ms
+[Session released] 33ms
+[RUN] 720/1000
+[Session created] provider=KERNEL_HEADFUL id=eb9solq9ut0enjx3qhiyflu1 31ms
+[Browser connected] 416ms
+[Page loaded] 422ms
+[Session released] 45ms
+[RUN] 721/1000
+[Session created] provider=KERNEL_HEADFUL id=qrbe13pl84m18tfmng74tacx 32ms
+[Browser connected] 474ms
+[Page loaded] 431ms
+[Session released] 35ms
+[RUN] 722/1000
+[Session created] provider=KERNEL_HEADFUL id=s8z75y2nldk4r4ptrslbbrdd 43ms
+[Browser connected] 559ms
+[Page loaded] 441ms
+[Session released] 43ms
+[RUN] 723/1000
+[Session created] provider=KERNEL_HEADFUL id=njgqvt6qmra1k4fjyk9gspcu 28ms
+[Browser connected] 363ms
+[Page loaded] 557ms
+[Session released] 39ms
+[RUN] 724/1000
+[Session created] provider=KERNEL_HEADFUL id=lug2yj2n3cwcisunfz4ypii9 35ms
+[Browser connected] 413ms
+[Page loaded] 377ms
+[Session released] 38ms
+[RUN] 725/1000
+[Session created] provider=KERNEL_HEADFUL id=jg0wvbjv1n5j5lwvhvdpqylz 30ms
+[Browser connected] 406ms
+[Page loaded] 507ms
+[Session released] 42ms
+[RUN] 726/1000
+[Session created] provider=KERNEL_HEADFUL id=wp0jaeq3ykjac7c79m4rpc4g 23ms
+[Browser connected] 392ms
+[Page loaded] 461ms
+[Session released] 38ms
+[RUN] 727/1000
+[Session created] provider=KERNEL_HEADFUL id=s9jjc7pua5hc5l8qljv8ervw 24ms
+[Browser connected] 587ms
+[Page loaded] 518ms
+[Session released] 39ms
+[RUN] 728/1000
+[Session created] provider=KERNEL_HEADFUL id=c06mghtg7029fuqlvqoeacwb 28ms
+[Browser connected] 446ms
+[Page loaded] 454ms
+[Session released] 54ms
+[RUN] 729/1000
+[Session created] provider=KERNEL_HEADFUL id=hlqy02zln7613qrir2qw2ng9 27ms
+[Browser connected] 396ms
+[Page loaded] 369ms
+[Session released] 41ms
+[RUN] 730/1000
+[Session created] provider=KERNEL_HEADFUL id=h7z0dssbc9u4gsmr0o0ohjqv 37ms
+[Browser connected] 486ms
+[Page loaded] 551ms
+[Session released] 44ms
+[RUN] 731/1000
+[Session created] provider=KERNEL_HEADFUL id=s4itbbva229h9geawx5wa7lw 29ms
+[Browser connected] 355ms
+[Page loaded] 346ms
+[Session released] 39ms
+[RUN] 732/1000
+[Session created] provider=KERNEL_HEADFUL id=ybuh4n34tgqe9dnaehtli7jq 133ms
+[Browser connected] 234ms
+[Page loaded] 500ms
+[Session released] 41ms
+[RUN] 733/1000
+[Session created] provider=KERNEL_HEADFUL id=syhwm7vwgy2afgtwzw3h6xry 29ms
+[Browser connected] 421ms
+[Page loaded] 610ms
+[Session released] 41ms
+[RUN] 734/1000
+[Session created] provider=KERNEL_HEADFUL id=p47gooyg60wxs9isclh7zxib 17ms
+[Browser connected] 293ms
+[Page loaded] 360ms
+[Session released] 39ms
+[RUN] 735/1000
+[Session created] provider=KERNEL_HEADFUL id=n9svpp0kba3crl95sy4i6abd 20ms
+[Browser connected] 394ms
+[Page loaded] 394ms
+[Session released] 40ms
+[RUN] 736/1000
+[Session created] provider=KERNEL_HEADFUL id=cyaokb9fqwbto8e2i8qqjht6 27ms
+[Browser connected] 457ms
+[Page loaded] 463ms
+[Session released] 37ms
+[RUN] 737/1000
+[Session created] provider=KERNEL_HEADFUL id=t1nuif8j222onnxcsc32d2c6 31ms
+[Browser connected] 399ms
+[Page loaded] 368ms
+[Session released] 41ms
+[RUN] 738/1000
+[Session created] provider=KERNEL_HEADFUL id=p2poq5833heh7e6ygrqeflhv 25ms
+[Browser connected] 373ms
+[Page loaded] 295ms
+[Session released] 38ms
+[RUN] 739/1000
+[Session created] provider=KERNEL_HEADFUL id=g4bphb83xwb2vt3aeyxufemo 22ms
+[Browser connected] 382ms
+[Page loaded] 357ms
+[Session released] 44ms
+[RUN] 740/1000
+[Session created] provider=KERNEL_HEADFUL id=wzvnomvjke9qmz7t6riwioe2 39ms
+[Browser connected] 501ms
+[Page loaded] 515ms
+[Session released] 39ms
+[RUN] 741/1000
+[Session created] provider=KERNEL_HEADFUL id=nj2lvqijaubn8u5tpgx9xb4x 22ms
+[Browser connected] 416ms
+[Page loaded] 452ms
+[Session released] 36ms
+[RUN] 742/1000
+[Session created] provider=KERNEL_HEADFUL id=xvq7o1x8y3nzptjanba9yxt3 23ms
+[Browser connected] 463ms
+[Page loaded] 543ms
+[Session released] 40ms
+[RUN] 743/1000
+[Session created] provider=KERNEL_HEADFUL id=nttlw0uz0jqx8sz4m1m288fs 27ms
+[Browser connected] 388ms
+[Page loaded] 426ms
+[Session released] 62ms
+[RUN] 744/1000
+[Session created] provider=KERNEL_HEADFUL id=q42pksupz3bid883u0awbw3x 19ms
+[Browser connected] 474ms
+[Page loaded] 504ms
+[Session released] 35ms
+[RUN] 745/1000
+[Session created] provider=KERNEL_HEADFUL id=okqwpttsh9r7c9hs754hon9o 37ms
+[Browser connected] 397ms
+[Page loaded] 403ms
+[Session released] 42ms
+[RUN] 746/1000
+[Session created] provider=KERNEL_HEADFUL id=pa42nmn5uba44918wm6p0u1i 23ms
+[Browser connected] 318ms
+[Page loaded] 317ms
+[Session released] 37ms
+[RUN] 747/1000
+[Session created] provider=KERNEL_HEADFUL id=wmjv26aqk6574qf4cky8wclu 22ms
+[Browser connected] 630ms
+[Page loaded] 437ms
+[Session released] 39ms
+[RUN] 748/1000
+[Session created] provider=KERNEL_HEADFUL id=rl0kc5z08429g0a2tab9le8z 31ms
+[Browser connected] 448ms
+[Page loaded] 362ms
+[Session released] 45ms
+[RUN] 749/1000
+[Session created] provider=KERNEL_HEADFUL id=lh582wbzl63js653ez54kwe9 31ms
+[Browser connected] 352ms
+[Page loaded] 420ms
+[Session released] 45ms
+[RUN] 750/1000
+[Session created] provider=KERNEL_HEADFUL id=y3nkcay4o5ru65ix3s1xi4pl 33ms
+[Browser connected] 404ms
+[Page loaded] 443ms
+[Session released] 38ms
+[RUN] 751/1000
+[Session created] provider=KERNEL_HEADFUL id=dvf9gyftvriy2ucvesa4vhg3 33ms
+[Browser connected] 326ms
+[Page loaded] 330ms
+[Session released] 42ms
+[RUN] 752/1000
+[Session created] provider=KERNEL_HEADFUL id=p1043whj53zz3qm3jcb1thw2 31ms
+[Browser connected] 362ms
+[Page loaded] 460ms
+[Session released] 53ms
+[RUN] 753/1000
+[Session created] provider=KERNEL_HEADFUL id=zgdo52lrrbultyrb15m4q0wp 30ms
+[Browser connected] 383ms
+[Page loaded] 408ms
+[Session released] 31ms
+[RUN] 754/1000
+[Session created] provider=KERNEL_HEADFUL id=wpbqm2z8wluholtv7gszm9yr 28ms
+[Browser connected] 355ms
+[Page loaded] 379ms
+[Session released] 40ms
+[RUN] 755/1000
+[Session created] provider=KERNEL_HEADFUL id=nkvmsbbut8bp8udvku8v1gdm 32ms
+[Browser connected] 421ms
+[Page loaded] 430ms
+[Session released] 40ms
+[RUN] 756/1000
+[Session created] provider=KERNEL_HEADFUL id=vrqec35b735sgvomv3pm2rd3 35ms
+[Browser connected] 423ms
+[Page loaded] 391ms
+[Session released] 46ms
+[RUN] 757/1000
+[Session created] provider=KERNEL_HEADFUL id=p52nw82ftoqy4wy4k38nx2us 1076ms
+[Browser connected] 380ms
+[Page loaded] 312ms
+[Session released] 47ms
+[RUN] 758/1000
+[Session created] provider=KERNEL_HEADFUL id=yivuv1sumaebg1fghexz20ep 30ms
+[Browser connected] 384ms
+[Page loaded] 311ms
+[Session released] 41ms
+[RUN] 759/1000
+[Session created] provider=KERNEL_HEADFUL id=mu8mqcni2kap2leo7mi9trt2 31ms
+[Browser connected] 346ms
+[Page loaded] 435ms
+[Session released] 44ms
+[RUN] 760/1000
+[Session created] provider=KERNEL_HEADFUL id=y12z85tn7f7uynb58307b872 41ms
+[Browser connected] 373ms
+[Page loaded] 889ms
+[Session released] 38ms
+[RUN] 761/1000
+[Session created] provider=KERNEL_HEADFUL id=thbak6hsu5p5ft2tvgrwbxe1 24ms
+[Browser connected] 412ms
+[Page loaded] 373ms
+[Session released] 38ms
+[RUN] 762/1000
+[Session created] provider=KERNEL_HEADFUL id=z5c9y3aj030cfvp2m7pelcvs 21ms
+[Browser connected] 430ms
+[Page loaded] 442ms
+[Session released] 41ms
+[RUN] 763/1000
+[Session created] provider=KERNEL_HEADFUL id=h6pj2u0w7ewl1u7mxira8166 24ms
+[Browser connected] 504ms
+[Page loaded] 527ms
+[Session released] 40ms
+[RUN] 764/1000
+[Session created] provider=KERNEL_HEADFUL id=x71sbblu4v1jils08mhfiwy7 32ms
+[Browser connected] 391ms
+[Page loaded] 412ms
+[Session released] 42ms
+[RUN] 765/1000
+[Session created] provider=KERNEL_HEADFUL id=etavs95l1bdj9kdxr6k850te 19ms
+[Browser connected] 412ms
+[Page loaded] 418ms
+[Session released] 36ms
+[RUN] 766/1000
+[Session created] provider=KERNEL_HEADFUL id=naymgmk1s67pfplqk1bogj16 20ms
+[Browser connected] 372ms
+[Page loaded] 385ms
+[Session released] 33ms
+[RUN] 767/1000
+[Session created] provider=KERNEL_HEADFUL id=spy3jpzbhxuuiyvdsnqd3fph 19ms
+[Browser connected] 327ms
+[Page loaded] 390ms
+[Session released] 40ms
+[RUN] 768/1000
+[Session created] provider=KERNEL_HEADFUL id=ez6wqu3fqurpnhwf20r92jmv 26ms
+[Browser connected] 432ms
+[Page loaded] 435ms
+[Session released] 41ms
+[RUN] 769/1000
+[Session created] provider=KERNEL_HEADFUL id=kyb28sc6xj1w5b22nhj2eeqp 26ms
+[Browser connected] 358ms
+[Page loaded] 488ms
+[Session released] 49ms
+[RUN] 770/1000
+[Session created] provider=KERNEL_HEADFUL id=ho7eubq6fsunr5iinp6x7ekq 18ms
+[Browser connected] 440ms
+[Page loaded] 455ms
+[Session released] 40ms
+[RUN] 771/1000
+[Session created] provider=KERNEL_HEADFUL id=si2d9k9bq69z11v0znflqiif 22ms
+[Browser connected] 403ms
+[Page loaded] 461ms
+[Session released] 48ms
+[RUN] 772/1000
+[Session created] provider=KERNEL_HEADFUL id=ew3ya4lzxyy49bfgtxnu4fii 28ms
+[Browser connected] 407ms
+[Page loaded] 599ms
+[Session released] 42ms
+[RUN] 773/1000
+[Session created] provider=KERNEL_HEADFUL id=rn45m5rc3tgcpohvtartp91p 18ms
+[Browser connected] 428ms
+[Page loaded] 348ms
+[Session released] 39ms
+[RUN] 774/1000
+[Session created] provider=KERNEL_HEADFUL id=zut7mywffof5tfjty60ft5ot 42ms
+[Browser connected] 468ms
+[Page loaded] 478ms
+[Session released] 149ms
+[RUN] 775/1000
+[Session created] provider=KERNEL_HEADFUL id=lc6cxb0htfj9e1gdmj1npe7a 37ms
+[Browser connected] 460ms
+[Page loaded] 475ms
+[Session released] 43ms
+[RUN] 776/1000
+[Session created] provider=KERNEL_HEADFUL id=uz8hl3roqvqe13h7ifoocp7x 22ms
+[Browser connected] 364ms
+[Page loaded] 421ms
+[Session released] 42ms
+[RUN] 777/1000
+[Session created] provider=KERNEL_HEADFUL id=ecdvvt910evijclltofp468k 26ms
+[Browser connected] 351ms
+[Page loaded] 502ms
+[Session released] 41ms
+[RUN] 778/1000
+[Session created] provider=KERNEL_HEADFUL id=zom8e3t4h8zr9wf31msprcp2 55ms
+[Browser connected] 396ms
+[Page loaded] 329ms
+[Session released] 41ms
+[RUN] 779/1000
+[Session created] provider=KERNEL_HEADFUL id=n205mesti6m3d9j6vwsq8zes 30ms
+[Browser connected] 375ms
+[Page loaded] 332ms
+[Session released] 39ms
+[RUN] 780/1000
+[Session created] provider=KERNEL_HEADFUL id=d331oy7j78w4tksxk3no06sm 20ms
+[Browser connected] 631ms
+[Page loaded] 544ms
+[Session released] 38ms
+[RUN] 781/1000
+[Session created] provider=KERNEL_HEADFUL id=k1vy26iqnhaz5u6fqxpmpvl1 26ms
+[Browser connected] 393ms
+[Page loaded] 344ms
+[Session released] 46ms
+[RUN] 782/1000
+[Session created] provider=KERNEL_HEADFUL id=lzdym1u55ol7ntm895j691qs 34ms
+[Browser connected] 442ms
+[Page loaded] 647ms
+[Session released] 39ms
+[RUN] 783/1000
+[Session created] provider=KERNEL_HEADFUL id=pxjvlsepkpj9ssya7rx3islv 35ms
+[Browser connected] 373ms
+[Page loaded] 468ms
+[Session released] 39ms
+[RUN] 784/1000
+[Session created] provider=KERNEL_HEADFUL id=l5f85m582p3wj03x0fqa7gub 33ms
+[Browser connected] 439ms
+[Page loaded] 477ms
+[Session released] 39ms
+[RUN] 785/1000
+[Session created] provider=KERNEL_HEADFUL id=pg9s91wk5p7r2pajv0u67xb6 20ms
+[Browser connected] 356ms
+[Page loaded] 342ms
+[Session released] 40ms
+[RUN] 786/1000
+[Session created] provider=KERNEL_HEADFUL id=q0joh5e54r27kh4d20h3rmaz 24ms
+[Browser connected] 361ms
+[Page loaded] 296ms
+[Session released] 40ms
+[RUN] 787/1000
+[Session created] provider=KERNEL_HEADFUL id=yg5kt93fqjnjai4r72o8uqma 32ms
+[Browser connected] 430ms
+[Page loaded] 468ms
+[Session released] 38ms
+[RUN] 788/1000
+[Session created] provider=KERNEL_HEADFUL id=setfissomlu9ctwqbwhu8rmv 19ms
+[Browser connected] 570ms
+[Page loaded] 587ms
+[Session released] 43ms
+[RUN] 789/1000
+[Session created] provider=KERNEL_HEADFUL id=w08x3ak3orqe3g71pviryejz 28ms
+[Browser connected] 639ms
+[Page loaded] 488ms
+[Session released] 39ms
+[RUN] 790/1000
+[Session created] provider=KERNEL_HEADFUL id=gawhypmt1wklc4dyrg1fnotl 19ms
+[Browser connected] 589ms
+[Page loaded] 503ms
+[Session released] 43ms
+[RUN] 791/1000
+[Session created] provider=KERNEL_HEADFUL id=vh8k5ts73067341i9fofyrt0 35ms
+[Browser connected] 496ms
+[Page loaded] 510ms
+[Session released] 43ms
+[RUN] 792/1000
+[Session created] provider=KERNEL_HEADFUL id=ymh411u6pf775haeqi2dbc5h 27ms
+[Browser connected] 415ms
+[Page loaded] 512ms
+[Session released] 43ms
+[RUN] 793/1000
+[Session created] provider=KERNEL_HEADFUL id=a2tqxagpqeh9dgug9bhhey8a 26ms
+[Browser connected] 381ms
+[Page loaded] 448ms
+[Session released] 51ms
+[RUN] 794/1000
+[Session created] provider=KERNEL_HEADFUL id=kruq6f8iuvaahtv9xkaq8sxq 23ms
+[Browser connected] 409ms
+[Page loaded] 429ms
+[Session released] 36ms
+[RUN] 795/1000
+[Session created] provider=KERNEL_HEADFUL id=c1covrjey3bq7vi3gwwt996c 27ms
+[Browser connected] 364ms
+[Page loaded] 354ms
+[Session released] 38ms
+[RUN] 796/1000
+[Session created] provider=KERNEL_HEADFUL id=teggsdxxe90yxveb0wunkk0v 30ms
+[Browser connected] 397ms
+[Page loaded] 401ms
+[Session released] 39ms
+[RUN] 797/1000
+[Session created] provider=KERNEL_HEADFUL id=u6bykpr8xejhzpef9f5vv6jh 39ms
+[Browser connected] 434ms
+[Page loaded] 355ms
+[Session released] 44ms
+[RUN] 798/1000
+[Session created] provider=KERNEL_HEADFUL id=e0i84qzboiuo9f7x70ikum30 37ms
+[Browser connected] 607ms
+[Page loaded] 475ms
+[Session released] 30ms
+[RUN] 799/1000
+[Session created] provider=KERNEL_HEADFUL id=njikovpbb9xe7bkr5nkwcmhl 27ms
+[Browser connected] 365ms
+[Page loaded] 435ms
+[Session released] 36ms
+[RUN] 800/1000
+[Session created] provider=KERNEL_HEADFUL id=d8wtx6k6okoxg636y3kakgug 23ms
+[Browser connected] 411ms
+[Page loaded] 569ms
+[Session released] 32ms
+[RUN] 801/1000
+[Session created] provider=KERNEL_HEADFUL id=aszi5zwwb7hm69vfrp8ic6ut 20ms
+[Browser connected] 522ms
+[Page loaded] 485ms
+[Session released] 45ms
+[RUN] 802/1000
+[Session created] provider=KERNEL_HEADFUL id=gq8c5g3vd6whx5ufvhmzul5x 18ms
+[Browser connected] 465ms
+[Page loaded] 498ms
+[Session released] 47ms
+[RUN] 803/1000
+[Session created] provider=KERNEL_HEADFUL id=wy153kep2gfa4vvaz1ijmcik 16ms
+[Browser connected] 582ms
+[Page loaded] 483ms
+[Session released] 46ms
+[RUN] 804/1000
+[Session created] provider=KERNEL_HEADFUL id=sxdqtqmt15mnvk6ggi90u7hp 48ms
+[Browser connected] 422ms
+[Page loaded] 380ms
+[Session released] 41ms
+[RUN] 805/1000
+[Session created] provider=KERNEL_HEADFUL id=solup8aar5ec78yrxhkm25gv 36ms
+[Browser connected] 430ms
+[Page loaded] 413ms
+[Session released] 47ms
+[RUN] 806/1000
+[Session created] provider=KERNEL_HEADFUL id=xkkw3po6wacpxnajk9752sxc 22ms
+[Browser connected] 387ms
+[Page loaded] 372ms
+[Session released] 38ms
+[RUN] 807/1000
+[Session created] provider=KERNEL_HEADFUL id=h0zolchk9audo72867qdykch 21ms
+[Browser connected] 652ms
+[Page loaded] 854ms
+[Session released] 42ms
+[RUN] 808/1000
+[Session created] provider=KERNEL_HEADFUL id=atfwwdylw8ismf8qapnzea20 30ms
+[Browser connected] 333ms
+[Page loaded] 396ms
+[Session released] 42ms
+[RUN] 809/1000
+[Session created] provider=KERNEL_HEADFUL id=qbqtew27pmhq20ceatahmerl 27ms
+[Browser connected] 420ms
+[Page loaded] 389ms
+[Session released] 36ms
+[RUN] 810/1000
+[Session created] provider=KERNEL_HEADFUL id=yqx079xx67mnr8yrmec6yxxa 21ms
+[Browser connected] 547ms
+[Page loaded] 518ms
+[Session released] 49ms
+[RUN] 811/1000
+[Session created] provider=KERNEL_HEADFUL id=uege8jbjo22ty3w128zhzh1q 24ms
+[Browser connected] 367ms
+[Page loaded] 315ms
+[Session released] 38ms
+[RUN] 812/1000
+[Session created] provider=KERNEL_HEADFUL id=hogii0zxbmwh5pxz3a65kjlg 26ms
+[Browser connected] 335ms
+[Page loaded] 387ms
+[Session released] 31ms
+[RUN] 813/1000
+[Session created] provider=KERNEL_HEADFUL id=xnfcnsem45isibnsr5ru9f08 26ms
+[Browser connected] 638ms
+[Page loaded] 537ms
+[Session released] 52ms
+[RUN] 814/1000
+[Session created] provider=KERNEL_HEADFUL id=mlvzhajuhw64hldv8w8v5008 29ms
+[Browser connected] 342ms
+[Page loaded] 316ms
+[Session released] 35ms
+[RUN] 815/1000
+[Session created] provider=KERNEL_HEADFUL id=i0w7sjuql58te1t32efb7vt1 38ms
+[Browser connected] 462ms
+[Page loaded] 567ms
+[Session released] 47ms
+[RUN] 816/1000
+[Session created] provider=KERNEL_HEADFUL id=dl7m3yrh2mve5lbu7q8p8iif 44ms
+[Browser connected] 372ms
+[Page loaded] 382ms
+[Session released] 51ms
+[RUN] 817/1000
+[Session created] provider=KERNEL_HEADFUL id=gtmxiu2s7zmr6ok53g6qx95q 28ms
+[Browser connected] 404ms
+[Page loaded] 475ms
+[Session released] 37ms
+[RUN] 818/1000
+[Session created] provider=KERNEL_HEADFUL id=e1s5x9644kif63slfae8cfaa 36ms
+[Browser connected] 494ms
+[Page loaded] 499ms
+[Session released] 41ms
+[RUN] 819/1000
+[Session created] provider=KERNEL_HEADFUL id=em2825j9i3jd4ehe1yv9agnh 36ms
+[Browser connected] 332ms
+[Page loaded] 302ms
+[Session released] 78ms
+[RUN] 820/1000
+[Session created] provider=KERNEL_HEADFUL id=jpy0l65xed3ctl404aszvsay 18ms
+[Browser connected] 452ms
+[Page loaded] 362ms
+[Session released] 42ms
+[RUN] 821/1000
+[Session created] provider=KERNEL_HEADFUL id=tqrkl4eff33jxh869e2n7lwi 30ms
+[Browser connected] 339ms
+[Page loaded] 464ms
+[Session released] 63ms
+[RUN] 822/1000
+[Session created] provider=KERNEL_HEADFUL id=vaqyve80hmtw40228qvvzzz0 38ms
+[Browser connected] 457ms
+[Page loaded] 487ms
+[Session released] 71ms
+[RUN] 823/1000
+[Session created] provider=KERNEL_HEADFUL id=bhnli9oowlio5goyxn9wi5jz 25ms
+[Browser connected] 457ms
+[Page loaded] 486ms
+[Session released] 36ms
+[RUN] 824/1000
+[Session created] provider=KERNEL_HEADFUL id=pdof28ixs9zl4mnqyfmdw695 32ms
+[Browser connected] 342ms
+[Page loaded] 481ms
+[Session released] 36ms
+[RUN] 825/1000
+[Session created] provider=KERNEL_HEADFUL id=xqveth7df3na1re2jwo0a734 37ms
+[Browser connected] 373ms
+[Page loaded] 447ms
+[Session released] 35ms
+[RUN] 826/1000
+[Session created] provider=KERNEL_HEADFUL id=ja5op68q5l3x4qcaais2tidp 24ms
+[Browser connected] 419ms
+[Page loaded] 594ms
+[Session released] 43ms
+[RUN] 827/1000
+[Session created] provider=KERNEL_HEADFUL id=g2zbzzdi2eaneq0holtuwl2i 18ms
+[Browser connected] 415ms
+[Page loaded] 408ms
+[Session released] 67ms
+[RUN] 828/1000
+[Session created] provider=KERNEL_HEADFUL id=yyejp6t9t9u0vzvxakh6cu0m 24ms
+[Browser connected] 421ms
+[Page loaded] 486ms
+[Session released] 78ms
+[RUN] 829/1000
+[Session created] provider=KERNEL_HEADFUL id=jp4u572ysvhurm2qa461rspb 41ms
+[Browser connected] 426ms
+[Page loaded] 406ms
+[Session released] 42ms
+[RUN] 830/1000
+[Session created] provider=KERNEL_HEADFUL id=he0vgn89rr44nz8la279hvrz 21ms
+[Browser connected] 587ms
+[Page loaded] 497ms
+[Session released] 73ms
+[RUN] 831/1000
+[Session created] provider=KERNEL_HEADFUL id=hhi9vrg39sbsehdnx4om60un 19ms
+[Browser connected] 400ms
+[Page loaded] 371ms
+[Session released] 38ms
+[RUN] 832/1000
+[Session created] provider=KERNEL_HEADFUL id=pumt0ibh92vi1acwpy16i3fm 40ms
+[Browser connected] 386ms
+[Page loaded] 425ms
+[Session released] 35ms
+[RUN] 833/1000
+[Session created] provider=KERNEL_HEADFUL id=spr09cpipyv2nho51enehxms 28ms
+[Browser connected] 432ms
+[Page loaded] 373ms
+[Session released] 44ms
+[RUN] 834/1000
+[Session created] provider=KERNEL_HEADFUL id=auliz7q6nvusbfxk8c22olzl 37ms
+[Browser connected] 431ms
+[Page loaded] 367ms
+[Session released] 36ms
+[RUN] 835/1000
+[Session created] provider=KERNEL_HEADFUL id=oa39r1bo95m33bh87gsg9k94 27ms
+[Browser connected] 411ms
+[Page loaded] 490ms
+[Session released] 32ms
+[RUN] 836/1000
+[Session created] provider=KERNEL_HEADFUL id=cpygnvr8kejjrpn5tisz41vf 29ms
+[Browser connected] 436ms
+[Page loaded] 548ms
+[Session released] 38ms
+[RUN] 837/1000
+[Session created] provider=KERNEL_HEADFUL id=h6tc5ddsv7t74pjnwpceyi8i 37ms
+[Browser connected] 453ms
+[Page loaded] 392ms
+[Session released] 44ms
+[RUN] 838/1000
+[Session created] provider=KERNEL_HEADFUL id=ifhd9we9ofwbf2ao1lins5jf 35ms
+[Browser connected] 639ms
+[Page loaded] 527ms
+[Session released] 40ms
+[RUN] 839/1000
+[Session created] provider=KERNEL_HEADFUL id=vmqnlt7xefs9ahoii7oe8r4o 21ms
+[Browser connected] 370ms
+[Page loaded] 373ms
+[Session released] 43ms
+[RUN] 840/1000
+[Session created] provider=KERNEL_HEADFUL id=givo7t5uht603gfiw4hy2uiq 24ms
+[Browser connected] 378ms
+[Page loaded] 378ms
+[Session released] 35ms
+[RUN] 841/1000
+[Session created] provider=KERNEL_HEADFUL id=ey6c14rgq410qf1yh5qg039i 30ms
+[Browser connected] 593ms
+[Page loaded] 525ms
+[Session released] 41ms
+[RUN] 842/1000
+[Session created] provider=KERNEL_HEADFUL id=woydlmynha8etfgvb0c7tp5u 19ms
+[Browser connected] 418ms
+[Page loaded] 432ms
+[Session released] 36ms
+[RUN] 843/1000
+[Session created] provider=KERNEL_HEADFUL id=qs2p8fiy9c7nnztqrwa6cyfx 23ms
+[Browser connected] 399ms
+[Page loaded] 735ms
+[Session released] 31ms
+[RUN] 844/1000
+[Session created] provider=KERNEL_HEADFUL id=npouyzvurxtq45bf7w1xc0m4 33ms
+[Browser connected] 455ms
+[Page loaded] 455ms
+[Session released] 37ms
+[RUN] 845/1000
+[Session created] provider=KERNEL_HEADFUL id=iz1uek93up94o13b1uafs16o 26ms
+[Browser connected] 405ms
+[Page loaded] 396ms
+[Session released] 35ms
+[RUN] 846/1000
+[Session created] provider=KERNEL_HEADFUL id=st5zplgyl6mc7v5bxwf10vsn 30ms
+[Browser connected] 455ms
+[Page loaded] 496ms
+[Session released] 42ms
+[RUN] 847/1000
+[Session created] provider=KERNEL_HEADFUL id=wk8wgvcavar43w5kxgfaeadz 28ms
+[Browser connected] 352ms
+[Page loaded] 397ms
+[Session released] 36ms
+[RUN] 848/1000
+[Session created] provider=KERNEL_HEADFUL id=dw298hfbxe837ry86b4rwnnn 32ms
+[Browser connected] 412ms
+[Page loaded] 547ms
+[Session released] 43ms
+[RUN] 849/1000
+[Session created] provider=KERNEL_HEADFUL id=x9uyx3l999gd3h3ipreo5gsf 22ms
+[Browser connected] 421ms
+[Page loaded] 337ms
+[Session released] 45ms
+[RUN] 850/1000
+[Session created] provider=KERNEL_HEADFUL id=gs6u2u60w2exsn36eektgmte 35ms
+[Browser connected] 339ms
+[Page loaded] 482ms
+[Session released] 45ms
+[RUN] 851/1000
+[Session created] provider=KERNEL_HEADFUL id=jss6mxs1men5aosu5pfi9f0e 22ms
+[Browser connected] 585ms
+[Page loaded] 450ms
+[Session released] 40ms
+[RUN] 852/1000
+[Session created] provider=KERNEL_HEADFUL id=rxxt616dhcdvjrnse0txs3z4 25ms
+[Browser connected] 464ms
+[Page loaded] 398ms
+[Session released] 37ms
+[RUN] 853/1000
+[Session created] provider=KERNEL_HEADFUL id=eqccvsrwd2puqdub1ovt0ljq 37ms
+[Browser connected] 447ms
+[Page loaded] 478ms
+[Session released] 35ms
+[RUN] 854/1000
+[Session created] provider=KERNEL_HEADFUL id=k0flbyjtgcnlw3u6sc5vefd5 28ms
+[Browser connected] 418ms
+[Page loaded] 442ms
+[Session released] 40ms
+[RUN] 855/1000
+[Session created] provider=KERNEL_HEADFUL id=syq68lztysiasgzawddil09n 33ms
+[Browser connected] 427ms
+[Page loaded] 521ms
+[Session released] 39ms
+[RUN] 856/1000
+[Session created] provider=KERNEL_HEADFUL id=t33nfj6y1dv3xjgcsi93ol49 38ms
+[Browser connected] 480ms
+[Page loaded] 510ms
+[Session released] 42ms
+[RUN] 857/1000
+[Session created] provider=KERNEL_HEADFUL id=s9ypxoaumd3xuexyqpge5he7 24ms
+[Browser connected] 405ms
+[Page loaded] 516ms
+[Session released] 36ms
+[RUN] 858/1000
+[Session created] provider=KERNEL_HEADFUL id=uo3gp9j69p97f6retivnt326 27ms
+[Browser connected] 618ms
+[Page loaded] 502ms
+[Session released] 39ms
+[RUN] 859/1000
+[Session created] provider=KERNEL_HEADFUL id=nvucmy6k1f1p4asdzdoy8zga 20ms
+[Browser connected] 567ms
+[Page loaded] 515ms
+[Session released] 43ms
+[RUN] 860/1000
+[Session created] provider=KERNEL_HEADFUL id=q0yab3sco8pqezwe5jbdy2w2 46ms
+[Browser connected] 401ms
+[Page loaded] 1380ms
+[Session released] 38ms
+[RUN] 861/1000
+[Session created] provider=KERNEL_HEADFUL id=z12jpmxqf0qul72npqdo3njx 41ms
+[Browser connected] 515ms
+[Page loaded] 541ms
+[Session released] 36ms
+[RUN] 862/1000
+[Session created] provider=KERNEL_HEADFUL id=b83aeb2v85q03ll9mabtim8c 31ms
+[Browser connected] 358ms
+[Page loaded] 369ms
+[Session released] 39ms
+[RUN] 863/1000
+[Session created] provider=KERNEL_HEADFUL id=j2p0hoco4h1jn6ca66c2qpmf 25ms
+[Browser connected] 356ms
+[Page loaded] 454ms
+[Session released] 66ms
+[RUN] 864/1000
+[Session created] provider=KERNEL_HEADFUL id=r28y525tir73o34xqh87vajd 34ms
+[Browser connected] 391ms
+[Page loaded] 354ms
+[Session released] 36ms
+[RUN] 865/1000
+[Session created] provider=KERNEL_HEADFUL id=bmaxodrh3vrsby1s52j5pgkh 44ms
+[Browser connected] 451ms
+[Page loaded] 452ms
+[Session released] 37ms
+[RUN] 866/1000
+[Session created] provider=KERNEL_HEADFUL id=k39ff7gp4eq2f19o503e87yq 32ms
+[Browser connected] 364ms
+[Page loaded] 518ms
+[Session released] 39ms
+[RUN] 867/1000
+[Session created] provider=KERNEL_HEADFUL id=w2pa7v6gm2ahi7iwmsmf7wph 32ms
+[Browser connected] 485ms
+[Page loaded] 483ms
+[Session released] 40ms
+[RUN] 868/1000
+[Session created] provider=KERNEL_HEADFUL id=wa8ihpytkxni8so33uge9uw9 29ms
+[Browser connected] 428ms
+[Page loaded] 474ms
+[Session released] 38ms
+[RUN] 869/1000
+[Session created] provider=KERNEL_HEADFUL id=kp8zgr48709spncwi84byhu8 21ms
+[Browser connected] 399ms
+[Page loaded] 429ms
+[Session released] 37ms
+[RUN] 870/1000
+[Session created] provider=KERNEL_HEADFUL id=yx53is25o6vuadu0akc6dqsk 24ms
+[Browser connected] 433ms
+[Page loaded] 485ms
+[Session released] 34ms
+[RUN] 871/1000
+[Session created] provider=KERNEL_HEADFUL id=cly7lo37dszm595bchqkb3ft 38ms
+[Browser connected] 466ms
+[Page loaded] 436ms
+[Session released] 37ms
+[RUN] 872/1000
+[Session created] provider=KERNEL_HEADFUL id=eqxpejzwqwqqiu1wedz3z12y 32ms
+[Browser connected] 441ms
+[Page loaded] 382ms
+[Session released] 40ms
+[RUN] 873/1000
+[Session created] provider=KERNEL_HEADFUL id=jt59a3pn5omkixknydpsw4vc 24ms
+[Browser connected] 405ms
+[Page loaded] 492ms
+[Session released] 39ms
+[RUN] 874/1000
+[Session created] provider=KERNEL_HEADFUL id=vs7mpdvtottu7i3jgjadceiq 29ms
+[Browser connected] 445ms
+[Page loaded] 374ms
+[Session released] 39ms
+[RUN] 875/1000
+[Session created] provider=KERNEL_HEADFUL id=w1bizqny57301ycemx4g6up6 28ms
+[Browser connected] 431ms
+[Page loaded] 353ms
+[Session released] 38ms
+[RUN] 876/1000
+[Session created] provider=KERNEL_HEADFUL id=zwt29qd8iw53f3uvncg9ijx3 37ms
+[Browser connected] 339ms
+[Page loaded] 356ms
+[Session released] 36ms
+[RUN] 877/1000
+[Session created] provider=KERNEL_HEADFUL id=e2pcodjb88174yhqtyavn118 33ms
+[Browser connected] 313ms
+[Page loaded] 321ms
+[Session released] 38ms
+[RUN] 878/1000
+[Session created] provider=KERNEL_HEADFUL id=es5fkqsrt3l0qon8la0hckgz 27ms
+[Browser connected] 377ms
+[Page loaded] 573ms
+[Session released] 38ms
+[RUN] 879/1000
+[Session created] provider=KERNEL_HEADFUL id=wz6da9nq5btah8revt35nimf 38ms
+[Browser connected] 394ms
+[Page loaded] 535ms
+[Session released] 38ms
+[RUN] 880/1000
+[Session created] provider=KERNEL_HEADFUL id=g90fcuxiue78maqztz9mszge 30ms
+[Browser connected] 405ms
+[Page loaded] 351ms
+[Session released] 46ms
+[RUN] 881/1000
+[Session created] provider=KERNEL_HEADFUL id=hsdz118amwf27sousuzxexr5 30ms
+[Browser connected] 429ms
+[Page loaded] 343ms
+[Session released] 46ms
+[RUN] 882/1000
+[Session created] provider=KERNEL_HEADFUL id=c1ed17k4ecf7e1qeas06e4gb 28ms
+[Browser connected] 592ms
+[Page loaded] 474ms
+[Session released] 45ms
+[RUN] 883/1000
+[Session created] provider=KERNEL_HEADFUL id=ujoknfywscnoc65xuya2b4hl 39ms
+[Browser connected] 583ms
+[Page loaded] 428ms
+[Session released] 47ms
+[RUN] 884/1000
+[Session created] provider=KERNEL_HEADFUL id=npngxgwih19utbmhfxkqckt7 46ms
+[Browser connected] 371ms
+[Page loaded] 394ms
+[Session released] 42ms
+[RUN] 885/1000
+[Session created] provider=KERNEL_HEADFUL id=gev30zpje2s636oemqlkrvz2 35ms
+[Browser connected] 342ms
+[Page loaded] 549ms
+[Session released] 44ms
+[RUN] 886/1000
+[Session created] provider=KERNEL_HEADFUL id=vsx6xt4keh3oyi5exnph27gu 30ms
+[Browser connected] 409ms
+[Page loaded] 555ms
+[Session released] 46ms
+[RUN] 887/1000
+[Session created] provider=KERNEL_HEADFUL id=y7je9g8lbkwt540jo520qex9 28ms
+[Browser connected] 356ms
+[Page loaded] 525ms
+[Session released] 35ms
+[RUN] 888/1000
+[Session created] provider=KERNEL_HEADFUL id=mcznhuk307bddfke7qv4xpwi 27ms
+[Browser connected] 407ms
+[Page loaded] 462ms
+[Session released] 38ms
+[RUN] 889/1000
+[Session created] provider=KERNEL_HEADFUL id=isd4ejidni61e1m0n8cfok5q 23ms
+[Browser connected] 393ms
+[Page loaded] 347ms
+[Session released] 43ms
+[RUN] 890/1000
+[Session created] provider=KERNEL_HEADFUL id=qqqjtq33cvqkoz7r1yhc5pjt 27ms
+[Browser connected] 600ms
+[Page loaded] 497ms
+[Session released] 41ms
+[RUN] 891/1000
+[Session created] provider=KERNEL_HEADFUL id=ug7b8pvjh0jpckdwtjf1vsmr 20ms
+[Browser connected] 366ms
+[Page loaded] 367ms
+[Session released] 38ms
+[RUN] 892/1000
+[Session created] provider=KERNEL_HEADFUL id=zymq4o22pmj80zfsu210isus 20ms
+[Browser connected] 416ms
+[Page loaded] 417ms
+[Session released] 43ms
+[RUN] 893/1000
+[Session created] provider=KERNEL_HEADFUL id=xsvq7khr84bq9rkdgz9bb58b 35ms
+[Browser connected] 461ms
+[Page loaded] 493ms
+[Session released] 32ms
+[RUN] 894/1000
+[Session created] provider=KERNEL_HEADFUL id=cl4n09nynvc2stwr1edw2lri 33ms
+[Browser connected] 398ms
+[Page loaded] 406ms
+[Session released] 35ms
+[RUN] 895/1000
+[Session created] provider=KERNEL_HEADFUL id=owe8e9u3jdfuy9dqkqr6ftys 34ms
+[Browser connected] 450ms
+[Page loaded] 392ms
+[Session released] 36ms
+[RUN] 896/1000
+[Session created] provider=KERNEL_HEADFUL id=t7049pacot742437icsr8hgw 32ms
+[Browser connected] 421ms
+[Page loaded] 392ms
+[Session released] 42ms
+[RUN] 897/1000
+[Session created] provider=KERNEL_HEADFUL id=fi7r5t1t5b78hw2kev0telfi 19ms
+[Browser connected] 460ms
+[Page loaded] 472ms
+[Session released] 44ms
+[RUN] 898/1000
+[Session created] provider=KERNEL_HEADFUL id=iumotcc9y0ef84h39fommi92 41ms
+[Browser connected] 421ms
+[Page loaded] 545ms
+[Session released] 37ms
+[RUN] 899/1000
+[Session created] provider=KERNEL_HEADFUL id=izjqkb0syn5er3d3hz8z18ls 27ms
+[Browser connected] 388ms
+[Page loaded] 543ms
+[Session released] 41ms
+[RUN] 900/1000
+[Session created] provider=KERNEL_HEADFUL id=v1bnxk6ovo1owxvt7j43r46h 28ms
+[Browser connected] 357ms
+[Page loaded] 372ms
+[Session released] 56ms
+[RUN] 901/1000
+[Session created] provider=KERNEL_HEADFUL id=eas9y0urwbdy6dsz3v9dxxwl 34ms
+[Browser connected] 550ms
+[Page loaded] 530ms
+[Session released] 40ms
+[RUN] 902/1000
+[Session created] provider=KERNEL_HEADFUL id=cdbs2ntg7q86jiblkopl5ysh 27ms
+[Browser connected] 370ms
+[Page loaded] 434ms
+[Session released] 40ms
+[RUN] 903/1000
+[Session created] provider=KERNEL_HEADFUL id=te4n7xwt4ab2zta5kmjqb5jh 25ms
+[Browser connected] 412ms
+[Page loaded] 395ms
+[Session released] 43ms
+[RUN] 904/1000
+[Session created] provider=KERNEL_HEADFUL id=n5l3u4g72fs4742kze8b7d70 45ms
+[Browser connected] 391ms
+[Page loaded] 387ms
+[Session released] 49ms
+[RUN] 905/1000
+[Session created] provider=KERNEL_HEADFUL id=zr8ak72ym8e61ogkz1voa7l1 18ms
+[Browser connected] 363ms
+[Page loaded] 335ms
+[Session released] 34ms
+[RUN] 906/1000
+[Session created] provider=KERNEL_HEADFUL id=afkxhd8o0x4n2pittyhprl9k 35ms
+[Browser connected] 401ms
+[Page loaded] 529ms
+[Session released] 34ms
+[RUN] 907/1000
+[Session created] provider=KERNEL_HEADFUL id=kzf2bc9o8aryipz39gx85y83 37ms
+[Browser connected] 406ms
+[Page loaded] 436ms
+[Session released] 42ms
+[RUN] 908/1000
+[Session created] provider=KERNEL_HEADFUL id=hbat1o46andfb4l7ehfqkcgu 36ms
+[Browser connected] 403ms
+[Page loaded] 429ms
+[Session released] 40ms
+[RUN] 909/1000
+[Session created] provider=KERNEL_HEADFUL id=sprepmdmha9vk1z3re89mqj3 27ms
+[Browser connected] 467ms
+[Page loaded] 532ms
+[Session released] 36ms
+[RUN] 910/1000
+[Session created] provider=KERNEL_HEADFUL id=ll5ck2xgsyjkoktmfga6tnfq 30ms
+[Browser connected] 328ms
+[Page loaded] 816ms
+[Session released] 44ms
+[RUN] 911/1000
+[Session created] provider=KERNEL_HEADFUL id=murfjn1aiw1hlurtmus2efce 38ms
+[Browser connected] 420ms
+[Page loaded] 391ms
+[Session released] 46ms
+[RUN] 912/1000
+[Session created] provider=KERNEL_HEADFUL id=kg3916insegl8vboa3smyowz 31ms
+[Browser connected] 597ms
+[Page loaded] 608ms
+[Session released] 40ms
+[RUN] 913/1000
+[Session created] provider=KERNEL_HEADFUL id=vdvcdpc222zgithxfuz9rhgl 19ms
+[Browser connected] 415ms
+[Page loaded] 461ms
+[Session released] 36ms
+[RUN] 914/1000
+[Session created] provider=KERNEL_HEADFUL id=npneqlnzs7bzufjiq5lobttq 42ms
+[Browser connected] 400ms
+[Page loaded] 427ms
+[Session released] 44ms
+[RUN] 915/1000
+[Session created] provider=KERNEL_HEADFUL id=ci3emsqhxxabvngm20yuql4d 43ms
+[Browser connected] 413ms
+[Page loaded] 405ms
+[Session released] 38ms
+[RUN] 916/1000
+[Session created] provider=KERNEL_HEADFUL id=pwaavacrrq77bmkm5bcwsn3b 31ms
+[Browser connected] 579ms
+[Page loaded] 465ms
+[Session released] 43ms
+[RUN] 917/1000
+[Session created] provider=KERNEL_HEADFUL id=x0vmsrduxn0zxgpj5vb5d1wk 47ms
+[Browser connected] 356ms
+[Page loaded] 398ms
+[Session released] 42ms
+[RUN] 918/1000
+[Session created] provider=KERNEL_HEADFUL id=hodz4ya5dtpuw2uux2uyrg2t 22ms
+[Browser connected] 445ms
+[Page loaded] 434ms
+[Session released] 41ms
+[RUN] 919/1000
+[Session created] provider=KERNEL_HEADFUL id=iwup3wkvps6oe600l3l2pm84 62ms
+[Browser connected] 308ms
+[Page loaded] 435ms
+[Session released] 40ms
+[RUN] 920/1000
+[Session created] provider=KERNEL_HEADFUL id=dlfenumhqa2ne6mbujdb4zvu 27ms
+[Browser connected] 424ms
+[Page loaded] 495ms
+[Session released] 39ms
+[RUN] 921/1000
+[Session created] provider=KERNEL_HEADFUL id=spvgpn6wtiut9khaq9k0ujar 32ms
+[Browser connected] 393ms
+[Page loaded] 401ms
+[Session released] 39ms
+[RUN] 922/1000
+[Session created] provider=KERNEL_HEADFUL id=knszcwvchrh8p172u9cs8prb 33ms
+[Browser connected] 350ms
+[Page loaded] 390ms
+[Session released] 39ms
+[RUN] 923/1000
+[Session created] provider=KERNEL_HEADFUL id=rb49cdeqo9912nyt6x0l7z6y 28ms
+[Browser connected] 363ms
+[Page loaded] 400ms
+[Session released] 44ms
+[RUN] 924/1000
+[Session created] provider=KERNEL_HEADFUL id=sxsfgobounavq6gonwqwc2ct 29ms
+[Browser connected] 416ms
+[Page loaded] 433ms
+[Session released] 40ms
+[RUN] 925/1000
+[Session created] provider=KERNEL_HEADFUL id=jsgcdcs65sd5mezj6vdtfxgp 19ms
+[Browser connected] 540ms
+[Page loaded] 504ms
+[Session released] 42ms
+[RUN] 926/1000
+[Session created] provider=KERNEL_HEADFUL id=vzlnva15qp9t3i6uzvy7goef 19ms
+[Browser connected] 359ms
+[Page loaded] 419ms
+[Session released] 36ms
+[RUN] 927/1000
+[Session created] provider=KERNEL_HEADFUL id=kkdkio9z4n25z05nbrr5cqdu 33ms
+[Browser connected] 442ms
+[Page loaded] 461ms
+[Session released] 48ms
+[RUN] 928/1000
+[Session created] provider=KERNEL_HEADFUL id=ca2fzwicuwulbh8f80uftrhg 24ms
+[Browser connected] 368ms
+[Page loaded] 519ms
+[Session released] 42ms
+[RUN] 929/1000
+[Session created] provider=KERNEL_HEADFUL id=zvbw0rwm07ltq8wcq34yc79n 36ms
+[Browser connected] 434ms
+[Page loaded] 466ms
+[Session released] 38ms
+[RUN] 930/1000
+[Session created] provider=KERNEL_HEADFUL id=kruyazts4o72fx15koxz0wgy 45ms
+[Browser connected] 411ms
+[Page loaded] 415ms
+[Session released] 38ms
+[RUN] 931/1000
+[Session created] provider=KERNEL_HEADFUL id=lze73jv8780lxbtvglgomz7m 30ms
+[Browser connected] 371ms
+[Page loaded] 536ms
+[Session released] 38ms
+[RUN] 932/1000
+[Session created] provider=KERNEL_HEADFUL id=t44z4smmdtzq2fo1tssv5b8o 26ms
+[Browser connected] 431ms
+[Page loaded] 445ms
+[Session released] 52ms
+[RUN] 933/1000
+[Session created] provider=KERNEL_HEADFUL id=zlgqswul89c7wq604dk1agnc 31ms
+[Browser connected] 334ms
+[Page loaded] 351ms
+[Session released] 41ms
+[RUN] 934/1000
+[Session created] provider=KERNEL_HEADFUL id=qyqxto0dqm3d7s8aecfcbq5m 25ms
+[Browser connected] 377ms
+[Page loaded] 433ms
+[Session released] 57ms
+[RUN] 935/1000
+[Session created] provider=KERNEL_HEADFUL id=v5yrqulogc03hm98ctqvx8kl 17ms
+[Browser connected] 325ms
+[Page loaded] 283ms
+[Session released] 30ms
+[RUN] 936/1000
+[Session created] provider=KERNEL_HEADFUL id=khm46m8j692060bz6dqgmr2g 35ms
+[Browser connected] 426ms
+[Page loaded] 351ms
+[Session released] 43ms
+[RUN] 937/1000
+[Session created] provider=KERNEL_HEADFUL id=zj1w21s98xvvs3263k5ll28j 31ms
+[Browser connected] 379ms
+[Page loaded] 374ms
+[Session released] 42ms
+[RUN] 938/1000
+[Session created] provider=KERNEL_HEADFUL id=oqavhzqdo4mx7j682br4y19m 26ms
+[Browser connected] 440ms
+[Page loaded] 414ms
+[Session released] 42ms
+[RUN] 939/1000
+[Session created] provider=KERNEL_HEADFUL id=n5ytbycj8uwc2crwtejtj7kq 27ms
+[Browser connected] 395ms
+[Page loaded] 496ms
+[Session released] 39ms
+[RUN] 940/1000
+[Session created] provider=KERNEL_HEADFUL id=fevt88wva5fepvvo42eyum7f 24ms
+[Browser connected] 576ms
+[Page loaded] 443ms
+[Session released] 39ms
+[RUN] 941/1000
+[Session created] provider=KERNEL_HEADFUL id=ilsxu80ma4nien8b1dikg3lj 34ms
+[Browser connected] 463ms
+[Page loaded] 456ms
+[Session released] 41ms
+[RUN] 942/1000
+[Session created] provider=KERNEL_HEADFUL id=v37e60g798cqmnozoqehuldf 39ms
+[Browser connected] 314ms
+[Page loaded] 336ms
+[Session released] 42ms
+[RUN] 943/1000
+[Session created] provider=KERNEL_HEADFUL id=je4l4csg88gdx9vqxtoflb79 33ms
+[Browser connected] 405ms
+[Page loaded] 669ms
+[Session released] 33ms
+[RUN] 944/1000
+[Session created] provider=KERNEL_HEADFUL id=bju13utn97jelve1qz2vbr28 29ms
+[Browser connected] 324ms
+[Page loaded] 321ms
+[Session released] 35ms
+[RUN] 945/1000
+[Session created] provider=KERNEL_HEADFUL id=fcyxbyo3dus5gun9ok22asn3 17ms
+[Browser connected] 439ms
+[Page loaded] 458ms
+[Session released] 56ms
+[RUN] 946/1000
+[Session created] provider=KERNEL_HEADFUL id=qckrxrsoprgzfsmmf8u7qppc 36ms
+[Browser connected] 593ms
+[Page loaded] 448ms
+[Session released] 46ms
+[RUN] 947/1000
+[Session created] provider=KERNEL_HEADFUL id=uaezis3qx12nd425l5qjgcde 41ms
+[Browser connected] 555ms
+[Page loaded] 451ms
+[Session released] 37ms
+[RUN] 948/1000
+[Session created] provider=KERNEL_HEADFUL id=nyic5n8csfjkojch9x7x9xxb 35ms
+[Browser connected] 387ms
+[Page loaded] 580ms
+[Session released] 42ms
+[RUN] 949/1000
+[Session created] provider=KERNEL_HEADFUL id=fkx2rlnnnvwdg7jrrgs9h27k 31ms
+[Browser connected] 369ms
+[Page loaded] 513ms
+[Session released] 42ms
+[RUN] 950/1000
+[Session created] provider=KERNEL_HEADFUL id=hxuqn7xzli3sntrkdgfzp6zc 21ms
+[Browser connected] 411ms
+[Page loaded] 373ms
+[Session released] 46ms
+[RUN] 951/1000
+[Session created] provider=KERNEL_HEADFUL id=q3vpawk5m3jnlon6e2k2dlgn 27ms
+[Browser connected] 389ms
+[Page loaded] 453ms
+[Session released] 33ms
+[RUN] 952/1000
+[Session created] provider=KERNEL_HEADFUL id=oi1ujup7ek2ch1ujkozlgkam 33ms
+[Browser connected] 346ms
+[Page loaded] 384ms
+[Session released] 39ms
+[RUN] 953/1000
+[Session created] provider=KERNEL_HEADFUL id=ot470jtpg93hfo48cin5y84f 24ms
+[Browser connected] 387ms
+[Page loaded] 526ms
+[Session released] 44ms
+[RUN] 954/1000
+[Session created] provider=KERNEL_HEADFUL id=livwg7ne04t2tbv6hhj0fdpp 30ms
+[Browser connected] 427ms
+[Page loaded] 336ms
+[Session released] 55ms
+[RUN] 955/1000
+[Session created] provider=KERNEL_HEADFUL id=xtqmz0qt3lvdti37l43qzs59 24ms
+[Browser connected] 378ms
+[Page loaded] 365ms
+[Session released] 48ms
+[RUN] 956/1000
+[Session created] provider=KERNEL_HEADFUL id=lakwytqeuces9wi4vxnivjni 25ms
+[Browser connected] 375ms
+[Page loaded] 373ms
+[Session released] 43ms
+[RUN] 957/1000
+[Session created] provider=KERNEL_HEADFUL id=ae8qoew4ev5g61wnfretjqcq 28ms
+[Browser connected] 373ms
+[Page loaded] 389ms
+[Session released] 37ms
+[RUN] 958/1000
+[Session created] provider=KERNEL_HEADFUL id=pxfbi8e0ny83sxb3tf1keogf 33ms
+[Browser connected] 436ms
+[Page loaded] 487ms
+[Session released] 42ms
+[RUN] 959/1000
+[Session created] provider=KERNEL_HEADFUL id=el7m6quyjf64ykuyv7nml4zw 21ms
+[Browser connected] 341ms
+[Page loaded] 680ms
+[Session released] 40ms
+[RUN] 960/1000
+[Session created] provider=KERNEL_HEADFUL id=g8g4401n4835gy0tjiq6yolx 37ms
+[Browser connected] 396ms
+[Page loaded] 379ms
+[Session released] 46ms
+[RUN] 961/1000
+[Session created] provider=KERNEL_HEADFUL id=qf6qnyplix0fnncnct37xu4l 29ms
+[Browser connected] 446ms
+[Page loaded] 397ms
+[Session released] 41ms
+[RUN] 962/1000
+[Session created] provider=KERNEL_HEADFUL id=g49zvz5lgpzl30a523j9fx97 53ms
+[Browser connected] 371ms
+[Page loaded] 289ms
+[Session released] 38ms
+[RUN] 963/1000
+[Session created] provider=KERNEL_HEADFUL id=px8e01gfjwj5gfotav8bghh7 38ms
+[Browser connected] 339ms
+[Page loaded] 259ms
+[Session released] 41ms
+[RUN] 964/1000
+[Session created] provider=KERNEL_HEADFUL id=l3qquwrho101gtxub3g8cj0t 24ms
+[Browser connected] 421ms
+[Page loaded] 379ms
+[Session released] 43ms
+[RUN] 965/1000
+[Session created] provider=KERNEL_HEADFUL id=t64ofmkzjif6x1vpvr9ljy9q 44ms
+[Browser connected] 429ms
+[Page loaded] 355ms
+[Session released] 53ms
+[RUN] 966/1000
+[Session created] provider=KERNEL_HEADFUL id=j8vevcu6kobusl0jcd4eachk 25ms
+[Browser connected] 339ms
+[Page loaded] 464ms
+[Session released] 52ms
+[RUN] 967/1000
+[Session created] provider=KERNEL_HEADFUL id=bbcsqtwy0r8yz5a7o9ssc1sy 28ms
+[Browser connected] 338ms
+[Page loaded] 303ms
+[Session released] 44ms
+[RUN] 968/1000
+[Session created] provider=KERNEL_HEADFUL id=tz5jdrqdxve8l9y92orrh8gn 28ms
+[Browser connected] 365ms
+[Page loaded] 575ms
+[Session released] 37ms
+[RUN] 969/1000
+[Session created] provider=KERNEL_HEADFUL id=ejjqh84sbjw7t28uh5zz7jtc 26ms
+[Browser connected] 312ms
+[Page loaded] 324ms
+[Session released] 40ms
+[RUN] 970/1000
+[Session created] provider=KERNEL_HEADFUL id=oumw8cazspfnnyk7z86kas84 29ms
+[Browser connected] 384ms
+[Page loaded] 370ms
+[Session released] 34ms
+[RUN] 971/1000
+[Session created] provider=KERNEL_HEADFUL id=haqgnbx1uqz2749h21axq2bz 25ms
+[Browser connected] 364ms
+[Page loaded] 554ms
+[Session released] 32ms
+[RUN] 972/1000
+[Session created] provider=KERNEL_HEADFUL id=e8vex4iauov4spp91agtzkin 22ms
+[Browser connected] 406ms
+[Page loaded] 647ms
+[Session released] 45ms
+[RUN] 973/1000
+[Session created] provider=KERNEL_HEADFUL id=s4yc7gk00en4q5lhtojukf9o 30ms
+[Browser connected] 430ms
+[Page loaded] 519ms
+[Session released] 43ms
+[RUN] 974/1000
+[Session created] provider=KERNEL_HEADFUL id=qapbwbvd8l4semipytjhdtlc 32ms
+[Browser connected] 423ms
+[Page loaded] 720ms
+[Session released] 33ms
+[RUN] 975/1000
+[Session created] provider=KERNEL_HEADFUL id=fdxg0z9ipr9od74yz4qg4b02 29ms
+[Browser connected] 390ms
+[Page loaded] 322ms
+[Session released] 38ms
+[RUN] 976/1000
+[Session created] provider=KERNEL_HEADFUL id=fswdtjkui2ipl92tm0uwvdmh 21ms
+[Browser connected] 354ms
+[Page loaded] 368ms
+[Session released] 42ms
+[RUN] 977/1000
+[Session created] provider=KERNEL_HEADFUL id=e6q7umz32ya3jgngrfq4wa4w 41ms
+[Browser connected] 421ms
+[Page loaded] 477ms
+[Session released] 40ms
+[RUN] 978/1000
+[Session created] provider=KERNEL_HEADFUL id=ap6a2uzfxgxzbtmtzzdp0id5 24ms
+[Browser connected] 396ms
+[Page loaded] 406ms
+[Session released] 44ms
+[RUN] 979/1000
+[Session created] provider=KERNEL_HEADFUL id=tivttd3hoznrtkq8lbzn1b9j 21ms
+[Browser connected] 421ms
+[Page loaded] 356ms
+[Session released] 42ms
+[RUN] 980/1000
+[Session created] provider=KERNEL_HEADFUL id=y7iouv35bgjw87h9yyomd7o7 27ms
+[Browser connected] 393ms
+[Page loaded] 475ms
+[Session released] 37ms
+[RUN] 981/1000
+[Session created] provider=KERNEL_HEADFUL id=srrep1ks9d9cocgtyxhkt568 19ms
+[Browser connected] 560ms
+[Page loaded] 438ms
+[Session released] 36ms
+[RUN] 982/1000
+[Session created] provider=KERNEL_HEADFUL id=mil2fs0xzbpkvb620hia56we 34ms
+[Browser connected] 353ms
+[Page loaded] 357ms
+[Session released] 42ms
+[RUN] 983/1000
+[Session created] provider=KERNEL_HEADFUL id=vguf2p4dum2x76hyy39z7ri4 25ms
+[Browser connected] 370ms
+[Page loaded] 381ms
+[Session released] 39ms
+[RUN] 984/1000
+[Session created] provider=KERNEL_HEADFUL id=pjw7u66zmevfgtfsrqg2qtcf 42ms
+[Browser connected] 381ms
+[Page loaded] 396ms
+[Session released] 35ms
+[RUN] 985/1000
+[Session created] provider=KERNEL_HEADFUL id=ny1mvo13y3a9zo9x5tu9z30x 38ms
+[Browser connected] 344ms
+[Page loaded] 362ms
+[Session released] 39ms
+[RUN] 986/1000
+[Session created] provider=KERNEL_HEADFUL id=pba2koprpeah3npxpjm2xrsa 26ms
+[Browser connected] 386ms
+[Page loaded] 399ms
+[Session released] 40ms
+[RUN] 987/1000
+[Session created] provider=KERNEL_HEADFUL id=fzc0aur3g87v3be1lplph9db 31ms
+[Browser connected] 447ms
+[Page loaded] 873ms
+[Session released] 38ms
+[RUN] 988/1000
+[Session created] provider=KERNEL_HEADFUL id=yjfuq9r1912s6wf461ntxpuy 20ms
+[Browser connected] 366ms
+[Page loaded] 299ms
+[Session released] 37ms
+[RUN] 989/1000
+[Session created] provider=KERNEL_HEADFUL id=ohgx30rvzjwcq8kjzf7lxlju 19ms
+[Browser connected] 553ms
+[Page loaded] 456ms
+[Session released] 39ms
+[RUN] 990/1000
+[Session created] provider=KERNEL_HEADFUL id=v60eqrxnt9thx19n7yg793ol 20ms
+[Browser connected] 572ms
+[Page loaded] 428ms
+[Session released] 36ms
+[RUN] 991/1000
+[Session created] provider=KERNEL_HEADFUL id=p8yx1s09x2h13ypngrz51gbr 30ms
+[Browser connected] 424ms
+[Page loaded] 451ms
+[Session released] 46ms
+[RUN] 992/1000
+[Session created] provider=KERNEL_HEADFUL id=r2adrzj2bdp4k1130cxeo1xr 41ms
+[Browser connected] 467ms
+[Page loaded] 433ms
+[Session released] 41ms
+[RUN] 993/1000
+[Session created] provider=KERNEL_HEADFUL id=gr2y2fiygb2zxxzo1rvuxjn7 28ms
+[Browser connected] 585ms
+[Page loaded] 430ms
+[Session released] 38ms
+[RUN] 994/1000
+[Session created] provider=KERNEL_HEADFUL id=xznqzfxq4wgxnbgrd1htnszv 23ms
+[Browser connected] 380ms
+[Page loaded] 348ms
+[Session released] 38ms
+[RUN] 995/1000
+[Session created] provider=KERNEL_HEADFUL id=qti2ptblk656mx3w69e26970 16ms
+[Browser connected] 395ms
+[Page loaded] 386ms
+[Session released] 41ms
+[RUN] 996/1000
+[Session created] provider=KERNEL_HEADFUL id=mafhqokcxo2vm07sbglac2vs 29ms
+[Browser connected] 347ms
+[Page loaded] 433ms
+[Session released] 44ms
+[RUN] 997/1000
+[Session created] provider=KERNEL_HEADFUL id=w7e5wgaxtow0brmcabx333jd 22ms
+[Browser connected] 375ms
+[Page loaded] 403ms
+[Session released] 39ms
+[RUN] 998/1000
+[Session created] provider=KERNEL_HEADFUL id=r9hd7huwbsa2v42ihnkinrw6 41ms
+[Browser connected] 380ms
+[Page loaded] 396ms
+[Session released] 44ms
+[RUN] 999/1000
+[Session created] provider=KERNEL_HEADFUL id=dw6khbjyrir6r83usc3h69bu 38ms
+[Browser connected] 354ms
+[Page loaded] 519ms
+[Session released] 39ms
+[RUN] 1000/1000
+[Session created] provider=KERNEL_HEADFUL id=oe44pwkuaqcbevgtm8iytrv1 33ms
+[Browser connected] 537ms
+[Page loaded] 521ms
+[Session released] 42ms
+[DONE] success=1000 failure=0
