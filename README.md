@@ -38,6 +38,8 @@ For providers that support region selection, we explicitly set **us-east**:
 
 The remaining providers (Kernel, Anchor Browser, Browser Use, Notte, Steel) don't expose a region selector.
 
+For Kernel, Browser Use and Anchor Browser, the region  has been inferred. 
+
 The remaining providers don't expose a region selector — their browser instances run in fixed locations.
 
 ### Fairness

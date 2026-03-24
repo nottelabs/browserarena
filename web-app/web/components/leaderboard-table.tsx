@@ -1,4 +1,10 @@
-import type { ProviderStats, PercentileType, VmMeta } from "@/lib/data";
+import {
+  getProviderRegionLabel,
+  vmMetaRegionLabel,
+  type ProviderStats,
+  type PercentileType,
+  type VmMeta,
+} from "@/lib/data";
 import {
   Table,
   TableBody,
@@ -39,8 +45,36 @@ function formatDate(iso: string): string {
   return `${d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })} ${d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} UTC`;
 }
 
-function MachineIcon({ meta }: { meta: VmMeta }) {
-  const durationMs = meta.started_at && meta.finished_at
+/** `runDate` is YYYY-MM-DD from the results folder */
+function formatRunDate(ymd: string): string {
+  const [y, m, d] = ymd.split("-").map(Number);
+  if (!y || !m || !d) return ymd;
+  const date = new Date(Date.UTC(y, m - 1, d));
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+function VmMetaTooltipBody({
+  meta,
+  runDate,
+}: {
+  meta?: VmMeta;
+  runDate?: string;
+}) {
+  const regionFromMeta = vmMetaRegionLabel(meta);
+  const machineLine =
+    meta?.instance_type && regionFromMeta
+      ? `${meta.instance_type} · ${regionFromMeta}`
+      : meta?.instance_type
+        ? meta.instance_type
+        : regionFromMeta
+          ? regionFromMeta
+          : null;
+  const durationMs = meta?.started_at && meta?.finished_at
     ? new Date(meta.finished_at).getTime() - new Date(meta.started_at).getTime()
     : null;
   const durationLabel = durationMs != null
@@ -49,6 +83,43 @@ function MachineIcon({ meta }: { meta: VmMeta }) {
       : `${Math.round(durationMs / 60_000)}m`
     : null;
 
+  return (
+    <div className="grid grid-cols-[auto_1fr] text-[0.65rem] font-mono">
+      {runDate && (
+        <>
+          <span className="px-3 py-1.5 text-muted-foreground bg-muted/30">Run date</span>
+          <span className="px-3 py-1.5">{formatRunDate(runDate)}</span>
+        </>
+      )}
+      {machineLine && (
+        <>
+          <span className="px-3 py-1.5 text-muted-foreground bg-muted/30">Machine</span>
+          <span className="px-3 py-1.5">{machineLine}</span>
+        </>
+      )}
+      {meta?.started_at && (
+        <>
+          <span className="px-3 py-1.5 text-muted-foreground bg-muted/30">Started</span>
+          <span className="px-3 py-1.5">{formatDate(meta.started_at)}</span>
+        </>
+      )}
+      {durationLabel != null && (
+        <>
+          <span className="px-3 py-1.5 text-muted-foreground bg-muted/30">Duration</span>
+          <span className="px-3 py-1.5">{durationLabel}</span>
+        </>
+      )}
+    </div>
+  );
+}
+
+function MachineIcon({
+  meta,
+  runDate,
+}: {
+  meta: VmMeta;
+  runDate?: string;
+}) {
   return (
     <Tooltip>
       <TooltipTrigger asChild>
@@ -59,32 +130,7 @@ function MachineIcon({ meta }: { meta: VmMeta }) {
         </span>
       </TooltipTrigger>
       <TooltipContent side="right" className="p-0 overflow-hidden">
-        <div className="grid grid-cols-[auto_1fr] text-[0.65rem] font-mono">
-          {meta.cloud && meta.region && (
-            <>
-              <span className="px-3 py-1.5 text-muted-foreground bg-muted/30">Region</span>
-              <span className="px-3 py-1.5">{meta.cloud.toUpperCase()} {meta.region}</span>
-            </>
-          )}
-          {meta.instance_type && (
-            <>
-              <span className="px-3 py-1.5 text-muted-foreground bg-muted/30">Machine</span>
-              <span className="px-3 py-1.5">{meta.instance_type}</span>
-            </>
-          )}
-          {meta.started_at && (
-            <>
-              <span className="px-3 py-1.5 text-muted-foreground bg-muted/30">Started</span>
-              <span className="px-3 py-1.5">{formatDate(meta.started_at)}</span>
-            </>
-          )}
-          {durationLabel != null && (
-            <>
-              <span className="px-3 py-1.5 text-muted-foreground bg-muted/30">Duration</span>
-              <span className="px-3 py-1.5">{durationLabel}</span>
-            </>
-          )}
-        </div>
+        <VmMetaTooltipBody meta={meta} runDate={runDate} />
       </TooltipContent>
     </Tooltip>
   );
@@ -137,6 +183,7 @@ export function LeaderboardTable({
           {data.map((p) => {
             const isWinner = p.rank === 1;
             const totalMs = p[totalKey] as number;
+            const providerRegion = getProviderRegionLabel(p.provider, p.vmMeta);
             return (
               <TableRow
                 key={p.provider}
@@ -167,8 +214,42 @@ export function LeaderboardTable({
                       <span className="font-mono text-[0.6rem] text-muted-foreground">
                         {p.successRate.toFixed(1)}%
                       </span>
-                      {p.vmMeta && <MachineIcon meta={p.vmMeta} />}
+                      {p.vmMeta && (
+                        <MachineIcon meta={p.vmMeta} runDate={p.runDate} />
+                      )}
                     </div>
+                    {(p.runDate || providerRegion) ? (
+                      p.vmMeta ? (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <p className="text-[0.58rem] text-muted-foreground/85 font-mono leading-snug cursor-default">
+                              {[p.runDate ? formatRunDate(p.runDate) : null, providerRegion]
+                                .filter(Boolean)
+                                .join(" · ")}
+                            </p>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom" className="p-0 overflow-hidden">
+                            <VmMetaTooltipBody
+                              meta={p.vmMeta}
+                              runDate={p.runDate}
+                            />
+                          </TooltipContent>
+                        </Tooltip>
+                      ) : (
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <p className="text-[0.58rem] text-muted-foreground/85 font-mono leading-snug cursor-default">
+                              {[p.runDate ? formatRunDate(p.runDate) : null, providerRegion]
+                                .filter(Boolean)
+                                .join(" · ")}
+                            </p>
+                          </TooltipTrigger>
+                          <TooltipContent side="bottom" className="p-0 overflow-hidden">
+                            <VmMetaTooltipBody runDate={p.runDate} />
+                          </TooltipContent>
+                        </Tooltip>
+                      )
+                    ) : null}
                     {p.disclaimer ? (
                       <p className="text-[0.58rem] text-muted-foreground/85 leading-snug max-w-[18rem]">
                         {p.disclaimer}

@@ -30,6 +30,8 @@ export interface ProviderStats {
   displayName: string;
   url: string;
   disclaimer?: string;
+  /** YYYY-MM-DD of the results folder used for this provider's run */
+  runDate?: string;
   vmMeta?: VmMeta;
   totalRuns: number;
   successRate: number;
@@ -103,6 +105,40 @@ const PROVIDER_META: Record<
   BROWSER_USE: { displayName: "Browser Use", url: "https://browser-use.com" },
 };
 
+/**
+ * Provider **browser / CDP** location for the leaderboard subtitle (where the cloud
+ * browser session lives — CDP WebSocket path), not proxy egress country.
+ * - Kernel: OpenAPI `cdp_ws_url` examples use `proxy.yul-*.onkernel.com` (YUL = Montreal).
+ * - Anchor & Browser Use: **~us-east-2** from README TCP+TLS RTT to CDP hosts (`connect.anchorbrowser.io`,
+ *   Browser Use session `cdpUrl`); not `country_code` / `proxyCountryCode` (proxy-only).
+ */
+export const PROVIDER_REGION_README: Record<string, string> = {
+  BROWSERBASE: "us-east-1",
+  STEEL: "us-east-1",
+  NOTTE: "us-east-1",
+  KERNEL: "Montreal (YUL)",
+  KERNEL_HEADFUL: "Montreal (YUL)",
+  ANCHORBROWSER: "us-east-2",
+  HYPERBROWSER: "us-east",
+  BROWSER_USE: "us-east-2",
+};
+
+/** Region from benchmark VM `_meta.json` (cloud + region when present). */
+export function vmMetaRegionLabel(vmMeta?: VmMeta): string | null {
+  if (!vmMeta?.region) return null;
+  return vmMeta.cloud
+    ? `${vmMeta.cloud.toUpperCase()} ${vmMeta.region}`
+    : vmMeta.region;
+}
+
+export function getProviderRegionLabel(
+  provider: string,
+  vmMeta?: VmMeta
+): string | null {
+  const fromReadme = PROVIDER_REGION_README[provider];
+  if (fromReadme) return fromReadme;
+  return vmMetaRegionLabel(vmMeta);
+}
 
 function median(values: number[]): number {
   if (values.length === 0) return 0;
@@ -166,8 +202,13 @@ function parseJsonlLines(content: string): BenchmarkEntry[] {
 async function loadEntriesFromGitHub(
   benchmark: "hello-browser" | "v0",
   date?: string
-): Promise<{ entries: BenchmarkEntry[]; dateRange?: { min: string; max: string } }> {
+): Promise<{
+  entries: BenchmarkEntry[];
+  dateRange?: { min: string; max: string };
+  providerRunDateMap: Map<string, string>;
+}> {
   const providerMap = new Map<string, BenchmarkEntry[]>();
+  const providerRunDateMap = new Map<string, string>();
   const basePath = `results/${benchmark}`;
 
   // Structure: results/{benchmark}/{provider}/{date}/results.jsonl
@@ -191,10 +232,14 @@ async function loadEntriesFromGitHub(
       const content = await fetchFromGitHub(
         `${basePath}/${dir.name}/${latestDate}/results.jsonl`
       );
-      for (const entry of parseJsonlLines(content)) {
+      const lines = parseJsonlLines(content);
+      for (const entry of lines) {
         const existing = providerMap.get(entry.provider) || [];
         existing.push(entry);
         providerMap.set(entry.provider, existing);
+      }
+      if (lines.length > 0) {
+        providerRunDateMap.set(lines[0]!.provider, latestDate);
       }
     } catch {
       // skip if file doesn't exist
@@ -207,21 +252,28 @@ async function loadEntriesFromGitHub(
     const dates = entries.map((e) => e.created_at).filter(Boolean).sort();
     dateRange = { min: dates[0]!, max: dates[dates.length - 1]! };
   }
-  return { entries, dateRange };
+  return { entries, dateRange, providerRunDateMap };
 }
 
 function loadEntriesFromFs(
   benchmark: "hello-browser" | "v0",
   date?: string
-): { entries: BenchmarkEntry[]; dateRange?: { min: string; max: string }; providerMetaMap: Map<string, VmMeta> } {
+): {
+  entries: BenchmarkEntry[];
+  dateRange?: { min: string; max: string };
+  providerMetaMap: Map<string, VmMeta>;
+  providerRunDateMap: Map<string, string>;
+} {
   const resultsDir = getResultsDir();
   const providerMap = new Map<string, BenchmarkEntry[]>();
   const providerMetaMap = new Map<string, VmMeta>();
+  const providerRunDateMap = new Map<string, string>();
   let dateRange: { min: string; max: string } | undefined;
 
   // Structure: results/{benchmark}/{provider}/{date}/results.jsonl
   const benchDir = path.join(resultsDir, benchmark);
-  if (!fs.existsSync(benchDir)) return { entries: [], providerMetaMap };
+  if (!fs.existsSync(benchDir))
+    return { entries: [], providerMetaMap, providerRunDateMap };
 
   const providerDirs = fs.readdirSync(benchDir, { withFileTypes: true })
     .filter((e) => e.isDirectory() && !e.name.startsWith("_"));
@@ -257,6 +309,7 @@ function loadEntriesFromFs(
 
     // Load meta
     if (providerName) {
+      providerRunDateMap.set(providerName, latestDate);
       const metaFile = path.join(runDir, "_meta.json");
       if (fs.existsSync(metaFile)) {
         try {
@@ -276,6 +329,7 @@ function loadEntriesFromFs(
     entries: Array.from(providerMap.values()).flat(),
     dateRange,
     providerMetaMap,
+    providerRunDateMap,
   };
 }
 
@@ -327,6 +381,8 @@ export async function loadLeaderboard(
   const allEntries = fsResult?.entries ?? ghResult?.entries ?? [];
   const dateRange = fsResult?.dateRange ?? ghResult?.dateRange;
   const providerMetaMap = fsResult?.providerMetaMap ?? new Map<string, VmMeta>();
+  const providerRunDateMap =
+    fsResult?.providerRunDateMap ?? ghResult?.providerRunDateMap ?? new Map<string, string>();
 
   // Use first available provider meta for the overall VM meta display
   const vmMeta = providerMetaMap.size > 0
@@ -401,11 +457,13 @@ export async function loadLeaderboard(
       medianCostUsd = getMedianCostUsd(provider, durationsMs);
     }
 
+    const runDate = providerRunDateMap.get(provider);
     stats.push({
       provider,
       displayName: meta.displayName,
       url: meta.url,
       ...(meta.disclaimer ? { disclaimer: meta.disclaimer } : {}),
+      ...(runDate ? { runDate } : {}),
       vmMeta: providerMetaMap.get(provider),
       totalRuns: entries.length,
       successRate,
