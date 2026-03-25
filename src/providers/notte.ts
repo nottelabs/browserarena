@@ -1,32 +1,12 @@
 import type { ProviderClient, ProviderSession } from "../types.js";
 import { requireEnv } from "../utils/env.js";
 
-interface SessionStartRequest {
-  headless?: boolean;
-  solve_captchas?: boolean;
-  max_duration_minutes?: number;
-  idle_timeout_minutes?: number;
-  browser_type?: "chromium" | "chrome" | "firefox" | "chrome-nightly" | "chrome-turbo";
-  profile?: {
-    pool?: "local_pool" | "remote_pool";
-  };
-}
-
 interface SessionResponse {
   session_id: string;
   status: string;
   created_at: string;
   last_accessed_at: string;
-}
-
-interface SessionDebugResponse {
-  debug_url: string;
-  ws: {
-    cdp: string;
-    recording: string;
-    logs: string;
-  };
-  tabs: any[];
+  cdp_url?: string;
 }
 
 export class NotteProvider implements ProviderClient {
@@ -76,29 +56,9 @@ export class NotteProvider implements ProviderClient {
       throw new Error("Invalid Notte session response: missing session_id");
     }
 
-    // Get the CDP URL from the debug endpoint
-    const debugResponse = await fetch(
-      `${this.baseUrl}/sessions/${sessionId}/debug`,
-      {
-        method: "GET",
-        headers: {
-          "Authorization": `Bearer ${this.getApiKey()}`,
-        },
-      }
-    );
-
-    if (!debugResponse.ok) {
-      const errorText = await debugResponse.text();
-      const isHtml = errorText.trim().startsWith('<!DOCTYPE') || errorText.trim().startsWith('<html');
-      const errorBody = isHtml ? debugResponse.statusText : errorText;
-      throw new Error(`Failed to get Notte debug info: HTTP ${debugResponse.status} - ${errorBody}`);
-    }
-
-    const debugData: SessionDebugResponse = await debugResponse.json();
-    const cdpUrl = debugData.ws?.cdp;
-
+    const cdpUrl = sessionData.cdp_url;
     if (!cdpUrl) {
-      throw new Error("Invalid Notte debug response: missing ws.cdp");
+      throw new Error("Invalid Notte session response: missing cdp_url");
     }
 
     return { id: sessionId, cdpUrl };
