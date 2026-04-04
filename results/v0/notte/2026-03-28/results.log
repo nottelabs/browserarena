@@ -1,0 +1,35 @@
+[LOG] Saving logs to results/v0/notte/2026-03-28/results.log
+
+[CONFIG] provider=NOTTE concurrency=1 runs=1 url=https://en.wikipedia.org/wiki/Artificial_intelligence
+[WARMUP] 1/3
+[Session created] provider=NOTTE id=92fdecee-7918-497b-a74d-9c902a4a590b 1125ms
+[Browser connected] 1137ms
+[Extract] 3293ms — "Artificial intelligence" (5 links found)
+[Crawl] 62102ms — 35 pages: Ai, Artificial intelligence (disambiguation), Artificial general intelligence, Intelligent agent, Recursive self-improvement, Artificial intelligence, Ai (chimpanzee), Artificial Intelligence (EP), Artificial Intelligence (John Cale album), Generative AI, Superintelligence, Intelligent designer, Embodied agent, Personal development, Automated planning and scheduling, Computer vision, General game playing, Species, Chimpanzee, Extended play, Tom Cardy, Album, John Cale, Théâtre D'opéra Spatial, Midjourney, Superintelligence (film), Intelligence, Intelligent design, Watchmaker analogy, Human, Mobile robot, Personality development, Self-awareness, Knowledge representation and reasoning, Natural language processing
+[Form] 14016ms — confirmed=true
+[Total] 79413ms
+[Session released] 596ms
+[WARMUP] 2/3
+[Session created] provider=NOTTE id=731d679d-dfd2-4d4e-86f7-419cb80c9255 990ms
+[Browser connected] 1065ms
+[Extract] 3466ms — "Artificial intelligence" (5 links found)
+[Crawl] 58726ms — 35 pages: Ai, Artificial intelligence (disambiguation), Artificial general intelligence, Intelligent agent, Recursive self-improvement, Artificial intelligence, Ai (chimpanzee), Artificial Intelligence (EP), Artificial Intelligence (John Cale album), Generative AI, Superintelligence, Intelligent designer, Embodied agent, Personal development, Automated planning and scheduling, Computer vision, General game playing, Species, Chimpanzee, Extended play, Tom Cardy, Album, John Cale, Théâtre D'opéra Spatial, Midjourney, Superintelligence (film), Intelligence, Intelligent design, Watchmaker analogy, Human, Mobile robot, Personality development, Self-awareness, Knowledge representation and reasoning, Natural language processing
+[Form] 14214ms — confirmed=true
+[Total] 76408ms
+[Session released] 594ms
+[WARMUP] 3/3
+[Session created] provider=NOTTE id=46f784cf-ded5-4816-a40c-067f402fad61 715ms
+[Browser connected] 1094ms
+[Extract] 3489ms — "Artificial intelligence" (5 links found)
+[Crawl] 58396ms — 35 pages: Ai, Artificial intelligence (disambiguation), Artificial general intelligence, Intelligent agent, Recursive self-improvement, Artificial intelligence, Ai (chimpanzee), Artificial Intelligence (EP), Artificial Intelligence (John Cale album), Generative AI, Superintelligence, Intelligent designer, Embodied agent, Personal development, Automated planning and scheduling, Computer vision, General game playing, Species, Chimpanzee, Extended play, Tom Cardy, Album, John Cale, Théâtre D'opéra Spatial, Midjourney, Superintelligence (film), Intelligence, Intelligent design, Watchmaker analogy, Human, Mobile robot, Personality development, Self-awareness, Knowledge representation and reasoning, Natural language processing
+[Form] 13818ms — confirmed=true
+[Total] 75705ms
+[Session released] 610ms
+[RUN] 1/1 (c=1)
+[Session created] provider=NOTTE id=89acb551-9b8b-4c7f-b6b3-19cb93167352 702ms
+[Browser connected] 1044ms
+[Extract] 3181ms — "Artificial intelligence" (5 links found)
+[Crawl] 60845ms — 35 pages: Ai, Artificial intelligence (disambiguation), Artificial general intelligence, Intelligent agent, Recursive self-improvement, Artificial intelligence, Ai (chimpanzee), Artificial Intelligence (EP), Artificial Intelligence (John Cale album), Generative AI, Superintelligence, Intelligent designer, Embodied agent, Personal development, Automated planning and scheduling, Computer vision, General game playing, Species, Chimpanzee, Extended play, Tom Cardy, Album, John Cale, Théâtre D'opéra Spatial, Midjourney, Superintelligence (film), Intelligence, Intelligent design, Watchmaker analogy, Human, Mobile robot, Personality development, Self-awareness, Knowledge representation and reasoning, Natural language processing
+[Form] 13709ms — confirmed=true
+[Total] 77738ms
+[Session released] 585ms

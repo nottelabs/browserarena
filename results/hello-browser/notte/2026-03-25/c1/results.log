@@ -1,0 +1,5125 @@
+[LOG] Saving logs to results/hello-browser/notte/2026-03-25/results.log
+
+[CONFIG] provider=NOTTE runs=1000
+[WARMUP] 1/10
+[Session created] provider=NOTTE id=79068b97-fd75-438a-91a0-820e678f75c5 321ms
+[Browser connected] 138ms
+[Page loaded] 1093ms
+[Session released] 168ms
+[WARMUP] 2/10
+[Session created] provider=NOTTE id=458f50c3-8289-4324-9081-f6a8f5bdf70b 305ms
+[Browser connected] 302ms
+[Page loaded] 457ms
+[Session released] 98ms
+[WARMUP] 3/10
+[Session created] provider=NOTTE id=949e5bc5-235f-4012-a88e-79b9e554eeb2 277ms
+[Browser connected] 184ms
+[Page loaded] 545ms
+[Session released] 83ms
+[WARMUP] 4/10
+[Session created] provider=NOTTE id=da896aa3-c2b2-434f-b5fe-ae4194b69fc9 266ms
+[Browser connected] 109ms
+[Page loaded] 588ms
+[Session released] 75ms
+[WARMUP] 5/10
+[Session created] provider=NOTTE id=465a80fe-0ba7-4a5b-865c-5c4701f94128 247ms
+[Browser connected] 109ms
+[Page loaded] 492ms
+[Session released] 86ms
+[WARMUP] 6/10
+[Session created] provider=NOTTE id=1b785278-f392-494d-a433-d5ef8dc0d9e9 304ms
+[Browser connected] 136ms
+[Page loaded] 684ms
+[Session released] 116ms
+[WARMUP] 7/10
+[Session created] provider=NOTTE id=8a3101c8-a39a-48d9-b85a-161c46e784b2 248ms
+[Browser connected] 114ms
+[Page loaded] 585ms
+[Session released] 100ms
+[WARMUP] 8/10
+[Session created] provider=NOTTE id=85de0060-b02c-429e-afe8-18c493a6349a 239ms
+[Browser connected] 115ms
+[Page loaded] 507ms
+[Session released] 68ms
+[WARMUP] 9/10
+[Session created] provider=NOTTE id=2fc07a6e-29da-464b-8de2-6d7d926fe4a7 241ms
+[Browser connected] 120ms
+[Page loaded] 510ms
+[Session released] 86ms
+[WARMUP] 10/10
+[Session created] provider=NOTTE id=2f7415ae-8b89-466d-b84c-bcad74c162d5 310ms
+[Browser connected] 214ms
+[Page loaded] 540ms
+[Session released] 75ms
+[RUN] 1/1000
+[Session created] provider=NOTTE id=7436b8de-e8b5-468c-af47-27059594d1a0 306ms
+[Browser connected] 110ms
+[Page loaded] 532ms
+[Session released] 84ms
+[RUN] 2/1000
+[Session created] provider=NOTTE id=a476ceb9-77ea-4cef-988a-f60b985a54f6 299ms
+[Browser connected] 172ms
+[Page loaded] 520ms
+[Session released] 72ms
+[RUN] 3/1000
+[Session created] provider=NOTTE id=9c58600f-5ebf-4f57-9ad8-20ee4e1e850f 278ms
+[Browser connected] 117ms
+[Page loaded] 503ms
+[Session released] 83ms
+[RUN] 4/1000
+[Session created] provider=NOTTE id=a79e7d7d-8497-4756-a64e-392b424b800f 247ms
+[Browser connected] 128ms
+[Page loaded] 531ms
+[Session released] 83ms
+[RUN] 5/1000
+[Session created] provider=NOTTE id=c0579635-01ce-4d53-bd58-c6491db6ad25 288ms
+[Browser connected] 139ms
+[Page loaded] 569ms
+[Session released] 81ms
+[RUN] 6/1000
+[Session created] provider=NOTTE id=ad31da4d-b92a-4426-b2ec-277f01f9fa59 259ms
+[Browser connected] 170ms
+[Page loaded] 481ms
+[Session released] 93ms
+[RUN] 7/1000
+[Session created] provider=NOTTE id=865fbe22-72d7-47ed-ace1-60494f516755 275ms
+[Browser connected] 161ms
+[Page loaded] 613ms
+[Session released] 82ms
+[RUN] 8/1000
+[Session created] provider=NOTTE id=03a83e98-9bbe-4f6f-a7c5-5912e7b0c8d1 260ms
+[Browser connected] 132ms
+[Page loaded] 532ms
+[Session released] 83ms
+[RUN] 9/1000
+[Session created] provider=NOTTE id=a8cec0b6-9d4d-4df5-98f4-0157ca8d3d7a 328ms
+[Browser connected] 153ms
+[Page loaded] 656ms
+[Session released] 652ms
+[RUN] 10/1000
+[Session created] provider=NOTTE id=0affd88f-8620-4482-900c-496e16b61aa3 286ms
+[Browser connected] 128ms
+[Page loaded] 525ms
+[Session released] 152ms
+[RUN] 11/1000
+[Session created] provider=NOTTE id=8bfb230b-cdde-4e6a-8634-dde8edb82e9a 268ms
+[Browser connected] 136ms
+[Page loaded] 472ms
+[Session released] 90ms
+[RUN] 12/1000
+[Session created] provider=NOTTE id=7d12ce3e-1957-48f4-8bfb-f71e016dd1b0 398ms
+[Browser connected] 126ms
+[Page loaded] 601ms
+[Session released] 625ms
+[RUN] 13/1000
+[Session created] provider=NOTTE id=c788a8f6-c18f-406a-84b6-1f45e2398133 308ms
+[Browser connected] 151ms
+[Page loaded] 575ms
+[Session released] 75ms
+[RUN] 14/1000
+[Session created] provider=NOTTE id=4c5499b5-85b5-4c50-9a37-bb62da4779df 349ms
+[Browser connected] 173ms
+[Page loaded] 611ms
+[Session released] 311ms
+[RUN] 15/1000
+[Session created] provider=NOTTE id=d7022ce5-a654-4f0b-8714-24344ec179c0 266ms
+[Browser connected] 137ms
+[Page loaded] 576ms
+[Session released] 68ms
+[RUN] 16/1000
+[Session created] provider=NOTTE id=8fc8aba1-13d4-46df-8c43-c03d7186fd9d 240ms
+[Browser connected] 114ms
+[Page loaded] 657ms
+[Session released] 100ms
+[RUN] 17/1000
+[Session created] provider=NOTTE id=b9a8dc05-6f5b-47f2-ab5b-fb7d97db2833 256ms
+[Browser connected] 113ms
+[Page loaded] 483ms
+[Session released] 91ms
+[RUN] 18/1000
+[Session created] provider=NOTTE id=9d63cd80-bc44-4d10-992e-da1ee707a02c 294ms
+[Browser connected] 117ms
+[Page loaded] 529ms
+[Session released] 85ms
+[RUN] 19/1000
+[Session created] provider=NOTTE id=e1be5fe1-6136-4410-93bf-3574cbb6421a 250ms
+[Browser connected] 171ms
+[Page loaded] 569ms
+[Session released] 119ms
+[RUN] 20/1000
+[Session created] provider=NOTTE id=a33ac987-2ef3-43cf-8120-e04e6f6f3bf8 253ms
+[Browser connected] 130ms
+[Page loaded] 484ms
+[Session released] 102ms
+[RUN] 21/1000
+[Session created] provider=NOTTE id=20e0c909-5151-41d5-b0a7-008a67d286e8 268ms
+[Browser connected] 129ms
+[Page loaded] 475ms
+[Session released] 96ms
+[RUN] 22/1000
+[Session created] provider=NOTTE id=0206ed83-a987-46b1-80a2-ef2eea711727 243ms
+[Browser connected] 163ms
+[Page loaded] 555ms
+[Session released] 118ms
+[RUN] 23/1000
+[Session created] provider=NOTTE id=b50319b6-bb8f-4eb0-833e-2fde727e5f1f 281ms
+[Browser connected] 136ms
+[Page loaded] 599ms
+[Session released] 71ms
+[RUN] 24/1000
+[Session created] provider=NOTTE id=3ddf23ba-32af-427f-b8be-8d85e98534c4 246ms
+[Browser connected] 103ms
+[Page loaded] 478ms
+[Session released] 93ms
+[RUN] 25/1000
+[Session created] provider=NOTTE id=f988a3f0-5853-46c6-9922-8de7d3b7c559 363ms
+[Browser connected] 126ms
+[Page loaded] 474ms
+[Session released] 74ms
+[RUN] 26/1000
+[Session created] provider=NOTTE id=79eced56-64d4-43ae-83ae-73463a1c3263 252ms
+[Browser connected] 211ms
+[Page loaded] 463ms
+[Session released] 82ms
+[RUN] 27/1000
+[Session created] provider=NOTTE id=6de54040-f8ea-4902-9e00-ea038addb215 224ms
+[Browser connected] 102ms
+[Page loaded] 532ms
+[Session released] 90ms
+[RUN] 28/1000
+[Session created] provider=NOTTE id=9aca127f-0bf2-4b02-a49f-bfd191187d00 240ms
+[Browser connected] 111ms
+[Page loaded] 540ms
+[Session released] 82ms
+[RUN] 29/1000
+[Session created] provider=NOTTE id=7e9177ff-f1e6-436b-ab65-91e915b26ed4 436ms
+[Browser connected] 99ms
+[Page loaded] 530ms
+[Session released] 77ms
+[RUN] 30/1000
+[Session created] provider=NOTTE id=35637839-c69b-48c2-99ec-56a43d504523 263ms
+[Browser connected] 103ms
+[Page loaded] 465ms
+[Session released] 102ms
+[RUN] 31/1000
+[Session created] provider=NOTTE id=e92bae75-a122-44ef-8af2-9926cd1ceede 255ms
+[Browser connected] 106ms
+[Page loaded] 499ms
+[Session released] 82ms
+[RUN] 32/1000
+[Session created] provider=NOTTE id=30d0f9fb-fab0-401e-9e8c-41fc719a301d 292ms
+[Browser connected] 124ms
+[Page loaded] 486ms
+[Session released] 1445ms
+[RUN] 33/1000
+[Session created] provider=NOTTE id=3c3ea0cf-ad23-493a-88fe-3d06a2166c6b 241ms
+[Browser connected] 106ms
+[Page loaded] 482ms
+[Session released] 122ms
+[RUN] 34/1000
+[Session created] provider=NOTTE id=b427d3e7-61fd-49a3-ad1f-3a78e37fdee7 277ms
+[Browser connected] 107ms
+[Page loaded] 495ms
+[Session released] 84ms
+[RUN] 35/1000
+[Session created] provider=NOTTE id=c53f4b5c-b83b-48ce-a7d7-2560c846ff5f 293ms
+[Browser connected] 151ms
+[Page loaded] 479ms
+[Session released] 123ms
+[RUN] 36/1000
+[Session created] provider=NOTTE id=1ca55d2a-a506-4eb1-ab30-ce7edfd2c10c 286ms
+[Browser connected] 103ms
+[Page loaded] 678ms
+[Session released] 98ms
+[RUN] 37/1000
+[Session created] provider=NOTTE id=408ba665-7f68-4d7e-9c36-7f240d2ade9d 252ms
+[Browser connected] 105ms
+[Page loaded] 638ms
+[Session released] 103ms
+[RUN] 38/1000
+[Session created] provider=NOTTE id=2de78610-983b-402c-bd3c-a875dd095222 256ms
+[Browser connected] 111ms
+[Page loaded] 450ms
+[Session released] 760ms
+[RUN] 39/1000
+[Session created] provider=NOTTE id=888115b4-07ee-4ac4-afb6-b7708c42aae3 267ms
+[Browser connected] 178ms
+[Page loaded] 493ms
+[Session released] 72ms
+[RUN] 40/1000
+[Session created] provider=NOTTE id=97da3284-3e93-4dc7-9ad9-25d66989d690 281ms
+[Browser connected] 141ms
+[Page loaded] 528ms
+[Session released] 76ms
+[RUN] 41/1000
+[Session created] provider=NOTTE id=fb685cc9-ba13-4ac8-a657-f0611695156d 244ms
+[Browser connected] 104ms
+[Page loaded] 465ms
+[Session released] 88ms
+[RUN] 42/1000
+[Session created] provider=NOTTE id=542b6d35-8096-4570-9189-990e1fd12bb1 249ms
+[Browser connected] 137ms
+[Page loaded] 442ms
+[Session released] 105ms
+[RUN] 43/1000
+[Session created] provider=NOTTE id=9d456a89-aacf-4605-848f-a997a483bcd1 291ms
+[Browser connected] 139ms
+[Page loaded] 419ms
+[Session released] 92ms
+[RUN] 44/1000
+[Session created] provider=NOTTE id=7a215900-daa7-41b1-bcbd-fee1f7673e29 232ms
+[Browser connected] 102ms
+[Page loaded] 504ms
+[Session released] 69ms
+[RUN] 45/1000
+[Session created] provider=NOTTE id=1c628df7-1909-4149-a653-ad5cbd719839 276ms
+[Browser connected] 113ms
+[Page loaded] 518ms
+[Session released] 85ms
+[RUN] 46/1000
+[Session created] provider=NOTTE id=59ad01ef-8536-4937-9df7-59a8bb00708f 247ms
+[Browser connected] 105ms
+[Page loaded] 509ms
+[Session released] 91ms
+[RUN] 47/1000
+[Session created] provider=NOTTE id=24d55ad8-e705-411d-a6e8-85cfded45d87 280ms
+[Browser connected] 115ms
+[Page loaded] 509ms
+[Session released] 97ms
+[RUN] 48/1000
+[Session created] provider=NOTTE id=52a9b23f-4dc3-4018-850b-59e971fc913a 364ms
+[Browser connected] 134ms
+[Page loaded] 459ms
+[Session released] 92ms
+[RUN] 49/1000
+[Session created] provider=NOTTE id=0f5d5b63-ae87-46f0-a58f-000e07f27f7b 290ms
+[Browser connected] 103ms
+[Page loaded] 974ms
+[Session released] 117ms
+[RUN] 50/1000
+[Session created] provider=NOTTE id=e1aa1821-4b9e-4929-8a06-3472b62437d1 308ms
+[Browser connected] 108ms
+[Page loaded] 550ms
+[Session released] 564ms
+[RUN] 51/1000
+[Session created] provider=NOTTE id=35f11afc-9d01-44de-b11b-fc6825d49190 269ms
+[Browser connected] 171ms
+[Page loaded] 475ms
+[Session released] 83ms
+[RUN] 52/1000
+[Session created] provider=NOTTE id=b01fafbe-e527-4890-be3d-9ac1e7af1732 269ms
+[Browser connected] 145ms
+[Page loaded] 476ms
+[Session released] 95ms
+[RUN] 53/1000
+[Session created] provider=NOTTE id=a8dffbb9-df1e-434a-8442-15d3ea8b8318 261ms
+[Browser connected] 165ms
+[Page loaded] 577ms
+[Session released] 74ms
+[RUN] 54/1000
+[Session created] provider=NOTTE id=94f39f5b-8f21-47f2-a5d1-d6d49dcb0048 269ms
+[Browser connected] 104ms
+[Page loaded] 876ms
+[Session released] 106ms
+[RUN] 55/1000
+[Session created] provider=NOTTE id=f72653ee-a1cf-4b0b-bc90-422a2ec4a7c2 319ms
+[Browser connected] 163ms
+[Page loaded] 611ms
+[Session released] 88ms
+[RUN] 56/1000
+[Session created] provider=NOTTE id=2391e3ba-ac8d-4963-83bc-4194965e17e4 237ms
+[Browser connected] 129ms
+[Page loaded] 588ms
+[Session released] 77ms
+[RUN] 57/1000
+[Session created] provider=NOTTE id=dce08719-3d15-4fe9-8b07-12a08c945f1d 252ms
+[Browser connected] 160ms
+[Page loaded] 562ms
+[Session released] 82ms
+[RUN] 58/1000
+[Session created] provider=NOTTE id=9fd680a2-429c-4966-bd92-ca6649cf12c5 249ms
+[Browser connected] 122ms
+[Page loaded] 455ms
+[Session released] 96ms
+[RUN] 59/1000
+[Session created] provider=NOTTE id=3f55290e-353c-43fa-9a39-1e24057bcd76 366ms
+[Browser connected] 106ms
+[Page loaded] 484ms
+[Session released] 109ms
+[RUN] 60/1000
+[Session created] provider=NOTTE id=dc3494a3-f6b2-4439-a73f-fde69c53f569 274ms
+[Browser connected] 135ms
+[Page loaded] 418ms
+[Session released] 88ms
+[RUN] 61/1000
+[Session created] provider=NOTTE id=3ac9e843-2400-4186-b220-eea0cbbb55cb 287ms
+[Browser connected] 109ms
+[Page loaded] 484ms
+[Session released] 84ms
+[RUN] 62/1000
+[Session created] provider=NOTTE id=d557c213-822d-454e-89f6-e81fea0ac7c0 278ms
+[Browser connected] 124ms
+[Page loaded] 520ms
+[Session released] 120ms
+[RUN] 63/1000
+[Session created] provider=NOTTE id=5284d001-7865-48a3-96dd-1e717611ed5f 288ms
+[Browser connected] 124ms
+[Page loaded] 516ms
+[Session released] 113ms
+[RUN] 64/1000
+[Session created] provider=NOTTE id=5ca74ef9-bbf7-4f62-a500-b1ac8e1fd482 305ms
+[Browser connected] 84ms
+[Page loaded] 554ms
+[Session released] 70ms
+[RUN] 65/1000
+[Session created] provider=NOTTE id=03829f17-8e86-465e-b2cb-7333510a6a38 248ms
+[Browser connected] 144ms
+[Page loaded] 490ms
+[Session released] 106ms
+[RUN] 66/1000
+[Session created] provider=NOTTE id=17657437-eea0-4cf2-9c9f-4acdcf9d0329 256ms
+[Browser connected] 192ms
+[Page loaded] 583ms
+[Session released] 87ms
+[RUN] 67/1000
+[Session created] provider=NOTTE id=3557fbcb-114e-408c-a445-cd64c58c5540 323ms
+[Browser connected] 110ms
+[Page loaded] 599ms
+[Session released] 75ms
+[RUN] 68/1000
+[Session created] provider=NOTTE id=b259b2bf-c4b9-4911-8797-8518f502cfb5 265ms
+[Browser connected] 268ms
+[Page loaded] 482ms
+[Session released] 81ms
+[RUN] 69/1000
+[Session created] provider=NOTTE id=d24e06bd-88ab-4b55-bd27-d5adefb79175 272ms
+[Browser connected] 111ms
+[Page loaded] 562ms
+[Session released] 93ms
+[RUN] 70/1000
+[Session created] provider=NOTTE id=00a4e5c7-b2a0-4fe1-b60d-73c429056402 383ms
+[Browser connected] 104ms
+[Page loaded] 544ms
+[Session released] 84ms
+[RUN] 71/1000
+[Session created] provider=NOTTE id=5facbc0d-f39f-4fa7-8f50-51c385febe5b 293ms
+[Browser connected] 129ms
+[Page loaded] 436ms
+[Session released] 86ms
+[RUN] 72/1000
+[Session created] provider=NOTTE id=4d99e7fd-1639-4581-891a-d256912a3442 277ms
+[Browser connected] 99ms
+[Page loaded] 520ms
+[Session released] 74ms
+[RUN] 73/1000
+[Session created] provider=NOTTE id=14274669-a0ef-4d91-bacd-da139d5558dd 304ms
+[Browser connected] 157ms
+[Page loaded] 543ms
+[Session released] 74ms
+[RUN] 74/1000
+[Session created] provider=NOTTE id=6c6b5459-deea-4fe9-8b85-d75666ffeb5d 217ms
+[Browser connected] 123ms
+[Page loaded] 705ms
+[Session released] 93ms
+[RUN] 75/1000
+[Session created] provider=NOTTE id=8bcf79d2-da40-4231-8129-64861ee6aa59 272ms
+[Browser connected] 144ms
+[Page loaded] 673ms
+[Session released] 71ms
+[RUN] 76/1000
+[Session created] provider=NOTTE id=af979a75-9e75-44c6-ac61-f05c691df871 296ms
+[Browser connected] 104ms
+[Page loaded] 1232ms
+[Session released] 126ms
+[RUN] 77/1000
+[Session created] provider=NOTTE id=5562471e-0896-40cf-8e33-e17fbad8b091 420ms
+[Browser connected] 139ms
+[Page loaded] 519ms
+[Session released] 126ms
+[RUN] 78/1000
+[Session created] provider=NOTTE id=72826d97-6e56-4966-82b7-e0a5f4860e9a 259ms
+[Browser connected] 128ms
+[Page loaded] 532ms
+[Session released] 101ms
+[RUN] 79/1000
+[Session created] provider=NOTTE id=5fcfcfe0-ee61-40d0-b374-787662a3860e 300ms
+[Browser connected] 164ms
+[Page loaded] 545ms
+[Session released] 91ms
+[RUN] 80/1000
+[Session created] provider=NOTTE id=e2d9374c-e16f-4b27-bc54-a69ba3650b50 229ms
+[Browser connected] 154ms
+[Page loaded] 660ms
+[Session released] 110ms
+[RUN] 81/1000
+[Session created] provider=NOTTE id=3e2d8bc1-05d4-45bd-bc6c-37a6e34558cb 275ms
+[Browser connected] 135ms
+[Page loaded] 1112ms
+[Session released] 83ms
+[RUN] 82/1000
+[Session created] provider=NOTTE id=2bad1fdd-1f4d-4f9f-a515-a1029a9bbfda 241ms
+[Browser connected] 125ms
+[Page loaded] 501ms
+[Session released] 74ms
+[RUN] 83/1000
+[Session created] provider=NOTTE id=fe2102b0-e977-4c25-af57-d61f2d281177 249ms
+[Browser connected] 158ms
+[Page loaded] 520ms
+[Session released] 76ms
+[RUN] 84/1000
+[Session created] provider=NOTTE id=e2fe51dc-618a-495f-b2cf-e4bf54b56fcf 259ms
+[Browser connected] 133ms
+[Page loaded] 537ms
+[Session released] 127ms
+[RUN] 85/1000
+[Session created] provider=NOTTE id=2e852b06-afcf-44ec-8ca2-2048a481f647 238ms
+[Browser connected] 126ms
+[Page loaded] 457ms
+[Session released] 174ms
+[RUN] 86/1000
+[Session created] provider=NOTTE id=59ae17bd-6a40-41e1-9909-80fa1ea646b2 349ms
+[Browser connected] 132ms
+[Page loaded] 583ms
+[Session released] 81ms
+[RUN] 87/1000
+[Session created] provider=NOTTE id=56780483-7994-4805-b175-722a86f2c900 295ms
+[Browser connected] 176ms
+[Page loaded] 435ms
+[Session released] 75ms
+[RUN] 88/1000
+[Session created] provider=NOTTE id=59e4f6ef-1cdb-4a17-ac83-cb7a7c8f2cb3 272ms
+[Browser connected] 118ms
+[Page loaded] 621ms
+[Session released] 114ms
+[RUN] 89/1000
+[Session created] provider=NOTTE id=ccbeddae-26ca-4497-88ec-71467f00d598 253ms
+[Browser connected] 99ms
+[Page loaded] 613ms
+[Session released] 87ms
+[RUN] 90/1000
+[Session created] provider=NOTTE id=70975e21-4746-4ff8-9b19-2cb123ba90e0 204ms
+[Browser connected] 117ms
+[Page loaded] 559ms
+[Session released] 77ms
+[RUN] 91/1000
+[Session created] provider=NOTTE id=7ef98a8e-9185-4b39-a5dc-a5cf13c32902 243ms
+[Browser connected] 109ms
+[Page loaded] 487ms
+[Session released] 511ms
+[RUN] 92/1000
+[Session created] provider=NOTTE id=3ccd1a96-8a0f-4c5e-994d-7258f1a96b91 252ms
+[Browser connected] 118ms
+[Page loaded] 547ms
+[Session released] 106ms
+[RUN] 93/1000
+[Session created] provider=NOTTE id=ee68cb16-a765-4165-8f1c-84f3827801ec 255ms
+[Browser connected] 115ms
+[Page loaded] 484ms
+[Session released] 79ms
+[RUN] 94/1000
+[Session created] provider=NOTTE id=6b0a1344-4676-4586-a3cd-4537988773ef 280ms
+[Browser connected] 134ms
+[Page loaded] 616ms
+[Session released] 71ms
+[RUN] 95/1000
+[Session created] provider=NOTTE id=c46c05e4-1765-485f-96ba-f282a886066b 325ms
+[Browser connected] 102ms
+[Page loaded] 520ms
+[Session released] 72ms
+[RUN] 96/1000
+[Session created] provider=NOTTE id=e834b17c-6fd6-4548-a1b1-7e5e8646d5e8 235ms
+[Browser connected] 109ms
+[Page loaded] 652ms
+[Session released] 82ms
+[RUN] 97/1000
+[Session created] provider=NOTTE id=33a0d38e-87c8-4b63-be3c-6e1bfba68b6b 302ms
+[Browser connected] 141ms
+[Page loaded] 580ms
+[Session released] 1116ms
+[RUN] 98/1000
+[Session created] provider=NOTTE id=8bf0d762-d779-45ba-8771-5ae449c0cffe 262ms
+[Browser connected] 156ms
+[Page loaded] 1012ms
+[Session released] 123ms
+[RUN] 99/1000
+[Session created] provider=NOTTE id=8f27b3d6-f5b4-4745-8a02-463486a818d1 263ms
+[Browser connected] 133ms
+[Page loaded] 441ms
+[Session released] 81ms
+[RUN] 100/1000
+[Session created] provider=NOTTE id=d2fe62d7-07ee-45e2-951f-bb1cfe2987ea 324ms
+[Browser connected] 91ms
+[Page loaded] 462ms
+[Session released] 99ms
+[RUN] 101/1000
+[Session created] provider=NOTTE id=d97e3607-1f9d-492a-8f61-b8a5b4eef782 272ms
+[Browser connected] 119ms
+[Page loaded] 550ms
+[Session released] 76ms
+[RUN] 102/1000
+[Session created] provider=NOTTE id=5da953c5-06fe-4880-98b9-e13a766d58a7 282ms
+[Browser connected] 119ms
+[Page loaded] 493ms
+[Session released] 158ms
+[RUN] 103/1000
+[Session created] provider=NOTTE id=fc8239da-37e1-44ee-902e-4fb2e6b71fe5 310ms
+[Browser connected] 98ms
+[Page loaded] 600ms
+[Session released] 72ms
+[RUN] 104/1000
+[Session created] provider=NOTTE id=8e618c81-888e-4684-b13e-96173ba802d5 231ms
+[Browser connected] 168ms
+[Page loaded] 519ms
+[Session released] 91ms
+[RUN] 105/1000
+[Session created] provider=NOTTE id=d6dad896-b2a4-4a52-a7ca-089b3afc93ca 263ms
+[Browser connected] 136ms
+[Page loaded] 915ms
+[Session released] 146ms
+[RUN] 106/1000
+[Session created] provider=NOTTE id=2afdd527-2e5f-4265-b9ad-a12edb5ac607 238ms
+[Browser connected] 128ms
+[Page loaded] 454ms
+[Session released] 90ms
+[RUN] 107/1000
+[Session created] provider=NOTTE id=0036918c-d206-458a-bd69-87e586c0478d 258ms
+[Browser connected] 109ms
+[Page loaded] 612ms
+[Session released] 76ms
+[RUN] 108/1000
+[Session created] provider=NOTTE id=7e56bb55-1dd3-473b-8e6e-38d6b665b37b 241ms
+[Browser connected] 110ms
+[Page loaded] 530ms
+[Session released] 74ms
+[RUN] 109/1000
+[Session created] provider=NOTTE id=776d24bc-e418-42e9-96cc-78d31fe44dba 331ms
+[Browser connected] 134ms
+[Page loaded] 464ms
+[Session released] 69ms
+[RUN] 110/1000
+[Session created] provider=NOTTE id=00e010c1-3233-4e5c-a52a-1930992bd5a7 244ms
+[Browser connected] 107ms
+[Page loaded] 532ms
+[Session released] 71ms
+[RUN] 111/1000
+[Session created] provider=NOTTE id=cf5bcde1-abc7-4e6e-854b-578be580a5d5 246ms
+[Browser connected] 104ms
+[Page loaded] 508ms
+[Session released] 198ms
+[RUN] 112/1000
+[Session created] provider=NOTTE id=06e1071d-c1ff-4e4f-b9f8-1165ff378f8e 237ms
+[Browser connected] 154ms
+[Page loaded] 562ms
+[Session released] 72ms
+[RUN] 113/1000
+[Session created] provider=NOTTE id=fce54d78-cd80-4353-97d7-5d821388d99b 259ms
+[Browser connected] 135ms
+[Page loaded] 509ms
+[Session released] 84ms
+[RUN] 114/1000
+[Session created] provider=NOTTE id=6a9f5506-ef8f-4655-a0da-a03df1fd9339 231ms
+[Browser connected] 109ms
+[Page loaded] 613ms
+[Session released] 601ms
+[RUN] 115/1000
+[Session created] provider=NOTTE id=2823d846-a29d-4adc-9a07-a3d9155b6d4d 302ms
+[Browser connected] 102ms
+[Page loaded] 487ms
+[Session released] 398ms
+[RUN] 116/1000
+[Session created] provider=NOTTE id=9e7568df-845e-44a7-8235-9545c304884b 251ms
+[Browser connected] 148ms
+[Page loaded] 523ms
+[Session released] 92ms
+[RUN] 117/1000
+[Session created] provider=NOTTE id=889a57d8-8c52-47fc-b743-0cfebd91bf07 282ms
+[Browser connected] 193ms
+[Page loaded] 546ms
+[Session released] 108ms
+[RUN] 118/1000
+[Session created] provider=NOTTE id=381882ff-d8ca-46c0-889b-dcc999e9051d 318ms
+[Browser connected] 115ms
+[Page loaded] 507ms
+[Session released] 105ms
+[RUN] 119/1000
+[Session created] provider=NOTTE id=fffb3789-0078-4a33-9467-1917cea318c6 266ms
+[Browser connected] 204ms
+[Page loaded] 493ms
+[Session released] 350ms
+[RUN] 120/1000
+[Session created] provider=NOTTE id=18424bc1-f263-46de-b965-20df8dfd5209 264ms
+[Browser connected] 122ms
+[Page loaded] 574ms
+[Session released] 71ms
+[RUN] 121/1000
+[Session created] provider=NOTTE id=b4fb5da0-0f50-4380-b392-4cc79187f1c2 287ms
+[Browser connected] 111ms
+[Page loaded] 562ms
+[Session released] 70ms
+[RUN] 122/1000
+[Session created] provider=NOTTE id=b785c81f-1110-43d1-b6c4-7c2307d4437a 249ms
+[Browser connected] 107ms
+[Page loaded] 476ms
+[Session released] 192ms
+[RUN] 123/1000
+[Session created] provider=NOTTE id=af7b5e64-d684-4d70-b08d-b57df75fe8ab 269ms
+[Browser connected] 121ms
+[Page loaded] 430ms
+[Session released] 86ms
+[RUN] 124/1000
+[Session created] provider=NOTTE id=0d3080e3-c88d-45e0-9d28-bb5f7e6e44aa 269ms
+[Browser connected] 105ms
+[Page loaded] 482ms
+[Session released] 107ms
+[RUN] 125/1000
+[Session created] provider=NOTTE id=19d15949-8b38-433b-b772-5aaaf997a3a6 318ms
+[Browser connected] 106ms
+[Page loaded] 570ms
+[Session released] 83ms
+[RUN] 126/1000
+[Session created] provider=NOTTE id=94469f9d-3bb9-4ef0-a70f-9b2e903ce482 279ms
+[Browser connected] 118ms
+[Page loaded] 549ms
+[Session released] 82ms
+[RUN] 127/1000
+[Session created] provider=NOTTE id=94e50b76-dcd1-4458-bb3c-74a958e64f9b 263ms
+[Browser connected] 104ms
+[Page loaded] 522ms
+[Session released] 79ms
+[RUN] 128/1000
+[Session created] provider=NOTTE id=c0ded796-7ec6-4496-b797-e85edcc6c8a6 274ms
+[Browser connected] 167ms
+[Page loaded] 503ms
+[Session released] 83ms
+[RUN] 129/1000
+[Session created] provider=NOTTE id=9b7f8622-ca9a-4622-b9a7-1fa501ea45e2 301ms
+[Browser connected] 124ms
+[Page loaded] 443ms
+[Session released] 100ms
+[RUN] 130/1000
+[Session created] provider=NOTTE id=286986c3-3297-44ec-88c4-bfecc998fb9a 294ms
+[Browser connected] 101ms
+[Page loaded] 543ms
+[Session released] 71ms
+[RUN] 131/1000
+[Session created] provider=NOTTE id=3790fab7-f2eb-4031-a4b7-585bf65535c7 225ms
+[Browser connected] 129ms
+[Page loaded] 471ms
+[Session released] 102ms
+[RUN] 132/1000
+[Session created] provider=NOTTE id=5d7b1975-73ad-4cf5-8e70-9f5301206ce7 300ms
+[Browser connected] 179ms
+[Page loaded] 593ms
+[Session released] 76ms
+[RUN] 133/1000
+[Session created] provider=NOTTE id=cb05f9cc-343b-4585-a2f7-f8c3015abbc8 276ms
+[Browser connected] 130ms
+[Page loaded] 479ms
+[Session released] 81ms
+[RUN] 134/1000
+[Session created] provider=NOTTE id=2d836ecb-d875-47b4-9fa6-3b1abf78d7ed 295ms
+[Browser connected] 116ms
+[Page loaded] 440ms
+[Session released] 83ms
+[RUN] 135/1000
+[Session created] provider=NOTTE id=4cdd1ec4-434d-4b2c-8e54-b48fd04bae81 390ms
+[Browser connected] 120ms
+[Page loaded] 456ms
+[Session released] 74ms
+[RUN] 136/1000
+[Session created] provider=NOTTE id=cabf7ec9-9eb6-4fe7-b247-3f966974053f 265ms
+[Browser connected] 96ms
+[Page loaded] 541ms
+[Session released] 68ms
+[RUN] 137/1000
+[Session created] provider=NOTTE id=909ef556-e034-4980-be48-054e9a4ae09a 266ms
+[Browser connected] 129ms
+[Page loaded] 545ms
+[Session released] 93ms
+[RUN] 138/1000
+[Session created] provider=NOTTE id=a1ddcd58-b1c6-4e8e-8bc7-2ef6c9293f80 243ms
+[Browser connected] 116ms
+[Page loaded] 492ms
+[Session released] 78ms
+[RUN] 139/1000
+[Session created] provider=NOTTE id=e44d32dd-da29-4546-997d-dc4aa7e70517 311ms
+[Browser connected] 91ms
+[Page loaded] 457ms
+[Session released] 75ms
+[RUN] 140/1000
+[Session created] provider=NOTTE id=0d5d5e1d-27a7-4bf9-8342-2ac32f31120a 246ms
+[Browser connected] 102ms
+[Page loaded] 526ms
+[Session released] 70ms
+[RUN] 141/1000
+[Session created] provider=NOTTE id=42b8ecba-b72d-4a27-a78c-a0c9f1a32f31 297ms
+[Browser connected] 104ms
+[Page loaded] 511ms
+[Session released] 105ms
+[RUN] 142/1000
+[Session created] provider=NOTTE id=cd307915-93ba-49b0-a708-4d44f2dd9f5c 271ms
+[Browser connected] 117ms
+[Page loaded] 513ms
+[Session released] 69ms
+[RUN] 143/1000
+[Session created] provider=NOTTE id=d63cf3af-982f-4f06-ba33-096e934ae148 229ms
+[Browser connected] 109ms
+[Page loaded] 481ms
+[Session released] 94ms
+[RUN] 144/1000
+[Session created] provider=NOTTE id=6c23bb2d-654d-4141-b4b0-06b62a5ce515 304ms
+[Browser connected] 163ms
+[Page loaded] 608ms
+[Session released] 70ms
+[RUN] 145/1000
+[Session created] provider=NOTTE id=920b50ed-6d6f-4ed9-8f08-59b06fa83b84 237ms
+[Browser connected] 109ms
+[Page loaded] 548ms
+[Session released] 88ms
+[RUN] 146/1000
+[Session created] provider=NOTTE id=1e4404f2-a552-4219-b766-c95bb48bb226 243ms
+[Browser connected] 104ms
+[Page loaded] 576ms
+[Session released] 94ms
+[RUN] 147/1000
+[Session created] provider=NOTTE id=4ccb204a-4ac4-42dc-82c4-3a86ccdf77fc 241ms
+[Browser connected] 100ms
+[Page loaded] 462ms
+[Session released] 90ms
+[RUN] 148/1000
+[Session created] provider=NOTTE id=77d4eb6e-d598-4fdd-ad0d-edd467bbae08 314ms
+[Browser connected] 107ms
+[Page loaded] 522ms
+[Session released] 76ms
+[RUN] 149/1000
+[Session created] provider=NOTTE id=aaceb5b4-af75-43ac-b4f7-15f3a6204b41 264ms
+[Browser connected] 124ms
+[Page loaded] 495ms
+[Session released] 85ms
+[RUN] 150/1000
+[Session created] provider=NOTTE id=2e71ae8c-fd92-485b-a1c7-786895f1d532 340ms
+[Browser connected] 101ms
+[Page loaded] 572ms
+[Session released] 70ms
+[RUN] 151/1000
+[Session created] provider=NOTTE id=d126ef76-d176-4c96-bc0f-a62abc2dd2eb 271ms
+[Browser connected] 109ms
+[Page loaded] 438ms
+[Session released] 81ms
+[RUN] 152/1000
+[Session created] provider=NOTTE id=6618930d-ebc4-4e59-a249-e162682e8931 248ms
+[Browser connected] 115ms
+[Page loaded] 432ms
+[Session released] 81ms
+[RUN] 153/1000
+[Session created] provider=NOTTE id=431b8292-dc14-452d-bbfc-ea6b41ff7524 250ms
+[Browser connected] 161ms
+[Page loaded] 603ms
+[Session released] 76ms
+[RUN] 154/1000
+[Session created] provider=NOTTE id=a8378fde-93be-474a-9ee8-f91d6a664f1a 226ms
+[Browser connected] 100ms
+[Page loaded] 547ms
+[Session released] 95ms
+[RUN] 155/1000
+[Session created] provider=NOTTE id=a85d1921-bf1d-43ee-96eb-000607fc8c65 240ms
+[Browser connected] 108ms
+[Page loaded] 488ms
+[Session released] 75ms
+[RUN] 156/1000
+[Session created] provider=NOTTE id=33a27ad3-907c-4753-9cdc-341ea03c6a15 253ms
+[Browser connected] 143ms
+[Page loaded] 512ms
+[Session released] 80ms
+[RUN] 157/1000
+[Session created] provider=NOTTE id=f67f79e6-86a1-4975-a76b-025eb9f96a5a 196ms
+[Browser connected] 141ms
+[Page loaded] 478ms
+[Session released] 81ms
+[RUN] 158/1000
+[Session created] provider=NOTTE id=e56fe707-8634-4f83-b1ee-d9d7a4a2b8e7 248ms
+[Browser connected] 113ms
+[Page loaded] 457ms
+[Session released] 91ms
+[RUN] 159/1000
+[Session created] provider=NOTTE id=0edcac56-ddcb-4145-bc91-dd6356a9454c 351ms
+[Browser connected] 88ms
+[Page loaded] 446ms
+[Session released] 75ms
+[RUN] 160/1000
+[Session created] provider=NOTTE id=d9ecec17-dec9-4466-984f-dd85ee91de5c 231ms
+[Browser connected] 161ms
+[Page loaded] 458ms
+[Session released] 82ms
+[RUN] 161/1000
+[Session created] provider=NOTTE id=5a3a416f-22b2-40e9-b9de-d6ac53149d16 252ms
+[Browser connected] 114ms
+[Page loaded] 553ms
+[Session released] 92ms
+[RUN] 162/1000
+[Session created] provider=NOTTE id=5e03ec89-7a1f-4535-a771-a4bcea22fbd7 297ms
+[Browser connected] 132ms
+[Page loaded] 473ms
+[Session released] 270ms
+[RUN] 163/1000
+[Session created] provider=NOTTE id=127daf84-d7e8-45d9-ad92-738d4b5a3b39 271ms
+[Browser connected] 160ms
+[Page loaded] 492ms
+[Session released] 78ms
+[RUN] 164/1000
+[Session created] provider=NOTTE id=e43620dd-4b11-458a-a1b4-c4d41ae7b0f4 253ms
+[Browser connected] 107ms
+[Page loaded] 484ms
+[Session released] 76ms
+[RUN] 165/1000
+[Session created] provider=NOTTE id=2e3ddc38-cf66-487f-8b66-874036989c85 278ms
+[Browser connected] 117ms
+[Page loaded] 494ms
+[Session released] 80ms
+[RUN] 166/1000
+[Session created] provider=NOTTE id=ebbd99b3-61c3-40c3-b14c-14b645296474 257ms
+[Browser connected] 146ms
+[Page loaded] 486ms
+[Session released] 80ms
+[RUN] 167/1000
+[Session created] provider=NOTTE id=c09d83f7-7f88-4f52-854c-c60fd8eb1634 248ms
+[Browser connected] 99ms
+[Page loaded] 537ms
+[Session released] 102ms
+[RUN] 168/1000
+[Session created] provider=NOTTE id=584de775-f1db-4368-9721-4d89586097b6 214ms
+[Browser connected] 128ms
+[Page loaded] 418ms
+[Session released] 84ms
+[RUN] 169/1000
+[Session created] provider=NOTTE id=99e137d1-1457-4f33-8a89-8015e3a035f4 292ms
+[Browser connected] 123ms
+[Page loaded] 571ms
+[Session released] 67ms
+[RUN] 170/1000
+[Session created] provider=NOTTE id=d243fd74-8dde-46c0-93fa-ec50ee4cc5a4 274ms
+[Browser connected] 102ms
+[Page loaded] 557ms
+[Session released] 92ms
+[RUN] 171/1000
+[Session created] provider=NOTTE id=138579d6-9ad5-4d76-a4c9-faafa4e80487 244ms
+[Browser connected] 122ms
+[Page loaded] 581ms
+[Session released] 92ms
+[RUN] 172/1000
+[Session created] provider=NOTTE id=7e882334-0c64-4476-bb4a-6759592baac8 251ms
+[Browser connected] 102ms
+[Page loaded] 440ms
+[Session released] 79ms
+[RUN] 173/1000
+[Session created] provider=NOTTE id=da3a86ed-f0fb-4682-9e4d-95a40a83efa0 242ms
+[Browser connected] 113ms
+[Page loaded] 505ms
+[Session released] 77ms
+[RUN] 174/1000
+[Session created] provider=NOTTE id=2c800f5b-5ca3-4c7c-949c-7d465416d61a 298ms
+[Browser connected] 108ms
+[Page loaded] 483ms
+[Session released] 77ms
+[RUN] 175/1000
+[Session created] provider=NOTTE id=fee86b90-b1f6-4adc-bf2a-b562cd407317 274ms
+[Browser connected] 132ms
+[Page loaded] 484ms
+[Session released] 81ms
+[RUN] 176/1000
+[Session created] provider=NOTTE id=7ca49be1-a0d2-4aaf-a9e0-9a55791fc0e8 325ms
+[Browser connected] 106ms
+[Page loaded] 600ms
+[Session released] 89ms
+[RUN] 177/1000
+[Session created] provider=NOTTE id=823fc5a3-3754-4ad7-85c2-e9fc047e4ebc 208ms
+[Browser connected] 194ms
+[Page loaded] 532ms
+[Session released] 90ms
+[RUN] 178/1000
+[Session created] provider=NOTTE id=2b3ac57d-d9e3-470d-8744-b61f927cd9e5 310ms
+[Browser connected] 117ms
+[Page loaded] 522ms
+[Session released] 634ms
+[RUN] 179/1000
+[Session created] provider=NOTTE id=b9739ad1-8d6e-4127-8e88-1e47d77a41ca 268ms
+[Browser connected] 214ms
+[Page loaded] 477ms
+[Session released] 101ms
+[RUN] 180/1000
+[Session created] provider=NOTTE id=f0de9410-4693-4aea-9f1b-a35e30dcea83 279ms
+[Browser connected] 92ms
+[Page loaded] 484ms
+[Session released] 120ms
+[RUN] 181/1000
+[Session created] provider=NOTTE id=bfc07c68-a53a-436a-aa29-62692bc7b243 258ms
+[Browser connected] 160ms
+[Page loaded] 488ms
+[Session released] 69ms
+[RUN] 182/1000
+[Session created] provider=NOTTE id=6f9d0f6b-e9b1-4095-ba46-5990ceed5ac5 235ms
+[Browser connected] 97ms
+[Page loaded] 449ms
+[Session released] 123ms
+[RUN] 183/1000
+[Session created] provider=NOTTE id=3aae01c9-25b8-4ea5-aba8-3d3f7c6ab1ac 276ms
+[Browser connected] 125ms
+[Page loaded] 571ms
+[Session released] 177ms
+[RUN] 184/1000
+[Session created] provider=NOTTE id=0dbe1376-2774-4494-a39e-69d3084fda89 242ms
+[Browser connected] 97ms
+[Page loaded] 549ms
+[Session released] 97ms
+[RUN] 185/1000
+[Session created] provider=NOTTE id=c7f042b0-747c-47ac-869a-dcc7a014429d 303ms
+[Browser connected] 117ms
+[Page loaded] 505ms
+[Session released] 72ms
+[RUN] 186/1000
+[Session created] provider=NOTTE id=6394e73e-dbef-4521-be8a-63b6114862a5 259ms
+[Browser connected] 155ms
+[Page loaded] 566ms
+[Session released] 90ms
+[RUN] 187/1000
+[Session created] provider=NOTTE id=b92cc688-f787-4210-82b8-32ef710cb83d 235ms
+[Browser connected] 157ms
+[Page loaded] 493ms
+[Session released] 92ms
+[RUN] 188/1000
+[Session created] provider=NOTTE id=bfc68569-c62b-4c97-b680-4128b58b17cc 257ms
+[Browser connected] 174ms
+[Page loaded] 408ms
+[Session released] 94ms
+[RUN] 189/1000
+[Session created] provider=NOTTE id=1f12c926-a25d-46ac-95cb-430b8101a320 278ms
+[Browser connected] 107ms
+[Page loaded] 570ms
+[Session released] 79ms
+[RUN] 190/1000
+[Session created] provider=NOTTE id=dfe50460-d1f0-43b4-b30b-ffda5a59b380 289ms
+[Browser connected] 110ms
+[Page loaded] 589ms
+[Session released] 89ms
+[RUN] 191/1000
+[Session created] provider=NOTTE id=649e2cf3-735c-4d08-8718-dcd671dbbff8 312ms
+[Browser connected] 113ms
+[Page loaded] 556ms
+[Session released] 67ms
+[RUN] 192/1000
+[Session created] provider=NOTTE id=6f5b70d3-0efa-456d-90ab-c34ab1b362df 220ms
+[Browser connected] 97ms
+[Page loaded] 455ms
+[Session released] 80ms
+[RUN] 193/1000
+[Session created] provider=NOTTE id=01a32b1f-e90c-409a-a0be-069ce48e98cf 273ms
+[Browser connected] 146ms
+[Page loaded] 583ms
+[Session released] 87ms
+[RUN] 194/1000
+[Session created] provider=NOTTE id=299490bb-b4b5-4275-90c3-9bc00410fd44 207ms
+[Browser connected] 106ms
+[Page loaded] 574ms
+[Session released] 83ms
+[RUN] 195/1000
+[Session created] provider=NOTTE id=7aad0c4c-742c-4ee2-9353-f52627b8f765 284ms
+[Browser connected] 114ms
+[Page loaded] 543ms
+[Session released] 106ms
+[RUN] 196/1000
+[Session created] provider=NOTTE id=b602501a-a99c-4bb2-9fa5-5edde8d9fbc1 270ms
+[Browser connected] 106ms
+[Page loaded] 508ms
+[Session released] 83ms
+[RUN] 197/1000
+[Session created] provider=NOTTE id=3aa216d3-02d8-4818-b88f-aab953b62b92 245ms
+[Browser connected] 110ms
+[Page loaded] 511ms
+[Session released] 70ms
+[RUN] 198/1000
+[Session created] provider=NOTTE id=4fa91e85-ee7c-4586-be0a-2910ed7700c2 236ms
+[Browser connected] 97ms
+[Page loaded] 937ms
+[Session released] 118ms
+[RUN] 199/1000
+[Session created] provider=NOTTE id=da610fa8-3b8e-445a-a491-e088dd4a4888 245ms
+[Browser connected] 107ms
+[Page loaded] 496ms
+[Session released] 85ms
+[RUN] 200/1000
+[Session created] provider=NOTTE id=ec8428f2-f8a1-4b31-84ee-b50ef478fa3f 286ms
+[Browser connected] 138ms
+[Page loaded] 637ms
+[Session released] 74ms
+[RUN] 201/1000
+[Session created] provider=NOTTE id=f4715713-dd6c-49af-a063-3ca40c545770 269ms
+[Browser connected] 145ms
+[Page loaded] 535ms
+[Session released] 85ms
+[RUN] 202/1000
+[Session created] provider=NOTTE id=40c77026-2342-45b1-817c-fc0afc70e71e 284ms
+[Browser connected] 118ms
+[Page loaded] 1047ms
+[Session released] 99ms
+[RUN] 203/1000
+[Session created] provider=NOTTE id=c2dfd966-ccc3-47ca-81d0-73a7070645bc 302ms
+[Browser connected] 179ms
+[Page loaded] 464ms
+[Session released] 140ms
+[RUN] 204/1000
+[Session created] provider=NOTTE id=62b0c59a-4762-41f6-a14c-fb6e059267e6 241ms
+[Browser connected] 156ms
+[Page loaded] 499ms
+[Session released] 88ms
+[RUN] 205/1000
+[Session created] provider=NOTTE id=7961dd2e-f066-4ac1-bd65-f74c484803f2 271ms
+[Browser connected] 106ms
+[Page loaded] 525ms
+[Session released] 93ms
+[RUN] 206/1000
+[Session created] provider=NOTTE id=ab2537ad-92ea-47d2-affd-69e5d9024111 245ms
+[Browser connected] 107ms
+[Page loaded] 443ms
+[Session released] 112ms
+[RUN] 207/1000
+[Session created] provider=NOTTE id=215755fb-31a4-4ba2-b22a-a94e12ce32dd 231ms
+[Browser connected] 138ms
+[Page loaded] 443ms
+[Session released] 75ms
+[RUN] 208/1000
+[Session created] provider=NOTTE id=dd7c9f60-fbe9-4993-a870-ac5d7e76d134 250ms
+[Browser connected] 136ms
+[Page loaded] 506ms
+[Session released] 84ms
+[RUN] 209/1000
+[Session created] provider=NOTTE id=c57262b2-09c1-48e4-aa19-9cdd7d65d76b 264ms
+[Browser connected] 167ms
+[Page loaded] 462ms
+[Session released] 101ms
+[RUN] 210/1000
+[Session created] provider=NOTTE id=b8acfd5b-3c4b-44ea-8675-775528ad6277 257ms
+[Browser connected] 106ms
+[Page loaded] 531ms
+[Session released] 79ms
+[RUN] 211/1000
+[Session created] provider=NOTTE id=f7996f5a-5a1f-4921-a9b5-598636ebc832 325ms
+[Browser connected] 117ms
+[Page loaded] 519ms
+[Session released] 77ms
+[RUN] 212/1000
+[Session created] provider=NOTTE id=bf3cf01a-b80f-426d-9a93-fdae4a1c3cc7 234ms
+[Browser connected] 164ms
+[Page loaded] 687ms
+[Session released] 83ms
+[RUN] 213/1000
+[Session created] provider=NOTTE id=c1c7a2b0-93eb-47c0-9883-7dbeae2fee7a 249ms
+[Browser connected] 123ms
+[Page loaded] 571ms
+[Session released] 99ms
+[RUN] 214/1000
+[Session created] provider=NOTTE id=540f0cc1-a025-408f-b044-2416f510e45d 346ms
+[Browser connected] 104ms
+[Page loaded] 467ms
+[Session released] 78ms
+[RUN] 215/1000
+[Session created] provider=NOTTE id=596cde16-717d-43b1-9732-2f5938f6d226 350ms
+[Browser connected] 116ms
+[Page loaded] 473ms
+[Session released] 75ms
+[RUN] 216/1000
+[Session created] provider=NOTTE id=3b887fe2-0d81-4d9d-a147-b5a380d8cb3a 295ms
+[Browser connected] 105ms
+[Page loaded] 493ms
+[Session released] 85ms
+[RUN] 217/1000
+[Session created] provider=NOTTE id=3cd033fb-49c9-4fd2-9721-17b9e00e8db5 236ms
+[Browser connected] 176ms
+[Page loaded] 629ms
+[Session released] 94ms
+[RUN] 218/1000
+[Session created] provider=NOTTE id=5dc96bff-e4b9-4bb8-88d7-0472948cccc2 287ms
+[Browser connected] 97ms
+[Page loaded] 467ms
+[Session released] 95ms
+[RUN] 219/1000
+[Session created] provider=NOTTE id=2fb2644d-5eca-4134-8f5e-4f283a0fd1e8 250ms
+[Browser connected] 105ms
+[Page loaded] 478ms
+[Session released] 89ms
+[RUN] 220/1000
+[Session created] provider=NOTTE id=142d7037-f78e-4f65-8473-e3e5c8879783 226ms
+[Browser connected] 142ms
+[Page loaded] 548ms
+[Session released] 67ms
+[RUN] 221/1000
+[Session created] provider=NOTTE id=b22361e9-7da1-41a5-91fd-557f9337d105 261ms
+[Browser connected] 119ms
+[Page loaded] 452ms
+[Session released] 92ms
+[RUN] 222/1000
+[Session created] provider=NOTTE id=c778f1e2-90a0-4408-ab54-9f36a7f4f74b 284ms
+[Browser connected] 120ms
+[Page loaded] 497ms
+[Session released] 74ms
+[RUN] 223/1000
+[Session created] provider=NOTTE id=3b4491dd-430b-4845-88d8-d3c89181d811 237ms
+[Browser connected] 109ms
+[Page loaded] 495ms
+[Session released] 67ms
+[RUN] 224/1000
+[Session created] provider=NOTTE id=f3bab56a-1bb2-41f3-9319-e950c724912a 276ms
+[Browser connected] 125ms
+[Page loaded] 556ms
+[Session released] 83ms
+[RUN] 225/1000
+[Session created] provider=NOTTE id=2e39aa9c-f264-4726-a9ff-5b68629dc615 237ms
+[Browser connected] 116ms
+[Page loaded] 494ms
+[Session released] 66ms
+[RUN] 226/1000
+[Session created] provider=NOTTE id=87d627ea-c0de-43a6-8db2-974e9ea5a269 287ms
+[Browser connected] 188ms
+[Page loaded] 674ms
+[Session released] 85ms
+[RUN] 227/1000
+[Session created] provider=NOTTE id=54bc8f6a-8578-4c5a-815a-ab26efec711d 261ms
+[Browser connected] 130ms
+[Page loaded] 451ms
+[Session released] 84ms
+[RUN] 228/1000
+[Session created] provider=NOTTE id=973a9fc7-e33f-449f-9404-3fcbf9314dec 261ms
+[Browser connected] 159ms
+[Page loaded] 440ms
+[Session released] 94ms
+[RUN] 229/1000
+[Session created] provider=NOTTE id=bf619385-3d08-4602-95d8-1617365f04fc 308ms
+[Browser connected] 111ms
+[Page loaded] 497ms
+[Session released] 77ms
+[RUN] 230/1000
+[Session created] provider=NOTTE id=d204e517-2921-407e-ad10-5f1b4cfed1aa 237ms
+[Browser connected] 109ms
+[Page loaded] 523ms
+[Session released] 74ms
+[RUN] 231/1000
+[Session created] provider=NOTTE id=6e8fa23f-3927-431b-b19a-693298e79dae 248ms
+[Browser connected] 112ms
+[Page loaded] 489ms
+[Session released] 82ms
+[RUN] 232/1000
+[Session created] provider=NOTTE id=35c4d9f0-7e1f-40ef-a795-fb06a87d55d5 298ms
+[Browser connected] 100ms
+[Page loaded] 466ms
+[Session released] 83ms
+[RUN] 233/1000
+[Session created] provider=NOTTE id=a5da8494-196d-4448-bd35-0a610726b1bf 288ms
+[Browser connected] 111ms
+[Page loaded] 582ms
+[Session released] 76ms
+[RUN] 234/1000
+[Session created] provider=NOTTE id=805f1b3e-05a6-4e11-a332-740eec22f6af 270ms
+[Browser connected] 109ms
+[Page loaded] 454ms
+[Session released] 87ms
+[RUN] 235/1000
+[Session created] provider=NOTTE id=6cd1a1a4-543b-44f1-a442-1369ad134e04 242ms
+[Browser connected] 116ms
+[Page loaded] 603ms
+[Session released] 85ms
+[RUN] 236/1000
+[Session created] provider=NOTTE id=e1b9d452-5268-4b95-8887-b33e128b45d2 294ms
+[Browser connected] 115ms
+[Page loaded] 476ms
+[Session released] 72ms
+[RUN] 237/1000
+[Session created] provider=NOTTE id=0182b938-692e-462f-82f6-44aa4d94c4fe 308ms
+[Browser connected] 156ms
+[Page loaded] 580ms
+[Session released] 95ms
+[RUN] 238/1000
+[Session created] provider=NOTTE id=c729b684-4412-4104-accb-8c343c74a119 280ms
+[Browser connected] 254ms
+[Page loaded] 488ms
+[Session released] 78ms
+[RUN] 239/1000
+[Session created] provider=NOTTE id=5375316a-f34d-48c9-abbb-5097999ecba0 260ms
+[Browser connected] 91ms
+[Page loaded] 693ms
+[Session released] 92ms
+[RUN] 240/1000
+[Session created] provider=NOTTE id=6d45f429-aeec-4002-89bc-355448e5dfc2 286ms
+[Browser connected] 157ms
+[Page loaded] 621ms
+[Session released] 91ms
+[RUN] 241/1000
+[Session created] provider=NOTTE id=c58c602e-755a-46ee-b990-a12e156c54bf 275ms
+[Browser connected] 126ms
+[Page loaded] 575ms
+[Session released] 71ms
+[RUN] 242/1000
+[Session created] provider=NOTTE id=9bde49b3-b88a-4685-8a42-086d512c1f5e 307ms
+[Browser connected] 109ms
+[Page loaded] 672ms
+[Session released] 74ms
+[RUN] 243/1000
+[Session created] provider=NOTTE id=bbbbcafe-4363-423e-b36f-a96d7c9d08c2 252ms
+[Browser connected] 96ms
+[Page loaded] 611ms
+[Session released] 73ms
+[RUN] 244/1000
+[Session created] provider=NOTTE id=fd9958d2-5271-483d-9b73-e3a8b42c5e80 290ms
+[Browser connected] 101ms
+[Page loaded] 565ms
+[Session released] 99ms
+[RUN] 245/1000
+[Session created] provider=NOTTE id=035c4892-00c1-4907-88f0-2c6c03c86b57 227ms
+[Browser connected] 122ms
+[Page loaded] 462ms
+[Session released] 99ms
+[RUN] 246/1000
+[Session created] provider=NOTTE id=04ac45f4-ef98-4170-bc27-29bfe95bf535 286ms
+[Browser connected] 99ms
+[Page loaded] 429ms
+[Session released] 120ms
+[RUN] 247/1000
+[Session created] provider=NOTTE id=fa14bb82-161e-45fe-a1b5-4622c2da8333 242ms
+[Browser connected] 120ms
+[Page loaded] 562ms
+[Session released] 81ms
+[RUN] 248/1000
+[Session created] provider=NOTTE id=3ec5a06b-60c6-433b-82eb-8ef87156acc7 241ms
+[Browser connected] 127ms
+[Page loaded] 511ms
+[Session released] 157ms
+[RUN] 249/1000
+[Session created] provider=NOTTE id=678e245e-b1e7-477c-adb0-23036f7cf8ac 894ms
+[Browser connected] 109ms
+[Page loaded] 481ms
+[Session released] 94ms
+[RUN] 250/1000
+[Session created] provider=NOTTE id=6b1269fd-f96a-43da-8209-6d14f30916e2 238ms
+[Browser connected] 103ms
+[Page loaded] 498ms
+[Session released] 84ms
+[RUN] 251/1000
+[Session created] provider=NOTTE id=3b7c6726-79fd-4243-91e3-94ff78cd6215 249ms
+[Browser connected] 141ms
+[Page loaded] 466ms
+[Session released] 103ms
+[RUN] 252/1000
+[Session created] provider=NOTTE id=da542603-91a2-4334-9136-4b36abc99f97 275ms
+[Browser connected] 152ms
+[Page loaded] 568ms
+[Session released] 80ms
+[RUN] 253/1000
+[Session created] provider=NOTTE id=dad2317e-5ab2-4c2e-9bd8-68da5b91589c 249ms
+[Browser connected] 128ms
+[Page loaded] 522ms
+[Session released] 118ms
+[RUN] 254/1000
+[Session created] provider=NOTTE id=3db4093f-9c43-42cf-82ab-e1d7d6482663 230ms
+[Browser connected] 112ms
+[Page loaded] 607ms
+[Session released] 172ms
+[RUN] 255/1000
+[Session created] provider=NOTTE id=60a2f69f-db71-4e8d-968c-af5d98edef80 284ms
+[Browser connected] 117ms
+[Page loaded] 565ms
+[Session released] 93ms
+[RUN] 256/1000
+[Session created] provider=NOTTE id=9e5e79f1-fdaf-4c64-b1ab-0bb6293981ba 304ms
+[Browser connected] 106ms
+[Page loaded] 713ms
+[Session released] 73ms
+[RUN] 257/1000
+[Session created] provider=NOTTE id=e475b96b-283b-4554-ad7e-9087d4b44a13 226ms
+[Browser connected] 136ms
+[Page loaded] 525ms
+[Session released] 84ms
+[RUN] 258/1000
+[Session created] provider=NOTTE id=ed9efe8e-2908-437d-9274-c57d1679e546 247ms
+[Browser connected] 113ms
+[Page loaded] 471ms
+[Session released] 87ms
+[RUN] 259/1000
+[Session created] provider=NOTTE id=08b8a369-ac1d-4ddf-a901-744bb8335624 260ms
+[Browser connected] 113ms
+[Page loaded] 576ms
+[Session released] 90ms
+[RUN] 260/1000
+[Session created] provider=NOTTE id=a14afe23-610d-4dd6-87c3-35da0edfd869 236ms
+[Browser connected] 188ms
+[Page loaded] 532ms
+[Session released] 110ms
+[RUN] 261/1000
+[Session created] provider=NOTTE id=b57a2075-bc7d-49bb-80b4-e262efb1a086 246ms
+[Browser connected] 111ms
+[Page loaded] 463ms
+[Session released] 126ms
+[RUN] 262/1000
+[Session created] provider=NOTTE id=b6699c31-9593-43b8-92b5-690a7f43d6c2 272ms
+[Browser connected] 103ms
+[Page loaded] 477ms
+[Session released] 80ms
+[RUN] 263/1000
+[Session created] provider=NOTTE id=cae0a6bb-fea5-4a38-ae25-afd03d827988 241ms
+[Browser connected] 165ms
+[Page loaded] 585ms
+[Session released] 79ms
+[RUN] 264/1000
+[Session created] provider=NOTTE id=f8e2208a-1a8a-4fec-bab5-207a3915f166 257ms
+[Browser connected] 111ms
+[Page loaded] 596ms
+[Session released] 83ms
+[RUN] 265/1000
+[Session created] provider=NOTTE id=588df025-ef19-402c-bad4-c71b7f4c48d8 239ms
+[Browser connected] 115ms
+[Page loaded] 589ms
+[Session released] 100ms
+[RUN] 266/1000
+[Session created] provider=NOTTE id=6ea6c13b-5f13-4d22-ac9c-54ed03fdb8bf 235ms
+[Browser connected] 167ms
+[Page loaded] 539ms
+[Session released] 89ms
+[RUN] 267/1000
+[Session created] provider=NOTTE id=1b9533e7-b381-405d-8858-c822db8e1251 240ms
+[Browser connected] 162ms
+[Page loaded] 618ms
+[Session released] 76ms
+[RUN] 268/1000
+[Session created] provider=NOTTE id=7c1806ff-89e6-4176-8535-fa8ce84dc327 248ms
+[Browser connected] 111ms
+[Page loaded] 485ms
+[Session released] 94ms
+[RUN] 269/1000
+[Session created] provider=NOTTE id=102c384f-fdd5-41ac-9523-94872836c081 302ms
+[Browser connected] 112ms
+[Page loaded] 472ms
+[Session released] 80ms
+[RUN] 270/1000
+[Session created] provider=NOTTE id=67dcbfc4-5603-4cad-ac72-324f53c42206 289ms
+[Browser connected] 114ms
+[Page loaded] 424ms
+[Session released] 135ms
+[RUN] 271/1000
+[Session created] provider=NOTTE id=6b14212f-6097-4ec8-b44c-6113b5ff39ca 257ms
+[Browser connected] 121ms
+[Page loaded] 526ms
+[Session released] 95ms
+[RUN] 272/1000
+[Session created] provider=NOTTE id=f6b362ee-56e2-46e6-bfc2-0fcc0d538411 231ms
+[Browser connected] 99ms
+[Page loaded] 523ms
+[Session released] 69ms
+[RUN] 273/1000
+[Session created] provider=NOTTE id=06c2f8b8-7e8d-4704-b8f4-9df23c9da3c4 289ms
+[Browser connected] 105ms
+[Page loaded] 511ms
+[Session released] 94ms
+[RUN] 274/1000
+[Session created] provider=NOTTE id=883840bf-7421-4b43-b253-a433c2da99a8 281ms
+[Browser connected] 127ms
+[Page loaded] 494ms
+[Session released] 99ms
+[RUN] 275/1000
+[Session created] provider=NOTTE id=69d9bea3-8ca3-493b-a5aa-d65b4b5de217 301ms
+[Browser connected] 150ms
+[Page loaded] 470ms
+[Session released] 88ms
+[RUN] 276/1000
+[Session created] provider=NOTTE id=eae02cab-9294-4628-9766-0a4cfe486720 282ms
+[Browser connected] 139ms
+[Page loaded] 519ms
+[Session released] 66ms
+[RUN] 277/1000
+[Session created] provider=NOTTE id=3b85928c-aca5-4e38-97ac-b0151cd1b2fe 250ms
+[Browser connected] 106ms
+[Page loaded] 484ms
+[Session released] 67ms
+[RUN] 278/1000
+[Session created] provider=NOTTE id=fe3ec737-e347-416c-9481-a6f7f1f248d7 216ms
+[Browser connected] 98ms
+[Page loaded] 419ms
+[Session released] 73ms
+[RUN] 279/1000
+[Session created] provider=NOTTE id=e28afa3e-1076-4d4c-8b28-20156a79b462 298ms
+[Browser connected] 155ms
+[Page loaded] 496ms
+[Session released] 79ms
+[RUN] 280/1000
+[Session created] provider=NOTTE id=98a82330-1b15-4c3b-8e0a-a5b7245ba1c3 244ms
+[Browser connected] 114ms
+[Page loaded] 445ms
+[Session released] 119ms
+[RUN] 281/1000
+[Session created] provider=NOTTE id=c6a1343d-20c6-40c6-970b-aee06fc4b14f 263ms
+[Browser connected] 194ms
+[Page loaded] 649ms
+[Session released] 71ms
+[RUN] 282/1000
+[Session created] provider=NOTTE id=a644a0b8-263c-4346-a2f3-9948a20f0aa3 294ms
+[Browser connected] 110ms
+[Page loaded] 493ms
+[Session released] 98ms
+[RUN] 283/1000
+[Session created] provider=NOTTE id=385d1f41-6ad3-46f8-8acf-78ef5312b3bb 249ms
+[Browser connected] 104ms
+[Page loaded] 570ms
+[Session released] 107ms
+[RUN] 284/1000
+[Session created] provider=NOTTE id=867110be-4b2c-4fa5-a130-3cff2cdf79f1 274ms
+[Browser connected] 117ms
+[Page loaded] 429ms
+[Session released] 81ms
+[RUN] 285/1000
+[Session created] provider=NOTTE id=33428fcc-05f9-4e71-b59c-bde552053aa6 868ms
+[Browser connected] 166ms
+[Page loaded] 608ms
+[Session released] 80ms
+[RUN] 286/1000
+[Session created] provider=NOTTE id=24eaff59-4f83-4dd1-8c12-2ed2b165378d 228ms
+[Browser connected] 112ms
+[Page loaded] 530ms
+[Session released] 75ms
+[RUN] 287/1000
+[Session created] provider=NOTTE id=5f445b39-719d-47f1-b315-4442ef242045 242ms
+[Browser connected] 150ms
+[Page loaded] 511ms
+[Session released] 83ms
+[RUN] 288/1000
+[Session created] provider=NOTTE id=fd5a4479-e1bb-4b22-83a8-f5dc1bf9086e 311ms
+[Browser connected] 117ms
+[Page loaded] 512ms
+[Session released] 71ms
+[RUN] 289/1000
+[Session created] provider=NOTTE id=aaa80cbd-299e-4274-a1bd-9efd23097e9b 257ms
+[Browser connected] 133ms
+[Page loaded] 518ms
+[Session released] 75ms
+[RUN] 290/1000
+[Session created] provider=NOTTE id=18addd7a-8db7-4747-9dde-ca642778cb15 287ms
+[Browser connected] 139ms
+[Page loaded] 487ms
+[Session released] 68ms
+[RUN] 291/1000
+[Session created] provider=NOTTE id=59ad744e-e984-484c-9240-f7e4363cbf17 311ms
+[Browser connected] 130ms
+[Page loaded] 474ms
+[Session released] 94ms
+[RUN] 292/1000
+[Session created] provider=NOTTE id=ec29c355-cf28-40cc-ac31-ac76a1668420 252ms
+[Browser connected] 155ms
+[Page loaded] 536ms
+[Session released] 76ms
+[RUN] 293/1000
+[Session created] provider=NOTTE id=91a98760-93da-4360-931e-b2bfd1ca54e8 252ms
+[Browser connected] 107ms
+[Page loaded] 559ms
+[Session released] 91ms
+[RUN] 294/1000
+[Session created] provider=NOTTE id=8457de4e-0f33-4189-a762-a5e9f0c0a540 279ms
+[Browser connected] 118ms
+[Page loaded] 415ms
+[Session released] 101ms
+[RUN] 295/1000
+[Session created] provider=NOTTE id=47f3b255-d13a-4ccf-8ca1-23a1aedfead5 236ms
+[Browser connected] 137ms
+[Page loaded] 574ms
+[Session released] 93ms
+[RUN] 296/1000
+[Session created] provider=NOTTE id=5b840f8e-11f9-4434-9d41-95f7b6ac6f83 232ms
+[Browser connected] 145ms
+[Page loaded] 424ms
+[Session released] 235ms
+[RUN] 297/1000
+[Session created] provider=NOTTE id=d11a41b1-8f43-4645-8579-c4538d89940f 294ms
+[Browser connected] 89ms
+[Page loaded] 504ms
+[Session released] 273ms
+[RUN] 298/1000
+[Session created] provider=NOTTE id=267e666e-25aa-4a7f-87fd-a1932c665459 913ms
+[Browser connected] 220ms
+[Page loaded] 486ms
+[Session released] 83ms
+[RUN] 299/1000
+[Session created] provider=NOTTE id=4b202a6a-9ca5-459c-b942-1a70e04c7d63 288ms
+[Browser connected] 124ms
+[Page loaded] 706ms
+[Session released] 94ms
+[RUN] 300/1000
+[Session created] provider=NOTTE id=60699d39-96c6-4ca9-859a-1d78dd743998 258ms
+[Browser connected] 113ms
+[Page loaded] 838ms
+[Session released] 135ms
+[RUN] 301/1000
+[Session created] provider=NOTTE id=1cb6f3df-5f97-49fd-9fca-a7c4e8ecd838 285ms
+[Browser connected] 176ms
+[Page loaded] 587ms
+[Session released] 91ms
+[RUN] 302/1000
+[Session created] provider=NOTTE id=a7176c1b-d0dd-4f9a-949c-dc30e1a6043b 241ms
+[Browser connected] 113ms
+[Page loaded] 518ms
+[Session released] 78ms
+[RUN] 303/1000
+[Session created] provider=NOTTE id=ddf7c0dc-8c25-4774-8d7e-e155069585c7 228ms
+[Browser connected] 217ms
+[Page loaded] 516ms
+[Session released] 73ms
+[RUN] 304/1000
+[Session created] provider=NOTTE id=64343bf9-2751-46a7-b120-9848e9f3deac 265ms
+[Browser connected] 100ms
+[Page loaded] 461ms
+[Session released] 77ms
+[RUN] 305/1000
+[Session created] provider=NOTTE id=af64eb68-0c27-4730-9100-65203ebc932c 224ms
+[Browser connected] 113ms
+[Page loaded] 497ms
+[Session released] 105ms
+[RUN] 306/1000
+[Session created] provider=NOTTE id=ed4b3d7a-085f-4d90-91da-e879f6dc7dda 260ms
+[Browser connected] 125ms
+[Page loaded] 482ms
+[Session released] 82ms
+[RUN] 307/1000
+[Session created] provider=NOTTE id=8a67e71c-8f0e-4c23-a8ba-3668d0c39e1c 294ms
+[Browser connected] 104ms
+[Page loaded] 486ms
+[Session released] 96ms
+[RUN] 308/1000
+[Session created] provider=NOTTE id=b6d07e8d-b25f-43a0-b714-ad7a67062031 243ms
+[Browser connected] 170ms
+[Page loaded] 422ms
+[Session released] 74ms
+[RUN] 309/1000
+[Session created] provider=NOTTE id=77688fb0-0e7a-45cf-8420-48e8418e4420 234ms
+[Browser connected] 126ms
+[Page loaded] 517ms
+[Session released] 89ms
+[RUN] 310/1000
+[Session created] provider=NOTTE id=6fb043a3-48e8-4a86-ae76-7cdf0af524ca 260ms
+[Browser connected] 124ms
+[Page loaded] 507ms
+[Session released] 91ms
+[RUN] 311/1000
+[Session created] provider=NOTTE id=4f97e124-62d4-433e-b229-4325cc953be8 311ms
+[Browser connected] 88ms
+[Page loaded] 570ms
+[Session released] 72ms
+[RUN] 312/1000
+[Session created] provider=NOTTE id=20ff602d-ba4c-4dba-91fb-2af67b737b76 293ms
+[Browser connected] 102ms
+[Page loaded] 432ms
+[Session released] 92ms
+[RUN] 313/1000
+[Session created] provider=NOTTE id=449430c0-c0cd-459b-9aa0-62cc761f20a7 262ms
+[Browser connected] 117ms
+[Page loaded] 445ms
+[Session released] 87ms
+[RUN] 314/1000
+[Session created] provider=NOTTE id=db80af6f-ed9b-4bd9-bdd6-43320c58acd3 292ms
+[Browser connected] 135ms
+[Page loaded] 428ms
+[Session released] 81ms
+[RUN] 315/1000
+[Session created] provider=NOTTE id=05d3eed0-ffaa-45dc-9a0e-30c8bbbaf76e 305ms
+[Browser connected] 126ms
+[Page loaded] 510ms
+[Session released] 75ms
+[RUN] 316/1000
+[Session created] provider=NOTTE id=40f5b9f5-48b9-478e-a385-761ac63bd9bc 248ms
+[Browser connected] 108ms
+[Page loaded] 660ms
+[Session released] 115ms
+[RUN] 317/1000
+[Session created] provider=NOTTE id=635d21a3-be13-4e4c-bbda-e57112a93483 252ms
+[Browser connected] 125ms
+[Page loaded] 607ms
+[Session released] 75ms
+[RUN] 318/1000
+[Session created] provider=NOTTE id=3228df1a-21ff-4850-b7fa-fe4da02f5728 347ms
+[Browser connected] 103ms
+[Page loaded] 552ms
+[Session released] 86ms
+[RUN] 319/1000
+[Session created] provider=NOTTE id=2ef85ea5-e084-4317-b012-ca44c99e6dc9 264ms
+[Browser connected] 104ms
+[Page loaded] 471ms
+[Session released] 79ms
+[RUN] 320/1000
+[Session created] provider=NOTTE id=62aa8084-2da7-4452-a53c-79b0fbb49cc9 250ms
+[Browser connected] 172ms
+[Page loaded] 442ms
+[Session released] 131ms
+[RUN] 321/1000
+[Session created] provider=NOTTE id=f67b8ab5-e022-4077-8c60-bae647efea32 267ms
+[Browser connected] 133ms
+[Page loaded] 512ms
+[Session released] 197ms
+[RUN] 322/1000
+[Session created] provider=NOTTE id=4e835074-a7de-48a5-beea-408920bda0e8 290ms
+[Browser connected] 134ms
+[Page loaded] 514ms
+[Session released] 103ms
+[RUN] 323/1000
+[Session created] provider=NOTTE id=1305ed7b-2c39-429e-b134-2f7c0b7ac6ba 278ms
+[Browser connected] 128ms
+[Page loaded] 524ms
+[Session released] 78ms
+[RUN] 324/1000
+[Session created] provider=NOTTE id=76b34738-299e-4054-aea2-1a5d71b4eb0f 275ms
+[Browser connected] 115ms
+[Page loaded] 468ms
+[Session released] 91ms
+[RUN] 325/1000
+[Session created] provider=NOTTE id=3e961c6d-ed25-4e36-a08a-0f69a4677edb 249ms
+[Browser connected] 157ms
+[Page loaded] 496ms
+[Session released] 110ms
+[RUN] 326/1000
+[Session created] provider=NOTTE id=57adec23-a989-4f18-98aa-a9bc96c28996 318ms
+[Browser connected] 102ms
+[Page loaded] 636ms
+[Session released] 77ms
+[RUN] 327/1000
+[Session created] provider=NOTTE id=d1e20177-cc1d-442d-aca9-d4914fbef392 300ms
+[Browser connected] 176ms
+[Page loaded] 606ms
+[Session released] 92ms
+[RUN] 328/1000
+[Session created] provider=NOTTE id=10819e7b-54da-4fc7-ad7c-7269c67be6a5 188ms
+[Browser connected] 107ms
+[Page loaded] 524ms
+[Session released] 118ms
+[RUN] 329/1000
+[Session created] provider=NOTTE id=503d437a-c8de-41a8-808d-c4492edcd3b2 260ms
+[Browser connected] 105ms
+[Page loaded] 506ms
+[Session released] 93ms
+[RUN] 330/1000
+[Session created] provider=NOTTE id=952dfa7b-2d65-4278-8c46-332a6eb7d676 275ms
+[Browser connected] 107ms
+[Page loaded] 487ms
+[Session released] 81ms
+[RUN] 331/1000
+[Session created] provider=NOTTE id=ec882a07-b039-43e8-96d8-10a5bb0de0ff 281ms
+[Browser connected] 159ms
+[Page loaded] 421ms
+[Session released] 82ms
+[RUN] 332/1000
+[Session created] provider=NOTTE id=ab171e57-add7-4e44-a2c6-046a41f7a6f0 254ms
+[Browser connected] 160ms
+[Page loaded] 492ms
+[Session released] 85ms
+[RUN] 333/1000
+[Session created] provider=NOTTE id=7de88a3e-9a3f-451b-b0ff-9021481409f0 261ms
+[Browser connected] 126ms
+[Page loaded] 549ms
+[Session released] 88ms
+[RUN] 334/1000
+[Session created] provider=NOTTE id=42cb9dc6-3d86-4549-bc7b-eca1e0ed08d8 495ms
+[Browser connected] 114ms
+[Page loaded] 445ms
+[Session released] 93ms
+[RUN] 335/1000
+[Session created] provider=NOTTE id=8a4f898a-ac60-454e-9dd9-e0b2f529f278 241ms
+[Browser connected] 125ms
+[Page loaded] 490ms
+[Session released] 86ms
+[RUN] 336/1000
+[Session created] provider=NOTTE id=43d1da96-f7ea-40fb-a0ab-32d46a2f561f 286ms
+[Browser connected] 130ms
+[Page loaded] 838ms
+[Session released] 145ms
+[RUN] 337/1000
+[Session created] provider=NOTTE id=300d5b17-c7ba-47c5-851f-d6e596f68cac 254ms
+[Browser connected] 116ms
+[Page loaded] 574ms
+[Session released] 71ms
+[RUN] 338/1000
+[Session created] provider=NOTTE id=45815cb0-20f9-436d-97c9-f5cf1f0c799b 288ms
+[Browser connected] 186ms
+[Page loaded] 511ms
+[Session released] 92ms
+[RUN] 339/1000
+[Session created] provider=NOTTE id=a393234a-6c7f-4b6d-83bb-0575132fe522 241ms
+[Browser connected] 125ms
+[Page loaded] 472ms
+[Session released] 85ms
+[RUN] 340/1000
+[Session created] provider=NOTTE id=c5ebba34-93c4-4b27-99c1-68f8bd687cae 256ms
+[Browser connected] 108ms
+[Page loaded] 463ms
+[Session released] 275ms
+[RUN] 341/1000
+[Session created] provider=NOTTE id=0ce2ce4e-5f5e-4c70-91d4-098162a1e140 275ms
+[Browser connected] 133ms
+[Page loaded] 433ms
+[Session released] 84ms
+[RUN] 342/1000
+[Session created] provider=NOTTE id=3aec7340-3c84-4a21-a920-2244ce3e0d40 287ms
+[Browser connected] 108ms
+[Page loaded] 507ms
+[Session released] 70ms
+[RUN] 343/1000
+[Session created] provider=NOTTE id=2b951407-68be-4ac4-bdc3-816c20d4a68c 284ms
+[Browser connected] 101ms
+[Page loaded] 468ms
+[Session released] 102ms
+[RUN] 344/1000
+[Session created] provider=NOTTE id=e52fae85-a0db-48ac-b393-c1a79cc6b6a5 746ms
+[Browser connected] 123ms
+[Page loaded] 504ms
+[Session released] 381ms
+[RUN] 345/1000
+[Session created] provider=NOTTE id=87f56d18-735a-4ee0-ac7c-13c0307e95fd 249ms
+[Browser connected] 114ms
+[Page loaded] 516ms
+[Session released] 72ms
+[RUN] 346/1000
+[Session created] provider=NOTTE id=ad38a38d-3391-42fc-a395-4f76158cdc57 269ms
+[Browser connected] 110ms
+[Page loaded] 461ms
+[Session released] 115ms
+[RUN] 347/1000
+[Session created] provider=NOTTE id=7a2259de-51a3-46c7-a8d5-72f339708f9e 285ms
+[Browser connected] 137ms
+[Page loaded] 506ms
+[Session released] 83ms
+[RUN] 348/1000
+[Session created] provider=NOTTE id=5aefa4b5-13d3-4741-8d6b-55baf03e35d3 278ms
+[Browser connected] 173ms
+[Page loaded] 550ms
+[Session released] 90ms
+[RUN] 349/1000
+[Session created] provider=NOTTE id=3bf46344-2c60-4198-b102-2585405db77b 302ms
+[Browser connected] 119ms
+[Page loaded] 487ms
+[Session released] 77ms
+[RUN] 350/1000
+[Session created] provider=NOTTE id=04e31b53-bfd7-4267-8d17-f02b24069f77 322ms
+[Browser connected] 135ms
+[Page loaded] 526ms
+[Session released] 111ms
+[RUN] 351/1000
+[Session created] provider=NOTTE id=2d984b9f-56e4-4b6d-9678-f9f344736391 265ms
+[Browser connected] 97ms
+[Page loaded] 476ms
+[Session released] 70ms
+[RUN] 352/1000
+[Session created] provider=NOTTE id=bb06303d-dfc4-449a-952f-08b2c06b1907 224ms
+[Browser connected] 99ms
+[Page loaded] 585ms
+[Session released] 128ms
+[RUN] 353/1000
+[Session created] provider=NOTTE id=896d30cf-8c13-48f8-84c9-75a1f4e4e905 261ms
+[Browser connected] 182ms
+[Page loaded] 527ms
+[Session released] 142ms
+[RUN] 354/1000
+[Session created] provider=NOTTE id=3681d534-796a-4849-b5cc-6a434ca443e0 254ms
+[Browser connected] 154ms
+[Page loaded] 476ms
+[Session released] 99ms
+[RUN] 355/1000
+[Session created] provider=NOTTE id=8120c9f9-0eb4-4ab7-b056-cf9c229bbd07 278ms
+[Browser connected] 147ms
+[Page loaded] 486ms
+[Session released] 111ms
+[RUN] 356/1000
+[Session created] provider=NOTTE id=b765f908-25ac-40ac-8281-9a30e979c02e 235ms
+[Browser connected] 118ms
+[Page loaded] 519ms
+[Session released] 100ms
+[RUN] 357/1000
+[Session created] provider=NOTTE id=b96a38dd-fde9-4930-a70e-9bd95e2a93e4 235ms
+[Browser connected] 248ms
+[Page loaded] 726ms
+[Session released] 97ms
+[RUN] 358/1000
+[Session created] provider=NOTTE id=70e592bb-51d2-4ecb-a7fb-93aa979ab340 243ms
+[Browser connected] 122ms
+[Page loaded] 474ms
+[Session released] 86ms
+[RUN] 359/1000
+[Session created] provider=NOTTE id=8ad890d8-b510-4018-9fcc-5ad3058d21c1 254ms
+[Browser connected] 114ms
+[Page loaded] 574ms
+[Session released] 82ms
+[RUN] 360/1000
+[Session created] provider=NOTTE id=1f308076-5499-4168-83f3-ff1d2f61f6d4 285ms
+[Browser connected] 116ms
+[Page loaded] 501ms
+[Session released] 77ms
+[RUN] 361/1000
+[Session created] provider=NOTTE id=3af7a479-de76-4df6-abff-ab9fcd13d2b1 304ms
+[Browser connected] 116ms
+[Page loaded] 784ms
+[Session released] 84ms
+[RUN] 362/1000
+[Session created] provider=NOTTE id=fe1cb338-2c64-4d87-a84f-6b28a4eb6d9f 309ms
+[Browser connected] 159ms
+[Page loaded] 412ms
+[Session released] 90ms
+[RUN] 363/1000
+[Session created] provider=NOTTE id=2747d362-516c-4e02-8ea9-842ec463e4ba 301ms
+[Browser connected] 105ms
+[Page loaded] 770ms
+[Session released] 158ms
+[RUN] 364/1000
+[Session created] provider=NOTTE id=e79c44cf-f9e5-4e37-8932-89df6f83db95 282ms
+[Browser connected] 156ms
+[Page loaded] 490ms
+[Session released] 103ms
+[RUN] 365/1000
+[Session created] provider=NOTTE id=6c851c65-5a37-4def-ae2d-411442ff0ef7 253ms
+[Browser connected] 110ms
+[Page loaded] 519ms
+[Session released] 85ms
+[RUN] 366/1000
+[Session created] provider=NOTTE id=470365d0-eb08-420a-b7b1-118f8da895bf 240ms
+[Browser connected] 130ms
+[Page loaded] 524ms
+[Session released] 83ms
+[RUN] 367/1000
+[Session created] provider=NOTTE id=14e10b38-d40d-4d5f-a25c-dfeb020256c7 254ms
+[Browser connected] 110ms
+[Page loaded] 533ms
+[Session released] 91ms
+[RUN] 368/1000
+[Session created] provider=NOTTE id=6c656085-3f6a-407f-9868-86e2f9cbe411 298ms
+[Browser connected] 117ms
+[Page loaded] 646ms
+[Session released] 119ms
+[RUN] 369/1000
+[Session created] provider=NOTTE id=4219fed2-9dea-4398-9c8f-49d6eb5b6fc9 222ms
+[Browser connected] 148ms
+[Page loaded] 496ms
+[Session released] 90ms
+[RUN] 370/1000
+[Session created] provider=NOTTE id=a3924b28-1536-4277-a4ff-35f81e75e9f7 283ms
+[Browser connected] 157ms
+[Page loaded] 563ms
+[Session released] 80ms
+[RUN] 371/1000
+[Session created] provider=NOTTE id=a273087c-5d4b-4671-8dd5-9ad479c83423 264ms
+[Browser connected] 118ms
+[Page loaded] 587ms
+[Session released] 82ms
+[RUN] 372/1000
+[Session created] provider=NOTTE id=44edda21-4408-4ef0-91ee-b2e80e992ce0 280ms
+[Browser connected] 92ms
+[Page loaded] 474ms
+[Session released] 77ms
+[RUN] 373/1000
+[Session created] provider=NOTTE id=d505b5e1-d2f9-4476-b23f-c967a027a425 254ms
+[Browser connected] 84ms
+[Page loaded] 479ms
+[Session released] 93ms
+[RUN] 374/1000
+[Session created] provider=NOTTE id=738b0ff5-d98c-41c6-b487-e385e110a4f9 306ms
+[Browser connected] 110ms
+[Page loaded] 538ms
+[Session released] 84ms
+[RUN] 375/1000
+[Session created] provider=NOTTE id=f962fea1-c624-4680-b85c-34c9fd7e1d73 186ms
+[Browser connected] 102ms
+[Page loaded] 525ms
+[Session released] 75ms
+[RUN] 376/1000
+[Session created] provider=NOTTE id=d93af6da-5b42-4a15-a45e-7788f1555280 245ms
+[Browser connected] 105ms
+[Page loaded] 498ms
+[Session released] 106ms
+[RUN] 377/1000
+[Session created] provider=NOTTE id=8269f843-801a-404f-9345-d1d77f986178 262ms
+[Browser connected] 112ms
+[Page loaded] 453ms
+[Session released] 588ms
+[RUN] 378/1000
+[Session created] provider=NOTTE id=479a3cd6-dd1b-4ae7-8013-fb27d732df54 308ms
+[Browser connected] 98ms
+[Page loaded] 559ms
+[Session released] 88ms
+[RUN] 379/1000
+[Session created] provider=NOTTE id=8d9afc32-57e9-4522-9102-e717ebe39d1f 278ms
+[Browser connected] 166ms
+[Page loaded] 581ms
+[Session released] 91ms
+[RUN] 380/1000
+[Session created] provider=NOTTE id=f408aa90-f910-4f06-958a-bc21f48f5e68 230ms
+[Browser connected] 116ms
+[Page loaded] 427ms
+[Session released] 76ms
+[RUN] 381/1000
+[Session created] provider=NOTTE id=b0679332-096a-4fbc-bb32-8ad6a1ddcaf8 215ms
+[Browser connected] 104ms
+[Page loaded] 478ms
+[Session released] 80ms
+[RUN] 382/1000
+[Session created] provider=NOTTE id=f2f6b8ed-c717-4160-b791-21882bef2d5d 287ms
+[Browser connected] 91ms
+[Page loaded] 559ms
+[Session released] 86ms
+[RUN] 383/1000
+[Session created] provider=NOTTE id=7d28e79c-e8ae-44e2-9abc-e2b3c4d2fc83 292ms
+[Browser connected] 115ms
+[Page loaded] 451ms
+[Session released] 107ms
+[RUN] 384/1000
+[Session created] provider=NOTTE id=26c2cb6d-c407-481f-813e-5a48e34457fd 309ms
+[Browser connected] 107ms
+[Page loaded] 539ms
+[Session released] 94ms
+[RUN] 385/1000
+[Session created] provider=NOTTE id=6de751cc-5298-4519-8a1d-771d499bab56 291ms
+[Browser connected] 110ms
+[Page loaded] 497ms
+[Session released] 105ms
+[RUN] 386/1000
+[Session created] provider=NOTTE id=50412498-60bf-4124-8bb1-59c714a72237 266ms
+[Browser connected] 106ms
+[Page loaded] 494ms
+[Session released] 85ms
+[RUN] 387/1000
+[Session created] provider=NOTTE id=b9227517-d93b-4516-8c8f-07a392741564 266ms
+[Browser connected] 123ms
+[Page loaded] 434ms
+[Session released] 93ms
+[RUN] 388/1000
+[Session created] provider=NOTTE id=23bf2423-6402-4e14-bb54-8f03177948cc 299ms
+[Browser connected] 170ms
+[Page loaded] 545ms
+[Session released] 97ms
+[RUN] 389/1000
+[Session created] provider=NOTTE id=1d7a8e6b-5ac2-48cb-a476-e91377ef1955 260ms
+[Browser connected] 198ms
+[Page loaded] 467ms
+[Session released] 77ms
+[RUN] 390/1000
+[Session created] provider=NOTTE id=0122d419-206d-49b9-b242-b362703bb523 277ms
+[Browser connected] 198ms
+[Page loaded] 522ms
+[Session released] 90ms
+[RUN] 391/1000
+[Session created] provider=NOTTE id=e80e0c92-7eb5-4bca-8d71-0f3590351552 268ms
+[Browser connected] 102ms
+[Page loaded] 426ms
+[Session released] 82ms
+[RUN] 392/1000
+[Session created] provider=NOTTE id=d7af036f-0223-4dde-af4b-939b1e9eb67d 252ms
+[Browser connected] 136ms
+[Page loaded] 412ms
+[Session released] 71ms
+[RUN] 393/1000
+[Session created] provider=NOTTE id=93cad0e4-755c-4247-ae61-b4d5c8cfbf29 258ms
+[Browser connected] 165ms
+[Page loaded] 513ms
+[Session released] 70ms
+[RUN] 394/1000
+[Session created] provider=NOTTE id=85741872-3782-48cc-b491-a66aed137624 259ms
+[Browser connected] 114ms
+[Page loaded] 547ms
+[Session released] 85ms
+[RUN] 395/1000
+[Session created] provider=NOTTE id=a424e448-fd28-4513-a398-4b8a66f0eaac 247ms
+[Browser connected] 167ms
+[Page loaded] 513ms
+[Session released] 89ms
+[RUN] 396/1000
+[Session created] provider=NOTTE id=d9ed9522-0006-440e-8a2e-106635a5d63a 250ms
+[Browser connected] 656ms
+[Page loaded] 513ms
+[Session released] 82ms
+[RUN] 397/1000
+[Session created] provider=NOTTE id=c4c1ca71-7136-43a0-b97b-e91d7c402a3a 274ms
+[Browser connected] 93ms
+[Page loaded] 409ms
+[Session released] 109ms
+[RUN] 398/1000
+[Session created] provider=NOTTE id=9338a3e1-fdbf-4ae3-a7fa-f1ed6254e88c 261ms
+[Browser connected] 109ms
+[Page loaded] 717ms
+[Session released] 134ms
+[RUN] 399/1000
+[Session created] provider=NOTTE id=ed8a2040-7f00-439a-a434-280c4beae647 229ms
+[Browser connected] 110ms
+[Page loaded] 424ms
+[Session released] 78ms
+[RUN] 400/1000
+[Session created] provider=NOTTE id=8822726f-b604-4f45-b98c-2bbaa5ca23c0 611ms
+[Browser connected] 115ms
+[Page loaded] 449ms
+[Session released] 89ms
+[RUN] 401/1000
+[Session created] provider=NOTTE id=a13843b6-34c5-4cdb-95bd-406c5a9282af 287ms
+[Browser connected] 109ms
+[Page loaded] 466ms
+[Session released] 86ms
+[RUN] 402/1000
+[Session created] provider=NOTTE id=879bc146-6cd0-4690-a7dd-76343909abba 305ms
+[Browser connected] 143ms
+[Page loaded] 495ms
+[Session released] 139ms
+[RUN] 403/1000
+[Session created] provider=NOTTE id=8a263311-bbac-4489-ba02-df34befe09e2 280ms
+[Browser connected] 105ms
+[Page loaded] 446ms
+[Session released] 92ms
+[RUN] 404/1000
+[Session created] provider=NOTTE id=1d9d6d38-4785-4951-b6aa-742748dbdeef 249ms
+[Browser connected] 113ms
+[Page loaded] 691ms
+[Session released] 69ms
+[RUN] 405/1000
+[Session created] provider=NOTTE id=1c5757db-2bc1-49ce-8754-c1dcf1247ece 277ms
+[Browser connected] 93ms
+[Page loaded] 473ms
+[Session released] 67ms
+[RUN] 406/1000
+[Session created] provider=NOTTE id=9641ad68-f7d1-4166-b94c-b264d3031a67 299ms
+[Browser connected] 103ms
+[Page loaded] 562ms
+[Session released] 107ms
+[RUN] 407/1000
+[Session created] provider=NOTTE id=f54685c4-5d13-4523-8a7a-998f5bd91488 285ms
+[Browser connected] 103ms
+[Page loaded] 545ms
+[Session released] 76ms
+[RUN] 408/1000
+[Session created] provider=NOTTE id=88ea2da7-6973-4676-bb27-1ae4dc802202 265ms
+[Browser connected] 131ms
+[Page loaded] 505ms
+[Session released] 111ms
+[RUN] 409/1000
+[Session created] provider=NOTTE id=b89303a6-4d81-4b09-8dcf-d1ce0e1ebc9c 293ms
+[Browser connected] 114ms
+[Page loaded] 482ms
+[Session released] 72ms
+[RUN] 410/1000
+[Session created] provider=NOTTE id=c6fc27b8-0f5e-4551-8d68-fe61702ac509 225ms
+[Browser connected] 109ms
+[Page loaded] 692ms
+[Session released] 101ms
+[RUN] 411/1000
+[Session created] provider=NOTTE id=b5435c39-762d-4f9c-9229-f0023ba34533 299ms
+[Browser connected] 122ms
+[Page loaded] 487ms
+[Session released] 134ms
+[RUN] 412/1000
+[Session created] provider=NOTTE id=5dea34c8-51a4-4428-9220-8881e27ddf17 247ms
+[Browser connected] 119ms
+[Page loaded] 565ms
+[Session released] 124ms
+[RUN] 413/1000
+[Session created] provider=NOTTE id=1f8bcda2-34ae-4bcd-b256-bfe4fca44d63 249ms
+[Browser connected] 153ms
+[Page loaded] 475ms
+[Session released] 69ms
+[RUN] 414/1000
+[Session created] provider=NOTTE id=befc1af8-45bc-4974-9d89-8c060dd14f8b 239ms
+[Browser connected] 106ms
+[Page loaded] 582ms
+[Session released] 92ms
+[RUN] 415/1000
+[Session created] provider=NOTTE id=9ef2392e-2b5f-437a-9391-44d04b530a8d 232ms
+[Browser connected] 220ms
+[Page loaded] 469ms
+[Session released] 102ms
+[RUN] 416/1000
+[Session created] provider=NOTTE id=9fc41efd-10d3-40f9-ab57-e30cf0b2a124 318ms
+[Browser connected] 97ms
+[Page loaded] 499ms
+[Session released] 91ms
+[RUN] 417/1000
+[Session created] provider=NOTTE id=f7d5b3e2-c749-4a19-ac64-d4008552b31c 241ms
+[Browser connected] 108ms
+[Page loaded] 419ms
+[Session released] 87ms
+[RUN] 418/1000
+[Session created] provider=NOTTE id=ef90abc8-8863-4b2a-bab2-7f5a2a585fa1 328ms
+[Browser connected] 154ms
+[Page loaded] 592ms
+[Session released] 67ms
+[RUN] 419/1000
+[Session created] provider=NOTTE id=cbd01b8d-8679-452e-b01f-1c7923a30f78 223ms
+[Browser connected] 162ms
+[Page loaded] 492ms
+[Session released] 92ms
+[RUN] 420/1000
+[Session created] provider=NOTTE id=ee71a96b-c06d-4cfa-9839-930b2a2f316a 263ms
+[Browser connected] 118ms
+[Page loaded] 511ms
+[Session released] 83ms
+[RUN] 421/1000
+[Session created] provider=NOTTE id=9b83a057-2eee-493c-82d7-0097c6304190 225ms
+[Browser connected] 115ms
+[Page loaded] 482ms
+[Session released] 89ms
+[RUN] 422/1000
+[Session created] provider=NOTTE id=b5fa0380-29da-45a1-b726-24d1fdbc8a67 244ms
+[Browser connected] 111ms
+[Page loaded] 489ms
+[Session released] 101ms
+[RUN] 423/1000
+[Session created] provider=NOTTE id=1f31adc1-26fc-441e-b0d5-31318d6df8eb 244ms
+[Browser connected] 161ms
+[Page loaded] 548ms
+[Session released] 78ms
+[RUN] 424/1000
+[Session created] provider=NOTTE id=f720d8de-478b-45f2-973e-1a4ad76eba2c 267ms
+[Browser connected] 108ms
+[Page loaded] 843ms
+[Session released] 88ms
+[RUN] 425/1000
+[Session created] provider=NOTTE id=213733ef-6e81-4842-a307-05967b297629 295ms
+[Browser connected] 113ms
+[Page loaded] 582ms
+[Session released] 77ms
+[RUN] 426/1000
+[Session created] provider=NOTTE id=4b3165cd-cba2-4634-b301-aaecdb6573dc 265ms
+[Browser connected] 111ms
+[Page loaded] 440ms
+[Session released] 97ms
+[RUN] 427/1000
+[Session created] provider=NOTTE id=583e518d-ceaf-4f75-819e-e99015042b7e 287ms
+[Browser connected] 126ms
+[Page loaded] 440ms
+[Session released] 74ms
+[RUN] 428/1000
+[Session created] provider=NOTTE id=f5fe1af1-16ad-4390-8088-07393993e07c 254ms
+[Browser connected] 116ms
+[Page loaded] 496ms
+[Session released] 89ms
+[RUN] 429/1000
+[Session created] provider=NOTTE id=36c8a486-d5ce-4bcb-be7f-b00521ddcebe 306ms
+[Browser connected] 131ms
+[Page loaded] 449ms
+[Session released] 76ms
+[RUN] 430/1000
+[Session created] provider=NOTTE id=9b8b3adb-f172-47ff-ad22-cdaa2e2eecc4 290ms
+[Browser connected] 114ms
+[Page loaded] 574ms
+[Session released] 84ms
+[RUN] 431/1000
+[Session created] provider=NOTTE id=5ad9f6fa-da23-417e-be2a-a8d2cc68b2a8 287ms
+[Browser connected] 112ms
+[Page loaded] 445ms
+[Session released] 83ms
+[RUN] 432/1000
+[Session created] provider=NOTTE id=997fd705-6f5c-4a80-9732-d223c65af446 233ms
+[Browser connected] 166ms
+[Page loaded] 506ms
+[Session released] 97ms
+[RUN] 433/1000
+[Session created] provider=NOTTE id=5d2db327-5c01-4c6b-99d2-25b9f865b728 252ms
+[Browser connected] 88ms
+[Page loaded] 665ms
+[Session released] 88ms
+[RUN] 434/1000
+[Session created] provider=NOTTE id=a27561e0-1188-40fd-abc6-9f8144b1f1c7 291ms
+[Browser connected] 103ms
+[Page loaded] 504ms
+[Session released] 117ms
+[RUN] 435/1000
+[Session created] provider=NOTTE id=e859a52a-24a3-4263-b7fd-b6e6ecd45769 245ms
+[Browser connected] 113ms
+[Page loaded] 404ms
+[Session released] 84ms
+[RUN] 436/1000
+[Session created] provider=NOTTE id=766b7965-de52-46de-a75b-665c67d2f497 245ms
+[Browser connected] 120ms
+[Page loaded] 532ms
+[Session released] 342ms
+[RUN] 437/1000
+[Session created] provider=NOTTE id=c8e91308-8112-4bed-9a41-a452ed8afac6 232ms
+[Browser connected] 189ms
+[Page loaded] 458ms
+[Session released] 75ms
+[RUN] 438/1000
+[Session created] provider=NOTTE id=58a71a82-82e2-4add-b009-0c926bea4884 295ms
+[Browser connected] 107ms
+[Page loaded] 459ms
+[Session released] 71ms
+[RUN] 439/1000
+[Session created] provider=NOTTE id=493ca6e8-5b42-4e41-af43-5c5ef98b66ca 288ms
+[Browser connected] 94ms
+[Page loaded] 447ms
+[Session released] 77ms
+[RUN] 440/1000
+[Session created] provider=NOTTE id=3ee62659-0260-40b4-85d5-c6b77e30cb40 225ms
+[Browser connected] 119ms
+[Page loaded] 442ms
+[Session released] 87ms
+[RUN] 441/1000
+[Session created] provider=NOTTE id=d422bdf9-4864-4d8b-b111-3acc7b5c523f 293ms
+[Browser connected] 100ms
+[Page loaded] 585ms
+[Session released] 70ms
+[RUN] 442/1000
+[Session created] provider=NOTTE id=aaa14979-b8e7-4a81-9255-66512bb0e8b0 257ms
+[Browser connected] 147ms
+[Page loaded] 674ms
+[Session released] 78ms
+[RUN] 443/1000
+[Session created] provider=NOTTE id=4eba16a1-44d4-49be-8a53-9af10825951e 285ms
+[Browser connected] 119ms
+[Page loaded] 529ms
+[Session released] 103ms
+[RUN] 444/1000
+[Session created] provider=NOTTE id=538fbdc8-72f5-4155-8235-c01e93354abb 295ms
+[Browser connected] 113ms
+[Page loaded] 478ms
+[Session released] 97ms
+[RUN] 445/1000
+[Session created] provider=NOTTE id=d7ea290c-c396-4ee2-aa21-725d431153c1 271ms
+[Browser connected] 96ms
+[Page loaded] 440ms
+[Session released] 82ms
+[RUN] 446/1000
+[Session created] provider=NOTTE id=2c293703-f7ef-429e-9169-60877c688162 249ms
+[Browser connected] 121ms
+[Page loaded] 463ms
+[Session released] 74ms
+[RUN] 447/1000
+[Session created] provider=NOTTE id=e729788b-0373-4062-973a-e05565e1fdb9 297ms
+[Browser connected] 102ms
+[Page loaded] 623ms
+[Session released] 195ms
+[RUN] 448/1000
+[Session created] provider=NOTTE id=6763e32b-6b2c-4353-8566-d630e0f10b0e 353ms
+[Browser connected] 108ms
+[Page loaded] 504ms
+[Session released] 75ms
+[RUN] 449/1000
+[Session created] provider=NOTTE id=c40f657a-8b2f-4ad4-b411-a431546680db 268ms
+[Browser connected] 145ms
+[Page loaded] 465ms
+[Session released] 93ms
+[RUN] 450/1000
+[Session created] provider=NOTTE id=3b3baa71-ade2-4a8a-b605-958b5d8e533c 321ms
+[Browser connected] 178ms
+[Page loaded] 437ms
+[Session released] 89ms
+[RUN] 451/1000
+[Session created] provider=NOTTE id=5a4a2170-bb18-4d51-b30e-a6da4254d0cf 273ms
+[Browser connected] 126ms
+[Page loaded] 498ms
+[Session released] 87ms
+[RUN] 452/1000
+[Session created] provider=NOTTE id=f1ddf3cf-fce0-4840-ab65-6a0101c344ce 235ms
+[Browser connected] 116ms
+[Page loaded] 472ms
+[Session released] 88ms
+[RUN] 453/1000
+[Session created] provider=NOTTE id=cfb5871a-59b1-461d-a36b-b03b13b7853c 268ms
+[Browser connected] 97ms
+[Page loaded] 430ms
+[Session released] 82ms
+[RUN] 454/1000
+[Session created] provider=NOTTE id=a838ac6c-f3f1-459b-a8e6-066cee04248b 277ms
+[Browser connected] 94ms
+[Page loaded] 536ms
+[Session released] 78ms
+[RUN] 455/1000
+[Session created] provider=NOTTE id=a9d8ee75-6fa9-4728-8ec9-b6d12072174e 843ms
+[Browser connected] 116ms
+[Page loaded] 506ms
+[Session released] 330ms
+[RUN] 456/1000
+[Session created] provider=NOTTE id=bb4ca26e-f768-4ec7-9708-27adadc5290c 230ms
+[Browser connected] 150ms
+[Page loaded] 653ms
+[Session released] 82ms
+[RUN] 457/1000
+[Session created] provider=NOTTE id=dd934ae1-c2f9-437b-9f2e-c7915573e453 302ms
+[Browser connected] 154ms
+[Page loaded] 534ms
+[Session released] 79ms
+[RUN] 458/1000
+[Session created] provider=NOTTE id=25222d25-7a09-46eb-91f4-1f7e985b9f79 251ms
+[Browser connected] 110ms
+[Page loaded] 473ms
+[Session released] 87ms
+[RUN] 459/1000
+[Session created] provider=NOTTE id=e334ba6d-02dd-42b4-93e2-f11ee9b01d11 250ms
+[Browser connected] 115ms
+[Page loaded] 493ms
+[Session released] 87ms
+[RUN] 460/1000
+[Session created] provider=NOTTE id=6723a2af-9963-4ac8-80e5-d6ef9f14054d 281ms
+[Browser connected] 115ms
+[Page loaded] 538ms
+[Session released] 111ms
+[RUN] 461/1000
+[Session created] provider=NOTTE id=0335405c-bf2e-4bb2-a955-0a78994ef6a6 289ms
+[Browser connected] 104ms
+[Page loaded] 624ms
+[Session released] 80ms
+[RUN] 462/1000
+[Session created] provider=NOTTE id=4332edcc-b9de-434f-93a9-f0196a777f12 229ms
+[Browser connected] 146ms
+[Page loaded] 539ms
+[Session released] 81ms
+[RUN] 463/1000
+[Session created] provider=NOTTE id=372cb24c-d466-433a-b569-53273d141b8d 223ms
+[Browser connected] 162ms
+[Page loaded] 468ms
+[Session released] 191ms
+[RUN] 464/1000
+[Session created] provider=NOTTE id=e79f6419-da36-491c-8fa7-24b7e3bbf27f 272ms
+[Browser connected] 123ms
+[Page loaded] 495ms
+[Session released] 74ms
+[RUN] 465/1000
+[Session created] provider=NOTTE id=201054a0-8ca9-4d4c-9736-d6edd8d11107 236ms
+[Browser connected] 163ms
+[Page loaded] 493ms
+[Session released] 285ms
+[RUN] 466/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=e957989e-5dbc-4ead-a021-817f63866e1d 256ms
+[Browser connected] 109ms
+[Page loaded] 523ms
+[Session released] 113ms
+[RUN] 467/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=e61489e8-6d27-4086-9699-8a5fdcea2d7b 287ms
+[Browser connected] 142ms
+[Page loaded] 629ms
+[Session released] 88ms
+[RUN] 468/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=3dec89ea-e324-4de3-a80b-3b57ef6307bb 268ms
+[Browser connected] 102ms
+[Page loaded] 473ms
+[Session released] 98ms
+[RUN] 469/1000
+[Session created] provider=NOTTE id=38cec2de-a3de-4856-b286-556d4be188a8 419ms
+[Browser connected] 109ms
+[Page loaded] 577ms
+[Session released] 111ms
+[RUN] 470/1000
+[Session created] provider=NOTTE id=5a05b637-6da3-4953-a326-2d99d1e109b1 297ms
+[Browser connected] 137ms
+[Page loaded] 509ms
+[Session released] 77ms
+[RUN] 471/1000
+[Session created] provider=NOTTE id=c5026901-c7aa-4620-ad62-875a493db452 217ms
+[Browser connected] 101ms
+[Page loaded] 512ms
+[Session released] 77ms
+[RUN] 472/1000
+[Session created] provider=NOTTE id=a6feb5e9-bf36-451c-a53b-544ca1689a2f 238ms
+[Browser connected] 120ms
+[Page loaded] 500ms
+[Session released] 83ms
+[RUN] 473/1000
+[Session created] provider=NOTTE id=a4f691f8-294b-47b0-b021-3d5e2645656a 290ms
+[Browser connected] 181ms
+[Page loaded] 530ms
+[Session released] 86ms
+[RUN] 474/1000
+[Session created] provider=NOTTE id=42ab193e-f9a8-42b4-a6d7-f5b08725e532 323ms
+[Browser connected] 114ms
+[Page loaded] 517ms
+[Session released] 84ms
+[RUN] 475/1000
+[Session created] provider=NOTTE id=8c2ed2a1-6871-44b0-8d1b-b73ffbf90d09 318ms
+[Browser connected] 116ms
+[Page loaded] 501ms
+[Session released] 73ms
+[RUN] 476/1000
+[Session created] provider=NOTTE id=cd5fc8d8-a6c6-4b65-b4c5-34ffd6a49da9 240ms
+[Browser connected] 160ms
+[Page loaded] 403ms
+[Session released] 76ms
+[RUN] 477/1000
+[Session created] provider=NOTTE id=2ebc0d24-a51e-4d78-b592-eede998e075f 292ms
+[Browser connected] 117ms
+[Page loaded] 512ms
+[Session released] 244ms
+[RUN] 478/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=eda3f76e-a860-47a1-9bf7-debb5560dc89 283ms
+[Browser connected] 126ms
+[Page loaded] 543ms
+[Session released] 85ms
+[RUN] 479/1000
+[Session created] provider=NOTTE id=ff32ed81-6e15-4379-bb89-55fadb14c001 282ms
+[Browser connected] 133ms
+[Page loaded] 485ms
+[Session released] 116ms
+[RUN] 480/1000
+[Session created] provider=NOTTE id=c1000171-4787-4488-b796-be24bec2e8e5 247ms
+[Browser connected] 107ms
+[Page loaded] 618ms
+[Session released] 92ms
+[RUN] 481/1000
+[Session created] provider=NOTTE id=ac6f9e58-b62f-4b18-901e-752be3d39c01 229ms
+[Browser connected] 106ms
+[Page loaded] 606ms
+[Session released] 70ms
+[RUN] 482/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=7740bf28-1709-4b0d-b484-cd833cb3c11f 271ms
+[Browser connected] 118ms
+[Page loaded] 481ms
+[Session released] 118ms
+[RUN] 483/1000
+[Session created] provider=NOTTE id=41cb5c20-5b58-4616-b527-1b9d729f7b8c 315ms
+[Browser connected] 171ms
+[Page loaded] 559ms
+[Session released] 81ms
+[RUN] 484/1000
+[Session created] provider=NOTTE id=2056429a-8303-4841-875a-fcb59fc80650 288ms
+[Browser connected] 126ms
+[Page loaded] 557ms
+[Session released] 94ms
+[RUN] 485/1000
+[Session created] provider=NOTTE id=02031729-0894-491a-b3fc-1eaa9ca860bf 254ms
+[Browser connected] 105ms
+[Page loaded] 530ms
+[Session released] 93ms
+[RUN] 486/1000
+[Session created] provider=NOTTE id=249d9edb-7e60-43e1-bcad-18da5bf89417 250ms
+[Browser connected] 158ms
+[Page loaded] 580ms
+[Session released] 70ms
+[RUN] 487/1000
+[Session created] provider=NOTTE id=0cbd08e7-96d3-4842-bad6-4beca4c252a4 293ms
+[Browser connected] 141ms
+[Page loaded] 566ms
+[Session released] 80ms
+[RUN] 488/1000
+[Session created] provider=NOTTE id=3f5ea213-a6c6-405d-b5a8-81cf72b6ce6c 361ms
+[Browser connected] 111ms
+[Page loaded] 445ms
+[Session released] 94ms
+[RUN] 489/1000
+[Session created] provider=NOTTE id=c7485cdb-4dd3-48c9-b3d8-5e9bd9b61f08 266ms
+[Browser connected] 125ms
+[Page loaded] 483ms
+[Session released] 75ms
+[RUN] 490/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=f05e4adc-d3e0-48fd-9528-76610cf9cbf4 262ms
+[Browser connected] 162ms
+[Page loaded] 534ms
+[Session released] 92ms
+[RUN] 491/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=239be494-da24-4f9c-8fb8-30c161dc493d 277ms
+[Browser connected] 174ms
+[Page loaded] 584ms
+[Session released] 121ms
+[RUN] 492/1000
+[Session created] provider=NOTTE id=403c2d92-b53f-4ede-af71-3eebc44c3150 266ms
+[Browser connected] 124ms
+[Page loaded] 541ms
+[Session released] 261ms
+[RUN] 493/1000
+[Session created] provider=NOTTE id=b18675de-7986-48a9-8a7b-923212331da2 277ms
+[Browser connected] 123ms
+[Page loaded] 527ms
+[Session released] 67ms
+[RUN] 494/1000
+[Session created] provider=NOTTE id=386f0d4f-7e91-4f53-902a-88da6867b5b4 277ms
+[Browser connected] 153ms
+[Page loaded] 507ms
+[Session released] 76ms
+[RUN] 495/1000
+[Session created] provider=NOTTE id=38c603b0-02be-4a2b-847a-1f78e850e1dd 280ms
+[Browser connected] 642ms
+[Page loaded] 420ms
+[Session released] 72ms
+[RUN] 496/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=7b9dab4b-78e4-4591-8772-cb8b55c3382b 302ms
+[Browser connected] 104ms
+[Page loaded] 455ms
+[Session released] 120ms
+[RUN] 497/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=6273e2fc-4c56-42ee-99c0-554c9801fcf4 259ms
+[Browser connected] 107ms
+[Page loaded] 501ms
+[Session released] 93ms
+[RUN] 498/1000
+[Session created] provider=NOTTE id=bbed0a90-6c97-4822-9eb3-7abc2655c4ea 292ms
+[Browser connected] 112ms
+[Page loaded] 552ms
+[Session released] 90ms
+[RUN] 499/1000
+[Session created] provider=NOTTE id=afa234ef-1da9-4ae0-879d-dc7069a25f6c 266ms
+[Browser connected] 143ms
+[Page loaded] 479ms
+[Session released] 67ms
+[RUN] 500/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=565cdd5b-6cb4-40d9-bff6-02106bdd9281 258ms
+[Browser connected] 129ms
+[Page loaded] 455ms
+[Session released] 98ms
+[RUN] 501/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=7935f641-156a-489d-987d-cd94d12a5148 308ms
+[Browser connected] 370ms
+[Page loaded] 488ms
+[Session released] 92ms
+[RUN] 502/1000
+[Session created] provider=NOTTE id=dba8df97-0f49-499a-8649-9a1d365195d9 324ms
+[Browser connected] 184ms
+[Page loaded] 523ms
+[Session released] 78ms
+[RUN] 503/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=c6ef3ee6-c465-42d7-8b77-0493917f62ae 273ms
+[Browser connected] 125ms
+[Page loaded] 587ms
+[Session released] 70ms
+[RUN] 504/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=2fe67535-329c-4591-8008-892bcf5f94c8 266ms
+[Browser connected] 189ms
+[Page loaded] 514ms
+[Session released] 95ms
+[RUN] 505/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=3261cb61-2cfa-4bc3-8a61-d98bf0378f65 323ms
+[Browser connected] 142ms
+[Page loaded] 499ms
+[Session released] 97ms
+[RUN] 506/1000
+[Session created] provider=NOTTE id=ca59eb6a-7579-4c96-9d37-7f7eb3268092 331ms
+[Browser connected] 119ms
+[Page loaded] 495ms
+[Session released] 69ms
+[RUN] 507/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=ae8a4a29-3c7c-4c0a-819a-512c56ee1978 316ms
+[Browser connected] 123ms
+[Page loaded] 460ms
+[Session released] 78ms
+[RUN] 508/1000
+[Session created] provider=NOTTE id=2fbe7812-dfb8-42b3-99da-933ae4ac1b98 299ms
+[Browser connected] 112ms
+[Page loaded] 489ms
+[Session released] 84ms
+[RUN] 509/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=9097c83a-3831-4548-b191-768056728920 436ms
+[Browser connected] 114ms
+[Page loaded] 556ms
+[Session released] 68ms
+[RUN] 510/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=a25f6559-5201-44eb-aee4-27ee8050b137 284ms
+[Browser connected] 163ms
+[Page loaded] 503ms
+[Session released] 91ms
+[RUN] 511/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=3254c947-cff5-4255-ae52-e32bf89ca9e6 256ms
+[Browser connected] 120ms
+[Page loaded] 556ms
+[Session released] 110ms
+[RUN] 512/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=e7185134-52fe-4ca1-be69-2084c28c5991 326ms
+[Browser connected] 143ms
+[Page loaded] 1102ms
+[Session released] 132ms
+[RUN] 513/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=c4657da5-c541-4e19-95cd-0877bf42de94 274ms
+[Browser connected] 105ms
+[Page loaded] 504ms
+[Session released] 93ms
+[RUN] 514/1000
+[Session created] provider=NOTTE id=44a47127-5f96-42b0-87ac-affaedf34dcf 358ms
+[Browser connected] 131ms
+[Page loaded] 542ms
+[Session released] 70ms
+[RUN] 515/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=46299cdf-0b5f-4356-b3a5-3644c635f437 267ms
+[Browser connected] 145ms
+[Page loaded] 477ms
+[Session released] 116ms
+[RUN] 516/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=319e59fe-419e-43c3-812c-b3a43669a288 345ms
+[Browser connected] 113ms
+[Page loaded] 498ms
+[Session released] 119ms
+[RUN] 517/1000
+[Session created] provider=NOTTE id=72d1e451-4c10-490e-b5f3-fb095f70e677 438ms
+[Browser connected] 157ms
+[Page loaded] 547ms
+[Session released] 85ms
+[RUN] 518/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=24a8185a-4f89-4990-b929-3403fbaa3070 318ms
+[Browser connected] 180ms
+[Page loaded] 534ms
+[Session released] 99ms
+[RUN] 519/1000
+[Session created] provider=NOTTE id=0ee85e90-f843-470f-bfe2-a063dbf52bc7 247ms
+[Browser connected] 178ms
+[Page loaded] 462ms
+[Session released] 964ms
+[RUN] 520/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=dd6cfcb3-f75b-4702-b223-ce2fad5ffcc3 252ms
+[Browser connected] 128ms
+[Page loaded] 547ms
+[Session released] 96ms
+[RUN] 521/1000
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=f2db5a28-2781-4508-bed9-b316eab61a12 240ms
+[Browser connected] 122ms
+[Page loaded] 489ms
+[Session released] 108ms
+[RUN] 522/1000
+[Session created] provider=NOTTE id=4906de22-603a-4c8f-864c-cc4708e950c0 265ms
+[Browser connected] 113ms
+[Page loaded] 522ms
+[Session released] 101ms
+[RUN] 523/1000
+[Session created] provider=NOTTE id=a73c1324-737d-4e02-89a1-9eb78f1cb0e1 285ms
+[Browser connected] 102ms
+[Page loaded] 550ms
+[Session released] 76ms
+[RUN] 524/1000
+[Session created] provider=NOTTE id=743d5b1c-23b3-4035-95a8-b08423c9d2e7 255ms
+[Browser connected] 125ms
+[Page loaded] 483ms
+[Session released] 119ms
+[RUN] 525/1000
+[Session created] provider=NOTTE id=62755e1c-16b3-4aef-98b8-1f81ad84492f 257ms
+[Browser connected] 115ms
+[Page loaded] 553ms
+[Session released] 72ms
+[RUN] 526/1000
+[Session created] provider=NOTTE id=4f462570-0f85-4661-8b0a-ad18a3a4da0e 282ms
+[Browser connected] 167ms
+[Page loaded] 418ms
+[Session released] 72ms
+[RUN] 527/1000
+[Session created] provider=NOTTE id=95eb8484-c8bf-4d7e-9b5d-c5fe36d67cbc 260ms
+[Browser connected] 111ms
+[Page loaded] 474ms
+[Session released] 71ms
+[RUN] 528/1000
+[Session created] provider=NOTTE id=f34eb1aa-5891-4678-a63f-39fe1a605a11 190ms
+[Browser connected] 96ms
+[Page loaded] 420ms
+[Session released] 76ms
+[RUN] 529/1000
+[Session created] provider=NOTTE id=b81c20e9-e391-406f-a26f-0e3c1b67d11d 299ms
+[Browser connected] 194ms
+[Page loaded] 567ms
+[Session released] 66ms
+[RUN] 530/1000
+[Session created] provider=NOTTE id=ab72f88c-9add-4ffd-9738-7713da57ddc0 314ms
+[Browser connected] 126ms
+[Page loaded] 663ms
+[Session released] 64ms
+[RUN] 531/1000
+[Session created] provider=NOTTE id=e89169e3-0b9c-4d38-b7b2-d05e8e2ff036 273ms
+[Browser connected] 152ms
+[Page loaded] 619ms
+[Session released] 71ms
+[RUN] 532/1000
+[Session created] provider=NOTTE id=9dd47d39-3623-4ac2-a579-5f7f4a65842e 325ms
+[Browser connected] 120ms
+[Page loaded] 507ms
+[Session released] 69ms
+[RUN] 533/1000
+[Session created] provider=NOTTE id=53dc5bf9-7875-4c50-8711-1631b2f0b9f0 298ms
+[Browser connected] 156ms
+[Page loaded] 436ms
+[Session released] 76ms
+[RUN] 534/1000
+[Session created] provider=NOTTE id=d2d7ec3e-4d8b-470c-8e1f-b528aecf6af6 290ms
+[Browser connected] 106ms
+[Page loaded] 467ms
+[Session released] 66ms
+[RUN] 535/1000
+[Session created] provider=NOTTE id=28ffaa69-1030-4a83-891d-641cc80b0be6 278ms
+[Browser connected] 155ms
+[Page loaded] 558ms
+[Session released] 965ms
+[RUN] 536/1000
+[Session created] provider=NOTTE id=91b8d59e-cf85-4c30-a00f-6f6edbee9f2e 265ms
+[Browser connected] 130ms
+[Page loaded] 456ms
+[Session released] 110ms
+[RUN] 537/1000
+[Session created] provider=NOTTE id=57d628d8-24b4-4531-948e-a15609f2a997 266ms
+[Browser connected] 108ms
+[Page loaded] 923ms
+[Session released] 440ms
+[RUN] 538/1000
+[Session created] provider=NOTTE id=8cda4ee7-5193-4785-979d-12579c69444b 291ms
+[Browser connected] 107ms
+[Page loaded] 512ms
+[Session released] 62ms
+[RUN] 539/1000
+[Session created] provider=NOTTE id=90e0f8e7-1fa0-4d61-9796-128c7db0cb3c 248ms
+[Browser connected] 149ms
+[Page loaded] 494ms
+[Session released] 66ms
+[RUN] 540/1000
+[Session created] provider=NOTTE id=ebd15005-d726-4cb9-a80c-c64d77da415d 230ms
+[Browser connected] 107ms
+[Page loaded] 534ms
+[Session released] 84ms
+[RUN] 541/1000
+[Session created] provider=NOTTE id=bea8ec97-b8d5-4b87-b548-ba19b1867e45 331ms
+[Browser connected] 111ms
+[Page loaded] 645ms
+[Session released] 92ms
+[RUN] 542/1000
+[Session created] provider=NOTTE id=68e1bbe1-e6c5-483e-84f1-ac78a20a076b 305ms
+[Browser connected] 102ms
+[Page loaded] 578ms
+[Session released] 132ms
+[RUN] 543/1000
+[Session created] provider=NOTTE id=3367d303-6ff6-47ee-b582-0c7955fc183d 279ms
+[Browser connected] 107ms
+[Page loaded] 434ms
+[Session released] 73ms
+[RUN] 544/1000
+[Session created] provider=NOTTE id=f138b78d-4d22-48c1-a81a-32908751e008 208ms
+[Browser connected] 142ms
+[Page loaded] 473ms
+[Session released] 96ms
+[RUN] 545/1000
+[Session created] provider=NOTTE id=ab10eb72-5369-4ed8-b736-6de8e868f0f6 232ms
+[Browser connected] 149ms
+[Page loaded] 546ms
+[Session released] 95ms
+[RUN] 546/1000
+[Session created] provider=NOTTE id=2f3afb61-4406-481d-b7f0-a96b1780a08b 288ms
+[Browser connected] 134ms
+[Page loaded] 511ms
+[Session released] 97ms
+[RUN] 547/1000
+[Session created] provider=NOTTE id=13791ca7-3960-4615-9b8e-203d161d17b5 272ms
+[Browser connected] 115ms
+[Page loaded] 478ms
+[Session released] 99ms
+[RUN] 548/1000
+[Session created] provider=NOTTE id=05a20b1d-68f7-4d36-af2d-e5af3a61fb36 256ms
+[Browser connected] 109ms
+[Page loaded] 502ms
+[Session released] 81ms
+[RUN] 549/1000
+[Session created] provider=NOTTE id=cecbad7a-d183-4af9-9f42-ceddc723c202 241ms
+[Browser connected] 159ms
+[Page loaded] 562ms
+[Session released] 67ms
+[RUN] 550/1000
+[Session created] provider=NOTTE id=4bff20fd-bcc7-48d8-93e5-c371e75a9647 280ms
+[Browser connected] 115ms
+[Page loaded] 466ms
+[Session released] 95ms
+[RUN] 551/1000
+[Session created] provider=NOTTE id=b673ecc3-5dfe-4197-a8f9-7fdbf09b71da 233ms
+[Browser connected] 125ms
+[Page loaded] 569ms
+[Session released] 67ms
+[RUN] 552/1000
+[Session created] provider=NOTTE id=a9f99b97-57a1-4813-853d-4a5775f59313 230ms
+[Browser connected] 96ms
+[Page loaded] 481ms
+[Session released] 108ms
+[RUN] 553/1000
+[Session created] provider=NOTTE id=0c0932d0-1492-4a4c-96ac-29fd53ad17cb 196ms
+[Browser connected] 166ms
+[Page loaded] 499ms
+[Session released] 72ms
+[RUN] 554/1000
+[Session created] provider=NOTTE id=19893f55-ca24-4f0c-a67b-ec36c22c2cef 285ms
+[Browser connected] 104ms
+[Page loaded] 489ms
+[Session released] 80ms
+[RUN] 555/1000
+[Session created] provider=NOTTE id=c72b115f-953f-4bde-828c-a5e8f0e2b237 240ms
+[Browser connected] 134ms
+[Page loaded] 789ms
+[Session released] 68ms
+[RUN] 556/1000
+[Session created] provider=NOTTE id=5116c503-06ee-44cc-a62d-17e144ce9e16 291ms
+[Browser connected] 167ms
+[Page loaded] 523ms
+[Session released] 106ms
+[RUN] 557/1000
+[Session created] provider=NOTTE id=8e287e6d-3b82-49b9-a014-8277c86b2475 296ms
+[Browser connected] 156ms
+[Page loaded] 500ms
+[Session released] 75ms
+[RUN] 558/1000
+[Session created] provider=NOTTE id=e97d59a8-1424-4f0d-be24-5138b0f82861 291ms
+[Browser connected] 109ms
+[Page loaded] 486ms
+[Session released] 101ms
+[RUN] 559/1000
+[Session created] provider=NOTTE id=82534ecb-40f2-430f-81d1-7e7c610ecb4c 286ms
+[Browser connected] 139ms
+[Page loaded] 467ms
+[Session released] 81ms
+[RUN] 560/1000
+[Session created] provider=NOTTE id=d307ba62-82f4-4004-be9b-8568fc464f97 293ms
+[Browser connected] 99ms
+[Page loaded] 508ms
+[Session released] 75ms
+[RUN] 561/1000
+[Session created] provider=NOTTE id=a047897e-6f2d-4853-b526-943de066d3aa 312ms
+[Browser connected] 169ms
+[Page loaded] 590ms
+[Session released] 86ms
+[RUN] 562/1000
+[Session created] provider=NOTTE id=896e1a7e-7769-4c6f-9eeb-80d830f5592a 261ms
+[Browser connected] 123ms
+[Page loaded] 478ms
+[Session released] 83ms
+[RUN] 563/1000
+[Session created] provider=NOTTE id=29fe9f44-28ad-4c45-9d6e-5f8865cf7360 261ms
+[Browser connected] 166ms
+[Page loaded] 575ms
+[Session released] 89ms
+[RUN] 564/1000
+[Session created] provider=NOTTE id=5363b4c5-d129-4e3a-8cf2-03e13f6db1d7 261ms
+[Browser connected] 99ms
+[Page loaded] 496ms
+[Session released] 73ms
+[RUN] 565/1000
+[Session created] provider=NOTTE id=680599a1-dd54-401c-834e-f9aaaa471880 221ms
+[Browser connected] 152ms
+[Page loaded] 573ms
+[Session released] 146ms
+[RUN] 566/1000
+[Session created] provider=NOTTE id=d216c55f-910a-48ab-bee5-f147017bf178 341ms
+[Browser connected] 129ms
+[Page loaded] 468ms
+[Session released] 81ms
+[RUN] 567/1000
+[Session created] provider=NOTTE id=d87c983d-3a66-4b68-9a34-5799e69031be 259ms
+[Browser connected] 158ms
+[Page loaded] 589ms
+[Session released] 203ms
+[RUN] 568/1000
+[Session created] provider=NOTTE id=015fae6f-72f5-4fa7-9700-03664f51197b 252ms
+[Browser connected] 110ms
+[Page loaded] 556ms
+[Session released] 101ms
+[RUN] 569/1000
+[Session created] provider=NOTTE id=bc3bb31e-2317-45ed-94b9-cb7d4f1373b9 283ms
+[Browser connected] 111ms
+[Page loaded] 505ms
+[Session released] 67ms
+[RUN] 570/1000
+[Session created] provider=NOTTE id=f27fc283-46a2-460d-add5-85f06a780723 273ms
+[Browser connected] 93ms
+[Page loaded] 524ms
+[Session released] 67ms
+[RUN] 571/1000
+[Session created] provider=NOTTE id=f6c61fc4-fcdd-44d7-9a99-1c5b22c4680c 283ms
+[Browser connected] 128ms
+[Page loaded] 503ms
+[Session released] 86ms
+[RUN] 572/1000
+[Session created] provider=NOTTE id=bfc331e2-d291-4e1c-a585-2be640949948 215ms
+[Browser connected] 103ms
+[Page loaded] 429ms
+[Session released] 88ms
+[RUN] 573/1000
+[Session created] provider=NOTTE id=180337db-2fe9-4426-a4f7-993900c1ed86 238ms
+[Browser connected] 181ms
+[Page loaded] 600ms
+[Session released] 74ms
+[RUN] 574/1000
+[Session created] provider=NOTTE id=6d1d7e51-55af-4b7b-aa8f-a2fb150f93a7 297ms
+[Browser connected] 150ms
+[Page loaded] 555ms
+[Session released] 74ms
+[RUN] 575/1000
+[Session created] provider=NOTTE id=bc4f716e-d693-47ba-901e-553766e269fc 285ms
+[Browser connected] 147ms
+[Page loaded] 530ms
+[Session released] 122ms
+[RUN] 576/1000
+[Session created] provider=NOTTE id=749f01ff-f4c6-4993-975b-08a1f1977549 268ms
+[Browser connected] 109ms
+[Page loaded] 515ms
+[Session released] 356ms
+[RUN] 577/1000
+[Session created] provider=NOTTE id=210c715a-abf4-4d3b-b2d2-4aa9c531a1ca 244ms
+[Browser connected] 161ms
+[Page loaded] 538ms
+[Session released] 75ms
+[RUN] 578/1000
+[Session created] provider=NOTTE id=f10216af-b550-4504-a6ec-350f56925c14 483ms
+[Browser connected] 110ms
+[Page loaded] 531ms
+[Session released] 98ms
+[RUN] 579/1000
+[Session created] provider=NOTTE id=d467927b-10c9-4d67-a909-2f79b8dbf5bd 278ms
+[Browser connected] 115ms
+[Page loaded] 471ms
+[Session released] 82ms
+[RUN] 580/1000
+[Session created] provider=NOTTE id=29cc601c-100d-498f-84f9-8bee17ce312f 259ms
+[Browser connected] 113ms
+[Page loaded] 471ms
+[Session released] 104ms
+[RUN] 581/1000
+[Session created] provider=NOTTE id=29395095-f342-41a1-8568-372623892070 249ms
+[Browser connected] 113ms
+[Page loaded] 407ms
+[Session released] 80ms
+[RUN] 582/1000
+[Session created] provider=NOTTE id=7b422d7a-22a6-4841-8765-cf08d43552f0 288ms
+[Browser connected] 99ms
+[Page loaded] 438ms
+[Session released] 78ms
+[RUN] 583/1000
+[Session created] provider=NOTTE id=88992818-9bef-4d50-9a1e-07f397dd3ea3 262ms
+[Browser connected] 162ms
+[Page loaded] 465ms
+[Session released] 90ms
+[RUN] 584/1000
+[Session created] provider=NOTTE id=84def76b-d7aa-4e01-b57f-3f7880772e20 290ms
+[Browser connected] 105ms
+[Page loaded] 462ms
+[Session released] 71ms
+[RUN] 585/1000
+[Session created] provider=NOTTE id=4cc94535-6dcf-41fd-98ad-c7a61b37f294 277ms
+[Browser connected] 126ms
+[Page loaded] 616ms
+[Session released] 92ms
+[RUN] 586/1000
+[Session created] provider=NOTTE id=08a4f1cb-bfcf-4aea-bd56-3dddac8cb466 313ms
+[Browser connected] 102ms
+[Page loaded] 484ms
+[Session released] 78ms
+[RUN] 587/1000
+[Session created] provider=NOTTE id=d359c4a9-7c09-4845-8efb-97c9e52aa9a8 855ms
+[Browser connected] 105ms
+[Page loaded] 436ms
+[Session released] 75ms
+[RUN] 588/1000
+[Session created] provider=NOTTE id=bcfb17e6-6c02-4165-9db0-5dbbb83f3502 235ms
+[Browser connected] 113ms
+[Page loaded] 444ms
+[Session released] 97ms
+[RUN] 589/1000
+[Session created] provider=NOTTE id=816788b4-f4c4-4de0-86b1-e6f4e44de885 248ms
+[Browser connected] 115ms
+[Page loaded] 566ms
+[Session released] 88ms
+[RUN] 590/1000
+[Session created] provider=NOTTE id=e3f4da00-9610-4ac1-bc9f-2f69c87d434c 240ms
+[Browser connected] 109ms
+[Page loaded] 412ms
+[Session released] 76ms
+[RUN] 591/1000
+[Session created] provider=NOTTE id=61613a71-9557-435a-9c89-91527d27ab3b 274ms
+[Browser connected] 114ms
+[Page loaded] 463ms
+[Session released] 79ms
+[RUN] 592/1000
+[Session created] provider=NOTTE id=d2ec9f55-7914-48d0-8571-80987fd327b3 309ms
+[Browser connected] 149ms
+[Page loaded] 494ms
+[Session released] 70ms
+[RUN] 593/1000
+[Session created] provider=NOTTE id=8c050cac-bcb7-42c4-aea6-2fa1e8a0dd89 281ms
+[Browser connected] 105ms
+[Page loaded] 485ms
+[Session released] 66ms
+[RUN] 594/1000
+[Session created] provider=NOTTE id=a8a427ee-2ef2-4757-bac2-c6b8e81571b6 268ms
+[Browser connected] 124ms
+[Page loaded] 483ms
+[Session released] 102ms
+[RUN] 595/1000
+[Session created] provider=NOTTE id=ee4a66a0-13f7-4790-969d-791f9271b8bb 294ms
+[Browser connected] 154ms
+[Page loaded] 764ms
+[Session released] 114ms
+[RUN] 596/1000
+[Session created] provider=NOTTE id=d339856c-d09c-4aa7-87a5-674b058c8115 246ms
+[Browser connected] 118ms
+[Page loaded] 509ms
+[Session released] 74ms
+[RUN] 597/1000
+[Session created] provider=NOTTE id=82e494ff-308a-426f-b831-b6814420ba14 277ms
+[Browser connected] 116ms
+[Page loaded] 492ms
+[Session released] 106ms
+[RUN] 598/1000
+[Session created] provider=NOTTE id=a9662c4c-bd0c-45e5-9928-5daeeba8cd43 266ms
+[Browser connected] 112ms
+[Page loaded] 453ms
+[Session released] 68ms
+[RUN] 599/1000
+[Session created] provider=NOTTE id=19e28e0a-fe4f-4ff2-9697-229c1499adb1 296ms
+[Browser connected] 119ms
+[Page loaded] 561ms
+[Session released] 75ms
+[RUN] 600/1000
+[Session created] provider=NOTTE id=aac2303a-a32f-4d62-893e-8f4189c2ab0b 265ms
+[Browser connected] 112ms
+[Page loaded] 530ms
+[Session released] 87ms
+[RUN] 601/1000
+[Session created] provider=NOTTE id=ca1a3367-ee17-42d1-a6da-9b7dfb06466e 298ms
+[Browser connected] 106ms
+[Page loaded] 593ms
+[Session released] 85ms
+[RUN] 602/1000
+[Session created] provider=NOTTE id=75081521-a82a-4c97-a055-363ee69086d1 276ms
+[Browser connected] 113ms
+[Page loaded] 560ms
+[Session released] 82ms
+[RUN] 603/1000
+[Session created] provider=NOTTE id=2a8809f0-ae92-4d01-aa98-19d7601b22af 231ms
+[Browser connected] 115ms
+[Page loaded] 504ms
+[Session released] 68ms
+[RUN] 604/1000
+[Session created] provider=NOTTE id=0b07668b-dcee-4836-9942-2506e711aaf9 218ms
+[Browser connected] 160ms
+[Page loaded] 719ms
+[Session released] 213ms
+[RUN] 605/1000
+[Session created] provider=NOTTE id=7d5ee0a2-b349-4b34-b34f-e40bd7b33d24 247ms
+[Browser connected] 113ms
+[Page loaded] 483ms
+[Session released] 89ms
+[RUN] 606/1000
+[Session created] provider=NOTTE id=fe5b602b-8375-4208-8f06-aa77d5ba7479 215ms
+[Browser connected] 108ms
+[Page loaded] 500ms
+[Session released] 87ms
+[RUN] 607/1000
+[Session created] provider=NOTTE id=212dd93c-476d-497a-9a3f-d9e1685713fc 297ms
+[Browser connected] 150ms
+[Page loaded] 473ms
+[Session released] 95ms
+[RUN] 608/1000
+[Session created] provider=NOTTE id=a2f3dd1b-cc43-4f9c-9ed9-a711b8f8b4e7 284ms
+[Browser connected] 92ms
+[Page loaded] 455ms
+[Session released] 93ms
+[RUN] 609/1000
+[Session created] provider=NOTTE id=f541d4b0-ea4f-447e-bf01-9f95c784b465 288ms
+[Browser connected] 103ms
+[Page loaded] 526ms
+[Session released] 80ms
+[RUN] 610/1000
+[Session created] provider=NOTTE id=ee2945a6-7f1f-4eb6-ba32-ab9d53a10cce 436ms
+[Browser connected] 123ms
+[Page loaded] 484ms
+[Session released] 82ms
+[RUN] 611/1000
+[Session created] provider=NOTTE id=9c6cb288-b509-47da-be2f-13c2edad9e60 230ms
+[Browser connected] 127ms
+[Page loaded] 488ms
+[Session released] 766ms
+[RUN] 612/1000
+[Session created] provider=NOTTE id=b31c154c-fb21-4379-8d18-263dc35bee4b 330ms
+[Browser connected] 144ms
+[Page loaded] 472ms
+[Session released] 62ms
+[RUN] 613/1000
+[Session created] provider=NOTTE id=578be39b-beaa-4ab6-9e66-509f0fa42d6a 237ms
+[Browser connected] 112ms
+[Page loaded] 520ms
+[Session released] 92ms
+[RUN] 614/1000
+[Session created] provider=NOTTE id=9249d408-a55a-49e8-8904-e9221880b572 244ms
+[Browser connected] 106ms
+[Page loaded] 558ms
+[Session released] 93ms
+[RUN] 615/1000
+[Session created] provider=NOTTE id=a615487a-b2b7-43ed-acd2-03ce134492a3 312ms
+[Browser connected] 100ms
+[Page loaded] 466ms
+[Session released] 83ms
+[RUN] 616/1000
+[Session created] provider=NOTTE id=de011746-54c1-4fe6-bc57-8727ccd6a080 276ms
+[Browser connected] 111ms
+[Page loaded] 522ms
+[Session released] 64ms
+[RUN] 617/1000
+[Session created] provider=NOTTE id=1cabfc77-eb39-4a9f-8b5e-ab930b24de62 234ms
+[Browser connected] 101ms
+[Page loaded] 523ms
+[Session released] 85ms
+[RUN] 618/1000
+[Session created] provider=NOTTE id=cda34a02-6afb-4b86-a638-23b8dd4a58a2 252ms
+[Browser connected] 139ms
+[Page loaded] 570ms
+[Session released] 72ms
+[RUN] 619/1000
+[Session created] provider=NOTTE id=9f59ea2a-87ee-47dd-8c27-53bb0a16d4c0 295ms
+[Browser connected] 144ms
+[Page loaded] 487ms
+[Session released] 67ms
+[RUN] 620/1000
+[Session created] provider=NOTTE id=0b627e2f-fc2e-449e-8c54-9cfb876b3ad4 246ms
+[Browser connected] 161ms
+[Page loaded] 589ms
+[Session released] 68ms
+[RUN] 621/1000
+[Session created] provider=NOTTE id=37575b35-f5c0-4c9d-975c-21c1c1e40bbb 232ms
+[Browser connected] 100ms
+[Page loaded] 527ms
+[Session released] 70ms
+[RUN] 622/1000
+[Session created] provider=NOTTE id=e56732d3-acc0-4913-8a37-e3ddba0b01c4 261ms
+[Browser connected] 102ms
+[Page loaded] 472ms
+[Session released] 75ms
+[RUN] 623/1000
+[Session created] provider=NOTTE id=b72be668-3a5b-4349-8578-71569e28f66d 334ms
+[Browser connected] 102ms
+[Page loaded] 501ms
+[Session released] 732ms
+[RUN] 624/1000
+[Session created] provider=NOTTE id=30c947a4-ec69-44c1-a3c9-ed2581a7a7a2 246ms
+[Browser connected] 114ms
+[Page loaded] 457ms
+[Session released] 79ms
+[RUN] 625/1000
+[Session created] provider=NOTTE id=76c5561f-e5e8-421f-a1ef-d6617a443a9b 311ms
+[Browser connected] 107ms
+[Page loaded] 494ms
+[Session released] 66ms
+[RUN] 626/1000
+[Session created] provider=NOTTE id=f98a8018-0a58-4181-bdc6-79f442e24f82 235ms
+[Browser connected] 148ms
+[Page loaded] 472ms
+[Session released] 117ms
+[RUN] 627/1000
+[Session created] provider=NOTTE id=3d0d4e1a-97c3-434b-8130-b5ce0ae04d57 280ms
+[Browser connected] 110ms
+[Page loaded] 475ms
+[Session released] 82ms
+[RUN] 628/1000
+[Session created] provider=NOTTE id=35494a03-3ed2-487c-932a-ab1e2dd7d43e 249ms
+[Browser connected] 117ms
+[Page loaded] 586ms
+[Session released] 88ms
+[RUN] 629/1000
+[Session created] provider=NOTTE id=cdc4df38-73ad-4b39-a4e9-09d48148b89e 283ms
+[Browser connected] 104ms
+[Page loaded] 521ms
+[Session released] 83ms
+[RUN] 630/1000
+[Session created] provider=NOTTE id=1c126e63-3236-4a5e-ad53-3226c9ec51b9 279ms
+[Browser connected] 131ms
+[Page loaded] 555ms
+[Session released] 87ms
+[RUN] 631/1000
+[Session created] provider=NOTTE id=68d8d80a-d9e7-4713-9089-f0fc1e20336c 260ms
+[Browser connected] 149ms
+[Page loaded] 429ms
+[Session released] 452ms
+[RUN] 632/1000
+[Session created] provider=NOTTE id=d43dee03-ed31-4405-b09a-9abdeced000d 285ms
+[Browser connected] 137ms
+[Page loaded] 592ms
+[Session released] 508ms
+[RUN] 633/1000
+[Session created] provider=NOTTE id=5680c98a-b3b2-4677-a2d3-10ef7a9bcfbb 260ms
+[Browser connected] 139ms
+[Page loaded] 570ms
+[Session released] 95ms
+[RUN] 634/1000
+[Session created] provider=NOTTE id=b23341dc-b185-441d-a61b-1dc14abc3954 244ms
+[Browser connected] 171ms
+[Page loaded] 476ms
+[Session released] 367ms
+[RUN] 635/1000
+[Session created] provider=NOTTE id=ab223098-320a-4f65-842e-1fbc1ddd5462 262ms
+[Browser connected] 106ms
+[Page loaded] 464ms
+[Session released] 100ms
+[RUN] 636/1000
+[Session created] provider=NOTTE id=9fcdf43d-314e-4ee2-8e20-6c7fde509f47 280ms
+[Browser connected] 96ms
+[Page loaded] 767ms
+[Session released] 143ms
+[RUN] 637/1000
+[Session created] provider=NOTTE id=77025185-8a2a-4711-b624-609de53f68f4 268ms
+[Browser connected] 105ms
+[Page loaded] 579ms
+[Session released] 75ms
+[RUN] 638/1000
+[Session created] provider=NOTTE id=ed0276c0-f91c-45be-9307-38bab82b16a8 238ms
+[Browser connected] 176ms
+[Page loaded] 516ms
+[Session released] 64ms
+[RUN] 639/1000
+[Session created] provider=NOTTE id=2f7a2e5c-05ab-442d-8e5e-27b9c1c48f3c 283ms
+[Browser connected] 104ms
+[Page loaded] 420ms
+[Session released] 72ms
+[RUN] 640/1000
+[Session created] provider=NOTTE id=2b0f8335-7dc9-4a6d-9a4f-0a32cc0b87fa 264ms
+[Browser connected] 107ms
+[Page loaded] 523ms
+[Session released] 66ms
+[RUN] 641/1000
+[Session created] provider=NOTTE id=ac2b4ca9-060c-4259-bdb0-41f215f51906 274ms
+[Browser connected] 203ms
+[Page loaded] 785ms
+[Session released] 64ms
+[RUN] 642/1000
+[Session created] provider=NOTTE id=3c3f4b56-0be0-4318-b3a5-92648e1fb610 285ms
+[Browser connected] 112ms
+[Page loaded] 552ms
+[Session released] 65ms
+[RUN] 643/1000
+[Session created] provider=NOTTE id=886505be-6d0e-419a-98f9-fb7334e8a041 243ms
+[Browser connected] 114ms
+[Page loaded] 485ms
+[Session released] 65ms
+[RUN] 644/1000
+[Session created] provider=NOTTE id=880f6669-52f3-458b-a3b7-5601aee6e120 262ms
+[Browser connected] 154ms
+[Page loaded] 484ms
+[Session released] 97ms
+[RUN] 645/1000
+[Session created] provider=NOTTE id=09e9a662-cb6e-4ffd-9540-31f4beff9cb3 284ms
+[Browser connected] 127ms
+[Page loaded] 412ms
+[Session released] 82ms
+[RUN] 646/1000
+[Session created] provider=NOTTE id=663c692a-c758-401e-be3c-58d4ef4217a9 187ms
+[Browser connected] 118ms
+[Page loaded] 526ms
+[Session released] 80ms
+[RUN] 647/1000
+[Session created] provider=NOTTE id=503d0b72-de22-474c-8192-04c1dce506f4 290ms
+[Browser connected] 144ms
+[Page loaded] 539ms
+[Session released] 66ms
+[RUN] 648/1000
+[Session created] provider=NOTTE id=580934f7-2e57-4f78-8c97-05cfbf25d1b3 279ms
+[Browser connected] 114ms
+[Page loaded] 477ms
+[Session released] 63ms
+[RUN] 649/1000
+[Session created] provider=NOTTE id=e47df628-7102-4ca3-98e1-a113567eeb87 174ms
+[Browser connected] 118ms
+[Page loaded] 438ms
+[Session released] 77ms
+[RUN] 650/1000
+[Session created] provider=NOTTE id=56242e71-3a3d-419b-a771-cce909e40399 240ms
+[Browser connected] 111ms
+[Page loaded] 481ms
+[Session released] 78ms
+[RUN] 651/1000
+[Session created] provider=NOTTE id=c64c78a4-4aae-441b-950e-491872ad193b 235ms
+[Browser connected] 120ms
+[Page loaded] 575ms
+[Session released] 67ms
+[RUN] 652/1000
+[Session created] provider=NOTTE id=9ca95e1b-371e-43a7-8164-71d5e176f330 295ms
+[Browser connected] 118ms
+[Page loaded] 554ms
+[Session released] 64ms
+[RUN] 653/1000
+[Session created] provider=NOTTE id=f0fc14b5-d398-422a-84f7-ec1eed2f7eb6 258ms
+[Browser connected] 113ms
+[Page loaded] 476ms
+[Session released] 70ms
+[RUN] 654/1000
+[Session created] provider=NOTTE id=53647f75-72f8-4e0c-a6e3-765db2e788cd 202ms
+[Browser connected] 116ms
+[Page loaded] 529ms
+[Session released] 86ms
+[RUN] 655/1000
+[Session created] provider=NOTTE id=06bc1e94-673c-44e3-9ec7-31bf34334c69 277ms
+[Browser connected] 102ms
+[Page loaded] 460ms
+[Session released] 93ms
+[RUN] 656/1000
+[Session created] provider=NOTTE id=f9135783-bb0a-42dd-98c8-3d2a67dd22ba 284ms
+[Browser connected] 162ms
+[Page loaded] 555ms
+[Session released] 89ms
+[RUN] 657/1000
+[Session created] provider=NOTTE id=66b15d93-0b7c-4726-92b8-2f08c93ee1f9 277ms
+[Browser connected] 133ms
+[Page loaded] 501ms
+[Session released] 90ms
+[RUN] 658/1000
+[Session created] provider=NOTTE id=e893233d-ba93-40bd-a138-4981b1e8053b 307ms
+[Browser connected] 112ms
+[Page loaded] 536ms
+[Session released] 80ms
+[RUN] 659/1000
+[Session created] provider=NOTTE id=a95635c1-1f77-4f29-9687-8499ffbd2dd9 271ms
+[Browser connected] 106ms
+[Page loaded] 442ms
+[Session released] 73ms
+[RUN] 660/1000
+[Session created] provider=NOTTE id=cd639bc2-dfdd-4f14-bfc2-064df936b47f 245ms
+[Browser connected] 110ms
+[Page loaded] 413ms
+[Session released] 89ms
+[RUN] 661/1000
+[Session created] provider=NOTTE id=bb673d64-8cc6-4b7d-9cd7-15de6e3d0886 224ms
+[Browser connected] 125ms
+[Page loaded] 395ms
+[Session released] 86ms
+[RUN] 662/1000
+[Session created] provider=NOTTE id=73361bc7-c884-429a-b2a0-4a85b3ec560d 192ms
+[Browser connected] 160ms
+[Page loaded] 547ms
+[Session released] 92ms
+[RUN] 663/1000
+[Session created] provider=NOTTE id=83336cdc-336d-4242-8f2f-938999abfd61 264ms
+[Browser connected] 139ms
+[Page loaded] 455ms
+[Session released] 73ms
+[RUN] 664/1000
+[Session created] provider=NOTTE id=7053f26b-03b1-407e-ba6a-2ba1bb9573f9 288ms
+[Browser connected] 120ms
+[Page loaded] 424ms
+[Session released] 115ms
+[RUN] 665/1000
+[Session created] provider=NOTTE id=31f82bff-ee1b-4f04-951f-ba25b64b7513 227ms
+[Browser connected] 127ms
+[Page loaded] 824ms
+[Session released] 103ms
+[RUN] 666/1000
+[Session created] provider=NOTTE id=63be9246-4df8-482c-938a-ce838c713bbc 309ms
+[Browser connected] 105ms
+[Page loaded] 507ms
+[Session released] 86ms
+[RUN] 667/1000
+[Session created] provider=NOTTE id=baebe120-a49d-4fbd-8c67-4790dd3630e1 495ms
+[Browser connected] 107ms
+[Page loaded] 413ms
+[Session released] 281ms
+[RUN] 668/1000
+[Session created] provider=NOTTE id=d20f6ea4-6b77-45a7-8b9a-9bffa64b2970 277ms
+[Browser connected] 120ms
+[Page loaded] 442ms
+[Session released] 75ms
+[RUN] 669/1000
+[Session created] provider=NOTTE id=3c172068-ff4b-4760-8ac2-b4ad74344a6c 273ms
+[Browser connected] 189ms
+[Page loaded] 480ms
+[Session released] 97ms
+[RUN] 670/1000
+[Session created] provider=NOTTE id=5281ac8c-4b66-4105-ba0c-7adfb80bf1af 262ms
+[Browser connected] 106ms
+[Page loaded] 469ms
+[Session released] 83ms
+[RUN] 671/1000
+[Session created] provider=NOTTE id=60316b9a-b8f8-445e-b807-ad93bdf83537 215ms
+[Browser connected] 128ms
+[Page loaded] 615ms
+[Session released] 79ms
+[RUN] 672/1000
+[Session created] provider=NOTTE id=00db474d-b4fd-410d-93a7-648041ab756b 254ms
+[Browser connected] 119ms
+[Page loaded] 547ms
+[Session released] 84ms
+[RUN] 673/1000
+[Session created] provider=NOTTE id=4330e92d-16f7-42b6-859b-a8d4b222b0c0 286ms
+[Browser connected] 108ms
+[Page loaded] 552ms
+[Session released] 99ms
+[RUN] 674/1000
+[Session created] provider=NOTTE id=90332c1a-6796-490f-9137-5b82e2bdad3f 258ms
+[Browser connected] 113ms
+[Page loaded] 459ms
+[Session released] 85ms
+[RUN] 675/1000
+[Session created] provider=NOTTE id=200090d7-613a-4dbc-8881-9451ddda537a 269ms
+[Browser connected] 188ms
+[Page loaded] 439ms
+[Session released] 66ms
+[RUN] 676/1000
+[Session created] provider=NOTTE id=92f7ca38-f895-4ae4-9671-059f44db314a 285ms
+[Browser connected] 99ms
+[Page loaded] 611ms
+[Session released] 65ms
+[RUN] 677/1000
+[Session created] provider=NOTTE id=63e0149b-9f07-4694-99bb-e37cc6778fd0 252ms
+[Browser connected] 131ms
+[Page loaded] 510ms
+[Session released] 76ms
+[RUN] 678/1000
+[Session created] provider=NOTTE id=21fa4c15-90a4-44b4-be6d-850d4333cfce 239ms
+[Browser connected] 164ms
+[Page loaded] 448ms
+[Session released] 81ms
+[RUN] 679/1000
+[Session created] provider=NOTTE id=c2a1d0be-094a-4b51-9f4c-3809f25bde4b 291ms
+[Browser connected] 119ms
+[Page loaded] 514ms
+[Session released] 89ms
+[RUN] 680/1000
+[Session created] provider=NOTTE id=d2eb4e6f-9c67-47de-8386-5f9275fea4fe 238ms
+[Browser connected] 117ms
+[Page loaded] 444ms
+[Session released] 92ms
+[RUN] 681/1000
+[Session created] provider=NOTTE id=03b0c3d4-04cb-4ab5-814b-de14f4661d7a 234ms
+[Browser connected] 118ms
+[Page loaded] 429ms
+[Session released] 79ms
+[RUN] 682/1000
+[Session created] provider=NOTTE id=44ca5570-1157-4534-97b3-212e1b26fe3a 293ms
+[Browser connected] 142ms
+[Page loaded] 573ms
+[Session released] 70ms
+[RUN] 683/1000
+[Session created] provider=NOTTE id=c2db8612-a85a-4546-be1e-fc81c4ebc753 977ms
+[Browser connected] 103ms
+[Page loaded] 499ms
+[Session released] 84ms
+[RUN] 684/1000
+[Session created] provider=NOTTE id=aef213a6-567d-45b8-900e-cdf999733dff 258ms
+[Browser connected] 123ms
+[Page loaded] 507ms
+[Session released] 82ms
+[RUN] 685/1000
+[Session created] provider=NOTTE id=729fbb64-3c0f-41d2-a0b8-63124523bc32 271ms
+[Browser connected] 116ms
+[Page loaded] 539ms
+[Session released] 80ms
+[RUN] 686/1000
+[Session created] provider=NOTTE id=2d0fe57f-13a0-4ff0-b858-7a1dbd30bf33 242ms
+[Browser connected] 121ms
+[Page loaded] 504ms
+[Session released] 75ms
+[RUN] 687/1000
+[Session created] provider=NOTTE id=6756bc20-91e2-42bc-ab06-8e5d9e33852f 169ms
+[Browser connected] 122ms
+[Page loaded] 442ms
+[Session released] 68ms
+[RUN] 688/1000
+[Session created] provider=NOTTE id=dcbb4c74-103b-4ffe-8ca8-74f73d0342cc 238ms
+[Browser connected] 128ms
+[Page loaded] 828ms
+[Session released] 76ms
+[RUN] 689/1000
+[Session created] provider=NOTTE id=aece4fc8-99ca-4054-968d-eaa99a4be11c 265ms
+[Browser connected] 111ms
+[Page loaded] 518ms
+[Session released] 78ms
+[RUN] 690/1000
+[Session created] provider=NOTTE id=0e921e21-501f-4425-9541-9a11952bd486 262ms
+[Browser connected] 110ms
+[Page loaded] 448ms
+[Session released] 91ms
+[RUN] 691/1000
+[Session created] provider=NOTTE id=8ebe1d8b-41ed-4a95-a71b-82912b1c979f 276ms
+[Browser connected] 142ms
+[Page loaded] 445ms
+[Session released] 76ms
+[RUN] 692/1000
+[Session created] provider=NOTTE id=f5d1bccb-85ca-4ac8-b032-7cbd54720b1a 273ms
+[Browser connected] 119ms
+[Page loaded] 424ms
+[Session released] 70ms
+[RUN] 693/1000
+[Session created] provider=NOTTE id=cff9e331-aae7-4374-bc0d-f8304479337d 256ms
+[Browser connected] 164ms
+[Page loaded] 491ms
+[Session released] 104ms
+[RUN] 694/1000
+[Session created] provider=NOTTE id=ccdcc41b-aad8-48d0-a469-59e77e47afee 282ms
+[Browser connected] 123ms
+[Page loaded] 452ms
+[Session released] 90ms
+[RUN] 695/1000
+[Session created] provider=NOTTE id=aad5f750-a5e9-45d2-bdcc-41ac0841df56 243ms
+[Browser connected] 119ms
+[Page loaded] 645ms
+[Session released] 68ms
+[RUN] 696/1000
+[Session created] provider=NOTTE id=12b92d53-b740-44aa-ae06-7445eca7b724 242ms
+[Browser connected] 129ms
+[Page loaded] 448ms
+[Session released] 94ms
+[RUN] 697/1000
+[Session created] provider=NOTTE id=02fd2692-efae-4065-a25c-923db28eaf12 231ms
+[Browser connected] 150ms
+[Page loaded] 546ms
+[Session released] 82ms
+[RUN] 698/1000
+[Session created] provider=NOTTE id=2ebc2816-ccd7-4499-a1d4-2eaf28b460f4 235ms
+[Browser connected] 188ms
+[Page loaded] 456ms
+[Session released] 100ms
+[RUN] 699/1000
+[Session created] provider=NOTTE id=ce3b4216-eab8-4f24-8488-eb14cfdeb09c 315ms
+[Browser connected] 105ms
+[Page loaded] 581ms
+[Session released] 69ms
+[RUN] 700/1000
+[Session created] provider=NOTTE id=dbbc151b-a298-46aa-9ed9-9781acf8d822 263ms
+[Browser connected] 127ms
+[Page loaded] 524ms
+[Session released] 78ms
+[RUN] 701/1000
+[Session created] provider=NOTTE id=5d577a56-dcda-41eb-814e-454153a0d230 237ms
+[Browser connected] 100ms
+[Page loaded] 451ms
+[Session released] 76ms
+[RUN] 702/1000
+[Session created] provider=NOTTE id=66dea990-174c-473e-b26a-d8c03364c24d 251ms
+[Browser connected] 114ms
+[Page loaded] 442ms
+[Session released] 110ms
+[RUN] 703/1000
+[Session created] provider=NOTTE id=a0410f2f-a80f-412d-b3f6-3650245fb074 287ms
+[Browser connected] 112ms
+[Page loaded] 460ms
+[Session released] 72ms
+[RUN] 704/1000
+[Session created] provider=NOTTE id=a712cef8-eab9-43c2-92f8-27c66b37f534 229ms
+[Browser connected] 106ms
+[Page loaded] 493ms
+[Session released] 98ms
+[RUN] 705/1000
+[Session created] provider=NOTTE id=c43a7c87-f9b3-4db4-8085-c589fa292417 350ms
+[Browser connected] 98ms
+[Page loaded] 452ms
+[Session released] 87ms
+[RUN] 706/1000
+[Session created] provider=NOTTE id=d9af7c6f-2a01-4c0b-955a-2b3d42878142 263ms
+[Browser connected] 101ms
+[Page loaded] 540ms
+[Session released] 88ms
+[RUN] 707/1000
+[Session created] provider=NOTTE id=4baf8651-8ee8-4bcf-a9c1-9089804791bb 240ms
+[Browser connected] 110ms
+[Page loaded] 482ms
+[Session released] 78ms
+[RUN] 708/1000
+[Session created] provider=NOTTE id=1c84fb15-5f99-4cd0-a612-3b3b6902c576 219ms
+[Browser connected] 95ms
+[Page loaded] 573ms
+[Session released] 83ms
+[RUN] 709/1000
+[Session created] provider=NOTTE id=945be379-357e-48c6-9162-349325d98a3d 268ms
+[Browser connected] 110ms
+[Page loaded] 599ms
+[Session released] 77ms
+[RUN] 710/1000
+[Session created] provider=NOTTE id=99d0cc4c-b3ae-4eb3-81da-f69aace0cb66 324ms
+[Browser connected] 126ms
+[Page loaded] 564ms
+[Session released] 375ms
+[RUN] 711/1000
+[Session created] provider=NOTTE id=beda12c1-e5ab-4dec-a2cc-7d8ae2f9a427 301ms
+[Browser connected] 105ms
+[Page loaded] 610ms
+[Session released] 68ms
+[RUN] 712/1000
+[Session created] provider=NOTTE id=ede363d6-aed5-445d-ae1f-d15dddcae77b 284ms
+[Browser connected] 120ms
+[Page loaded] 481ms
+[Session released] 86ms
+[RUN] 713/1000
+[Session created] provider=NOTTE id=57c7d954-d35d-4cdc-863a-957327a3945d 274ms
+[Browser connected] 152ms
+[Page loaded] 485ms
+[Session released] 117ms
+[RUN] 714/1000
+[Session created] provider=NOTTE id=f512f135-d624-4cdb-9187-c05012ea59a4 263ms
+[Browser connected] 107ms
+[Page loaded] 491ms
+[Session released] 75ms
+[RUN] 715/1000
+[Session created] provider=NOTTE id=2943f73e-9397-4fa3-a30a-3e51acbbec2b 225ms
+[Browser connected] 107ms
+[Page loaded] 520ms
+[Session released] 86ms
+[RUN] 716/1000
+[Session created] provider=NOTTE id=5a053776-287f-4d27-bbbf-65cda2df0126 272ms
+[Browser connected] 100ms
+[Page loaded] 514ms
+[Session released] 74ms
+[RUN] 717/1000
+[Session created] provider=NOTTE id=ec9cceb2-3b7d-4e6e-ae6d-934c48bce1af 217ms
+[Browser connected] 92ms
+[Page loaded] 430ms
+[Session released] 76ms
+[RUN] 718/1000
+[Session created] provider=NOTTE id=18e33a8b-6b7d-42bf-ad9d-b92cb1097771 282ms
+[Browser connected] 114ms
+[Page loaded] 473ms
+[Session released] 108ms
+[RUN] 719/1000
+[Session created] provider=NOTTE id=0cfa2185-aceb-4bc7-b214-b02fe7d3c788 300ms
+[Browser connected] 109ms
+[Page loaded] 558ms
+[Session released] 94ms
+[RUN] 720/1000
+[Session created] provider=NOTTE id=9ed6cb2d-5ee2-443d-961b-276d945583f6 280ms
+[Browser connected] 106ms
+[Page loaded] 496ms
+[Session released] 75ms
+[RUN] 721/1000
+[Session created] provider=NOTTE id=073cd836-6cc8-4bf1-a830-c6d811cc4216 207ms
+[Browser connected] 130ms
+[Page loaded] 472ms
+[Session released] 72ms
+[RUN] 722/1000
+[Session created] provider=NOTTE id=ca90728f-531e-4c59-8320-53d28f7cb36b 235ms
+[Browser connected] 113ms
+[Page loaded] 466ms
+[Session released] 72ms
+[RUN] 723/1000
+[Session created] provider=NOTTE id=e196a710-38ba-49dc-9646-99f1dd24e07b 298ms
+[Browser connected] 143ms
+[Page loaded] 551ms
+[Session released] 79ms
+[RUN] 724/1000
+[Session created] provider=NOTTE id=8d7f4491-ea40-466e-b1b8-49386f2e41d1 233ms
+[Browser connected] 105ms
+[Page loaded] 569ms
+[Session released] 99ms
+[RUN] 725/1000
+[Session created] provider=NOTTE id=3b50a710-205e-48d2-b744-0af0fff5fc0e 234ms
+[Browser connected] 146ms
+[Page loaded] 479ms
+[Session released] 76ms
+[RUN] 726/1000
+[Session created] provider=NOTTE id=e887da6e-04a5-459c-a274-89c35b1fd4fc 290ms
+[Browser connected] 151ms
+[Page loaded] 523ms
+[Session released] 73ms
+[RUN] 727/1000
+[Session created] provider=NOTTE id=0c2279ed-239b-4272-9aa2-12d29af3d012 667ms
+[Browser connected] 117ms
+[Page loaded] 486ms
+[Session released] 205ms
+[RUN] 728/1000
+[Session created] provider=NOTTE id=5eea2660-68b1-4355-a229-4201f4c0f63c 241ms
+[Browser connected] 118ms
+[Page loaded] 495ms
+[Session released] 89ms
+[RUN] 729/1000
+[Session created] provider=NOTTE id=e4dcc45d-196a-4718-9b3c-9dcaf0eb099f 228ms
+[Browser connected] 154ms
+[Page loaded] 431ms
+[Session released] 79ms
+[RUN] 730/1000
+[Session created] provider=NOTTE id=60b7accc-df22-4348-8c60-24bc1796b94c 295ms
+[Browser connected] 166ms
+[Page loaded] 962ms
+[Session released] 88ms
+[RUN] 731/1000
+[Session created] provider=NOTTE id=1c09da35-c7ac-4ca4-901e-3ca7fe5f2f44 270ms
+[Browser connected] 110ms
+[Page loaded] 499ms
+[Session released] 89ms
+[RUN] 732/1000
+[Session created] provider=NOTTE id=58c25ff8-2e08-4913-85f5-dfd84adfd872 291ms
+[Browser connected] 97ms
+[Page loaded] 557ms
+[Session released] 92ms
+[RUN] 733/1000
+[Session created] provider=NOTTE id=4a1f3104-0e62-453b-b732-605cbe06516b 238ms
+[Browser connected] 118ms
+[Page loaded] 557ms
+[Session released] 147ms
+[RUN] 734/1000
+[Session created] provider=NOTTE id=60a780a6-cda7-48fe-a5c9-a6e010904651 261ms
+[Browser connected] 113ms
+[Page loaded] 477ms
+[Session released] 97ms
+[RUN] 735/1000
+[Session created] provider=NOTTE id=8d40b49c-b0da-4f18-9e2c-359fbfa5eb93 307ms
+[Browser connected] 103ms
+[Page loaded] 444ms
+[Session released] 206ms
+[RUN] 736/1000
+[Session created] provider=NOTTE id=0b81c048-a5a2-405a-91d4-e449492198d8 290ms
+[Browser connected] 96ms
+[Page loaded] 476ms
+[Session released] 97ms
+[RUN] 737/1000
+[Session created] provider=NOTTE id=ac77829d-dc32-4a7c-a7c2-942c9aa96dd3 241ms
+[Browser connected] 187ms
+[Page loaded] 630ms
+[Session released] 85ms
+[RUN] 738/1000
+[Session created] provider=NOTTE id=9eee158e-3e29-4e6c-9a75-d83bd74bf561 279ms
+[Browser connected] 96ms
+[Page loaded] 542ms
+[Session released] 73ms
+[RUN] 739/1000
+[Session created] provider=NOTTE id=4a3c6db3-52cc-44a1-8c78-8db38c3f8f75 275ms
+[Browser connected] 145ms
+[Page loaded] 460ms
+[Session released] 66ms
+[RUN] 740/1000
+[Session created] provider=NOTTE id=8842d809-a5c2-4743-96bf-190e8e47013b 266ms
+[Browser connected] 124ms
+[Page loaded] 473ms
+[Session released] 66ms
+[RUN] 741/1000
+[Session created] provider=NOTTE id=6630f2ad-1f64-4e0b-8e05-686638796051 241ms
+[Browser connected] 192ms
+[Page loaded] 451ms
+[Session released] 83ms
+[RUN] 742/1000
+[Session created] provider=NOTTE id=a25a8a31-e19a-4084-a6e2-b7595d6fe5cc 278ms
+[Browser connected] 124ms
+[Page loaded] 522ms
+[Session released] 64ms
+[RUN] 743/1000
+[Session created] provider=NOTTE id=b3934c1f-81b0-4fa0-b5fb-d2a5b693a10f 259ms
+[Browser connected] 115ms
+[Page loaded] 431ms
+[Session released] 98ms
+[RUN] 744/1000
+[Session created] provider=NOTTE id=c5c7a15e-76e2-4ac9-8beb-06b165718f58 263ms
+[Browser connected] 106ms
+[Page loaded] 510ms
+[Session released] 235ms
+[RUN] 745/1000
+[Session created] provider=NOTTE id=3319465b-bfa0-42f0-b0d7-16f052f72bb4 249ms
+[Browser connected] 112ms
+[Page loaded] 447ms
+[Session released] 96ms
+[RUN] 746/1000
+[Session created] provider=NOTTE id=acac6e61-a246-4a25-a442-2b0448f3f4ca 245ms
+[Browser connected] 117ms
+[Page loaded] 526ms
+[Session released] 98ms
+[RUN] 747/1000
+[Session created] provider=NOTTE id=5f52b153-69cc-4810-943d-e36287906d7a 195ms
+[Browser connected] 103ms
+[Page loaded] 490ms
+[Session released] 75ms
+[RUN] 748/1000
+[Session created] provider=NOTTE id=86f79f9c-d549-4e2a-9aec-2e4af5537179 254ms
+[Browser connected] 130ms
+[Page loaded] 464ms
+[Session released] 91ms
+[RUN] 749/1000
+[Session created] provider=NOTTE id=dab73266-6758-4c0a-be85-15ded70f3d2f 283ms
+[Browser connected] 150ms
+[Page loaded] 416ms
+[Session released] 71ms
+[RUN] 750/1000
+[Session created] provider=NOTTE id=8bafc27d-92f6-4bad-9cb9-ec766be72adf 235ms
+[Browser connected] 117ms
+[Page loaded] 476ms
+[Session released] 67ms
+[RUN] 751/1000
+[Session created] provider=NOTTE id=804187eb-8427-4354-aa2e-7c94c64e5dd9 237ms
+[Browser connected] 105ms
+[Page loaded] 553ms
+[Session released] 86ms
+[RUN] 752/1000
+[Session created] provider=NOTTE id=c06df39d-5141-4474-bb73-86d89a0783d0 264ms
+[Browser connected] 178ms
+[Page loaded] 460ms
+[Session released] 175ms
+[RUN] 753/1000
+[Session created] provider=NOTTE id=b21d610d-dcf9-424f-8f95-73ffbc8c2555 280ms
+[Browser connected] 157ms
+[Page loaded] 472ms
+[Session released] 151ms
+[RUN] 754/1000
+[Session created] provider=NOTTE id=59404b56-1a64-44cd-af1e-145e25a3c22a 293ms
+[Browser connected] 137ms
+[Page loaded] 454ms
+[Session released] 157ms
+[RUN] 755/1000
+[Session created] provider=NOTTE id=18739c52-ddf9-495d-9a0b-40929b70bee9 217ms
+[Browser connected] 114ms
+[Page loaded] 471ms
+[Session released] 83ms
+[RUN] 756/1000
+[Session created] provider=NOTTE id=118e6a9e-06a6-4a88-bc17-13f305d89384 239ms
+[Browser connected] 147ms
+[Page loaded] 572ms
+[Session released] 95ms
+[RUN] 757/1000
+[Session created] provider=NOTTE id=43d55c3c-fcfb-490d-8f3c-dda41cb5a7eb 201ms
+[Browser connected] 109ms
+[Page loaded] 461ms
+[Session released] 100ms
+[RUN] 758/1000
+[Session created] provider=NOTTE id=d9894603-2224-4290-aa6b-5a00c9d7366d 277ms
+[Browser connected] 137ms
+[Page loaded] 483ms
+[Session released] 72ms
+[RUN] 759/1000
+[Session created] provider=NOTTE id=23aeadfa-63f4-4ba1-92ef-2ecc86be36dc 223ms
+[Browser connected] 122ms
+[Page loaded] 599ms
+[Session released] 82ms
+[RUN] 760/1000
+[Session created] provider=NOTTE id=2e079b85-963f-456e-98e3-5d4af3afd704 292ms
+[Browser connected] 154ms
+[Page loaded] 486ms
+[Session released] 215ms
+[RUN] 761/1000
+[Session created] provider=NOTTE id=074240df-b7f1-470f-978a-27158effae65 223ms
+[Browser connected] 113ms
+[Page loaded] 499ms
+[Session released] 78ms
+[RUN] 762/1000
+[Session created] provider=NOTTE id=277b919a-4fc7-445c-83bd-6712cbc108e3 294ms
+[Browser connected] 149ms
+[Page loaded] 505ms
+[Session released] 574ms
+[RUN] 763/1000
+[Session created] provider=NOTTE id=d3ee9497-ae43-4d6b-a2c6-c66f399887e0 286ms
+[Browser connected] 195ms
+[Page loaded] 445ms
+[Session released] 141ms
+[RUN] 764/1000
+[Session created] provider=NOTTE id=c5a34fe0-5303-422a-a85b-fb8ce2444b96 248ms
+[Browser connected] 102ms
+[Page loaded] 580ms
+[Session released] 78ms
+[RUN] 765/1000
+[Session created] provider=NOTTE id=1488bae5-de40-4dba-b28f-a054018ab0fa 280ms
+[Browser connected] 111ms
+[Page loaded] 489ms
+[Session released] 88ms
+[RUN] 766/1000
+[Session created] provider=NOTTE id=2daf7948-8381-46e7-af97-6330bebd7103 327ms
+[Browser connected] 113ms
+[Page loaded] 642ms
+[Session released] 79ms
+[RUN] 767/1000
+[Session created] provider=NOTTE id=b8c22078-3c05-48d1-8d17-54cb47915a8d 251ms
+[Browser connected] 105ms
+[Page loaded] 453ms
+[Session released] 223ms
+[RUN] 768/1000
+[Session created] provider=NOTTE id=d852f44f-3e36-421b-9fb2-309a786653e3 186ms
+[Browser connected] 136ms
+[Page loaded] 501ms
+[Session released] 90ms
+[RUN] 769/1000
+[Session created] provider=NOTTE id=6fedb00e-644b-4256-bba7-4e3d2c9ff910 277ms
+[Browser connected] 131ms
+[Page loaded] 410ms
+[Session released] 77ms
+[RUN] 770/1000
+[Session created] provider=NOTTE id=428090c3-fa6d-4dfa-82b0-7b3de46e6c04 236ms
+[Browser connected] 105ms
+[Page loaded] 525ms
+[Session released] 80ms
+[RUN] 771/1000
+[Session created] provider=NOTTE id=6b5a3364-5842-4398-92ae-db72868709cb 358ms
+[Browser connected] 133ms
+[Page loaded] 478ms
+[Session released] 98ms
+[RUN] 772/1000
+[Session created] provider=NOTTE id=47f8711a-c8e3-4487-95c1-f258bda8abd9 238ms
+[Browser connected] 108ms
+[Page loaded] 496ms
+[Session released] 872ms
+[RUN] 773/1000
+[Session created] provider=NOTTE id=36a466a7-3bc2-4693-bed3-4fafd8132cb7 221ms
+[Browser connected] 164ms
+[Page loaded] 528ms
+[Session released] 82ms
+[RUN] 774/1000
+[Session created] provider=NOTTE id=855d81ca-4cca-4145-ab54-b63b6ad174e5 282ms
+[Browser connected] 126ms
+[Page loaded] 505ms
+[Session released] 71ms
+[RUN] 775/1000
+[Session created] provider=NOTTE id=7b90c7be-2d60-4fc2-9bf8-61dc99029a05 291ms
+[Browser connected] 101ms
+[Page loaded] 774ms
+[Session released] 85ms
+[RUN] 776/1000
+[Session created] provider=NOTTE id=c8b1908c-631a-4f76-9558-7fa7405ec1e8 235ms
+[Browser connected] 93ms
+[Page loaded] 518ms
+[Session released] 79ms
+[RUN] 777/1000
+[Session created] provider=NOTTE id=d0a72b84-c48f-4554-ab9a-3f57f42fcb00 276ms
+[Browser connected] 109ms
+[Page loaded] 576ms
+[Session released] 81ms
+[RUN] 778/1000
+[Session created] provider=NOTTE id=0d88ebb5-42af-4e21-90cd-8fa1059975ea 370ms
+[Browser connected] 107ms
+[Page loaded] 528ms
+[Session released] 74ms
+[RUN] 779/1000
+[Session created] provider=NOTTE id=e251aaa1-9a09-4116-a0cd-da0a5ca5b2d2 253ms
+[Browser connected] 107ms
+[Page loaded] 480ms
+[Session released] 95ms
+[RUN] 780/1000
+[Session created] provider=NOTTE id=22dc0f9b-3935-4451-83df-9f0988fc8ba1 181ms
+[Browser connected] 144ms
+[Page loaded] 437ms
+[Session released] 72ms
+[RUN] 781/1000
+[Session created] provider=NOTTE id=1c5f7012-1675-49e0-b891-6dc060c30591 241ms
+[Browser connected] 116ms
+[Page loaded] 527ms
+[Session released] 82ms
+[RUN] 782/1000
+[Session created] provider=NOTTE id=8418e178-6cf6-4b65-922d-48f319eefc25 249ms
+[Browser connected] 193ms
+[Page loaded] 463ms
+[Session released] 70ms
+[RUN] 783/1000
+[Session created] provider=NOTTE id=6a205890-80d8-4e56-91fd-223b58164a3a 251ms
+[Browser connected] 89ms
+[Page loaded] 543ms
+[Session released] 84ms
+[RUN] 784/1000
+[Session created] provider=NOTTE id=7d2bc9b5-2aa9-4e7b-84e6-a0feadda2784 319ms
+[Browser connected] 127ms
+[Page loaded] 556ms
+[Session released] 114ms
+[RUN] 785/1000
+[Session created] provider=NOTTE id=02595bad-1fe7-4a34-937a-f4faf27bf1d3 231ms
+[Browser connected] 110ms
+[Page loaded] 497ms
+[Session released] 69ms
+[RUN] 786/1000
+[Session created] provider=NOTTE id=ecb88029-21da-4681-bc96-78a7500cde1b 925ms
+[Browser connected] 104ms
+[Page loaded] 496ms
+[Session released] 90ms
+[RUN] 787/1000
+[Session created] provider=NOTTE id=66591d98-5acf-45ae-9d22-eee09147bf70 280ms
+[Browser connected] 156ms
+[Page loaded] 449ms
+[Session released] 74ms
+[RUN] 788/1000
+[Session created] provider=NOTTE id=b1e03a41-c9c4-4672-8b5e-c304d9cf121c 236ms
+[Browser connected] 121ms
+[Page loaded] 506ms
+[Session released] 92ms
+[RUN] 789/1000
+[Session created] provider=NOTTE id=c92323cb-b57c-4703-956b-a159ca8ce6b3 232ms
+[Browser connected] 130ms
+[Page loaded] 494ms
+[Session released] 96ms
+[RUN] 790/1000
+[Session created] provider=NOTTE id=44655b86-8dc8-4db5-a9fc-699fdd9a28fc 302ms
+[Browser connected] 164ms
+[Page loaded] 524ms
+[Session released] 78ms
+[RUN] 791/1000
+[Session created] provider=NOTTE id=d635877f-416b-4ada-8bf0-375fbcc18e5c 305ms
+[Browser connected] 120ms
+[Page loaded] 443ms
+[Session released] 78ms
+[RUN] 792/1000
+[Session created] provider=NOTTE id=cf398917-97df-4c5a-80ac-dd9568912c51 304ms
+[Browser connected] 163ms
+[Page loaded] 542ms
+[Session released] 90ms
+[RUN] 793/1000
+[Session created] provider=NOTTE id=eeb90b31-dcc4-495e-a0b1-89beb970dfcb 277ms
+[Browser connected] 128ms
+[Page loaded] 446ms
+[Session released] 509ms
+[RUN] 794/1000
+[Session created] provider=NOTTE id=77a2af98-ee68-4965-bc56-f1c7c1241d50 281ms
+[Browser connected] 107ms
+[Page loaded] 470ms
+[Session released] 68ms
+[RUN] 795/1000
+[Session created] provider=NOTTE id=1eeae94b-1c28-4c23-a8dc-4c1866e78883 260ms
+[Browser connected] 155ms
+[Page loaded] 517ms
+[Session released] 70ms
+[RUN] 796/1000
+[Session created] provider=NOTTE id=8ac9f0ef-22b4-48bc-acd9-270199759530 253ms
+[Browser connected] 120ms
+[Page loaded] 496ms
+[Session released] 103ms
+[RUN] 797/1000
+[Session created] provider=NOTTE id=67e782fa-da27-433e-9c57-80a2db73e058 172ms
+[Browser connected] 112ms
+[Page loaded] 448ms
+[Session released] 70ms
+[RUN] 798/1000
+[Session created] provider=NOTTE id=beda4e10-5a4c-4282-b630-0132d83ff364 226ms
+[Browser connected] 108ms
+[Page loaded] 600ms
+[Session released] 70ms
+[RUN] 799/1000
+[Session created] provider=NOTTE id=954ae3b1-fb09-4148-ada7-5c53197830f2 241ms
+[Browser connected] 120ms
+[Page loaded] 572ms
+[Session released] 69ms
+[RUN] 800/1000
+[Session created] provider=NOTTE id=6201035c-0fac-44e3-8b86-8b130b7f2b98 252ms
+[Browser connected] 153ms
+[Page loaded] 485ms
+[Session released] 66ms
+[RUN] 801/1000
+[Session created] provider=NOTTE id=a2aa5fe8-9d51-4690-8c7f-f3621212b99f 325ms
+[Browser connected] 135ms
+[Page loaded] 475ms
+[Session released] 82ms
+[RUN] 802/1000
+[Session created] provider=NOTTE id=3f603fc1-48d2-4e96-b1bb-5f11e364c615 235ms
+[Browser connected] 127ms
+[Page loaded] 536ms
+[Session released] 86ms
+[RUN] 803/1000
+[Session created] provider=NOTTE id=ee321fd7-2065-413a-8e0d-c8b784115ce1 252ms
+[Browser connected] 151ms
+[Page loaded] 471ms
+[Session released] 70ms
+[RUN] 804/1000
+[Session created] provider=NOTTE id=ac436186-ad6b-4884-a92d-20f50c5401ed 241ms
+[Browser connected] 148ms
+[Page loaded] 444ms
+[Session released] 76ms
+[RUN] 805/1000
+[Session created] provider=NOTTE id=d3a1edbb-ef96-4e8a-8531-6a6588087471 229ms
+[Browser connected] 218ms
+[Page loaded] 515ms
+[Session released] 65ms
+[RUN] 806/1000
+[Session created] provider=NOTTE id=b1e261cf-97e3-42c1-bccc-88f720cb8b78 292ms
+[Browser connected] 132ms
+[Page loaded] 548ms
+[Session released] 244ms
+[RUN] 807/1000
+[Session created] provider=NOTTE id=2f782de4-73fb-43c8-83f0-a77b20bba7dc 319ms
+[Browser connected] 126ms
+[Page loaded] 502ms
+[Session released] 117ms
+[RUN] 808/1000
+[Session created] provider=NOTTE id=b9e96503-20e5-48d8-a3e7-02acc056f172 237ms
+[Browser connected] 156ms
+[Page loaded] 1018ms
+[Session released] 111ms
+[RUN] 809/1000
+[Session created] provider=NOTTE id=5e400e2e-9c82-4ce1-8974-091ca7686dfa 294ms
+[Browser connected] 195ms
+[Page loaded] 466ms
+[Session released] 80ms
+[RUN] 810/1000
+[Session created] provider=NOTTE id=8c80dd1d-9dcd-4d41-87a9-029681d4a4f7 303ms
+[Browser connected] 116ms
+[Page loaded] 452ms
+[Session released] 87ms
+[RUN] 811/1000
+[Session created] provider=NOTTE id=8e750c4b-4f32-4a7d-8be9-154f26b851d3 249ms
+[Browser connected] 241ms
+[Page loaded] 516ms
+[Session released] 594ms
+[RUN] 812/1000
+[Session created] provider=NOTTE id=865a0505-3ce9-4749-96f7-99e1ac1e8e8f 231ms
+[Browser connected] 131ms
+[Page loaded] 507ms
+[Session released] 133ms
+[RUN] 813/1000
+[Session created] provider=NOTTE id=c18037e3-b91f-42fc-8493-33db297b93b2 243ms
+[Browser connected] 167ms
+[Page loaded] 511ms
+[Session released] 67ms
+[RUN] 814/1000
+[Session created] provider=NOTTE id=b095725c-40c6-4abd-800d-f13e9ec87b61 280ms
+[Browser connected] 132ms
+[Page loaded] 471ms
+[Session released] 65ms
+[RUN] 815/1000
+[Session created] provider=NOTTE id=8ad87219-d8d0-4d43-8f7e-f86ac2e66634 206ms
+[Browser connected] 164ms
+[Page loaded] 478ms
+[Session released] 105ms
+[RUN] 816/1000
+[Session created] provider=NOTTE id=ea557802-3db6-4bd1-b4d8-abd47d08a090 311ms
+[Browser connected] 105ms
+[Page loaded] 526ms
+[Session released] 62ms
+[RUN] 817/1000
+[Session created] provider=NOTTE id=67854f76-870f-496d-a22e-df23cd0c886c 304ms
+[Browser connected] 164ms
+[Page loaded] 504ms
+[Session released] 62ms
+[RUN] 818/1000
+[Session created] provider=NOTTE id=148b3c54-21a9-4207-a2fa-4d0f21af8d3b 214ms
+[Browser connected] 98ms
+[Page loaded] 491ms
+[Session released] 168ms
+[RUN] 819/1000
+[Session created] provider=NOTTE id=08ce1c77-6db7-4d2a-8625-5c00facf162f 263ms
+[Browser connected] 175ms
+[Page loaded] 502ms
+[Session released] 71ms
+[RUN] 820/1000
+[Session created] provider=NOTTE id=4e231528-91f9-4aec-9d91-2c860305e63a 287ms
+[Browser connected] 123ms
+[Page loaded] 508ms
+[Session released] 79ms
+[RUN] 821/1000
+[Session created] provider=NOTTE id=c1a7d103-1e7c-4cad-91bb-0cd41f19b71a 268ms
+[Browser connected] 111ms
+[Page loaded] 552ms
+[Session released] 64ms
+[RUN] 822/1000
+[Session created] provider=NOTTE id=ff1e8b2c-2ffc-4515-96ae-c04699ceafe8 274ms
+[Browser connected] 175ms
+[Page loaded] 466ms
+[Session released] 65ms
+[RUN] 823/1000
+[Session created] provider=NOTTE id=04fb5753-d67b-49a4-8627-9ca59a8774df 275ms
+[Browser connected] 90ms
+[Page loaded] 493ms
+[Session released] 70ms
+[RUN] 824/1000
+[Session created] provider=NOTTE id=f9697125-9c4d-426b-b3a6-d8ccb91a5bb3 283ms
+[Browser connected] 122ms
+[Page loaded] 478ms
+[Session released] 61ms
+[RUN] 825/1000
+[Session created] provider=NOTTE id=4e5fc4d0-25f4-4fcf-a118-2e08465fb510 282ms
+[Browser connected] 155ms
+[Page loaded] 615ms
+[Session released] 63ms
+[RUN] 826/1000
+[Session created] provider=NOTTE id=bde813e0-69d5-49d5-b83c-d9a2a42f0b3b 300ms
+[Browser connected] 118ms
+[Page loaded] 732ms
+[Session released] 173ms
+[RUN] 827/1000
+[Session created] provider=NOTTE id=90ccf859-382b-4a7e-801e-4dcb8f93c623 285ms
+[Browser connected] 86ms
+[Page loaded] 431ms
+[Session released] 67ms
+[RUN] 828/1000
+[Session created] provider=NOTTE id=6136f9b0-1a87-43aa-8ec5-8848c10c8512 250ms
+[Browser connected] 117ms
+[Page loaded] 579ms
+[Session released] 150ms
+[RUN] 829/1000
+[Session created] provider=NOTTE id=c7f106cb-ebab-44d2-baf0-f2ecda9249b3 328ms
+[Browser connected] 155ms
+[Page loaded] 481ms
+[Session released] 130ms
+[RUN] 830/1000
+[Session created] provider=NOTTE id=5dcdb724-2d69-40ac-94fe-28d7a3548e8c 271ms
+[Browser connected] 157ms
+[Page loaded] 520ms
+[Session released] 66ms
+[RUN] 831/1000
+[Session created] provider=NOTTE id=fdd52e6d-74bd-455b-b5d6-673f5372f20d 245ms
+[Browser connected] 108ms
+[Page loaded] 526ms
+[Session released] 69ms
+[RUN] 832/1000
+[Session created] provider=NOTTE id=fab4558a-10f9-44e4-a916-531799c24e95 284ms
+[Browser connected] 108ms
+[Page loaded] 616ms
+[Session released] 94ms
+[RUN] 833/1000
+[Session created] provider=NOTTE id=d15fa11d-e57f-4a4f-a16c-fd40db9dc7ae 295ms
+[Browser connected] 112ms
+[Page loaded] 578ms
+[Session released] 66ms
+[RUN] 834/1000
+[Session created] provider=NOTTE id=eaa49b47-0584-42be-a58e-a98802741aac 244ms
+[Browser connected] 116ms
+[Page loaded] 476ms
+[Session released] 98ms
+[RUN] 835/1000
+[Session created] provider=NOTTE id=a5ed47c6-5cfa-40a9-ac51-69e87b4575f8 313ms
+[Browser connected] 165ms
+[Page loaded] 638ms
+[Session released] 93ms
+[RUN] 836/1000
+[Session created] provider=NOTTE id=87caf991-61dd-481b-98ff-94f0cdce4f61 338ms
+[Browser connected] 108ms
+[Page loaded] 596ms
+[Session released] 398ms
+[RUN] 837/1000
+[Session created] provider=NOTTE id=1d79fed7-b5c8-4c9f-825b-a15a336fc15a 296ms
+[Browser connected] 103ms
+[Page loaded] 539ms
+[Session released] 178ms
+[RUN] 838/1000
+[Session created] provider=NOTTE id=c6ac91ab-f23f-4175-bab1-229f542db31b 333ms
+[Browser connected] 127ms
+[Page loaded] 528ms
+[Session released] 93ms
+[RUN] 839/1000
+[Session created] provider=NOTTE id=1ae4bb8d-18cb-45ab-af22-b85da0387072 330ms
+[Browser connected] 190ms
+[Page loaded] 534ms
+[Session released] 78ms
+[RUN] 840/1000
+[Session created] provider=NOTTE id=34fe5bfe-300e-42c4-b053-a631fc8f82d1 255ms
+[Browser connected] 176ms
+[Page loaded] 487ms
+[Session released] 96ms
+[RUN] 841/1000
+[Session created] provider=NOTTE id=6b80c82f-58c7-4deb-becd-eb289d318448 269ms
+[Browser connected] 106ms
+[Page loaded] 428ms
+[Session released] 80ms
+[RUN] 842/1000
+[Session created] provider=NOTTE id=5a006188-2fa1-493d-899d-50f73f0a48f3 229ms
+[Browser connected] 185ms
+[Page loaded] 660ms
+[Session released] 83ms
+[RUN] 843/1000
+[Session created] provider=NOTTE id=d75adeb7-06a0-4462-8654-ecf6598a6d43 257ms
+[Browser connected] 89ms
+[Page loaded] 450ms
+[Session released] 87ms
+[RUN] 844/1000
+[Session created] provider=NOTTE id=5561984a-6ba8-4b0f-af25-5b2403dd36eb 244ms
+[Browser connected] 206ms
+[Page loaded] 477ms
+[Session released] 69ms
+[RUN] 845/1000
+[Session created] provider=NOTTE id=457e1382-9e5e-4c5a-97db-166c0057fce2 288ms
+[Browser connected] 111ms
+[Page loaded] 503ms
+[Session released] 68ms
+[RUN] 846/1000
+[Session created] provider=NOTTE id=57f9a426-b2c0-4c62-b126-f2ec64ef21f5 300ms
+[Browser connected] 180ms
+[Page loaded] 498ms
+[Session released] 79ms
+[RUN] 847/1000
+[Session created] provider=NOTTE id=5a6af790-54c9-41f2-a3e3-ac8cd5a8cf26 312ms
+[Browser connected] 117ms
+[Page loaded] 545ms
+[Session released] 82ms
+[RUN] 848/1000
+[Session created] provider=NOTTE id=3eff3d94-08af-47e4-948e-9ce326fbc405 279ms
+[Browser connected] 100ms
+[Page loaded] 494ms
+[Session released] 88ms
+[RUN] 849/1000
+[Session created] provider=NOTTE id=5d967927-bd3b-48e7-b95f-1a1162eb73da 238ms
+[Browser connected] 110ms
+[Page loaded] 483ms
+[Session released] 92ms
+[RUN] 850/1000
+[Session created] provider=NOTTE id=22ccbebc-9e30-4ad8-8de4-617ba5efc347 260ms
+[Browser connected] 116ms
+[Page loaded] 476ms
+[Session released] 93ms
+[RUN] 851/1000
+[Session created] provider=NOTTE id=f39858f3-aa8c-4cda-a7b1-609a82ff7eac 267ms
+[Browser connected] 123ms
+[Page loaded] 420ms
+[Session released] 71ms
+[RUN] 852/1000
+[Session created] provider=NOTTE id=88d962fd-2cd9-423d-b576-8b61fef5965c 226ms
+[Browser connected] 166ms
+[Page loaded] 450ms
+[Session released] 81ms
+[RUN] 853/1000
+[Session created] provider=NOTTE id=cb980d15-cd26-4b64-a043-1514784d0e09 193ms
+[Browser connected] 112ms
+[Page loaded] 478ms
+[Session released] 149ms
+[RUN] 854/1000
+[Session created] provider=NOTTE id=9b8db1f4-a7c9-4840-861c-f60b3fd4500f 311ms
+[Browser connected] 106ms
+[Page loaded] 462ms
+[Session released] 83ms
+[RUN] 855/1000
+[Session created] provider=NOTTE id=0b5fc346-3a3e-48a2-ae96-ea82560a9381 260ms
+[Browser connected] 94ms
+[Page loaded] 498ms
+[Session released] 82ms
+[RUN] 856/1000
+[Session created] provider=NOTTE id=ea557fb9-c41d-467b-bef1-89a1b444a5cb 224ms
+[Browser connected] 107ms
+[Page loaded] 502ms
+[Session released] 93ms
+[RUN] 857/1000
+[Session created] provider=NOTTE id=c17ab7d8-814d-4253-83b0-4c412611dc56 237ms
+[Browser connected] 162ms
+[Page loaded] 494ms
+[Session released] 97ms
+[RUN] 858/1000
+[Session created] provider=NOTTE id=22197043-f8ba-433f-be76-2824ffce9f29 251ms
+[Browser connected] 134ms
+[Page loaded] 585ms
+[Session released] 780ms
+[RUN] 859/1000
+[Session created] provider=NOTTE id=17c10363-3fd9-4ce2-a331-dfc1c0fede56 259ms
+[Browser connected] 112ms
+[Page loaded] 516ms
+[Session released] 108ms
+[RUN] 860/1000
+[Session created] provider=NOTTE id=e68d4db9-3aba-4b80-98a9-a28910460112 269ms
+[Browser connected] 98ms
+[Page loaded] 540ms
+[Session released] 105ms
+[RUN] 861/1000
+[Session created] provider=NOTTE id=c60c71bf-c328-4614-8d4a-10a79fb34b9b 236ms
+[Browser connected] 118ms
+[Page loaded] 420ms
+[Session released] 91ms
+[RUN] 862/1000
+[Session created] provider=NOTTE id=ca0adde9-003f-4082-8f26-747cf63c0567 272ms
+[Browser connected] 121ms
+[Page loaded] 484ms
+[Session released] 97ms
+[RUN] 863/1000
+[Session created] provider=NOTTE id=d1f61cbf-5c1e-4c88-9b7c-4d39121b1a19 251ms
+[Browser connected] 114ms
+[Page loaded] 471ms
+[Session released] 86ms
+[RUN] 864/1000
+[Session created] provider=NOTTE id=e1d2e4f9-8423-4193-864d-556ca4fb839e 223ms
+[Browser connected] 101ms
+[Page loaded] 438ms
+[Session released] 79ms
+[RUN] 865/1000
+[Session created] provider=NOTTE id=a84810a6-053f-4e81-851e-9c222d1dae5e 245ms
+[Browser connected] 122ms
+[Page loaded] 472ms
+[Session released] 69ms
+[RUN] 866/1000
+[Session created] provider=NOTTE id=b3a2c956-a977-4e90-9367-c9b10cf12d89 226ms
+[Browser connected] 105ms
+[Page loaded] 537ms
+[Session released] 86ms
+[RUN] 867/1000
+[Session created] provider=NOTTE id=e4de5b62-8571-469e-b130-9cc6a0627b08 218ms
+[Browser connected] 106ms
+[Page loaded] 458ms
+[Session released] 99ms
+[RUN] 868/1000
+[Session created] provider=NOTTE id=9fe1862f-6462-4af1-bdc8-ffd21b987282 301ms
+[Browser connected] 111ms
+[Page loaded] 391ms
+[Session released] 85ms
+[RUN] 869/1000
+[Session created] provider=NOTTE id=d2df7a39-6e1d-4d5e-af18-c30912f95b95 268ms
+[Browser connected] 137ms
+[Page loaded] 441ms
+[Session released] 376ms
+[RUN] 870/1000
+[Session created] provider=NOTTE id=87cb9765-8850-45a4-96d7-7fce5a0fc27a 288ms
+[Browser connected] 205ms
+[Page loaded] 486ms
+[Session released] 68ms
+[RUN] 871/1000
+[Session created] provider=NOTTE id=82b6dce3-20c2-4e3f-b0e9-7cec4dcc16cd 274ms
+[Browser connected] 170ms
+[Page loaded] 472ms
+[Session released] 91ms
+[RUN] 872/1000
+[Session created] provider=NOTTE id=aea1f528-2a47-45c8-94c6-79b8946f6b54 376ms
+[Browser connected] 109ms
+[Page loaded] 441ms
+[Session released] 550ms
+[RUN] 873/1000
+[Session created] provider=NOTTE id=8bcd2f70-c5ee-48ff-a735-cdbb16f7f975 293ms
+[Browser connected] 137ms
+[Page loaded] 438ms
+[Session released] 78ms
+[RUN] 874/1000
+[Session created] provider=NOTTE id=978159f7-09b7-4864-98d6-53a7b0707d55 276ms
+[Browser connected] 147ms
+[Page loaded] 484ms
+[Session released] 91ms
+[RUN] 875/1000
+[Session created] provider=NOTTE id=2b315cf7-7b17-4bfb-8180-dda20c9ad13c 244ms
+[Browser connected] 163ms
+[Page loaded] 466ms
+[Session released] 90ms
+[RUN] 876/1000
+[Session created] provider=NOTTE id=d415ec94-028c-45eb-962c-88c0e9e5a5bc 181ms
+[Browser connected] 111ms
+[Page loaded] 555ms
+[Session released] 95ms
+[RUN] 877/1000
+[Session created] provider=NOTTE id=e7837a32-ea48-47dd-82de-a942916fd7d6 233ms
+[Browser connected] 165ms
+[Page loaded] 578ms
+[Session released] 95ms
+[RUN] 878/1000
+[Session created] provider=NOTTE id=8de13102-d39b-419f-9ba1-55c06d433910 239ms
+[Browser connected] 113ms
+[Page loaded] 455ms
+[Session released] 113ms
+[RUN] 879/1000
+[Session created] provider=NOTTE id=143f462e-51ec-40b0-af00-513d8342e338 272ms
+[Browser connected] 154ms
+[Page loaded] 403ms
+[Session released] 77ms
+[RUN] 880/1000
+[Session created] provider=NOTTE id=a541e3f3-336f-4c46-b798-e5a1a189e5c5 198ms
+[Browser connected] 163ms
+[Page loaded] 607ms
+[Session released] 79ms
+[RUN] 881/1000
+[Session created] provider=NOTTE id=e8afeb30-7e94-4bd2-983a-80cb939d7f89 280ms
+[Browser connected] 115ms
+[Page loaded] 528ms
+[Session released] 69ms
+[RUN] 882/1000
+[Session created] provider=NOTTE id=41cdad29-94bc-4f89-8b94-4e32510aebaa 226ms
+[Browser connected] 128ms
+[Page loaded] 498ms
+[Session released] 177ms
+[RUN] 883/1000
+[Session created] provider=NOTTE id=f63f3752-05b1-4d5c-8810-2128458e192d 225ms
+[Browser connected] 163ms
+[Page loaded] 863ms
+[Session released] 91ms
+[RUN] 884/1000
+[Session created] provider=NOTTE id=6d5d5eb4-fd85-455d-86f1-cea734dec15b 227ms
+[Browser connected] 111ms
+[Page loaded] 573ms
+[Session released] 80ms
+[RUN] 885/1000
+[Session created] provider=NOTTE id=2b832bf7-489c-4b3d-8b99-6a181b54409a 352ms
+[Browser connected] 114ms
+[Page loaded] 1238ms
+[Session released] 135ms
+[RUN] 886/1000
+[Session created] provider=NOTTE id=807f0335-eae9-489a-ac09-db2ac91079ae 297ms
+[Browser connected] 108ms
+[Page loaded] 472ms
+[Session released] 89ms
+[RUN] 887/1000
+[Session created] provider=NOTTE id=35d83529-4403-4a0b-91fb-2329ef8b240e 221ms
+[Browser connected] 105ms
+[Page loaded] 915ms
+[Session released] 108ms
+[RUN] 888/1000
+[Session created] provider=NOTTE id=98f42de3-c545-4469-8c10-7e7c3f5c54f9 267ms
+[Browser connected] 106ms
+[Page loaded] 552ms
+[Session released] 74ms
+[RUN] 889/1000
+[Session created] provider=NOTTE id=4ef092f8-c06a-4844-9775-46cfa4c5b5fb 225ms
+[Browser connected] 216ms
+[Page loaded] 473ms
+[Session released] 78ms
+[RUN] 890/1000
+[Session created] provider=NOTTE id=616c7a96-9cf1-4976-b2f3-8650a139bfa1 383ms
+[Browser connected] 114ms
+[Page loaded] 377ms
+[Session released] 207ms
+[RUN] 891/1000
+[Session created] provider=NOTTE id=e56edb74-da8f-4e0b-9dac-ec3748b6b7c6 237ms
+[Browser connected] 107ms
+[Page loaded] 516ms
+[Session released] 103ms
+[RUN] 892/1000
+[Session created] provider=NOTTE id=1010ce55-8a25-4372-baa0-c5dbf82ae139 269ms
+[Browser connected] 112ms
+[Page loaded] 405ms
+[Session released] 76ms
+[RUN] 893/1000
+[Session created] provider=NOTTE id=e103c2db-8848-497e-b0fe-ce7743aad344 288ms
+[Browser connected] 116ms
+[Page loaded] 749ms
+[Session released] 72ms
+[RUN] 894/1000
+[Session created] provider=NOTTE id=f3b8bc85-4056-4fba-8f14-f9cf369aa28b 316ms
+[Browser connected] 112ms
+[Page loaded] 450ms
+[Session released] 84ms
+[RUN] 895/1000
+[Session created] provider=NOTTE id=d7a7c83f-e0d9-454f-8dba-789a32ba5377 238ms
+[Browser connected] 105ms
+[Page loaded] 987ms
+[Session released] 71ms
+[RUN] 896/1000
+[Session created] provider=NOTTE id=62ce0d0f-5b56-4eb0-b4f8-05bb702c5255 247ms
+[Browser connected] 127ms
+[Page loaded] 543ms
+[Session released] 109ms
+[RUN] 897/1000
+[Session created] provider=NOTTE id=a070edb6-eaf6-4a8e-a105-472856c8c028 284ms
+[Browser connected] 108ms
+[Page loaded] 505ms
+[Session released] 67ms
+[RUN] 898/1000
+[Session created] provider=NOTTE id=c95a2c83-52ed-483d-b396-1e2ca45fffa9 259ms
+[Browser connected] 138ms
+[Page loaded] 518ms
+[Session released] 90ms
+[RUN] 899/1000
+[Session created] provider=NOTTE id=8e7fcef4-3140-4886-af43-ef8de17feaf0 292ms
+[Browser connected] 199ms
+[Page loaded] 516ms
+[Session released] 210ms
+[RUN] 900/1000
+[Session created] provider=NOTTE id=591add77-ab10-463d-b3d5-1b2d8a241335 222ms
+[Browser connected] 161ms
+[Page loaded] 574ms
+[Session released] 87ms
+[RUN] 901/1000
+[Session created] provider=NOTTE id=5743dffe-b6d8-49fa-8581-c093df5227c7 275ms
+[Browser connected] 110ms
+[Page loaded] 467ms
+[Session released] 80ms
+[RUN] 902/1000
+[Session created] provider=NOTTE id=b9f6bdfa-58d5-4e7a-9aad-dd0332868245 250ms
+[Browser connected] 223ms
+[Page loaded] 498ms
+[Session released] 68ms
+[RUN] 903/1000
+[Session created] provider=NOTTE id=7bef7cb6-056b-42a2-b07e-ef526f1e6dc5 288ms
+[Browser connected] 112ms
+[Page loaded] 530ms
+[Session released] 93ms
+[RUN] 904/1000
+[Session created] provider=NOTTE id=c92b61a1-2608-478d-8e79-6ba99ea260ce 214ms
+[Browser connected] 99ms
+[Page loaded] 597ms
+[Session released] 258ms
+[RUN] 905/1000
+[Session created] provider=NOTTE id=0c6cc35f-32d1-4a10-801f-0ca8a7b6193d 284ms
+[Browser connected] 110ms
+[Page loaded] 433ms
+[Session released] 83ms
+[RUN] 906/1000
+[Session created] provider=NOTTE id=3b7c82b8-4f46-4ae3-9748-038529a7b1cd 275ms
+[Browser connected] 129ms
+[Page loaded] 444ms
+[Session released] 88ms
+[RUN] 907/1000
+[Session created] provider=NOTTE id=e42b817f-9233-40e7-9ad8-4b31135ea5a8 248ms
+[Browser connected] 126ms
+[Page loaded] 470ms
+[Session released] 75ms
+[RUN] 908/1000
+[Session created] provider=NOTTE id=9deecc82-d75c-4a1e-97dd-76657310debe 253ms
+[Browser connected] 98ms
+[Page loaded] 488ms
+[Session released] 88ms
+[RUN] 909/1000
+[Session created] provider=NOTTE id=db0706aa-e6c8-4a45-a084-aad2c01fae49 230ms
+[Browser connected] 110ms
+[Page loaded] 534ms
+[Session released] 307ms
+[RUN] 910/1000
+[Session created] provider=NOTTE id=0278e163-f14b-45d0-91dd-f95516ca1304 260ms
+[Browser connected] 126ms
+[Page loaded] 573ms
+[Session released] 191ms
+[RUN] 911/1000
+[Session created] provider=NOTTE id=205f0e4e-584f-4cf0-917b-312ed049d7c0 286ms
+[Browser connected] 121ms
+[Page loaded] 531ms
+[Session released] 89ms
+[RUN] 912/1000
+[Session created] provider=NOTTE id=4a90aef3-b3d2-4f40-b72b-076e19c65086 258ms
+[Browser connected] 121ms
+[Page loaded] 462ms
+[Session released] 96ms
+[RUN] 913/1000
+[Session created] provider=NOTTE id=621882b6-09c0-41bb-948b-a867bcf88b97 228ms
+[Browser connected] 130ms
+[Page loaded] 500ms
+[Session released] 63ms
+[RUN] 914/1000
+[Session created] provider=NOTTE id=4cb63b36-ef35-4c80-8b83-990aeece39b1 249ms
+[Browser connected] 120ms
+[Page loaded] 492ms
+[Session released] 74ms
+[RUN] 915/1000
+[Session created] provider=NOTTE id=d9527be4-2db1-43d2-bf6c-7c0d9bedc408 261ms
+[Browser connected] 168ms
+[Page loaded] 486ms
+[Session released] 75ms
+[RUN] 916/1000
+[Session created] provider=NOTTE id=03f34888-740d-420a-8701-96971b0cd0c2 257ms
+[Browser connected] 99ms
+[Page loaded] 577ms
+[Session released] 59ms
+[RUN] 917/1000
+[Session created] provider=NOTTE id=b69c2cf2-21ce-47ca-b0c2-64f6a9e4293d 253ms
+[Browser connected] 152ms
+[Page loaded] 501ms
+[Session released] 79ms
+[RUN] 918/1000
+[Session created] provider=NOTTE id=3231f50f-24eb-49dd-8de2-aa50663346fd 305ms
+[Browser connected] 106ms
+[Page loaded] 586ms
+[Session released] 72ms
+[RUN] 919/1000
+[Session created] provider=NOTTE id=764cea3e-4bb1-4e5b-9c63-dee6cafafd96 257ms
+[Browser connected] 101ms
+[Page loaded] 524ms
+[Session released] 83ms
+[RUN] 920/1000
+[Session created] provider=NOTTE id=46f0d7e5-437a-4f0f-b537-56f4d75d704f 242ms
+[Browser connected] 118ms
+[Page loaded] 422ms
+[Session released] 70ms
+[RUN] 921/1000
+[Session created] provider=NOTTE id=23459075-8851-44f8-903e-2906195d853b 241ms
+[Browser connected] 107ms
+[Page loaded] 466ms
+[Session released] 223ms
+[RUN] 922/1000
+[Session created] provider=NOTTE id=ca96f0f3-3646-459c-9a23-2e2a74265eac 207ms
+[Browser connected] 109ms
+[Page loaded] 639ms
+[Session released] 138ms
+[RUN] 923/1000
+[Session created] provider=NOTTE id=9ca65738-8f0b-460f-8987-b66b9f8e6cea 254ms
+[Browser connected] 148ms
+[Page loaded] 497ms
+[Session released] 69ms
+[RUN] 924/1000
+[Session created] provider=NOTTE id=4a192980-54e5-461f-a740-807759fe7ae1 257ms
+[Browser connected] 164ms
+[Page loaded] 543ms
+[Session released] 109ms
+[RUN] 925/1000
+[Session created] provider=NOTTE id=4ad510de-7bb3-4bf1-85f5-97722e1624a3 275ms
+[Browser connected] 114ms
+[Page loaded] 521ms
+[Session released] 73ms
+[RUN] 926/1000
+[Session created] provider=NOTTE id=782fa07a-4052-4f36-ac2e-4ba591f38705 252ms
+[Browser connected] 102ms
+[Page loaded] 481ms
+[Session released] 147ms
+[RUN] 927/1000
+[Session created] provider=NOTTE id=d89ecd5c-ffa4-4865-a80c-3dd5d01e2c94 456ms
+[Browser connected] 177ms
+[Page loaded] 460ms
+[Session released] 65ms
+[RUN] 928/1000
+[Session created] provider=NOTTE id=98aa35b3-58b4-4510-8e1a-62b2b5be50eb 242ms
+[Browser connected] 111ms
+[Page loaded] 468ms
+[Session released] 92ms
+[RUN] 929/1000
+[Session created] provider=NOTTE id=f3ed2a56-b0a2-48a5-96e7-f0e528414479 257ms
+[Browser connected] 111ms
+[Page loaded] 495ms
+[Session released] 95ms
+[RUN] 930/1000
+[Session created] provider=NOTTE id=3d94e213-87a6-4d71-9106-b47ac7f2b50d 256ms
+[Browser connected] 164ms
+[Page loaded] 531ms
+[Session released] 66ms
+[RUN] 931/1000
+[Session created] provider=NOTTE id=2a124a71-4016-49b3-8701-91060dd1d896 292ms
+[Browser connected] 231ms
+[Page loaded] 611ms
+[Session released] 89ms
+[RUN] 932/1000
+[Session created] provider=NOTTE id=632c62c3-56b3-43a5-a22d-747e1ff594c0 249ms
+[Browser connected] 182ms
+[Page loaded] 496ms
+[Session released] 1085ms
+[RUN] 933/1000
+[Session created] provider=NOTTE id=fa1cd468-a868-4317-89ae-29da610bf1aa 192ms
+[Browser connected] 155ms
+[Page loaded] 557ms
+[Session released] 66ms
+[RUN] 934/1000
+[Session created] provider=NOTTE id=43bafc8b-b7ba-47db-9d6e-fc2e36530543 267ms
+[Browser connected] 152ms
+[Page loaded] 492ms
+[Session released] 73ms
+[RUN] 935/1000
+[Session created] provider=NOTTE id=23bd635a-b36e-4633-9c5f-8a32f16f008f 243ms
+[Browser connected] 127ms
+[Page loaded] 499ms
+[Session released] 98ms
+[RUN] 936/1000
+[Session created] provider=NOTTE id=ab7db593-f489-48a5-b449-a07c1fdeca4b 262ms
+[Browser connected] 156ms
+[Page loaded] 476ms
+[Session released] 92ms
+[RUN] 937/1000
+[Session created] provider=NOTTE id=97620f79-f382-44d4-a4a9-bc5ef6320779 214ms
+[Browser connected] 122ms
+[Page loaded] 436ms
+[Session released] 199ms
+[RUN] 938/1000
+[Session created] provider=NOTTE id=669df78b-9c52-41e2-a463-b318c8478b44 282ms
+[Browser connected] 112ms
+[Page loaded] 703ms
+[Session released] 72ms
+[RUN] 939/1000
+[Session created] provider=NOTTE id=5ae054a7-f7f5-4c99-b40c-f4f7e366eaad 821ms
+[Browser connected] 116ms
+[Page loaded] 563ms
+[Session released] 65ms
+[RUN] 940/1000
+[Session created] provider=NOTTE id=097ed28e-14d3-4875-a076-539a738a7c85 257ms
+[Browser connected] 118ms
+[Page loaded] 430ms
+[Session released] 93ms
+[RUN] 941/1000
+[Session created] provider=NOTTE id=5315ce60-7967-4c11-92be-bfef0e085b11 243ms
+[Browser connected] 102ms
+[Page loaded] 457ms
+[Session released] 105ms
+[RUN] 942/1000
+[Session created] provider=NOTTE id=a4e3bbde-198c-4ded-9f1d-84b6918da6ac 246ms
+[Browser connected] 115ms
+[Page loaded] 570ms
+[Session released] 177ms
+[RUN] 943/1000
+[Session created] provider=NOTTE id=09f9e474-46ec-4616-826e-9a0027b56ddb 286ms
+[Browser connected] 106ms
+[Page loaded] 575ms
+[Session released] 67ms
+[RUN] 944/1000
+[Session created] provider=NOTTE id=79f8493a-3bbd-4fbc-9d14-50e900ada649 252ms
+[Browser connected] 101ms
+[Page loaded] 543ms
+[Session released] 140ms
+[RUN] 945/1000
+[Session created] provider=NOTTE id=765abe2b-ac45-4fbc-a24f-30eda522e4ae 277ms
+[Browser connected] 112ms
+[Page loaded] 532ms
+[Session released] 69ms
+[RUN] 946/1000
+[Session created] provider=NOTTE id=f41c0baa-dcb0-4291-b461-344db5c79414 210ms
+[Browser connected] 162ms
+[Page loaded] 553ms
+[Session released] 66ms
+[RUN] 947/1000
+[Session created] provider=NOTTE id=8152e620-b210-46e8-9af9-8f050d720a94 262ms
+[Browser connected] 103ms
+[Page loaded] 529ms
+[Session released] 74ms
+[RUN] 948/1000
+[Session created] provider=NOTTE id=dda3d462-ff98-4011-82b1-c12594a5b06a 337ms
+[Browser connected] 148ms
+[Page loaded] 494ms
+[Session released] 84ms
+[RUN] 949/1000
+[Session created] provider=NOTTE id=53b729d0-15ea-42d7-8736-25c2958a29d7 213ms
+[Browser connected] 121ms
+[Page loaded] 555ms
+[Session released] 62ms
+[RUN] 950/1000
+[Session created] provider=NOTTE id=174563bb-4abf-4838-b84e-59faadc5fe79 291ms
+[Browser connected] 107ms
+[Page loaded] 436ms
+[Session released] 104ms
+[RUN] 951/1000
+[Session created] provider=NOTTE id=628331ca-5fa4-46cd-8bd1-646df51fa36d 217ms
+[Browser connected] 108ms
+[Page loaded] 592ms
+[Session released] 71ms
+[RUN] 952/1000
+[Session created] provider=NOTTE id=d56a7bc5-6d50-41c0-a9d6-3ac2ca31b3ec 263ms
+[Browser connected] 110ms
+[Page loaded] 421ms
+[Session released] 78ms
+[RUN] 953/1000
+[Session created] provider=NOTTE id=d10a5669-0c1d-4582-be8b-a24b5e0c2af3 244ms
+[Browser connected] 109ms
+[Page loaded] 402ms
+[Session released] 90ms
+[RUN] 954/1000
+[Session created] provider=NOTTE id=c32cbf9a-f20a-4e18-bc7a-30ab17897277 242ms
+[Browser connected] 111ms
+[Page loaded] 543ms
+[Session released] 124ms
+[RUN] 955/1000
+[Session created] provider=NOTTE id=3e0b7548-355b-446b-afb5-4863427ced3e 432ms
+[Browser connected] 125ms
+[Page loaded] 449ms
+[Session released] 97ms
+[RUN] 956/1000
+[Session created] provider=NOTTE id=327f21f1-c6e2-41bd-b666-1df01af671d4 249ms
+[Browser connected] 150ms
+[Page loaded] 446ms
+[Session released] 79ms
+[RUN] 957/1000
+[Session created] provider=NOTTE id=bfb2b54a-2888-4d1e-a4d2-91aea4d929ad 286ms
+[Browser connected] 154ms
+[Page loaded] 515ms
+[Session released] 103ms
+[RUN] 958/1000
+[Session created] provider=NOTTE id=5fbe6109-3ee2-435c-9cf0-0a8626fe6741 267ms
+[Browser connected] 126ms
+[Page loaded] 538ms
+[Session released] 107ms
+[RUN] 959/1000
+[Session created] provider=NOTTE id=56fd1678-fb2a-4490-9b29-ca5a77b47f93 224ms
+[Browser connected] 125ms
+[Page loaded] 475ms
+[Session released] 76ms
+[RUN] 960/1000
+[Session created] provider=NOTTE id=c4f8040f-cba3-49da-96d0-d94222d83dff 267ms
+[Browser connected] 136ms
+[Page loaded] 596ms
+[Session released] 77ms
+[RUN] 961/1000
+[Session created] provider=NOTTE id=3e7473a8-ddaf-4b88-aa5b-74cd4f225283 285ms
+[Browser connected] 107ms
+[Page loaded] 436ms
+[Session released] 87ms
+[RUN] 962/1000
+[Session created] provider=NOTTE id=c5e0cb0b-d8ee-4983-8343-ae2f69b3bced 310ms
+[Browser connected] 125ms
+[Page loaded] 452ms
+[Session released] 80ms
+[RUN] 963/1000
+[Session created] provider=NOTTE id=b4f0008e-cab2-4f96-9521-3abba99afe51 240ms
+[Browser connected] 143ms
+[Page loaded] 558ms
+[Session released] 77ms
+[RUN] 964/1000
+[Session created] provider=NOTTE id=9ae97b57-e1a0-4d3a-a195-b03e07b11915 205ms
+[Browser connected] 114ms
+[Page loaded] 518ms
+[Session released] 76ms
+[RUN] 965/1000
+[Session created] provider=NOTTE id=0f146352-99b1-4803-ab54-79ce186aaf4a 241ms
+[Browser connected] 103ms
+[Page loaded] 527ms
+[Session released] 65ms
+[RUN] 966/1000
+[Session created] provider=NOTTE id=99eb2e5e-c39e-4271-a33b-aaa7db2e4600 264ms
+[Browser connected] 155ms
+[Page loaded] 468ms
+[Session released] 230ms
+[RUN] 967/1000
+[Session created] provider=NOTTE id=fa887093-0c7a-4936-afaa-6f4bdf13c1d2 242ms
+[Browser connected] 113ms
+[Page loaded] 445ms
+[Session released] 87ms
+[RUN] 968/1000
+[Session created] provider=NOTTE id=cbc13f14-6f75-4423-a6b2-d66aceffc66e 307ms
+[Browser connected] 113ms
+[Page loaded] 430ms
+[Session released] 78ms
+[RUN] 969/1000
+[Session created] provider=NOTTE id=ba3f0483-b282-4b05-a210-5ae445baa92a 253ms
+[Browser connected] 112ms
+[Page loaded] 490ms
+[Session released] 103ms
+[RUN] 970/1000
+[Session created] provider=NOTTE id=08292357-b574-42c9-a65f-c2bf4a3b18f5 255ms
+[Browser connected] 143ms
+[Page loaded] 485ms
+[Session released] 74ms
+[RUN] 971/1000
+[Session created] provider=NOTTE id=f3a68217-596f-4b48-9c6a-7c9a4d90bbfa 306ms
+[Browser connected] 129ms
+[Page loaded] 540ms
+[Session released] 90ms
+[RUN] 972/1000
+[Session created] provider=NOTTE id=145c1230-9f66-4421-be94-8eb64efefc38 255ms
+[Browser connected] 166ms
+[Page loaded] 585ms
+[Session released] 68ms
+[RUN] 973/1000
+[Session created] provider=NOTTE id=68e3df9f-aa7c-455b-9265-3bad7a197578 263ms
+[Browser connected] 150ms
+[Page loaded] 515ms
+[Session released] 67ms
+[RUN] 974/1000
+[Session created] provider=NOTTE id=b9892670-f273-4ce5-a99b-e2a479cc26c0 241ms
+[Browser connected] 106ms
+[Page loaded] 492ms
+[Session released] 74ms
+[RUN] 975/1000
+[Session created] provider=NOTTE id=d2c1f00d-5ec3-4bff-a0cc-0911c185aa46 209ms
+[Browser connected] 118ms
+[Page loaded] 570ms
+[Session released] 70ms
+[RUN] 976/1000
+[Session created] provider=NOTTE id=2bffa6e0-7342-425c-a9df-dda6f4bcf154 250ms
+[Browser connected] 123ms
+[Page loaded] 474ms
+[Session released] 82ms
+[RUN] 977/1000
+[Session created] provider=NOTTE id=c07c157a-4fba-403b-ba98-c0ea585c2265 208ms
+[Browser connected] 101ms
+[Page loaded] 437ms
+[Session released] 70ms
+[RUN] 978/1000
+[Session created] provider=NOTTE id=90817525-969f-49f1-812a-f5a4226dafaf 253ms
+[Browser connected] 119ms
+[Page loaded] 523ms
+[Session released] 83ms
+[RUN] 979/1000
+[Session created] provider=NOTTE id=703d5925-34ff-461b-8036-75d10930de9c 263ms
+[Browser connected] 155ms
+[Page loaded] 851ms
+[Session released] 86ms
+[RUN] 980/1000
+[Session created] provider=NOTTE id=fe8db1f6-c039-4bb4-b6b5-ca7d0db40758 238ms
+[Browser connected] 154ms
+[Page loaded] 460ms
+[Session released] 78ms
+[RUN] 981/1000
+[Session created] provider=NOTTE id=1f8d104a-c0b0-4ef0-9b3f-cfaea45b1ca7 245ms
+[Browser connected] 134ms
+[Page loaded] 491ms
+[Session released] 65ms
+[RUN] 982/1000
+[Session created] provider=NOTTE id=1ae66724-348e-4291-b2b6-0b109d04fcb2 232ms
+[Browser connected] 169ms
+[Page loaded] 613ms
+[Session released] 70ms
+[RUN] 983/1000
+[Session created] provider=NOTTE id=3bf1e6a5-9fc9-44e5-aaa4-b1482a5efeb7 245ms
+[Browser connected] 179ms
+[Page loaded] 459ms
+[Session released] 115ms
+[RUN] 984/1000
+[Session created] provider=NOTTE id=767a521c-8249-4766-9f68-a846e36a67b6 276ms
+[Browser connected] 126ms
+[Page loaded] 482ms
+[Session released] 74ms
+[RUN] 985/1000
+[Session created] provider=NOTTE id=aced3bb9-1ada-4264-a8c6-197c0b102653 262ms
+[Browser connected] 162ms
+[Page loaded] 529ms
+[Session released] 106ms
+[RUN] 986/1000
+[Session created] provider=NOTTE id=749db6cb-c334-425e-b97e-5a511037c1d4 320ms
+[Browser connected] 109ms
+[Page loaded] 719ms
+[Session released] 87ms
+[RUN] 987/1000
+[Session created] provider=NOTTE id=1ae49db1-3424-4eec-8320-a07575eff559 241ms
+[Browser connected] 118ms
+[Page loaded] 458ms
+[Session released] 78ms
+[RUN] 988/1000
+[Session created] provider=NOTTE id=efff8df4-aebb-48f5-a2d4-fb700c8d07ca 309ms
+[Browser connected] 162ms
+[Page loaded] 883ms
+[Session released] 148ms
+[RUN] 989/1000
+[Session created] provider=NOTTE id=2226be0a-b3cf-46ae-b5c8-e4823679ddfb 242ms
+[Browser connected] 122ms
+[Page loaded] 480ms
+[Session released] 89ms
+[RUN] 990/1000
+[Session created] provider=NOTTE id=8f561930-ec67-47e0-97ab-33469170c6f0 240ms
+[Browser connected] 99ms
+[Page loaded] 504ms
+[Session released] 88ms
+[RUN] 991/1000
+[Session created] provider=NOTTE id=45a10c6a-ed70-4389-9ad2-10813de83149 293ms
+[Browser connected] 131ms
+[Page loaded] 589ms
+[Session released] 72ms
+[RUN] 992/1000
+[Session created] provider=NOTTE id=6b2fb8d6-e13d-49ca-8f7f-6927e97d504b 275ms
+[Browser connected] 102ms
+[Page loaded] 418ms
+[Session released] 87ms
+[RUN] 993/1000
+[Session created] provider=NOTTE id=9f8e66fe-946a-495d-ae16-c4984f3e5750 206ms
+[Browser connected] 121ms
+[Page loaded] 474ms
+[Session released] 85ms
+[RUN] 994/1000
+[Session created] provider=NOTTE id=6b6a42be-f600-45bc-84b9-560e1c87bdec 259ms
+[Browser connected] 110ms
+[Page loaded] 498ms
+[Session released] 297ms
+[RUN] 995/1000
+[Session created] provider=NOTTE id=8d50fbc9-147e-4299-bfa9-657f0ad01ee0 304ms
+[Browser connected] 124ms
+[Page loaded] 506ms
+[Session released] 72ms
+[RUN] 996/1000
+[Session created] provider=NOTTE id=30ae02c9-7ba6-4142-902c-0a81f2597a35 296ms
+[Browser connected] 132ms
+[Page loaded] 464ms
+[Session released] 86ms
+[RUN] 997/1000
+[Session created] provider=NOTTE id=be20423f-b0b6-4a4c-b3f6-b3e2e6687e97 264ms
+[Browser connected] 103ms
+[Page loaded] 538ms
+[Session released] 73ms
+[RUN] 998/1000
+[Session created] provider=NOTTE id=71a7a6e0-44ff-4635-b288-0c4106d63952 303ms
+[Browser connected] 121ms
+[Page loaded] 489ms
+[Session released] 92ms
+[RUN] 999/1000
+[Session created] provider=NOTTE id=0e38fb4c-cc65-4abf-9814-eaee39c8b487 241ms
+[Browser connected] 123ms
+[Page loaded] 489ms
+[Session released] 76ms
+[RUN] 1000/1000
+[Session created] provider=NOTTE id=34401824-f157-4a49-bda3-2d8847bd7b62 253ms
+[Browser connected] 96ms
+[Page loaded] 509ms
+[Session released] 537ms

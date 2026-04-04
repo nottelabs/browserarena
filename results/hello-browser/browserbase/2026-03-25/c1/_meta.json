@@ -1,0 +1,9 @@
+{
+  "region": "us-west-1",
+  "instance_type": "t3.micro",
+  "cloud": "aws",
+  "os": "linux x64",
+  "node_version": "v18.20.8",
+  "started_at": "2026-03-25T15:10:39.313Z",
+  "finished_at": "2026-03-25T16:01:13.092Z"
+}

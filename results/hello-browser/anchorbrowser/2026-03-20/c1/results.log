@@ -1,0 +1,1055 @@
+[LOG] Saving logs to results/hello-browser/anchorbrowser/2026-03-20/results.log
+
+NOTE:We only ran 200 runs to complete the previous run of 800.
+
+[CONFIG] provider=ANCHORBROWSER runs=200
+[WARMUP] 1/10
+[Session created] provider=ANCHORBROWSER id=74922ac9-5fa8-48eb-83a3-96d5d0186a2a 1524ms
+[Browser connected] 195ms
+[Page loaded] 765ms
+[Session released] 821ms
+[WARMUP] 2/10
+[Session created] provider=ANCHORBROWSER id=2cd12bef-82d0-4910-89a0-2f2ed52f924a 1598ms
+[Browser connected] 170ms
+[Page loaded] 835ms
+[Session released] 977ms
+[WARMUP] 3/10
+[Session created] provider=ANCHORBROWSER id=d9615261-0123-4e27-8281-dac4aa04dc4b 1386ms
+[Browser connected] 145ms
+[Page loaded] 852ms
+[Session released] 725ms
+[WARMUP] 4/10
+[Session created] provider=ANCHORBROWSER id=6b1b65e8-1084-49ff-9e07-a9f7d0ca69c6 1405ms
+[Browser connected] 149ms
+[Page loaded] 824ms
+[Session released] 842ms
+[WARMUP] 5/10
+[Session created] provider=ANCHORBROWSER id=86b13784-8a43-4ddd-b160-d0d007ec585c 1361ms
+[Browser connected] 166ms
+[Page loaded] 773ms
+[Session released] 850ms
+[WARMUP] 6/10
+[Session created] provider=ANCHORBROWSER id=27c17b4f-8376-4d1a-a1d7-7340ce93231c 1429ms
+[Browser connected] 189ms
+[Page loaded] 710ms
+[Session released] 1047ms
+[WARMUP] 7/10
+[Session created] provider=ANCHORBROWSER id=56e681dc-0b10-4ad0-8619-63c1b451861f 1337ms
+[Browser connected] 128ms
+[Page loaded] 668ms
+[Session released] 848ms
+[WARMUP] 8/10
+[Session created] provider=ANCHORBROWSER id=635306f6-4e21-4805-9450-425b7189025c 1306ms
+[Browser connected] 158ms
+[Page loaded] 740ms
+[Session released] 887ms
+[WARMUP] 9/10
+[Session created] provider=ANCHORBROWSER id=9fe0efc1-5cde-4368-8266-78521619c566 1340ms
+[Browser connected] 139ms
+[Page loaded] 687ms
+[Session released] 887ms
+[WARMUP] 10/10
+[Session created] provider=ANCHORBROWSER id=2f59a5fe-d135-4c38-933b-c55edc9a2e73 1321ms
+[Browser connected] 139ms
+[Page loaded] 794ms
+[Session released] 711ms
+[RUN] 1/200
+[Session created] provider=ANCHORBROWSER id=6eb81919-556b-49f8-b8fb-2a57f05d82a7 1676ms
+[Browser connected] 139ms
+[Page loaded] 838ms
+[Session released] 866ms
+[RUN] 2/200
+[Session created] provider=ANCHORBROWSER id=0684778f-e5d3-46c3-8a3c-7fed9fa69b71 1318ms
+[Browser connected] 131ms
+[Page loaded] 777ms
+[Session released] 742ms
+[RUN] 3/200
+[Session created] provider=ANCHORBROWSER id=bad52340-9c92-4399-9c10-140a77a818fe 1325ms
+[Browser connected] 150ms
+[Page loaded] 741ms
+[Session released] 804ms
+[RUN] 4/200
+[Session created] provider=ANCHORBROWSER id=5ca00334-b43c-4515-8f3d-08fbea0e2a99 1409ms
+[Browser connected] 146ms
+[Page loaded] 681ms
+[Session released] 899ms
+[RUN] 5/200
+[Session created] provider=ANCHORBROWSER id=148fe21e-7eb7-4cc4-b8d1-43eb41532cd1 1394ms
+[Browser connected] 158ms
+[Page loaded] 760ms
+[Session released] 790ms
+[RUN] 6/200
+[Session created] provider=ANCHORBROWSER id=9c506bb1-f641-4db4-a039-efc7b8c9ecce 1492ms
+[Browser connected] 161ms
+[Page loaded] 659ms
+[Session released] 835ms
+[RUN] 7/200
+[Session created] provider=ANCHORBROWSER id=3572a6c4-4879-4546-b3ed-af71c3e9bbfe 1493ms
+[Browser connected] 156ms
+[Page loaded] 763ms
+[Session released] 823ms
+[RUN] 8/200
+[Session created] provider=ANCHORBROWSER id=8270497d-cef9-43a3-a50d-a0d8627918d6 1335ms
+[Browser connected] 170ms
+[Page loaded] 729ms
+[Session released] 739ms
+[RUN] 9/200
+[Session created] provider=ANCHORBROWSER id=b0328f31-ed93-47af-86f0-26ac53e43e4a 1509ms
+[Browser connected] 154ms
+[Page loaded] 888ms
+[Session released] 861ms
+[RUN] 10/200
+[Session created] provider=ANCHORBROWSER id=583fd015-0415-49ac-bf55-bae029d0d425 2404ms
+[Browser connected] 267ms
+[Page loaded] 1209ms
+[Session released] 1027ms
+[RUN] 11/200
+[Session created] provider=ANCHORBROWSER id=3aee5e42-6f73-4579-92a2-d0fbf3912af4 2021ms
+[Browser connected] 293ms
+[Page loaded] 1375ms
+[Session released] 1409ms
+[RUN] 12/200
+[Session created] provider=ANCHORBROWSER id=6ea227c2-2fbe-4858-baa5-2d4004ffd82b 1356ms
+[Browser connected] 143ms
+[Page loaded] 652ms
+[Session released] 915ms
+[RUN] 13/200
+[Session created] provider=ANCHORBROWSER id=89cb24a8-d757-4394-ac91-6ff942902cf1 1378ms
+[Browser connected] 137ms
+[Page loaded] 677ms
+[Session released] 881ms
+[RUN] 14/200
+[Session created] provider=ANCHORBROWSER id=d4605835-9ab5-4fd5-9097-535e02efc727 1389ms
+[Browser connected] 120ms
+[Page loaded] 846ms
+[Session released] 730ms
+[RUN] 15/200
+[Session created] provider=ANCHORBROWSER id=e26fd9d3-6733-4556-8345-b7a488f9e40f 1283ms
+[Browser connected] 128ms
+[Page loaded] 807ms
+[Session released] 739ms
+[RUN] 16/200
+[Session created] provider=ANCHORBROWSER id=b2739488-8d46-40f2-a13c-d5dddaca3e8b 1363ms
+[Browser connected] 119ms
+[Page loaded] 765ms
+[Session released] 748ms
+[RUN] 17/200
+[Session created] provider=ANCHORBROWSER id=fa7ba4dc-dcb4-48f8-8638-5c1d0055da1f 1287ms
+[Browser connected] 149ms
+[Page loaded] 659ms
+[Session released] 822ms
+[RUN] 18/200
+[Session created] provider=ANCHORBROWSER id=5c95c754-7d5f-4b98-836f-2ca08e714612 1384ms
+[Browser connected] 135ms
+[Page loaded] 682ms
+[Session released] 790ms
+[RUN] 19/200
+[Session created] provider=ANCHORBROWSER id=b3d15cab-3d23-4e83-a872-1dcf1c8c8cc2 1295ms
+[Browser connected] 133ms
+[Page loaded] 799ms
+[Session released] 746ms
+[RUN] 20/200
+[Session created] provider=ANCHORBROWSER id=6a1bfdff-adf1-4d90-9e24-562a8df90440 1430ms
+[Browser connected] 179ms
+[Page loaded] 741ms
+[Session released] 749ms
+[RUN] 21/200
+[Session created] provider=ANCHORBROWSER id=33d8c0be-89ac-4d04-8cc0-cf35df8a95cb 1482ms
+[Browser connected] 135ms
+[Page loaded] 780ms
+[Session released] 805ms
+[RUN] 22/200
+[Session created] provider=ANCHORBROWSER id=5c2b966b-c479-480f-b9a1-2f358846481e 1471ms
+[Browser connected] 149ms
+[Page loaded] 787ms
+[Session released] 814ms
+[RUN] 23/200
+[Session created] provider=ANCHORBROWSER id=f3bfa786-e4b3-4256-8416-6da2a1c1e372 1437ms
+[Browser connected] 158ms
+[Page loaded] 673ms
+[Session released] 871ms
+[RUN] 24/200
+[Session created] provider=ANCHORBROWSER id=c1d9a58a-ab9d-48cf-80b5-5682416fbf86 1387ms
+[Browser connected] 141ms
+[Page loaded] 674ms
+[Session released] 766ms
+[RUN] 25/200
+[Session created] provider=ANCHORBROWSER id=e3efab86-51b5-4e19-b6a9-165f60ff1860 1327ms
+[Browser connected] 127ms
+[Page loaded] 835ms
+[Session released] 901ms
+[RUN] 26/200
+[Session created] provider=ANCHORBROWSER id=710988f5-4ddc-49ae-9852-63028e89ecaa 1453ms
+[Browser connected] 170ms
+[Page loaded] 852ms
+[Session released] 829ms
+[RUN] 27/200
+[Session created] provider=ANCHORBROWSER id=5075ac21-6e4e-45f8-81b3-8edb20e693c7 1346ms
+[Browser connected] 123ms
+[Page loaded] 937ms
+[Session released] 854ms
+[RUN] 28/200
+[Session created] provider=ANCHORBROWSER id=68106b83-93e2-42af-8b01-c4eaaf6f0eb9 1378ms
+[Browser connected] 172ms
+[Page loaded] 718ms
+[Session released] 763ms
+[RUN] 29/200
+[Session created] provider=ANCHORBROWSER id=41768fce-993f-425d-9a64-ee46ff99406e 1489ms
+[Browser connected] 199ms
+[Page loaded] 866ms
+[Session released] 826ms
+[RUN] 30/200
+[Session created] provider=ANCHORBROWSER id=b1848433-dcf1-4bd1-abcf-530228121aae 1518ms
+[Browser connected] 125ms
+[Page loaded] 687ms
+[Session released] 899ms
+[RUN] 31/200
+[Session created] provider=ANCHORBROWSER id=01fa63d1-b6b3-4917-a88d-d33a991390bc 1494ms
+[Browser connected] 119ms
+[Page loaded] 646ms
+[Session released] 700ms
+[RUN] 32/200
+[Session created] provider=ANCHORBROWSER id=1726b8e8-2298-4bf0-8f80-9bff37c9cf3b 1378ms
+[Browser connected] 126ms
+[Page loaded] 681ms
+[Session released] 705ms
+[RUN] 33/200
+[Session created] provider=ANCHORBROWSER id=816d80b7-373d-40eb-849c-1c75ef6c01bc 1300ms
+[Browser connected] 159ms
+[Page loaded] 727ms
+[Session released] 833ms
+[RUN] 34/200
+[Session created] provider=ANCHORBROWSER id=782fd493-7c7b-4606-a0c5-ea4ed2656a24 1499ms
+[Browser connected] 146ms
+[Page loaded] 674ms
+[Session released] 779ms
+[RUN] 35/200
+[Session created] provider=ANCHORBROWSER id=c5527528-9bb0-4f37-998a-c59b2820afbe 1403ms
+[Browser connected] 129ms
+[Page loaded] 711ms
+[Session released] 746ms
+[RUN] 36/200
+[Session created] provider=ANCHORBROWSER id=c325c1ae-feae-4878-b433-fc47eeff647a 1328ms
+[Browser connected] 164ms
+[Page loaded] 1053ms
+[Session released] 801ms
+[RUN] 37/200
+[Session created] provider=ANCHORBROWSER id=d665ea20-92c8-402c-95ee-dda28e129c62 1384ms
+[Browser connected] 162ms
+[Page loaded] 864ms
+[Session released] 814ms
+[RUN] 38/200
+[Session created] provider=ANCHORBROWSER id=ccbb0cd6-bca0-47cf-863d-2b37700d39f5 1253ms
+[Browser connected] 137ms
+[Page loaded] 612ms
+[Session released] 743ms
+[RUN] 39/200
+[Session created] provider=ANCHORBROWSER id=85266137-b824-4101-b294-3256168cdcce 1551ms
+[Browser connected] 158ms
+[Page loaded] 776ms
+[Session released] 771ms
+[RUN] 40/200
+[Session created] provider=ANCHORBROWSER id=4660f34b-a4af-41f8-b9c7-af81c1097e4c 1523ms
+[Browser connected] 161ms
+[Page loaded] 835ms
+[Session released] 951ms
+[RUN] 41/200
+[Session created] provider=ANCHORBROWSER id=54b8268d-6314-4d5c-8656-ad50c4d295aa 1409ms
+[Browser connected] 183ms
+[Page loaded] 809ms
+[Session released] 812ms
+[RUN] 42/200
+[Session created] provider=ANCHORBROWSER id=18274c6b-e06b-4f5e-bfaf-ae5b79312d93 1532ms
+[Browser connected] 170ms
+[Page loaded] 774ms
+[Session released] 1047ms
+[RUN] 43/200
+[Session created] provider=ANCHORBROWSER id=f237894a-8147-49bb-9368-2635d76a4a89 1362ms
+[Browser connected] 123ms
+[Page loaded] 713ms
+[Session released] 964ms
+[RUN] 44/200
+[Session created] provider=ANCHORBROWSER id=dd094131-6d1a-4dad-a2aa-5a4eb9e05b5e 1330ms
+[Browser connected] 125ms
+[Page loaded] 656ms
+[Session released] 796ms
+[RUN] 45/200
+[Session created] provider=ANCHORBROWSER id=01190733-7858-4daa-a47f-59dc022bd8c1 1450ms
+[Browser connected] 126ms
+[Page loaded] 805ms
+[Session released] 752ms
+[RUN] 46/200
+[Session created] provider=ANCHORBROWSER id=4aaff9b7-8a2b-45b5-a419-d6306ae2f7f1 1665ms
+[Browser connected] 231ms
+[Page loaded] 1143ms
+[Session released] 895ms
+[RUN] 47/200
+[Session created] provider=ANCHORBROWSER id=5b12dc59-e641-40d9-9b5d-b0dc24e36572 1275ms
+[Browser connected] 130ms
+[Page loaded] 662ms
+[Session released] 776ms
+[RUN] 48/200
+[Session created] provider=ANCHORBROWSER id=191bcd7c-1125-44da-8cec-e4ce12be71da 1597ms
+[Browser connected] 178ms
+[Page loaded] 1061ms
+[Session released] 1047ms
+[RUN] 49/200
+[Session created] provider=ANCHORBROWSER id=77fd1af7-2902-4f73-bd45-5875c59f670a 1445ms
+[Browser connected] 184ms
+[Page loaded] 838ms
+[Session released] 826ms
+[RUN] 50/200
+[Session created] provider=ANCHORBROWSER id=b31514aa-dc84-48a2-bed7-58207bf7ee0d 1687ms
+[Browser connected] 136ms
+[Page loaded] 960ms
+[Session released] 841ms
+[RUN] 51/200
+[Session created] provider=ANCHORBROWSER id=d66f41d3-5ac9-47bf-b68d-70abe5bd3975 1375ms
+[Browser connected] 132ms
+[Page loaded] 647ms
+[Session released] 689ms
+[RUN] 52/200
+[Session created] provider=ANCHORBROWSER id=09930145-4274-49cc-917c-ce88ef3c70f3 1388ms
+[Browser connected] 132ms
+[Page loaded] 850ms
+[Session released] 730ms
+[RUN] 53/200
+[Session created] provider=ANCHORBROWSER id=68df37a9-eb11-4776-a884-6c4cf17da99a 1382ms
+[Browser connected] 133ms
+[Page loaded] 696ms
+[Session released] 769ms
+[RUN] 54/200
+[Session created] provider=ANCHORBROWSER id=203f722f-f78c-42e1-aec6-8323e90928a2 1244ms
+[Browser connected] 135ms
+[Page loaded] 639ms
+[Session released] 676ms
+[RUN] 55/200
+[Session created] provider=ANCHORBROWSER id=94eb302b-fa97-470d-ad78-f434abee4bb8 1257ms
+[Browser connected] 138ms
+[Page loaded] 660ms
+[Session released] 681ms
+[RUN] 56/200
+[Session created] provider=ANCHORBROWSER id=60c8ff29-eecd-4f72-aadb-e61786fbd244 1304ms
+[Browser connected] 146ms
+[Page loaded] 653ms
+[Session released] 777ms
+[RUN] 57/200
+[Session created] provider=ANCHORBROWSER id=cc6a8e5b-41f3-4fee-baf7-7d56c6f00dc0 1562ms
+[Browser connected] 149ms
+[Page loaded] 803ms
+[Session released] 957ms
+[RUN] 58/200
+[Session created] provider=ANCHORBROWSER id=93557dcb-e90b-447a-b03b-ef31d0e95fba 1280ms
+[Browser connected] 152ms
+[Page loaded] 666ms
+[Session released] 680ms
+[RUN] 59/200
+[Session created] provider=ANCHORBROWSER id=66ca7bed-dcf3-443c-927d-9ebcf43c46f7 1351ms
+[Browser connected] 165ms
+[Page loaded] 801ms
+[Session released] 810ms
+[RUN] 60/200
+[Session created] provider=ANCHORBROWSER id=25164042-b41d-43bc-866d-657a25cdc821 1603ms
+[Browser connected] 198ms
+[Page loaded] 837ms
+[Session released] 964ms
+[RUN] 61/200
+[Session created] provider=ANCHORBROWSER id=9fd78c58-e8fd-43ea-87ee-fa47ac54d695 1340ms
+[Browser connected] 152ms
+[Page loaded] 699ms
+[Session released] 949ms
+[RUN] 62/200
+[Session created] provider=ANCHORBROWSER id=84a319fb-950f-45c2-b99c-2ea57df58635 1408ms
+[Browser connected] 114ms
+[Page loaded] 731ms
+[Session released] 953ms
+[RUN] 63/200
+[Session created] provider=ANCHORBROWSER id=9bbd47d0-7284-4aec-a7ea-cbe36f6e1190 1302ms
+[Browser connected] 140ms
+[Page loaded] 879ms
+[Session released] 745ms
+[RUN] 64/200
+[Session created] provider=ANCHORBROWSER id=b84fcb65-d5a6-42f1-802a-27619947a819 1309ms
+[Browser connected] 146ms
+[Page loaded] 857ms
+[Session released] 684ms
+[RUN] 65/200
+[Session created] provider=ANCHORBROWSER id=3e98c5b0-4fd3-4f14-892b-75c2be76b5b1 1315ms
+[Browser connected] 152ms
+[Page loaded] 760ms
+[Session released] 824ms
+[RUN] 66/200
+[Session created] provider=ANCHORBROWSER id=e6af18e1-1751-4908-b054-69ba2374a2c4 1240ms
+[Browser connected] 151ms
+[Page loaded] 641ms
+[Session released] 708ms
+[RUN] 67/200
+[Session created] provider=ANCHORBROWSER id=6a5d6a9f-799d-496d-a3e9-b5c81e451451 1296ms
+[Browser connected] 127ms
+[Page loaded] 652ms
+[Session released] 847ms
+[RUN] 68/200
+[Session created] provider=ANCHORBROWSER id=f1b9595b-d863-4363-9223-b1f836a4e316 1317ms
+[Browser connected] 144ms
+[Page loaded] 772ms
+[Session released] 749ms
+[RUN] 69/200
+[Session created] provider=ANCHORBROWSER id=2e6081ba-e799-476b-bd9c-f08f4064d8b3 1438ms
+[Browser connected] 128ms
+[Page loaded] 829ms
+[Session released] 747ms
+[RUN] 70/200
+[Session created] provider=ANCHORBROWSER id=43ec2880-ca91-4c8b-95a2-720054a24ce2 1447ms
+[Browser connected] 122ms
+[Page loaded] 798ms
+[Session released] 771ms
+[RUN] 71/200
+[Session created] provider=ANCHORBROWSER id=c527f61f-45c9-4d1f-a4a5-81d5309f6f16 1355ms
+[Browser connected] 168ms
+[Page loaded] 794ms
+[Session released] 910ms
+[RUN] 72/200
+[Session created] provider=ANCHORBROWSER id=3970d80d-8935-43bb-a26a-1a3c4e8e506c 1335ms
+[Browser connected] 133ms
+[Page loaded] 645ms
+[Session released] 827ms
+[RUN] 73/200
+[Session created] provider=ANCHORBROWSER id=cbcbdf42-3a5b-4471-ae98-43e79b6b48f0 1563ms
+[Browser connected] 137ms
+[Page loaded] 952ms
+[Session released] 822ms
+[RUN] 74/200
+[Session created] provider=ANCHORBROWSER id=2e629a56-6696-4327-86a6-2f5da8bf0ac1 1332ms
+[Browser connected] 124ms
+[Page loaded] 846ms
+[Session released] 797ms
+[RUN] 75/200
+[Session created] provider=ANCHORBROWSER id=75c8bb2d-285e-4680-a6fc-26cf5ae6bcbc 1435ms
+[Browser connected] 131ms
+[Page loaded] 963ms
+[Session released] 774ms
+[RUN] 76/200
+[Session created] provider=ANCHORBROWSER id=ffc84874-aac8-4d0e-882f-56bbb3adc583 1631ms
+[Browser connected] 141ms
+[Page loaded] 777ms
+[Session released] 788ms
+[RUN] 77/200
+[Session created] provider=ANCHORBROWSER id=26d6b391-68e4-4c93-953c-cfc3d6f57a9a 1316ms
+[Browser connected] 112ms
+[Page loaded] 765ms
+[Session released] 752ms
+[RUN] 78/200
+[Session created] provider=ANCHORBROWSER id=74cd3881-0ff7-4a3a-a3e4-a6ebf3b80246 1532ms
+[Browser connected] 173ms
+[Page loaded] 751ms
+[Session released] 761ms
+[RUN] 79/200
+[Session created] provider=ANCHORBROWSER id=6012e859-3d26-48b7-9071-e2f0893843f1 1430ms
+[Browser connected] 155ms
+[Page loaded] 914ms
+[Session released] 1018ms
+[RUN] 80/200
+[Session created] provider=ANCHORBROWSER id=cecec892-ada6-48d4-bb6a-0318aa4521c4 1338ms
+[Browser connected] 141ms
+[Page loaded] 693ms
+[Session released] 816ms
+[RUN] 81/200
+[Session created] provider=ANCHORBROWSER id=783282e9-0a2f-4fd0-b963-a74cd852a420 1356ms
+[Browser connected] 133ms
+[Page loaded] 854ms
+[Session released] 853ms
+[RUN] 82/200
+[Session created] provider=ANCHORBROWSER id=dcbfe74c-89bd-41a1-ba59-f771b4e63368 1463ms
+[Browser connected] 160ms
+[Page loaded] 672ms
+[Session released] 873ms
+[RUN] 83/200
+[Session created] provider=ANCHORBROWSER id=c10d4f16-54fb-46b2-9d44-a6475ea80ca2 1419ms
+[Browser connected] 137ms
+[Page loaded] 666ms
+[Session released] 834ms
+[RUN] 84/200
+[Session created] provider=ANCHORBROWSER id=1bbf85a0-3b76-4b27-9cda-d56d3e6e204f 1296ms
+[Browser connected] 149ms
+[Page loaded] 607ms
+[Session released] 671ms
+[RUN] 85/200
+[Session created] provider=ANCHORBROWSER id=df855993-c5ce-4713-b5e4-163a8cedb05f 1425ms
+[Browser connected] 165ms
+[Page loaded] 826ms
+[Session released] 880ms
+[RUN] 86/200
+[Session created] provider=ANCHORBROWSER id=c1b55292-0b55-49db-b6b8-49ca1e20de76 1215ms
+[Browser connected] 122ms
+[Page loaded] 615ms
+[Session released] 725ms
+[RUN] 87/200
+[Session created] provider=ANCHORBROWSER id=e5ae3a73-e439-401a-b231-bb192ddebc43 1346ms
+[Browser connected] 126ms
+[Page loaded] 743ms
+[Session released] 761ms
+[RUN] 88/200
+[Session created] provider=ANCHORBROWSER id=2008bded-ddce-45e0-a56f-27fe1988d6fe 1345ms
+[Browser connected] 135ms
+[Page loaded] 805ms
+[Session released] 780ms
+[RUN] 89/200
+[Session created] provider=ANCHORBROWSER id=9f4e64ec-ebab-4d37-a35f-a07527cec292 1374ms
+[Browser connected] 109ms
+[Page loaded] 899ms
+[Session released] 787ms
+[RUN] 90/200
+[Session created] provider=ANCHORBROWSER id=4de3e44b-b446-412c-9ed0-f321d1110215 1366ms
+[Browser connected] 159ms
+[Page loaded] 753ms
+[Session released] 973ms
+[RUN] 91/200
+[Session created] provider=ANCHORBROWSER id=8b33dbec-ed23-4cb5-b574-a5395590f459 1406ms
+[Browser connected] 148ms
+[Page loaded] 1096ms
+[Session released] 1003ms
+[RUN] 92/200
+[Session created] provider=ANCHORBROWSER id=e9e7bcb4-e242-46f0-84ec-55207c94366a 1808ms
+[Browser connected] 214ms
+[Page loaded] 1212ms
+[Session released] 1009ms
+[RUN] 93/200
+[Session created] provider=ANCHORBROWSER id=827996ad-d0c0-4403-b255-e973558c75c6 1251ms
+[Browser connected] 131ms
+[Page loaded] 778ms
+[Session released] 702ms
+[RUN] 94/200
+[Session created] provider=ANCHORBROWSER id=05c893a2-f5df-4b7d-856c-8e1a03cf2bf8 1422ms
+[Browser connected] 163ms
+[Page loaded] 712ms
+[Session released] 765ms
+[RUN] 95/200
+[Session created] provider=ANCHORBROWSER id=e3be611f-6be5-406f-b94c-9c307721365d 1479ms
+[Browser connected] 120ms
+[Page loaded] 617ms
+[Session released] 782ms
+[RUN] 96/200
+[Session created] provider=ANCHORBROWSER id=07def1e2-60b0-44d1-b4de-864f7d8a7829 1363ms
+[Browser connected] 128ms
+[Page loaded] 813ms
+[Session released] 772ms
+[RUN] 97/200
+[Session created] provider=ANCHORBROWSER id=706a3102-3131-4548-a4df-96aa49fb7462 1342ms
+[Browser connected] 143ms
+[Page loaded] 744ms
+[Session released] 852ms
+[RUN] 98/200
+[Session created] provider=ANCHORBROWSER id=97386bcf-5136-492a-9156-b4e4eaf93e27 1270ms
+[Browser connected] 130ms
+[Page loaded] 627ms
+[Session released] 765ms
+[RUN] 99/200
+[Session created] provider=ANCHORBROWSER id=b4c9655c-5da8-4fde-a360-0e5656128a04 1374ms
+[Browser connected] 178ms
+[Page loaded] 718ms
+[Session released] 765ms
+[RUN] 100/200
+[Session created] provider=ANCHORBROWSER id=ea0add72-5d90-40d8-8487-08c0710a0ab9 1412ms
+[Browser connected] 152ms
+[Page loaded] 702ms
+[Session released] 838ms
+[RUN] 101/200
+[Session created] provider=ANCHORBROWSER id=0f51779d-cf06-4b80-a3a2-56851c0f596a 1479ms
+[Browser connected] 172ms
+[Page loaded] 882ms
+[Session released] 825ms
+[RUN] 102/200
+[Session created] provider=ANCHORBROWSER id=ccc38a2c-36ce-4f44-904f-1883d6e33834 1373ms
+[Browser connected] 146ms
+[Page loaded] 687ms
+[Session released] 821ms
+[RUN] 103/200
+[Session created] provider=ANCHORBROWSER id=f6e41fc8-59a9-4216-8597-3ec885fb2e38 1349ms
+[Browser connected] 109ms
+[Page loaded] 632ms
+[Session released] 712ms
+[RUN] 104/200
+[Session created] provider=ANCHORBROWSER id=a22b4f5a-3575-4d49-b7a6-f941388d828b 1434ms
+[Browser connected] 114ms
+[Page loaded] 678ms
+[Session released] 878ms
+[RUN] 105/200
+[Session created] provider=ANCHORBROWSER id=48103455-431a-4d48-ae13-c4383f73a8b9 1481ms
+[Browser connected] 154ms
+[Page loaded] 750ms
+[Session released] 785ms
+[RUN] 106/200
+[Session created] provider=ANCHORBROWSER id=fc5a4a30-733b-46fa-a54d-ef4066081d5b 1396ms
+[Browser connected] 179ms
+[Page loaded] 745ms
+[Session released] 844ms
+[RUN] 107/200
+[Session created] provider=ANCHORBROWSER id=faaf107a-4b90-429b-be4f-0719e2597d3b 1330ms
+[Browser connected] 126ms
+[Page loaded] 831ms
+[Session released] 763ms
+[RUN] 108/200
+[Session created] provider=ANCHORBROWSER id=4d395e95-608f-4ff1-92c8-0cbbe9dcd456 1408ms
+[Browser connected] 140ms
+[Page loaded] 648ms
+[Session released] 730ms
+[RUN] 109/200
+[Session created] provider=ANCHORBROWSER id=3cc3a857-a0d7-4362-9ecd-60f1b85c505f 1402ms
+[Browser connected] 138ms
+[Page loaded] 845ms
+[Session released] 917ms
+[RUN] 110/200
+[Session created] provider=ANCHORBROWSER id=9ed078e2-c57c-4724-b1b0-ae4d2a24b5a6 1396ms
+[Browser connected] 163ms
+[Page loaded] 738ms
+[Session released] 834ms
+[RUN] 111/200
+[Session created] provider=ANCHORBROWSER id=15492d1f-837f-4dcc-8f60-564360de9181 1361ms
+[Browser connected] 142ms
+[Page loaded] 622ms
+[Session released] 714ms
+[RUN] 112/200
+[Session created] provider=ANCHORBROWSER id=8b57a6fc-84af-4a95-aa1f-183df0487613 1350ms
+[Browser connected] 137ms
+[Page loaded] 855ms
+[Session released] 804ms
+[RUN] 113/200
+[Session created] provider=ANCHORBROWSER id=fa109cd6-934d-4a93-88ca-750bde732dc0 1405ms
+[Browser connected] 120ms
+[Page loaded] 603ms
+[Session released] 737ms
+[RUN] 114/200
+[Session created] provider=ANCHORBROWSER id=a146b655-1788-46e0-8c8a-03ef7b92debe 1381ms
+[Browser connected] 117ms
+[Page loaded] 813ms
+[Session released] 776ms
+[RUN] 115/200
+[Session created] provider=ANCHORBROWSER id=4908da72-cbfd-4eb1-ac42-81197063aa0e 1317ms
+[Browser connected] 124ms
+[Page loaded] 763ms
+[Session released] 736ms
+[RUN] 116/200
+[Session created] provider=ANCHORBROWSER id=4580c8f9-b6ea-41d5-bb9e-52e13108e8e5 1605ms
+[Browser connected] 166ms
+[Page loaded] 812ms
+[Session released] 895ms
+[RUN] 117/200
+[Session created] provider=ANCHORBROWSER id=84584f59-c4c8-4d78-b4da-a66471b1fdc3 1327ms
+[Browser connected] 135ms
+[Page loaded] 617ms
+[Session released] 693ms
+[RUN] 118/200
+[Session created] provider=ANCHORBROWSER id=c7c74907-e722-458d-939f-66931fed56a4 1402ms
+[Browser connected] 179ms
+[Page loaded] 742ms
+[Session released] 765ms
+[RUN] 119/200
+[Session created] provider=ANCHORBROWSER id=aa932f94-66d0-495c-a9f6-e02c184113b6 1454ms
+[Browser connected] 195ms
+[Page loaded] 840ms
+[Session released] 816ms
+[RUN] 120/200
+[Session created] provider=ANCHORBROWSER id=26beef63-39c7-4d79-8c2d-f4d3f9c2b686 1488ms
+[Browser connected] 176ms
+[Page loaded] 1060ms
+[Session released] 847ms
+[RUN] 121/200
+[Session created] provider=ANCHORBROWSER id=9ac39a61-adfb-42d7-9cf8-9197efb1c6d9 1367ms
+[Browser connected] 157ms
+[Page loaded] 768ms
+[Session released] 773ms
+[RUN] 122/200
+[Session created] provider=ANCHORBROWSER id=655ef897-1c56-40ae-adb7-028a72e419f3 1472ms
+[Browser connected] 163ms
+[Page loaded] 818ms
+[Session released] 821ms
+[RUN] 123/200
+[Session created] provider=ANCHORBROWSER id=86f853e8-bc1a-4d7e-a67c-60784390930d 1444ms
+[Browser connected] 137ms
+[Page loaded] 801ms
+[Session released] 832ms
+[RUN] 124/200
+[Session created] provider=ANCHORBROWSER id=cdc6b853-76cc-4c50-90de-ea3ab1110b89 1538ms
+[Browser connected] 148ms
+[Page loaded] 699ms
+[Session released] 829ms
+[RUN] 125/200
+[Session created] provider=ANCHORBROWSER id=488c7131-7255-437d-bd02-ef55d3528aec 1352ms
+[Browser connected] 118ms
+[Page loaded] 1672ms
+[Session released] 770ms
+[RUN] 126/200
+[Session created] provider=ANCHORBROWSER id=e80a62ec-20ef-4d1e-8744-4e5b70d7acab 1362ms
+[Browser connected] 134ms
+[Page loaded] 682ms
+[Session released] 773ms
+[RUN] 127/200
+[Session created] provider=ANCHORBROWSER id=85a08b2c-e4a9-48bf-a145-6d093beb8628 1326ms
+[Browser connected] 144ms
+[Page loaded] 664ms
+[Session released] 855ms
+[RUN] 128/200
+[Session created] provider=ANCHORBROWSER id=c8fc46f1-48dd-480e-8b75-fa755beec0fb 1306ms
+[Browser connected] 143ms
+[Page loaded] 645ms
+[Session released] 779ms
+[RUN] 129/200
+[Session created] provider=ANCHORBROWSER id=03911720-22d4-442e-92c3-f3426ab532d8 1525ms
+[Browser connected] 150ms
+[Page loaded] 836ms
+[Session released] 926ms
+[RUN] 130/200
+[Session created] provider=ANCHORBROWSER id=70451ec2-1b34-4941-a944-f8d73265334f 1364ms
+[Browser connected] 142ms
+[Page loaded] 821ms
+[Session released] 818ms
+[RUN] 131/200
+[Session created] provider=ANCHORBROWSER id=bb0bb1e6-654a-4594-bbbe-2844c1edf963 1608ms
+[Browser connected] 223ms
+[Page loaded] 1265ms
+[Session released] 975ms
+[RUN] 132/200
+[Session created] provider=ANCHORBROWSER id=16142b68-6477-4fe6-9774-31754d106732 1379ms
+[Browser connected] 139ms
+[Page loaded] 726ms
+[Session released] 749ms
+[RUN] 133/200
+[Session created] provider=ANCHORBROWSER id=f47ff755-73bb-48ae-807d-fed8c9ac5e8d 1338ms
+[Browser connected] 136ms
+[Page loaded] 668ms
+[Session released] 736ms
+[RUN] 134/200
+[Session created] provider=ANCHORBROWSER id=4360b8b2-95f2-4789-9d27-a53c3d234654 1537ms
+[Browser connected] 210ms
+[Page loaded] 989ms
+[Session released] 847ms
+[RUN] 135/200
+[Session created] provider=ANCHORBROWSER id=ff8f2b99-73e9-4ce9-af03-9a8a78e543e2 1358ms
+[Browser connected] 153ms
+[Page loaded] 676ms
+[Session released] 824ms
+[RUN] 136/200
+[Session created] provider=ANCHORBROWSER id=a18c88a8-7792-43f8-8c95-f03f3f40fcab 1252ms
+[Browser connected] 131ms
+[Page loaded] 644ms
+[Session released] 698ms
+[RUN] 137/200
+[Session created] provider=ANCHORBROWSER id=baea1126-992b-4971-92cb-2ef1f0774144 1294ms
+[Browser connected] 136ms
+[Page loaded] 806ms
+[Session released] 801ms
+[RUN] 138/200
+[Session created] provider=ANCHORBROWSER id=21148030-6a24-4d35-bc01-b94fa296b53c 1474ms
+[Browser connected] 155ms
+[Page loaded] 714ms
+[Session released] 818ms
+[RUN] 139/200
+[Session created] provider=ANCHORBROWSER id=e27086b8-87c2-46f5-9874-6f92857a53b5 1474ms
+[Browser connected] 164ms
+[Page loaded] 1220ms
+[Session released] 778ms
+[RUN] 140/200
+[Session created] provider=ANCHORBROWSER id=07ffba1c-77d0-4432-b566-9604f2e5ce61 1340ms
+[Browser connected] 125ms
+[Page loaded] 657ms
+[Session released] 807ms
+[RUN] 141/200
+[Session created] provider=ANCHORBROWSER id=3e235810-f423-43fc-b00e-cd1690419ada 1380ms
+[Browser connected] 152ms
+[Page loaded] 702ms
+[Session released] 880ms
+[RUN] 142/200
+[Session created] provider=ANCHORBROWSER id=8ced8be1-7789-44d8-a1aa-3d61fbee3a8f 1364ms
+[Browser connected] 145ms
+[Page loaded] 720ms
+[Session released] 779ms
+[RUN] 143/200
+[Session created] provider=ANCHORBROWSER id=71f6426b-52c3-4e05-abe3-2106399bc4be 1275ms
+[Browser connected] 133ms
+[Page loaded] 641ms
+[Session released] 957ms
+[RUN] 144/200
+[Session created] provider=ANCHORBROWSER id=1d18fbbe-529d-462c-aea6-9adc0eb11950 1291ms
+[Browser connected] 120ms
+[Page loaded] 626ms
+[Session released] 800ms
+[RUN] 145/200
+[Session created] provider=ANCHORBROWSER id=db514b6f-181c-463e-b541-a45bf8875560 1379ms
+[Browser connected] 117ms
+[Page loaded] 825ms
+[Session released] 749ms
+[RUN] 146/200
+[Session created] provider=ANCHORBROWSER id=a04f88c9-d53e-4b71-a632-c668545fd5d8 1295ms
+[Browser connected] 158ms
+[Page loaded] 767ms
+[Session released] 698ms
+[RUN] 147/200
+[Session created] provider=ANCHORBROWSER id=a08f247c-72be-4e96-abf3-a3ce62560c28 1393ms
+[Browser connected] 143ms
+[Page loaded] 658ms
+[Session released] 789ms
+[RUN] 148/200
+[Session created] provider=ANCHORBROWSER id=6bd63eca-55c8-44d0-bd32-9eb80e4bbe4f 1570ms
+[Browser connected] 173ms
+[Page loaded] 955ms
+[Session released] 786ms
+[RUN] 149/200
+[Session created] provider=ANCHORBROWSER id=47d4b7d9-4e20-45df-b9ba-36398f2bbef0 1421ms
+[Browser connected] 152ms
+[Page loaded] 793ms
+[Session released] 1054ms
+[RUN] 150/200
+[Session created] provider=ANCHORBROWSER id=4d1c4d30-3db7-4fca-a0f0-2660010625aa 1445ms
+[Browser connected] 122ms
+[Page loaded] 661ms
+[Session released] 875ms
+[RUN] 151/200
+[Session created] provider=ANCHORBROWSER id=1ffc93ad-69ac-498b-bfcc-a8fbd1004959 1360ms
+[Browser connected] 162ms
+[Page loaded] 985ms
+[Session released] 829ms
+[RUN] 152/200
+[Session created] provider=ANCHORBROWSER id=76f90e24-291f-43f7-beb6-b41cbeddfcf8 1385ms
+[Browser connected] 168ms
+[Page loaded] 752ms
+[Session released] 792ms
+[RUN] 153/200
+[Session created] provider=ANCHORBROWSER id=9e7115df-7874-4cae-830a-e3acc7f8a9e6 1393ms
+[Browser connected] 125ms
+[Page loaded] 698ms
+[Session released] 888ms
+[RUN] 154/200
+[Session created] provider=ANCHORBROWSER id=ea1e86b3-4fd8-4053-bb3b-14ca1284bce9 1452ms
+[Browser connected] 152ms
+[Page loaded] 834ms
+[Session released] 893ms
+[RUN] 155/200
+[Session created] provider=ANCHORBROWSER id=93398de9-6d13-4b6c-8bb0-0f04d977165d 1408ms
+[Browser connected] 154ms
+[Page loaded] 832ms
+[Session released] 710ms
+[RUN] 156/200
+[Session created] provider=ANCHORBROWSER id=ce589313-5c7b-4d2a-8406-8a6fd7c2aefa 1385ms
+[Browser connected] 157ms
+[Page loaded] 693ms
+[Session released] 796ms
+[RUN] 157/200
+[Session created] provider=ANCHORBROWSER id=552e46f4-3d7a-40fc-92c2-6e29df2a2859 1411ms
+[Browser connected] 136ms
+[Page loaded] 706ms
+[Session released] 814ms
+[RUN] 158/200
+[Session created] provider=ANCHORBROWSER id=826486f3-aa6d-4574-81bd-82b4c47dc931 1384ms
+[Browser connected] 134ms
+[Page loaded] 773ms
+[Session released] 726ms
+[RUN] 159/200
+[Session created] provider=ANCHORBROWSER id=782c924e-bc29-4291-9fe9-dcb8706ceec0 1520ms
+[Browser connected] 177ms
+[Page loaded] 955ms
+[Session released] 875ms
+[RUN] 160/200
+[Session created] provider=ANCHORBROWSER id=9c3522da-98f4-4e6c-8967-207a0bcd8051 1422ms
+[Browser connected] 139ms
+[Page loaded] 628ms
+[Session released] 834ms
+[RUN] 161/200
+[Session created] provider=ANCHORBROWSER id=9eebed4c-5828-42bf-8b65-76930980fae4 1273ms
+[Browser connected] 124ms
+[Page loaded] 631ms
+[Session released] 676ms
+[RUN] 162/200
+[Session created] provider=ANCHORBROWSER id=f9888aa4-c686-4c6e-93f7-35d1c3f571aa 1284ms
+[Browser connected] 140ms
+[Page loaded] 825ms
+[Session released] 827ms
+[RUN] 163/200
+[Session created] provider=ANCHORBROWSER id=fb4918b1-39dc-4a60-b99c-5467d432bd5b 1288ms
+[Browser connected] 136ms
+[Page loaded] 788ms
+[Session released] 837ms
+[RUN] 164/200
+[Session created] provider=ANCHORBROWSER id=f4e58ee8-b498-414b-8238-d79a4552b249 1461ms
+[Browser connected] 146ms
+[Page loaded] 669ms
+[Session released] 824ms
+[RUN] 165/200
+[Session created] provider=ANCHORBROWSER id=3e3879b5-7260-42c7-a338-51ff421b2999 1568ms
+[Browser connected] 151ms
+[Page loaded] 829ms
+[Session released] 843ms
+[RUN] 166/200
+[Session created] provider=ANCHORBROWSER id=00299675-09a9-400b-affc-51e5c3d0dcc9 1291ms
+[Browser connected] 159ms
+[Page loaded] 749ms
+[Session released] 890ms
+[RUN] 167/200
+[Session created] provider=ANCHORBROWSER id=d106e4d7-f058-4ba4-9ebe-1973ba055225 1380ms
+[Browser connected] 147ms
+[Page loaded] 767ms
+[Session released] 784ms
+[RUN] 168/200
+[Session created] provider=ANCHORBROWSER id=16832f39-4699-4072-b978-34066bbfeeb6 1391ms
+[Browser connected] 150ms
+[Page loaded] 869ms
+[Session released] 828ms
+[RUN] 169/200
+[Session created] provider=ANCHORBROWSER id=cd8a4fa1-df44-4699-a70d-d946913fd779 1510ms
+[Browser connected] 144ms
+[Page loaded] 679ms
+[Session released] 793ms
+[RUN] 170/200
+[Session created] provider=ANCHORBROWSER id=97dbbf16-4e12-4f2c-8219-828e03ab640b 1388ms
+[Browser connected] 129ms
+[Page loaded] 829ms
+[Session released] 775ms
+[RUN] 171/200
+[Session created] provider=ANCHORBROWSER id=851865bf-767c-4e62-9c5b-4af0d0270807 1441ms
+[Browser connected] 134ms
+[Page loaded] 795ms
+[Session released] 795ms
+[RUN] 172/200
+[Session created] provider=ANCHORBROWSER id=cde6f2e5-d256-4dc3-8659-1fe8edeb6eda 1460ms
+[Browser connected] 175ms
+[Page loaded] 813ms
+[Session released] 873ms
+[RUN] 173/200
+[Session created] provider=ANCHORBROWSER id=069e8ddb-2075-49d0-b977-54535a474072 1361ms
+[Browser connected] 115ms
+[Page loaded] 663ms
+[Session released] 905ms
+[RUN] 174/200
+[Session created] provider=ANCHORBROWSER id=c9756ebe-1aae-4a8c-8a5a-51b9d6028e27 1365ms
+[Browser connected] 144ms
+[Page loaded] 625ms
+[Session released] 856ms
+[RUN] 175/200
+[Session created] provider=ANCHORBROWSER id=ad007629-aaf4-4901-8ebf-b86c593b58bb 1407ms
+[Browser connected] 161ms
+[Page loaded] 863ms
+[Session released] 783ms
+[RUN] 176/200
+[Session created] provider=ANCHORBROWSER id=aea5ae1b-b352-4dc9-830e-b47dd4b57561 1408ms
+[Browser connected] 137ms
+[Page loaded] 846ms
+[Session released] 943ms
+[RUN] 177/200
+[Session created] provider=ANCHORBROWSER id=e8ab81f4-7300-442e-ba7f-0c38b6f7766f 1507ms
+[Browser connected] 180ms
+[Page loaded] 870ms
+[Session released] 856ms
+[RUN] 178/200
+[Session created] provider=ANCHORBROWSER id=8a569976-db85-455b-93ad-bbc2fd5e5c9a 1302ms
+[Browser connected] 140ms
+[Page loaded] 650ms
+[Session released] 790ms
+[RUN] 179/200
+[Session created] provider=ANCHORBROWSER id=9e9b30bb-552d-40ac-bb85-7d11599095f6 1319ms
+[Browser connected] 125ms
+[Page loaded] 850ms
+[Session released] 825ms
+[RUN] 180/200
+[Session created] provider=ANCHORBROWSER id=7171943c-7579-4bb6-8928-98832148124d 1411ms
+[Browser connected] 145ms
+[Page loaded] 645ms
+[Session released] 773ms
+[RUN] 181/200
+[Session created] provider=ANCHORBROWSER id=70706a58-ce29-43be-b35c-56c7dd864751 1386ms
+[Browser connected] 149ms
+[Page loaded] 668ms
+[Session released] 781ms
+[RUN] 182/200
+[Session created] provider=ANCHORBROWSER id=e28cc4e6-0274-446b-9ce1-fea910c6f24e 1368ms
+[Browser connected] 137ms
+[Page loaded] 774ms
+[Session released] 849ms
+[RUN] 183/200
+[Session created] provider=ANCHORBROWSER id=5ce9730c-4ff0-41c7-b905-a9e9cf203d48 1519ms
+[Browser connected] 163ms
+[Page loaded] 915ms
+[Session released] 995ms
+[RUN] 184/200
+[Session created] provider=ANCHORBROWSER id=d8b6dfa7-1be8-414c-9bac-a56492ca5dc6 1418ms
+[Browser connected] 167ms
+[Page loaded] 755ms
+[Session released] 941ms
+[RUN] 185/200
+[Session created] provider=ANCHORBROWSER id=61061f95-c010-40b2-9789-42205a15e6c7 1600ms
+[Browser connected] 177ms
+[Page loaded] 879ms
+[Session released] 843ms
+[RUN] 186/200
+[Session created] provider=ANCHORBROWSER id=b60dd228-682c-4285-8151-880fd7cbf335 1427ms
+[Browser connected] 146ms
+[Page loaded] 668ms
+[Session released] 941ms
+[RUN] 187/200
+[Session created] provider=ANCHORBROWSER id=e379fded-46fa-44aa-917e-0f7030504d6a 1348ms
+[Browser connected] 155ms
+[Page loaded] 839ms
+[Session released] 891ms
+[RUN] 188/200
+[Session created] provider=ANCHORBROWSER id=f05f9f50-00f7-4eb0-ad6a-08e9a345a3ba 1285ms
+[Browser connected] 124ms
+[Page loaded] 609ms
+[Session released] 619ms
+[RUN] 189/200
+[Session created] provider=ANCHORBROWSER id=bff21ab8-0fdf-40ba-a421-cc1c07cd9703 1364ms
+[Browser connected] 137ms
+[Page loaded] 698ms
+[Session released] 902ms
+[RUN] 190/200
+[Session created] provider=ANCHORBROWSER id=d9dfe853-c3f1-4d5f-8a45-dfecea69a347 1378ms
+[Browser connected] 137ms
+[Page loaded] 849ms
+[Session released] 770ms
+[RUN] 191/200
+[Session created] provider=ANCHORBROWSER id=d2493589-51e9-4965-96d9-f4a5f5ed1879 1332ms
+[Browser connected] 154ms
+[Page loaded] 706ms
+[Session released] 745ms
+[RUN] 192/200
+[Session created] provider=ANCHORBROWSER id=235cb418-1ac7-4745-92e7-1900b2777bf1 1402ms
+[Browser connected] 126ms
+[Page loaded] 725ms
+[Session released] 885ms
+[RUN] 193/200
+[Session created] provider=ANCHORBROWSER id=7c8783f4-0739-4952-baf5-e92d664564b8 1406ms
+[Browser connected] 127ms
+[Page loaded] 834ms
+[Session released] 797ms
+[RUN] 194/200
+[Session created] provider=ANCHORBROWSER id=050a558f-bd2b-42cd-92bf-0c2dea7dbea6 1519ms
+[Browser connected] 168ms
+[Page loaded] 787ms
+[Session released] 918ms
+[RUN] 195/200
+[Session created] provider=ANCHORBROWSER id=f7464000-e190-42c1-8ab9-ba71a42bd3d9 1397ms
+[Browser connected] 138ms
+[Page loaded] 700ms
+[Session released] 769ms
+[RUN] 196/200
+[Session created] provider=ANCHORBROWSER id=38a18938-4c2e-4561-98b9-e396281b1851 1772ms
+[Browser connected] 168ms
+[Page loaded] 737ms
+[Session released] 803ms
+[RUN] 197/200
+[Session created] provider=ANCHORBROWSER id=097ab31b-f194-44e7-a4c7-c28d0a037e62 1295ms
+[Browser connected] 122ms
+[Page loaded] 645ms
+[Session released] 693ms
+[RUN] 198/200
+[Session created] provider=ANCHORBROWSER id=21cd2910-43ea-48c1-8731-eb127b8affe0 1371ms
+[Browser connected] 136ms
+[Page loaded] 661ms
+[Session released] 768ms
+[RUN] 199/200
+[Session created] provider=ANCHORBROWSER id=616626cc-d2a2-4258-a9d5-ad41b43d690c 1411ms
+[Browser connected] 157ms
+[Page loaded] 854ms
+[Session released] 933ms
+[RUN] 200/200
+[Session created] provider=ANCHORBROWSER id=c447b317-1936-410b-a23e-1fa1bfd41807 1327ms
+[Browser connected] 141ms
+[Page loaded] 630ms
+[Session released] 806ms

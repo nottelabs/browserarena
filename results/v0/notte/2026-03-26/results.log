@@ -1,0 +1,35 @@
+[LOG] Saving logs to results/v0/notte/2026-03-26/results.log
+
+[CONFIG] provider=NOTTE concurrency=1 runs=1 url=https://en.wikipedia.org/wiki/Artificial_intelligence
+[WARMUP] 1/3
+[Session created] provider=NOTTE id=5725c012-89ef-4571-8006-95568c83aa2a 611ms
+[Browser connected] 1385ms
+[Extract] 3641ms — "Artificial intelligence" (5 links found)
+[Crawl] 36508ms — 15 pages: Ai, Artificial intelligence (disambiguation), Artificial general intelligence, Intelligent agent, Recursive self-improvement, Artificial intelligence, Ai (chimpanzee), Artificial Intelligence (EP), Artificial Intelligence (John Cale album), Generative AI, Superintelligence, Intelligent designer, Embodied agent, Personal development, Automated planning and scheduling
+[Form] 16681ms — confirmed=true
+[Total] 56832ms
+[Session released] 683ms
+[WARMUP] 2/3
+[Session created] provider=NOTTE id=aedb6919-d102-451c-95e2-803633e447cf 588ms
+[Browser connected] 1046ms
+[Extract] 3354ms — "Artificial intelligence" (5 links found)
+[Crawl] 28500ms — 15 pages: Ai, Artificial intelligence (disambiguation), Artificial general intelligence, Intelligent agent, Recursive self-improvement, Artificial intelligence, Ai (chimpanzee), Artificial Intelligence (EP), Artificial Intelligence (John Cale album), Generative AI, Superintelligence, Intelligent designer, Embodied agent, Personal development, Automated planning and scheduling
+[Form] 14068ms — confirmed=true
+[Total] 45923ms
+[Session released] 452ms
+[WARMUP] 3/3
+[Session created] provider=NOTTE id=b1ee1154-f4ad-40e8-b127-6a5e50d60671 565ms
+[Browser connected] 1117ms
+[Extract] 3179ms — "Artificial intelligence" (5 links found)
+[Crawl] 27578ms — 15 pages: Ai, Artificial intelligence (disambiguation), Artificial general intelligence, Intelligent agent, Recursive self-improvement, Artificial intelligence, Ai (chimpanzee), Artificial Intelligence (EP), Artificial Intelligence (John Cale album), Generative AI, Superintelligence, Intelligent designer, Embodied agent, Personal development, Automated planning and scheduling
+[Form] 14150ms — confirmed=true
+[Total] 44908ms
+[Session released] 463ms
+[RUN] 1/1 (c=1)
+[Session created] provider=NOTTE id=a234f753-85bb-4d83-a63f-2ed01ce993ab 562ms
+[Browser connected] 1098ms
+[Extract] 3192ms — "Artificial intelligence" (5 links found)
+[Crawl] 29698ms — 15 pages: Ai, Artificial intelligence (disambiguation), Artificial general intelligence, Intelligent agent, Recursive self-improvement, Artificial intelligence, Ai (chimpanzee), Artificial Intelligence (EP), Artificial Intelligence (John Cale album), Generative AI, Superintelligence, Intelligent designer, Embodied agent, Personal development, Automated planning and scheduling
+[Form] 14632ms — confirmed=true
+[Total] 47525ms
+[Session released] 449ms
