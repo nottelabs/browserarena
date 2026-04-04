@@ -1,0 +1,9 @@
+{
+  "region": null,
+  "instance_type": null,
+  "cloud": "local",
+  "os": "darwin arm64",
+  "node_version": "v24.7.0",
+  "started_at": "2026-03-25T18:00:20.416Z",
+  "finished_at": "2026-03-25T18:07:00.864Z"
+}

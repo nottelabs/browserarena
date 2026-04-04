@@ -1,0 +1,67 @@
+[LOG] Saving logs to results/v0/notte/2026-03-25/results.log
+
+[CONFIG] provider=NOTTE concurrency=1 runs=1 url=https://en.wikipedia.org/wiki/Train
+[WARMUP] 1/3
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=2f804bc0-4ad9-40f2-bf73-ed05694aa27e 661ms
+[Browser connected] 1319ms
+[Extract] 2997ms — "Train" (3 links found)
+[Crawl] 5683ms — 3 pages: Training, Locomotive, Train (disambiguation)
+[ERROR] stage=form id=2f804bc0-4ad9-40f2-bf73-ed05694aa27e page.waitForNavigation: Timeout 15000ms exceeded.
+=========================== logs ===========================
+waiting for navigation until "domcontentloaded"
+============================================================
+    at phaseForm (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/agent-task.js:121:14)
+    at async runSingleSession (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/run.js:79:31)
+    at async runLoop (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/run.js:130:9)
+    at async main (/Users/kalilbouzigues/Work/notte/browserbench/dist/cli.js:99:21)
+[Session released] 460ms
+[WARMUP] 2/3
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=197193ac-c6f4-4fd0-8047-ce14fa06d1a5 726ms
+[Browser connected] 1259ms
+[Extract] 2582ms — "Train" (3 links found)
+[Crawl] 4713ms — 3 pages: Training, Locomotive, Train (disambiguation)
+[ERROR] stage=form id=197193ac-c6f4-4fd0-8047-ce14fa06d1a5 page.waitForNavigation: Timeout 15000ms exceeded.
+=========================== logs ===========================
+waiting for navigation until "domcontentloaded"
+============================================================
+    at phaseForm (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/agent-task.js:121:14)
+    at async runSingleSession (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/run.js:79:31)
+    at async runLoop (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/run.js:130:9)
+    at async main (/Users/kalilbouzigues/Work/notte/browserbench/dist/cli.js:99:21)
+[Session released] 523ms
+[WARMUP] 3/3
+[RATE_LIMIT] provider=NOTTE message="Failed to start Notte session: HTTP 429 - {"error":"Rate limit exceeded: 200 per 1 hour"}" → retry in 30s
+[Session created] provider=NOTTE id=af631802-8e95-4430-8838-0998825e49fb 658ms
+[Browser connected] 1201ms
+[Extract] 2529ms — "Train" (3 links found)
+[Crawl] 6220ms — 3 pages: Training, Locomotive, Train (disambiguation)
+[ERROR] stage=form id=af631802-8e95-4430-8838-0998825e49fb page.waitForNavigation: Timeout 15000ms exceeded.
+=========================== logs ===========================
+waiting for navigation until "domcontentloaded"
+============================================================
+    at phaseForm (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/agent-task.js:121:14)
+    at async runSingleSession (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/run.js:79:31)
+    at async runLoop (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/run.js:130:9)
+    at async main (/Users/kalilbouzigues/Work/notte/browserbench/dist/cli.js:99:21)
+[Session released] 468ms
+[RUN] 1/1 (c=1)
+[Session created] provider=NOTTE id=2b4c14c1-4b19-48b2-9d17-6472152c2ec1 637ms
+[Browser connected] 1203ms
+[Extract] 2581ms — "Train" (3 links found)
+[Crawl] 4783ms — 3 pages: Training, Locomotive, Train (disambiguation)
+[ERROR] stage=form id=2b4c14c1-4b19-48b2-9d17-6472152c2ec1 page.waitForNavigation: Timeout 15000ms exceeded.
+=========================== logs ===========================
+waiting for navigation until "domcontentloaded"
+============================================================
+    at phaseForm (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/agent-task.js:121:14)
+    at async runSingleSession (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/run.js:79:31)
+    at async runLoop (/Users/kalilbouzigues/Work/notte/browserbench/dist/benchmarks/v0/run.js:139:25)
+    at async main (/Users/kalilbouzigues/Work/notte/browserbench/dist/cli.js:99:21)
+[Session released] 549ms
