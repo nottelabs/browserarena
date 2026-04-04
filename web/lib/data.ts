@@ -263,7 +263,7 @@ function buildFailureInsights(
 }
 
 function getResultsDir(): string {
-  return path.join(process.cwd(), "..", "..", "results");
+  return path.join(process.cwd(), "..", "results");
 }
 
 async function fetchFromGitHub(filePath: string): Promise<string> {
