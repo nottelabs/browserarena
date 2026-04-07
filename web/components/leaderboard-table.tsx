@@ -164,7 +164,7 @@ export function LeaderboardTable({
   const headers = [
     "#",
     "Provider",
-    "Region",
+    "Ran from",
     "Create",
     "Connect",
     "Goto",
@@ -188,7 +188,7 @@ export function LeaderboardTable({
             {headers.map((h) => (
               <TableHead
                 key={h}
-                className={`text-[0.6rem] font-semibold uppercase tracking-wider text-muted-foreground ${h === "Provider" ? "text-left" : "text-right"
+                className={`text-[0.6rem] font-semibold uppercase tracking-wider text-muted-foreground ${h === "Provider" || h === "Ran from" ? "text-left" : "text-right"
                   } ${h === "#" ? "w-7 text-center" : ""}`}
               >
                 {h}
@@ -253,7 +253,7 @@ export function LeaderboardTable({
                     ) : null}
                   </div>
                 </TableCell>
-                <TableCell className="py-2.5 text-[0.65rem] text-muted-foreground font-mono">
+                <TableCell className="py-2.5 text-left text-[0.65rem] text-muted-foreground font-mono">
                   {vmMetaRegionLabel(p.vmMeta) ?? "—"}
                 </TableCell>
                 {segmentKeys.map((key, i) => (
