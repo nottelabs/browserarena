@@ -38,10 +38,9 @@ export type SortByType = "latency" | "reliability" | "price" | "speed";
 /** Aggregated failed-run messages for dashboard UI */
 export interface ProviderFailurePattern {
   stage: string | null;
-  /** Short single-line summary */
-  messagePreview: string;
-  /** Representative full text (may include stack) */
-  fullMessage: string;
+  errorCode: string;
+  /** Sanitized short summary for public UI/API use */
+  errorSummary: string;
   count: number;
 }
 
@@ -207,6 +206,51 @@ function entryScriptMs(e: BenchmarkEntry): number {
 
 const FAILURE_PATTERN_CAP = 8;
 
+const ANSI_ESCAPE_RE = /\u001B\[[0-9;]*m/g;
+const PRIVATE_IP_RE = /\b(?:10(?:\.\d{1,3}){3}|127(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})\b/g;
+const WS_URL_RE = /wss?:\/\/[^\s)"']+/gi;
+const BEARER_TOKEN_RE = /\bBearer\s+[A-Za-z0-9._~+\/=:-]+/gi;
+const SECRET_PARAM_RE = /([?&](?:token|key|api[_-]?key|signature|sig|auth)=)[^&\s]+/gi;
+const LONG_HEX_RE = /\b[a-f0-9]{24,}\b/gi;
+const UUID_RE = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi;
+
+function sanitizeFailureText(input: string): string {
+  const stripped = input
+    .replace(ANSI_ESCAPE_RE, "")
+    .replace(BEARER_TOKEN_RE, "Bearer [redacted]")
+    .replace(WS_URL_RE, "[redacted websocket url]")
+    .replace(SECRET_PARAM_RE, "$1[redacted]")
+    .replace(PRIVATE_IP_RE, "[redacted private ip]")
+    .replace(UUID_RE, "[redacted id]")
+    .replace(LONG_HEX_RE, "[redacted token]");
+
+  const lines = stripped
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const summary = lines[0] ?? "(no message)";
+  return summary.length > 200 ? `${summary.slice(0, 197)}…` : summary;
+}
+
+function classifyFailure(message: string, stage: string | null): string {
+  const normalized = message.toLowerCase();
+
+  if (/429|rate limit|too many/i.test(normalized)) return "RATE_LIMIT";
+  if (/401|403|unauthorized|forbidden/i.test(normalized)) return "AUTH_ERROR";
+  if (/5\d\d|bad gateway|cluster is under heavy load|service unavailable/i.test(normalized))
+    return "UPSTREAM_5XX";
+  if (/4\d\d|bad request|not found/i.test(normalized)) return "UPSTREAM_4XX";
+  if (/timeout|timed out|time out/i.test(normalized)) {
+    if (stage === "connect_over_cdp") return "CONNECT_TIMEOUT";
+    if (stage === "page_goto") return "NAVIGATION_TIMEOUT";
+    return "TIMEOUT";
+  }
+  if (/websocket|cdp|connectovercdp/i.test(normalized)) return "CDP_CONNECT_ERROR";
+
+  return "UNKNOWN";
+}
+
 function buildFailureInsights(
   entries: BenchmarkEntry[]
 ): ProviderFailureInsights | undefined {
@@ -216,7 +260,12 @@ function buildFailureInsights(
   const byStageMap = new Map<string, number>();
   const patternMap = new Map<
     string,
-    { stage: string | null; fullMessage: string; count: number }
+    {
+      stage: string | null;
+      errorCode: string;
+      errorSummary: string;
+      count: number;
+    }
   >();
 
   for (const e of failed) {
@@ -224,17 +273,18 @@ function buildFailureInsights(
     byStageMap.set(stageKey, (byStageMap.get(stageKey) ?? 0) + 1);
 
     const raw = e.error_message?.trim() ?? "";
-    const firstLine = raw ? raw.split("\n")[0]!.trim() : "";
-    const dedupeKey = `${stageKey}::${firstLine.slice(0, 400) || "(no message)"}`;
+    const errorCode = classifyFailure(raw, e.error_stage);
+    const errorSummary = sanitizeFailureText(raw);
+    const dedupeKey = `${stageKey}::${errorCode}::${errorSummary.slice(0, 400)}`;
 
     const prev = patternMap.get(dedupeKey);
     if (prev) {
       prev.count += 1;
-      if (raw.length > prev.fullMessage.length) prev.fullMessage = raw;
     } else {
       patternMap.set(dedupeKey, {
         stage: e.error_stage,
-        fullMessage: raw || "(no message)",
+        errorCode,
+        errorSummary,
         count: 1,
       });
     }
@@ -245,17 +295,6 @@ function buildFailureInsights(
     .sort((a, b) => b.count - a.count);
 
   const patterns = [...patternMap.values()]
-    .map((p) => {
-      const line = p.fullMessage.split("\n")[0] ?? "";
-      const messagePreview =
-        line.length > 140 ? `${line.slice(0, 137)}…` : line || "(no message)";
-      return {
-        stage: p.stage,
-        messagePreview,
-        fullMessage: p.fullMessage,
-        count: p.count,
-      };
-    })
     .sort((a, b) => b.count - a.count)
     .slice(0, FAILURE_PATTERN_CAP);
 

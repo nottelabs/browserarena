@@ -1,6 +1,4 @@
 "use client";
-
-import * as React from "react";
 import { AlertTriangle } from "lucide-react";
 import type { ProviderFailureInsights } from "@/lib/data";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +30,6 @@ export function ProviderFailuresPopover({
   className?: string;
 }) {
   const { failureCount, byStage, patterns } = insights;
-  const [openPattern, setOpenPattern] = React.useState<number | null>(null);
 
   return (
     <Popover>
@@ -92,12 +89,9 @@ export function ProviderFailuresPopover({
           </p>
           <ul className="space-y-2">
             {patterns.map((p, i) => {
-              const expanded = openPattern === i;
-              const longBody =
-                p.fullMessage.includes("\n") || p.fullMessage.length > 160;
               return (
                 <li
-                  key={`${p.stage}-${i}-${p.messagePreview.slice(0, 40)}`}
+                  key={`${p.stage}-${i}-${p.errorCode}-${p.errorSummary.slice(0, 40)}`}
                   className="rounded-lg border border-border/50 bg-muted/20 px-2 py-1.5"
                 >
                   <div className="flex flex-wrap items-center gap-1.5">
@@ -109,23 +103,16 @@ export function ProviderFailuresPopover({
                         {stageLabel(p.stage)}
                       </span>
                     ) : null}
+                    <Badge
+                      variant="secondary"
+                      className="font-mono text-[0.55rem] font-normal tracking-wide"
+                    >
+                      {p.errorCode}
+                    </Badge>
                   </div>
                   <p className="mt-1 whitespace-pre-wrap break-words font-mono text-[0.65rem] leading-snug text-foreground/90">
-                    {expanded || !longBody
-                      ? p.fullMessage
-                      : `${p.messagePreview}`}
+                    {p.errorSummary}
                   </p>
-                  {longBody ? (
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setOpenPattern(expanded ? null : i)
-                      }
-                      className="mt-1 text-[0.6rem] font-medium text-primary hover:underline"
-                    >
-                      {expanded ? "Show less" : "Show full"}
-                    </button>
-                  ) : null}
                 </li>
               );
             })}
