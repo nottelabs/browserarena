@@ -43,7 +43,7 @@ Two AWS EC2 VMs (t3.micro) run the benchmarks. TCP+TLS RTT measured with `curl t
 
 | Provider | CDP host | RTT | Runner region |
 |---|---|---|---|
-| Notte | `us-prod.notte.cc` | 12ms | us-west-1 |
+| Notte | `api.notte.cc` | 12ms | us-west-1 |
 | Steel | `connect.steel.dev` | 14ms | us-east-1 |
 | Kernel (Headless) | `api.onkernel.com` | 14ms | us-east-1 |
 | Kernel (Headful) | `api.onkernel.com` | 14ms | us-east-1 |
