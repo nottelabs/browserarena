@@ -164,6 +164,7 @@ export function LeaderboardTable({
   const headers = [
     "#",
     "Provider",
+    "Region",
     "Create",
     "Connect",
     "Goto",
@@ -251,6 +252,9 @@ export function LeaderboardTable({
                       </p>
                     ) : null}
                   </div>
+                </TableCell>
+                <TableCell className="py-2.5 text-[0.65rem] text-muted-foreground font-mono">
+                  {vmMetaRegionLabel(p.vmMeta) ?? "—"}
                 </TableCell>
                 {segmentKeys.map((key, i) => (
                   <TableCell

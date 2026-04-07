@@ -1,15 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import type { PercentileType, SortByType } from "@/lib/data";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 const REPO_URL =
   process.env.NEXT_PUBLIC_REPO_URL || "https://github.com/nottelabs/browserarena";
@@ -61,7 +54,6 @@ export function HelloBrowserControls({
 }: {
   concurrencyLevels?: number[];
 }) {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const percentile = (searchParams.get("percentile") || "median") as PercentileType;
   const concurrency = searchParams.get("concurrency") || "";
@@ -91,34 +83,36 @@ export function HelloBrowserControls({
           ))}
         </div>
       )}
-      {concurrencyLevels && concurrencyLevels.length > 1 && (
-        <Select
-          value={concurrency || String(concurrencyLevels[0])}
-          onValueChange={(value) => {
-            const next = new URLSearchParams(searchParams);
-            if (value === String(concurrencyLevels[0])) {
-              next.delete("concurrency");
-            } else {
-              next.set("concurrency", value);
-            }
-            if (Number(value) > 1) {
-              next.delete("percentile");
-            }
-            router.push(`/?${next.toString()}`, { scroll: false });
-          }}
-        >
-          <SelectTrigger size="sm" className="w-[140px] text-[0.7rem]">
-            <SelectValue placeholder="Concurrency" />
-          </SelectTrigger>
-          <SelectContent>
-            {concurrencyLevels.map((c) => (
-              <SelectItem key={c} value={String(c)} className="text-[0.7rem]">
-                {c === 1 ? "Sequential" : `${c} concurrent`}
-              </SelectItem>
+      {concurrencyLevels && concurrencyLevels.length > 1 && (() => {
+        const seqLevel = concurrencyLevels.find((c) => c === 1);
+        const concLevel = concurrencyLevels.find((c) => c > 1);
+        if (seqLevel == null || concLevel == null) return null;
+        const options = [
+          { value: String(seqLevel), label: "Sequential" },
+          { value: String(concLevel), label: `${concLevel} concurrent` },
+        ];
+        return (
+          <div className="flex items-center gap-0.5 rounded-md border border-border bg-muted p-0.5">
+            {options.map((opt) => (
+              <Link
+                key={opt.value}
+                href={`/?${buildSearchParams(searchParams, {
+                  concurrency: opt.value === String(seqLevel) ? "" : opt.value,
+                  ...(Number(opt.value) > 1 ? { percentile: "" } : {}),
+                })}`}
+                scroll={false}
+                className={`px-3 py-1.5 text-[0.7rem] font-medium rounded-sm ${
+                  String(effectiveConcurrency) === opt.value
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
+              >
+                {opt.label}
+              </Link>
             ))}
-          </SelectContent>
-        </Select>
-      )}
+          </div>
+        );
+      })()}
     </div>
   );
 }
