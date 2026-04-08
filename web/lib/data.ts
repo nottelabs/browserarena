@@ -71,7 +71,7 @@ const PROVIDER_META: Record<
     browserRegion: "us-east-1",
   },
   KERNEL: {
-    displayName: "Kernel",
+    displayName: "KERNEL",
     url: "https://www.kernel.sh",
     browserRegion: "us-east-1",
   },
@@ -109,6 +109,7 @@ const BEARER_TOKEN_RE = /\bBearer\s+[A-Za-z0-9._~+\/=:-]+/gi;
 const SECRET_PARAM_RE = /([?&](?:token|key|api[_-]?key|signature|sig|auth)=)[^&\s]+/gi;
 const LONG_HEX_RE = /\b[a-f0-9]{24,}\b/gi;
 const UUID_RE = /\b[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\b/gi;
+const HOME_PATH_RE = /\/(?:Users|home)\/[a-zA-Z0-9._-]+\//g;
 
 function sanitizeFailureText(input: string): string {
   const stripped = input
@@ -118,7 +119,8 @@ function sanitizeFailureText(input: string): string {
     .replace(SECRET_PARAM_RE, "$1[redacted]")
     .replace(PRIVATE_IP_RE, "[redacted private ip]")
     .replace(UUID_RE, "[redacted id]")
-    .replace(LONG_HEX_RE, "[redacted token]");
+    .replace(LONG_HEX_RE, "[redacted token]")
+    .replace(HOME_PATH_RE, "/[redacted path]/");
 
   const lines = stripped
     .split("\n")
