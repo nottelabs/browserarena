@@ -14,5 +14,9 @@ export async function GET(request: NextRequest) {
     : "median";
 
   const result = await loadLeaderboard("hello-browser", undefined, effectivePercentile);
-  return Response.json(result);
+  return Response.json(result, {
+    headers: {
+      "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",
+    },
+  });
 }
