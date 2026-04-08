@@ -8,6 +8,7 @@ import { runLoop as runV0 } from "./benchmarks/v0/run.js";
 import { phaseExtract, phaseCrawl, phaseForm } from "./benchmarks/v0/phases.js";
 import { getArg } from "./utils/arg.js";
 import { collectVmMeta } from "./utils/vm-meta.js";
+import { sanitizeErrorMessage } from "./utils/sanitize.js";
 
 type BenchmarkName = "hello-browser" | "v0";
 
@@ -28,7 +29,7 @@ function startLogging(logPath: string): () => void {
   console.error = (...args: unknown[]) => {
     originalError(...args);
     const line = args.map((a) => (typeof a === "string" ? a : JSON.stringify(a))).join(" ");
-    stream.write(line + "\n");
+    stream.write(sanitizeErrorMessage(line) + "\n");
   };
 
   return () => {

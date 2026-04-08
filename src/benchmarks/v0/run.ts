@@ -2,6 +2,7 @@ import fs from "node:fs";
 import { chromium } from "playwright-core";
 import type { ProviderClient } from "../../types.js";
 import { isoUtcNow, nowNs, msSince } from "../../utils/time.js";
+import { sanitizeErrorMessage } from "../../utils/sanitize.js";
 import type { V0Record } from "./types.js";
 import { phaseExtract, phaseCrawl, phaseForm } from "./phases.js";
 
@@ -132,7 +133,9 @@ export async function runSingleSession(
 
     result.success = true;
   } catch (e: unknown) {
-    const message = e instanceof Error ? e.stack || e.message : `${e}`;
+    const message = sanitizeErrorMessage(
+      e instanceof Error ? e.stack || e.message : `${e}`
+    );
     result.error_stage = stage;
     result.error_message = message;
     console.error(`[ERROR] stage=${stage} id=${result.id} ${message}`);

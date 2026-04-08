@@ -1,0 +1,27 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Source files
+*.ts text eol=lf
+*.tsx text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.sql text eol=lf
+*.jsonl text eol=lf
+*.log text eol=lf
+
+# Binary files
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mp4 binary
+
+# Generated files
+package-lock.json linguist-generated

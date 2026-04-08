@@ -1,6 +1,7 @@
 node_modules/
 dist/
 !results/.gitkeep
+results/**/*.log
 recordings/
 !web-app/web/public/recordings/
 .env
@@ -11,3 +12,30 @@ recordings/
 .vercel
 .next/
 TODO.md
+
+# Certificates / private keys
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+
+# Credential files
+credentials.json
+service-account*.json
+
+# Env variants
+.env.*
+!.env.example
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+
+# Build artifacts
+build/
+coverage/
