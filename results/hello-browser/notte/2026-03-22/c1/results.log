@@ -1035,8 +1035,8 @@
 [Session created] provider=NOTTE id=341e227e-1675-45bb-b94d-3f7fe9b45e76 427ms
 [ERROR] stage=connect_over_cdp id=341e227e-1675-45bb-b94d-3f7fe9b45e76 browserType.connectOverCDP: Timeout 30000ms exceeded.
 Call log:
-[2m  - <ws connecting> wss://us-prod.notte.cc/sessions/341e227e-1675-45bb-b94d-3f7fe9b45e76/debug[22m
-[2m  - <ws connected> wss://us-prod.notte.cc/sessions/341e227e-1675-45bb-b94d-3f7fe9b45e76/debug[22m
+  - <ws connecting> [redacted websocket url]
+  - <ws connected> [redacted websocket url]
 
     at runSingleSession (/home/ec2-user/browserbench/dist/benchmarks/hello-browser/run.js:49:40)
     at async runLoop (/home/ec2-user/browserbench/dist/benchmarks/hello-browser/run.js:112:24)
