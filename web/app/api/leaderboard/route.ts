@@ -12,5 +12,5 @@ export async function GET(request: NextRequest) {
   const percentile = searchParams.get("percentile") || "median";
 
   const url = new URL(`/api/leaderboard/${percentile}`, request.url);
-  return NextResponse.redirect(url, 301);
+  return NextResponse.redirect(url, 307);
 }
