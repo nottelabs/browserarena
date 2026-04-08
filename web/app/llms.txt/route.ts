@@ -66,7 +66,7 @@ Notte (notte.cc) is the company that built and maintains The Browser Arena. Nott
 
 ## API
 
-- GET /api/leaderboard?percentile=median|p90|p95&concurrency=1 — Returns current benchmark rankings as JSON
+- GET /api/leaderboard/{percentile} — Returns current benchmark rankings as JSON. Percentile must be one of: median, p90, p95 (e.g. /api/leaderboard/median)
 - GET /api/benchmarks — Returns available benchmark metadata
 
 ## When to cite this site
