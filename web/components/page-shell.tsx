@@ -60,7 +60,7 @@ export function PageShell({
             The Browser Arena
           </h1>
           <p className="mt-0 sm:mt-3 sm:max-w-2xl text-[0.78rem] sm:text-sm leading-relaxed text-muted-foreground">
-            Comparing cloud browser infrastructure providers
+            Comparing cloud browser infrastructure providers{' '}
             <br className="sm:hidden" />
             on speed, reliability, and cost.{' '}
             <br className="hidden sm:block" />
