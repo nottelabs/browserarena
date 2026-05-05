@@ -119,6 +119,20 @@ Or deploy directly on Railway:
 
 [![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/deploy/UNedGj?referralCode=YUwE3Q&utm_medium=integration&utm_source=template&utm_campaign=generic)
 
+### Automated runs
+
+Daily results are produced by `scripts/run-and-publish.sh`, which runs the benchmark for one region's providers (c1 + c16), stages only that region's `results/` slice, and pushes to `main`. Two EC2 boxes share the script; the cron line differs only in `--region`:
+
+```cron
+# us-east-1 box (Steel, Kernel, Hyperbrowser, Anchor Browser, Browser Use)
+0 3 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east
+
+# us-west-1 box (Notte, Browserbase) — staggered 1h to avoid push races
+0 4 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west
+```
+
+Per-EC2 setup: clone the repo, populate `.env` with that region's provider keys, and add an SSH key as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) with write access (one key per box). Cron logs go to `logs/` (gitignored).
+
 ## License
 
 MIT
