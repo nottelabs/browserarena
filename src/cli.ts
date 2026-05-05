@@ -52,7 +52,7 @@ async function main() {
   const defaultUrl =
     benchmarkArg === "v0"
       ? "https://en.wikipedia.org/wiki/Artificial_intelligence"
-      : "https://google.com/";
+      : "https://example.com/";
   const url = getArg("url", process.env.URL || defaultUrl)!;
   const outArg = getArg("out", process.env.OUTPUT || undefined);
   const rateArg = getArg("rate", process.env.RATE || undefined);

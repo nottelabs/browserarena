@@ -59,7 +59,7 @@ Two modes:
 ### Fairness
 
 - 10 warm-up runs before measurement to reduce cold-start effects
-- Same URL across all providers (`google.com`)
+- Same URL across all providers (`example.com`)
 - No provider-specific tuning, default SDK settings only
 - Automatic 30s backoff on 429 rate limit errors
 - Most provider SDKs auto-retry transient errors; success rates reflect post-retry outcomes
