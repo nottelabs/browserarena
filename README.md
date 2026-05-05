@@ -121,7 +121,7 @@ Or deploy directly on Railway:
 
 ### Automated runs
 
-Daily results are produced by `scripts/run-and-publish.sh`, which runs the benchmark for one region's providers (c1 + c16), stages only that region's `results/` slice, and pushes to `main`. Two EC2 boxes share the script; the cron line differs only in `--region`:
+Daily results are produced by `scripts/run-and-publish.sh`, which runs the benchmark for one region's providers (c1 + c10), stages only that region's `results/` slice, and pushes to `main`. Two EC2 boxes share the script; the cron line differs only in `--region`:
 
 ```cron
 # us-east-1 box (Steel, Kernel, Hyperbrowser, Anchor Browser, Browser Use)

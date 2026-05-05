@@ -92,7 +92,7 @@ echo "[INFO] running benchmark date=$DATE providers=$PROVIDERS"
 npm run bench -- \
   --benchmark=hello-browser \
   --provider="$PROVIDERS" \
-  --concurrency=1,16 \
+  --concurrency=1,10 \
   --runs="$RUNS"
 
 echo "[INFO] staging results for $REGION"
