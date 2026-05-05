@@ -49,7 +49,7 @@ npm run bench -- --provider=notte --runs=100
 npm run bench -- --provider=notte,steel --runs=100
 
 # Concurrent sessions
-npm run bench -- --provider=notte --runs=100 --concurrency=16
+npm run bench -- --provider=notte --runs=100 --concurrency=10
 ```
 
 Results are written to `results/<benchmark>/<provider>/<date>/`.

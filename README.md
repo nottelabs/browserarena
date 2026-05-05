@@ -52,7 +52,7 @@ The core benchmark measures the minimal end-to-end lifecycle for a remote Chrome
 Two modes:
 
 - Sequential: 1,000 runs per provider, one at a time
-- Concurrent: 100 batches of 16 parallel sessions
+- Concurrent: 100 batches of 10 parallel sessions
 
 ## Methodology
 
