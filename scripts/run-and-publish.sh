@@ -12,7 +12,7 @@
 set -euo pipefail
 
 REGION=""
-RUNS=1000
+RUNS=100
 DRY_RUN=0
 NO_RESET=0
 
@@ -95,6 +95,12 @@ npm run bench -- \
   --concurrency=1,10 \
   --runs="$RUNS"
 
+# Pull just before staging/commit so the commit is based on any results the
+# other region pushed while this benchmark was running.
+if [[ $DRY_RUN -eq 0 ]]; then
+  git pull --rebase origin main
+fi
+
 echo "[INFO] staging results for $REGION"
 staged_any=0
 for p in "${PROV_LIST[@]}"; do
@@ -131,10 +137,6 @@ GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-bot@browserarena.ai}"
 GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
-
-# Pull just before commit so the rebase is on top of any push the other region
-# made during our run.
-git pull --rebase origin main
 
 git commit -m "results: $REGION $DATE"
 

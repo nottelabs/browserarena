@@ -48,7 +48,7 @@ async function main() {
     "provider",
     process.env.PROVIDER || DEFAULT_PROVIDERS
   )!;
-  const runs = Number(getArg("runs", process.env.RUNS || "1000"));
+  const runs = Number(getArg("runs", process.env.RUNS || "100"));
   const defaultUrl =
     benchmarkArg === "v0"
       ? "https://en.wikipedia.org/wiki/Artificial_intelligence"
@@ -144,7 +144,8 @@ async function main() {
         for (const concurrency of concurrencyLevels) {
           const concOut = out.replace(/results\.jsonl$/, `c${concurrency}/results.jsonl`);
           fs.mkdirSync(path.dirname(concOut), { recursive: true });
-          await runHelloBrowser(provider, { runs, url, out: concOut, rate, concurrency });
+          const batches = Math.max(1, Math.ceil(runs / concurrency));
+          await runHelloBrowser(provider, { runs: batches, url, out: concOut, rate, concurrency });
         }
       } else {
         for (const concurrency of concurrencyLevels) {
