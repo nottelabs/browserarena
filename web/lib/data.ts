@@ -274,47 +274,42 @@ async function loadEntriesFromGitHub(
       .reverse();
 
     if (benchmark === "hello-browser") {
-      // Scan all dates to find the latest date per concurrency level
-      const loadedConcLevels = new Set<string>();
+      // Use the latest run date for each provider. Older concurrency levels
+      // remain in history but should not create active leaderboard tabs.
+      const latestDate = dates[0];
+      if (!latestDate) continue;
 
-      for (const dateDir of dates) {
-        const dateContents = await listFromGitHub(`${basePath}/${dir.name}/${dateDir}`);
-        const concDirs = dateContents
-          .filter((e) => e.type === "dir" && /^c\d+$/.test(e.name))
-          .map((e) => e.name);
+      const dateContents = await listFromGitHub(`${basePath}/${dir.name}/${latestDate}`);
+      const concDirs = dateContents
+        .filter((e) => e.type === "dir" && /^c\d+$/.test(e.name))
+        .map((e) => e.name)
+        .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
 
-        if (concDirs.length === 0) {
-          // Legacy top-level results.jsonl
-          if (!loadedConcLevels.has("c1")) {
-            loadedConcLevels.add("c1");
-            try {
-              const content = await fetchFromGitHub(`${basePath}/${dir.name}/${dateDir}/results.jsonl`);
-              const lines = parseJsonlLines(content);
-              for (const entry of lines) {
-                entry._runDate = dateDir;
-                const existing = providerMap.get(entry.provider) || [];
-                existing.push(entry);
-                providerMap.set(entry.provider, existing);
-              }
-            } catch { /* skip */ }
+      if (concDirs.length === 0) {
+        try {
+          const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/results.jsonl`);
+          const lines = parseJsonlLines(content);
+          for (const entry of lines) {
+            entry._runDate = latestDate;
+            const existing = providerMap.get(entry.provider) || [];
+            existing.push(entry);
+            providerMap.set(entry.provider, existing);
           }
-          continue;
-        }
+        } catch { /* skip */ }
+        continue;
+      }
 
-        for (const concDir of concDirs) {
-          if (loadedConcLevels.has(concDir)) continue;
-          loadedConcLevels.add(concDir);
-          try {
-            const content = await fetchFromGitHub(`${basePath}/${dir.name}/${dateDir}/${concDir}/results.jsonl`);
-            const lines = parseJsonlLines(content);
-            for (const entry of lines) {
-              entry._runDate = dateDir;
-              const existing = providerMap.get(entry.provider) || [];
-              existing.push(entry);
-              providerMap.set(entry.provider, existing);
-            }
-          } catch { /* skip */ }
-        }
+      for (const concDir of concDirs) {
+        try {
+          const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/${concDir}/results.jsonl`);
+          const lines = parseJsonlLines(content);
+          for (const entry of lines) {
+            entry._runDate = latestDate;
+            const existing = providerMap.get(entry.provider) || [];
+            existing.push(entry);
+            providerMap.set(entry.provider, existing);
+          }
+        } catch { /* skip */ }
       }
     } else {
       // v0: use latest date only
@@ -377,66 +372,58 @@ function loadEntriesFromFs(
       .reverse();
 
     if (benchmark === "hello-browser") {
-      // For hello-browser, scan all dates to find the latest date per concurrency level.
-      // e.g. c1 may be on 2026-03-22 while c16 is on 2026-03-25.
-      const loadedConcLevels = new Set<string>();
+      // Use the latest run date for each provider. Older concurrency levels
+      // remain in history but should not create active leaderboard tabs.
       let providerName: string | undefined;
+      const latestDate = dateDirs[0];
+      if (!latestDate) continue;
 
-      for (const dateDir of dateDirs) {
-        const runDir = path.join(providerPath, dateDir);
-        const concDirs = fs.readdirSync(runDir, { withFileTypes: true })
-          .filter((e) => e.isDirectory() && /^c\d+$/.test(e.name))
-          .map((e) => e.name);
+      const runDir = path.join(providerPath, latestDate);
+      const concDirs = fs.readdirSync(runDir, { withFileTypes: true })
+        .filter((e) => e.isDirectory() && /^c\d+$/.test(e.name))
+        .map((e) => e.name)
+        .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
 
-        // Also handle legacy top-level results.jsonl (no c{N} subdir)
-        if (concDirs.length === 0) {
-          const resultsFile = path.join(runDir, "results.jsonl");
-          if (!loadedConcLevels.has("c1") && fs.existsSync(resultsFile)) {
-            loadedConcLevels.add("c1");
-            const content = fs.readFileSync(resultsFile, "utf-8");
-            for (const line of content.trim().split("\n")) {
-              try {
-                const entry: BenchmarkEntry = JSON.parse(line);
-                entry._runDate = dateDir;
-                providerName = entry.provider;
-                const existing = providerMap.get(entry.provider) || [];
-                existing.push(entry);
-                providerMap.set(entry.provider, existing);
-              } catch { /* skip */ }
-            }
-          }
-          continue;
-        }
-
-        for (const concDir of concDirs) {
-          if (loadedConcLevels.has(concDir)) continue; // already have latest for this level
-          const resultsFile = path.join(runDir, concDir, "results.jsonl");
-          if (!fs.existsSync(resultsFile)) continue;
-
-          loadedConcLevels.add(concDir);
+      if (concDirs.length === 0) {
+        const resultsFile = path.join(runDir, "results.jsonl");
+        if (fs.existsSync(resultsFile)) {
           const content = fs.readFileSync(resultsFile, "utf-8");
           for (const line of content.trim().split("\n")) {
             try {
               const entry: BenchmarkEntry = JSON.parse(line);
-              entry._runDate = dateDir;
+              entry._runDate = latestDate;
               providerName = entry.provider;
               const existing = providerMap.get(entry.provider) || [];
               existing.push(entry);
               providerMap.set(entry.provider, existing);
             } catch { /* skip */ }
           }
+        }
+      } else {
+        for (const concDir of concDirs) {
+          const resultsFile = path.join(runDir, concDir, "results.jsonl");
+          if (!fs.existsSync(resultsFile)) continue;
 
-          // Load meta from this concurrency dir
-          if (providerName) {
-            if (!providerMetaMap.has(providerName)) {
-              const metaFile = path.join(runDir, concDir, "_meta.json");
-              if (fs.existsSync(metaFile)) {
-                try {
-                  providerMetaMap.set(providerName, JSON.parse(fs.readFileSync(metaFile, "utf-8")));
-                } catch { /* skip */ }
-              }
-            }
+          const content = fs.readFileSync(resultsFile, "utf-8");
+          for (const line of content.trim().split("\n")) {
+            try {
+              const entry: BenchmarkEntry = JSON.parse(line);
+              entry._runDate = latestDate;
+              providerName = entry.provider;
+              const existing = providerMap.get(entry.provider) || [];
+              existing.push(entry);
+              providerMap.set(entry.provider, existing);
+            } catch { /* skip */ }
           }
+        }
+      }
+
+      if (providerName && !providerMetaMap.has(providerName)) {
+        const metaFile = path.join(runDir, "_meta.json");
+        if (fs.existsSync(metaFile)) {
+          try {
+            providerMetaMap.set(providerName, JSON.parse(fs.readFileSync(metaFile, "utf-8")));
+          } catch { /* skip */ }
         }
       }
     } else {

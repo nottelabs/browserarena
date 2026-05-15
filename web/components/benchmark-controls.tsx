@@ -42,7 +42,7 @@ export function HelloBrowserControls({
       <div className="flex items-center gap-2">
         {options.map((c) => {
           const isActive = effectiveConcurrency === c;
-          const label = c === 1 ? "Sequential Runs" : `Concurrent Runs`;
+          const label = c === 1 ? "Sequential Runs" : `Concurrent Runs (c=${c})`;
           const params = buildSearchParams(searchParams, {
             concurrency: c === defaultConcurrency ? "" : String(c),
           });
