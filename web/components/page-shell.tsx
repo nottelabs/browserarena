@@ -30,6 +30,7 @@ export function PageShell({
           <NavBarActions>
             <nav className="hidden sm:flex items-center gap-8 text-sm font-medium">
               <a href="#leaderboard" className="text-muted-foreground hover:text-foreground transition-colors">Leaderboard</a>
+              <a href="#history" className="text-muted-foreground hover:text-foreground transition-colors">History</a>
               <a href="https://github.com/nottelabs/browserarena" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">Methodology</a>
               <a href="https://railway.com/deploy/UNedGj" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">Reproduce</a>
             </nav>

@@ -11,6 +11,9 @@ export type {
   VmMeta,
   LeaderboardMetadata,
   LeaderboardResult,
+  HistoricalLeaderboardResult,
+  HistoricalProviderPoint,
+  HistoricalProviderSeries,
   ProviderCdpEndpointInfo,
 } from "./data-shared";
 
@@ -25,6 +28,8 @@ import type {
   VmMeta,
   LeaderboardMetadata,
   LeaderboardResult,
+  HistoricalLeaderboardResult,
+  HistoricalProviderPoint,
 } from "./data-shared";
 
 const RESULTS_GITHUB_REPO =
@@ -477,6 +482,248 @@ function loadEntriesFromFs(
     providerMetaMap,
     providerRunDateMap,
   };
+}
+
+function readEntriesFromFsFile(filePath: string, runDate: string): BenchmarkEntry[] {
+  if (!fs.existsSync(filePath)) return [];
+  return parseJsonlLines(fs.readFileSync(filePath, "utf-8")).map((entry) => ({
+    ...entry,
+    _runDate: runDate,
+  }));
+}
+
+function summarizeHistoricalPoint(
+  entries: BenchmarkEntry[],
+  date: string
+): HistoricalProviderPoint | null {
+  if (entries.length === 0) return null;
+
+  const successful = entries.filter((e) => e.success);
+  const successRate = (successful.length / entries.length) * 100;
+
+  const creationTimes = successful.map((e) => e.session_creation_ms ?? 0);
+  const connectTimes = successful.map((e) => e.session_connect_ms ?? 0);
+  const gotoTimes = successful.map((e) => e.page_goto_ms ?? 0);
+  const scriptTimes = successful.map((e) => entryScriptMs(e) ?? 0);
+  const releaseTimes = successful.map((e) => e.session_release_ms ?? 0);
+
+  const medianCreationMs = median(creationTimes);
+  const medianConnectMs = median(connectTimes);
+  const medianGotoMs = median(gotoTimes);
+  const medianScriptMs = median(scriptTimes);
+  const medianReleaseMs = median(releaseTimes);
+
+  const p90CreationMs = percentile(creationTimes, 0.90);
+  const p90ConnectMs = percentile(connectTimes, 0.90);
+  const p90GotoMs = percentile(gotoTimes, 0.90);
+  const p90ScriptMs = percentile(scriptTimes, 0.90);
+  const p90ReleaseMs = percentile(releaseTimes, 0.90);
+
+  const p95CreationMs = percentile(creationTimes, 0.95);
+  const p95ConnectMs = percentile(connectTimes, 0.95);
+  const p95GotoMs = percentile(gotoTimes, 0.95);
+  const p95ScriptMs = percentile(scriptTimes, 0.95);
+  const p95ReleaseMs = percentile(releaseTimes, 0.95);
+
+  return {
+    date,
+    totalRuns: entries.length,
+    successRate,
+    medianCreationMs,
+    medianConnectMs,
+    medianGotoMs,
+    medianScriptMs,
+    medianReleaseMs,
+    p90CreationMs,
+    p90ConnectMs,
+    p90GotoMs,
+    p90ScriptMs,
+    p90ReleaseMs,
+    p95CreationMs,
+    p95ConnectMs,
+    p95GotoMs,
+    p95ScriptMs,
+    p95ReleaseMs,
+    totalTimeMs:
+      medianCreationMs +
+      medianConnectMs +
+      medianGotoMs +
+      medianScriptMs +
+      medianReleaseMs,
+    p90TotalMs:
+      p90CreationMs +
+      p90ConnectMs +
+      p90GotoMs +
+      p90ScriptMs +
+      p90ReleaseMs,
+    p95TotalMs:
+      p95CreationMs +
+      p95ConnectMs +
+      p95GotoMs +
+      p95ScriptMs +
+      p95ReleaseMs,
+  };
+}
+
+function loadHistoricalLeaderboardFromFs(
+  benchmark: "hello-browser",
+  concurrency?: number
+): HistoricalLeaderboardResult {
+  const resultsDir = getResultsDir();
+  const benchDir = path.join(resultsDir, benchmark);
+  if (!fs.existsSync(benchDir)) return { dates: [], providers: [] };
+
+  const EXCLUDED_PROVIDERS = new Set(["KERNEL_HEADFUL"]);
+  const effectiveConcurrency = concurrency ?? 1;
+  const dates = new Set<string>();
+  const providers = fs
+    .readdirSync(benchDir, { withFileTypes: true })
+    .filter((e) => e.isDirectory() && !e.name.startsWith("_"));
+
+  const series = providers.flatMap((dir) => {
+    const providerPath = path.join(benchDir, dir.name);
+    const dateDirs = fs
+      .readdirSync(providerPath, { withFileTypes: true })
+      .filter((e) => e.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
+      .map((e) => e.name)
+      .sort();
+
+    const points: HistoricalProviderPoint[] = [];
+    let providerName: string | undefined;
+
+    for (const date of dateDirs) {
+      const runDir = path.join(providerPath, date);
+      const concDir = path.join(runDir, `c${effectiveConcurrency}`);
+      const entries = fs.existsSync(concDir)
+        ? readEntriesFromFsFile(path.join(concDir, "results.jsonl"), date)
+        : effectiveConcurrency === 1
+          ? readEntriesFromFsFile(path.join(runDir, "results.jsonl"), date)
+          : [];
+      const filtered = entries.filter((entry) => !EXCLUDED_PROVIDERS.has(entry.provider));
+      if (filtered.length === 0) continue;
+
+      providerName = filtered[0]?.provider;
+      const point = summarizeHistoricalPoint(filtered, date);
+      if (!point) continue;
+      dates.add(date);
+      points.push(point);
+    }
+
+    if (!providerName || points.length === 0 || EXCLUDED_PROVIDERS.has(providerName)) {
+      return [];
+    }
+
+    const meta = PROVIDER_META[providerName] || {
+      displayName: providerName,
+      url: "#",
+    };
+
+    return [{
+      provider: providerName,
+      displayName: meta.displayName,
+      pricePerHour: getPricePerHour(providerName),
+      perSessionFee: getPerSessionFee(providerName),
+      points,
+    }];
+  });
+
+  series.sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+  return {
+    dates: [...dates].sort(),
+    providers: series,
+  };
+}
+
+async function loadHistoricalLeaderboardFromGitHub(
+  benchmark: "hello-browser",
+  concurrency?: number
+): Promise<HistoricalLeaderboardResult> {
+  const basePath = `results/${benchmark}`;
+  const effectiveConcurrency = concurrency ?? 1;
+  const EXCLUDED_PROVIDERS = new Set(["KERNEL_HEADFUL"]);
+  const dates = new Set<string>();
+  const series: HistoricalLeaderboardResult["providers"] = [];
+
+  const providerDirs = await listFromGitHub(basePath);
+  const dirs = providerDirs.filter(
+    (e) => e.type === "dir" && !e.name.startsWith("_")
+  );
+
+  for (const dir of dirs) {
+    const dateDirs = await listFromGitHub(`${basePath}/${dir.name}`);
+    const runDates = dateDirs
+      .filter((e) => e.type === "dir" && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
+      .map((e) => e.name)
+      .sort();
+
+    const points: HistoricalProviderPoint[] = [];
+    let providerName: string | undefined;
+
+    for (const date of runDates) {
+      const runPath = `${basePath}/${dir.name}/${date}`;
+      const contents = await listFromGitHub(runPath);
+      const hasConcurrencyDirs = contents.some(
+        (e) => e.type === "dir" && /^c\d+$/.test(e.name)
+      );
+      const resultPath = hasConcurrencyDirs
+        ? `${runPath}/c${effectiveConcurrency}/results.jsonl`
+        : effectiveConcurrency === 1
+          ? `${runPath}/results.jsonl`
+          : null;
+      if (!resultPath) continue;
+
+      try {
+        const entries = parseJsonlLines(await fetchFromGitHub(resultPath)).map(
+          (entry) => ({ ...entry, _runDate: date })
+        );
+        const filtered = entries.filter((entry) => !EXCLUDED_PROVIDERS.has(entry.provider));
+        if (filtered.length === 0) continue;
+
+        providerName = filtered[0]?.provider;
+        const point = summarizeHistoricalPoint(filtered, date);
+        if (!point) continue;
+        dates.add(date);
+        points.push(point);
+      } catch {
+        // skip missing concurrency levels and malformed runs
+      }
+    }
+
+    if (!providerName || points.length === 0 || EXCLUDED_PROVIDERS.has(providerName)) {
+      continue;
+    }
+
+    const meta = PROVIDER_META[providerName] || {
+      displayName: providerName,
+      url: "#",
+    };
+    series.push({
+      provider: providerName,
+      displayName: meta.displayName,
+      pricePerHour: getPricePerHour(providerName),
+      perSessionFee: getPerSessionFee(providerName),
+      points,
+    });
+  }
+
+  series.sort((a, b) => a.displayName.localeCompare(b.displayName));
+
+  return {
+    dates: [...dates].sort(),
+    providers: series,
+  };
+}
+
+export async function loadHistoricalLeaderboard(
+  benchmark: "hello-browser" = "hello-browser",
+  concurrency?: number
+): Promise<HistoricalLeaderboardResult> {
+  const resultsDir = getResultsDir();
+  if (fs.existsSync(resultsDir)) {
+    return loadHistoricalLeaderboardFromFs(benchmark, concurrency);
+  }
+  return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency);
 }
 
 function listBenchmarkDatesFromFs(benchmark: "v0"): string[] {
