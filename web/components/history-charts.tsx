@@ -15,7 +15,6 @@ import {
   ChartLegend,
   ChartLegendContent,
   ChartTooltip,
-  ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
 import type {
@@ -78,6 +77,8 @@ const PHASE_CONFIG = {
     color: "#76B7B2",
   },
 } satisfies ChartConfig;
+
+const PHASE_ORDER_TOP_DOWN = ["release", "goto", "connect", "create"];
 
 const PROVIDER_COLORS = [
   "#4E79A7",
@@ -169,6 +170,14 @@ type ValueScoreTooltipItem = {
   payload?: { date?: string };
 };
 
+type BreakdownTooltipItem = {
+  dataKey?: string | number;
+  name?: string | number;
+  value?: unknown;
+  color?: string;
+  payload?: { date?: string };
+};
+
 function ValueScoreTooltip({
   active,
   payload,
@@ -204,6 +213,61 @@ function ValueScoreTooltip({
               </span>
               <span className="font-mono font-medium text-foreground tabular-nums">
                 {formatScore(item.value)}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function BreakdownTooltip({
+  active,
+  payload,
+  config,
+}: {
+  active?: boolean;
+  payload?: BreakdownTooltipItem[];
+  config: ChartConfig;
+}) {
+  if (!active || !payload?.length) return null;
+
+  const phaseRank = new Map(
+    PHASE_ORDER_TOP_DOWN.map((key, index) => [key, index])
+  );
+  const rows = payload
+    .filter((item): item is BreakdownTooltipItem & { value: number } =>
+      typeof item.value === "number"
+    )
+    .sort((a, b) => {
+      const aKey = String(a.dataKey ?? a.name ?? "");
+      const bKey = String(b.dataKey ?? b.name ?? "");
+      return (phaseRank.get(aKey) ?? 99) - (phaseRank.get(bKey) ?? 99);
+    });
+  if (rows.length === 0) return null;
+
+  return (
+    <div className="grid min-w-[10rem] items-start gap-1.5 rounded-none border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
+      <div className="font-medium">{rows[0]?.payload?.date}</div>
+      <div className="grid gap-1.5">
+        {rows.map((item) => {
+          const key = String(item.dataKey ?? item.name ?? "");
+          return (
+            <div key={key} className="flex w-full items-center gap-2">
+              <div
+                className="h-2.5 w-2.5 shrink-0 rounded-[2px]"
+                style={{
+                  backgroundColor:
+                    item.color ||
+                    ("color" in (config[key] ?? {}) ? config[key]?.color : undefined),
+                }}
+              />
+              <span className="min-w-0 flex-1 text-muted-foreground">
+                {config[key]?.label ?? key}
+              </span>
+              <span className="font-mono font-medium text-foreground tabular-nums">
+                {formatMs(item.value)}
               </span>
             </div>
           );
@@ -552,20 +616,7 @@ export function HistoryCharts({
                 tickFormatter={(value) => `${(Number(value) / 1000).toFixed(1)}s`}
               />
               <ChartTooltip
-                content={
-                  <ChartTooltipContent
-                    className="rounded-none"
-                    labelFormatter={(_, payload) => payload?.[0]?.payload?.date}
-                    formatter={(value, name) => (
-                      <div className="flex w-full items-center justify-between gap-4">
-                        <span className="text-muted-foreground capitalize">{name}</span>
-                        <span className="font-mono text-foreground tabular-nums">
-                          {formatMs(value)}
-                        </span>
-                      </div>
-                    )}
-                  />
-                }
+                content={<BreakdownTooltip config={PHASE_CONFIG} />}
               />
               <ChartLegend content={<ChartLegendContent />} />
               {(["create", "connect", "goto", "release"] as const).map((key, index, arr) => (
