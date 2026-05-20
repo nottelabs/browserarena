@@ -79,6 +79,43 @@ export interface LeaderboardResult {
   metadata: LeaderboardMetadata;
 }
 
+export interface HistoricalProviderPoint {
+  date: string;
+  totalRuns: number;
+  successRate: number;
+  medianCreationMs: number;
+  medianConnectMs: number;
+  medianGotoMs: number;
+  medianScriptMs: number;
+  medianReleaseMs: number;
+  p90CreationMs: number;
+  p90ConnectMs: number;
+  p90GotoMs: number;
+  p90ScriptMs: number;
+  p90ReleaseMs: number;
+  p95CreationMs: number;
+  p95ConnectMs: number;
+  p95GotoMs: number;
+  p95ScriptMs: number;
+  p95ReleaseMs: number;
+  totalTimeMs: number;
+  p90TotalMs: number;
+  p95TotalMs: number;
+}
+
+export interface HistoricalProviderSeries {
+  provider: string;
+  displayName: string;
+  pricePerHour: number | null;
+  perSessionFee: number | null;
+  points: HistoricalProviderPoint[];
+}
+
+export interface HistoricalLeaderboardResult {
+  dates: string[];
+  providers: HistoricalProviderSeries[];
+}
+
 export interface ProviderCdpEndpointInfo {
   cdpHost: string;
   rttMs: number;

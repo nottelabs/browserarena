@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import {
+  loadHistoricalLeaderboard,
   loadLeaderboard,
   type PercentileType,
   type SortByType,
@@ -8,6 +9,7 @@ import {
 import { LeaderboardTable } from "@/components/leaderboard-table";
 import { HelloBrowserControls } from "@/components/benchmark-controls";
 import { PageShell } from "@/components/page-shell";
+import { HistoryCharts } from "@/components/history-charts";
 
 const VALID_PERCENTILES: PercentileType[] = ["median", "p90", "p95"];
 const VALID_SORT: SortByType[] = ["latency", "reliability", "price"];
@@ -46,6 +48,7 @@ export default async function Home({
     sortBy,
     concurrency
   );
+  const history = await loadHistoricalLeaderboard("hello-browser", effectiveConcurrency);
 
 
   return (
@@ -72,6 +75,12 @@ export default async function Home({
           </div>
         )}
       </div>
+
+      <HistoryCharts
+        history={history}
+        percentile={percentile}
+        initialProvider={providers[0]?.provider}
+      />
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <span className="text-sm text-muted-foreground">
