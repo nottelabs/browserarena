@@ -18,8 +18,7 @@ export class BrowserUseProvider implements ProviderClient {
         "Content-Type": "application/json",
         "X-Browser-Use-API-Key": apiKey,
       },
-      // proxyCountryCode: null runs the session proxyless (the API defaults to "us").
-      body: JSON.stringify({ proxyCountryCode: null }),
+      body: JSON.stringify({ proxyCountryCode: null }), // null runs the session proxyless (the API defaults to "us").
       signal: AbortSignal.timeout(90_000),
     });
     if (!res.ok) {
