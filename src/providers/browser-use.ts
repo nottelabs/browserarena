@@ -12,13 +12,13 @@ export class BrowserUseProvider implements ProviderClient {
 
   async create(): Promise<ProviderSession> {
     const apiKey = requireEnv("BROWSER_USE_API_KEY");
-    const res = await fetch("https://api.browser-use.com/api/v2/browsers", {
+    const res = await fetch("https://api.browser-use.com/api/v3/browsers", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-Browser-Use-API-Key": apiKey,
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({ proxyCountryCode: null }),
       signal: AbortSignal.timeout(90_000),
     });
     if (!res.ok) {
@@ -34,7 +34,7 @@ export class BrowserUseProvider implements ProviderClient {
 
   async release(id: string): Promise<void> {
     const apiKey = requireEnv("BROWSER_USE_API_KEY");
-    const res = await fetch(`https://api.browser-use.com/api/v2/browsers/${id}`, {
+    const res = await fetch(`https://api.browser-use.com/api/v3/browsers/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +55,7 @@ export class BrowserUseProvider implements ProviderClient {
     const delayMs = 3000;
 
     for (let i = 0; i < maxAttempts; i++) {
-      const res = await fetch(`https://api.browser-use.com/api/v2/sessions/${sessionId}`, {
+      const res = await fetch(`https://api.browser-use.com/api/v3/sessions/${sessionId}`, {
         headers: { "X-Browser-Use-API-Key": apiKey },
         signal: AbortSignal.timeout(30_000),
       });
