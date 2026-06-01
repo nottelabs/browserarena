@@ -5,7 +5,7 @@ export class BrowserUseProvider implements ProviderClient {
   readonly name = "BROWSER_USE";
 
   computeCost(seconds: number): number {
-    const perHour = 0.06;
+    const perHour = 0.02;
     const billedSeconds = Math.max(60, Math.ceil(seconds / 60) * 60);
     return Math.round((billedSeconds / 3600) * perHour * 1e8) / 1e8;
   }
@@ -29,7 +29,7 @@ export class BrowserUseProvider implements ProviderClient {
     const id = data.id;
     const cdpUrl = data.cdpUrl;
     if (!id || !cdpUrl) throw new Error("Invalid Browser Use response: missing id or cdpUrl");
-    return { id, cdpUrl };
+    return { id, cdpUrl: cdpUrl.replace("https://", "wss://") };
   }
 
   async release(id: string): Promise<void> {

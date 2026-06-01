@@ -74,7 +74,7 @@ All providers tested from the same EC2 instances. TCP+TLS round-trip times measu
 | Hyperbrowser | `connect-us-east-1.hyperbrowser.ai` | 9 ms | us-east-1 |
 | Steel | `connect.steel.dev` | 14 ms | us-east-1 |
 | Kernel | `api.onkernel.com` | 14 ms | us-east-1 |
-| Browser Use | `cdp1.browser-use.com` | 29 ms | us-east-1 |
+| Browser Use | `cdp.browser-use.com` | 29 ms | us-east-1 |
 | Anchor Browser | `connect.anchorbrowser.io` | 38 ms | us-east-1 |
 | Browserbase | `connect.usw2.browserbase.com` | 62 ms | us-west-1 |
 
