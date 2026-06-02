@@ -27,7 +27,7 @@ const PRICING: Record<string, { unit: UnitPricing }> = {
     unit: { ratePerHour: 0.06, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
   },
   BROWSER_USE: {
-    unit: { ratePerHour: 0.06, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
+    unit: { ratePerHour: 0.02, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
   },
 };
 

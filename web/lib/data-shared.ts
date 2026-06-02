@@ -135,7 +135,7 @@ export const PROVIDER_CDP_ENDPOINT: Record<string, ProviderCdpEndpointInfo> = {
   KERNEL: { cdpHost: "api.onkernel.com", rttMs: 14, proxied: false },
   ANCHORBROWSER: { cdpHost: "connect.anchorbrowser.io", rttMs: 38, proxied: false },
   HYPERBROWSER: { cdpHost: "connect-us-east-1.hyperbrowser.ai", rttMs: 9, proxied: false },
-  BROWSER_USE: { cdpHost: "cdp1.browser-use.com", rttMs: 29, proxied: false },
+  BROWSER_USE: { cdpHost: "cdp.browser-use.com", rttMs: 29, proxied: false },
 };
 
 /** Benchmark runner VM (`_meta.json`): cloud + region when present. */
