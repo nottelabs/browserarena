@@ -82,6 +82,12 @@ const PROVIDER_META: Record<
   },
   STEEL: { displayName: "Steel", url: "https://www.steel.dev", browserRegion: "us-east-1" },
   BROWSER_USE: { displayName: "Browser Use", url: "https://www.browser-use.com", browserRegion: "us-east-1" },
+  BASELAYER: {
+    displayName: "BaseLayer",
+    url: "https://github.com/Lasdw6/BaseLayer",
+    browserRegion: "self-hosted AWS m5zn.metal",
+    disclaimer: "Self-hosted on AWS m5zn.metal; not a managed cloud provider.",
+  },
 };
 
 function median(values: number[]): number {
