@@ -22,7 +22,7 @@ export class BrowserbaseProvider implements ProviderClient {
 
   async create(): Promise<ProviderSession> {
     const projectId = requireEnv("BROWSERBASE_PROJECT_ID");
-    const session = await (await this.client()).sessions.create({ projectId, region: "us-west-2" });
+    const session = await (await this.client()).sessions.create({ projectId, region: "us-east-1" });
     const id = session?.id;
     const cdpUrl = session?.connectUrl;
     if (!id || !cdpUrl) throw new Error("Invalid Browserbase session response");
