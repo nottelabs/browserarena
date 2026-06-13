@@ -31,8 +31,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$REGION" in
-  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use" ;;
-  us-west) PROVIDERS="notte,browserbase" ;;
+  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase" ;;
+  us-west) PROVIDERS="notte" ;;
   "")      echo "[ERROR] --region us-east|us-west required" >&2; exit 2 ;;
   *)       echo "[ERROR] invalid --region: $REGION (want us-east or us-west)" >&2; exit 2 ;;
 esac
