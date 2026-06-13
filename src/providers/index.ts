@@ -6,6 +6,7 @@ import { HyperbrowserProvider } from "./hyperbrowser.js";
 import { KernelProvider, KernelHeadfulProvider } from "./kernel.js";
 import { NotteProvider } from "./notte.js";
 import { BrowserUseProvider } from "./browser-use.js";
+import { BaseLayerProvider } from "./baselayer.js";
 
 export function getRequiredEnvVarsForProvider(name: string): string[] {
   const key = name.trim().toLowerCase();
@@ -20,6 +21,7 @@ export function getRequiredEnvVarsForProvider(name: string): string[] {
   if (key === "notte") return ["NOTTE_API_KEY"];
   if (key === "browser-use" || key === "browseruse" || key === "bu")
     return ["BROWSER_USE_API_KEY"];
+  if (key === "baselayer" || key === "base-layer") return ["BASELAYER_API_URL"];
   throw new Error(`Unknown provider: ${name}`);
 }
 
@@ -42,5 +44,6 @@ export function resolveProvider(name: string): ProviderClient {
   if (key === "notte") return new NotteProvider();
   if (key === "browser-use" || key === "browseruse" || key === "bu")
     return new BrowserUseProvider();
+  if (key === "baselayer" || key === "base-layer") return new BaseLayerProvider();
   throw new Error(`Unknown provider: ${name}`);
 }

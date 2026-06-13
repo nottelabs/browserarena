@@ -15,6 +15,7 @@ REGION=""
 RUNS=100
 DRY_RUN=0
 NO_RESET=0
+BASELAYER_SELFHOST_METAL_JSON=""
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -31,7 +32,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$REGION" in
-  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use" ;;
+  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,baselayer" ;;
   us-west) PROVIDERS="notte,browserbase" ;;
   "")      echo "[ERROR] --region us-east|us-west required" >&2; exit 2 ;;
   *)       echo "[ERROR] invalid --region: $REGION (want us-east or us-west)" >&2; exit 2 ;;
@@ -39,6 +40,109 @@ esac
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
+
+cleanup_baselayer_selfhost() {
+  if [[ -z "${BASELAYER_SELFHOST_METAL_JSON:-}" || ! -f "$BASELAYER_SELFHOST_METAL_JSON" ]]; then
+    return
+  fi
+  node - "$BASELAYER_SELFHOST_METAL_JSON" <<'NODE'
+const fs = require("fs");
+const meta = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+if (!meta.instanceId || !meta.region) process.exit(0);
+console.log(`[INFO] terminating BaseLayer self-host metal ${meta.instanceId} in ${meta.region}`);
+const { spawnSync } = require("child_process");
+spawnSync("aws", [
+  "ec2",
+  "terminate-instances",
+  "--profile",
+  process.env.BASELAYER_AWS_PROFILE || "baselayer",
+  "--region",
+  meta.region,
+  "--instance-ids",
+  meta.instanceId,
+], { stdio: "inherit" });
+NODE
+}
+trap cleanup_baselayer_selfhost EXIT
+
+provider_enabled() {
+  local needle="$1"
+  IFS=',' read -ra enabled <<< "$PROVIDERS"
+  for p in "${enabled[@]}"; do
+    [[ "$p" == "$needle" ]] && return 0
+  done
+  return 1
+}
+
+setup_baselayer_selfhost() {
+  if ! provider_enabled "baselayer"; then
+    return
+  fi
+  if [[ -n "${BASELAYER_API_URL:-}" ]]; then
+    echo "[INFO] BASELAYER_API_URL already set; using existing BaseLayer endpoint"
+    return
+  fi
+  if [[ "${BASELAYER_AUTO_SELFHOST:-1}" != "1" ]]; then
+    echo "[ERROR] baselayer provider is enabled but BASELAYER_API_URL is unset." >&2
+    echo "[ERROR] Set BASELAYER_API_URL or set BASELAYER_AUTO_SELFHOST=1 to provision from the BaseLayer repo." >&2
+    exit 1
+  fi
+  if [[ $DRY_RUN -eq 1 && "${BASELAYER_DRY_RUN_SELFHOST:-0}" != "1" ]]; then
+    echo "[INFO] --dry-run: skipping BaseLayer auto-selfhost provisioning."
+    echo "[INFO] Set BASELAYER_DRY_RUN_SELFHOST=1 to allow dry-run provisioning."
+    return
+  fi
+
+  local ps
+  ps="$(command -v pwsh || command -v powershell || true)"
+  if [[ -z "$ps" ]]; then
+    echo "[ERROR] BaseLayer auto-selfhost requires PowerShell 7+ (pwsh) because the BaseLayer AWS wrapper is PowerShell." >&2
+    exit 1
+  fi
+  if ! command -v aws >/dev/null 2>&1; then
+    echo "[ERROR] BaseLayer auto-selfhost requires AWS CLI v2 on the BrowserArena runner." >&2
+    exit 1
+  fi
+
+  local base_repo="${BASELAYER_REPO:-https://github.com/Lasdw6/BaseLayer.git}"
+  local base_ref="${BASELAYER_REF:-main}"
+  local base_dir="${BASELAYER_SELFHOST_REPO_DIR:-$REPO_ROOT/.tmp/baselayer-selfhost-repo}"
+  local out_dir="${BASELAYER_SELFHOST_OUT_DIR:-$REPO_ROOT/.tmp/baselayer-selfhost}"
+  local aws_region="${BASELAYER_AWS_REGION:-us-east-2}"
+  local smoke_runs="${BASELAYER_SELFHOST_SMOKE_RUNS:-1}"
+  local smoke_concurrency="${BASELAYER_SELFHOST_SMOKE_CONCURRENCY:-1}"
+  local runtime_profile="${BASELAYER_RUNTIME_PROFILE:-baselayer-firecracker-headless-shell}"
+
+  echo "[INFO] provisioning BaseLayer self-host from $base_repo ref=$base_ref region=$aws_region"
+  rm -rf "$base_dir"
+  git clone --depth 1 --branch "$base_ref" "$base_repo" "$base_dir"
+
+  "$ps" -NoProfile -ExecutionPolicy Bypass -File "$base_dir/scripts/bench/run-browserarena-selfhosted.ps1" \
+    -Mode local \
+    -AwsProfile "${BASELAYER_AWS_PROFILE:-baselayer}" \
+    -Region "$aws_region" \
+    -BaseLayerRepo "$base_repo" \
+    -BaseLayerRef "$base_ref" \
+    -BrowserArenaPath "$REPO_ROOT" \
+    -Target "${BASELAYER_SELFHOST_TARGET:-https://example.com}" \
+    -RuntimeProfile "$runtime_profile" \
+    -Concurrency "$smoke_concurrency" \
+    -Runs "$smoke_runs" \
+    -Repeats 1 \
+    -KeepMetal \
+    -OutDir "$out_dir"
+
+  BASELAYER_SELFHOST_METAL_JSON="$(find "$out_dir" -path '*/repeat-1/metal.json' -type f | sort | tail -n 1)"
+  if [[ -z "$BASELAYER_SELFHOST_METAL_JSON" || ! -f "$BASELAYER_SELFHOST_METAL_JSON" ]]; then
+    echo "[ERROR] BaseLayer self-host setup did not produce metal.json under $out_dir" >&2
+    exit 1
+  fi
+  export BASELAYER_API_URL
+  BASELAYER_API_URL="$(node -e 'const fs=require("fs"); const m=JSON.parse(fs.readFileSync(process.argv[1],"utf8")); process.stdout.write(`http://${m.publicIp}:3000`);' "$BASELAYER_SELFHOST_METAL_JSON")"
+  export BASELAYER_RUNTIME_PROFILE="$runtime_profile"
+  rm -rf "results/hello-browser/baselayer/$(date -u +%F)"
+  echo "[INFO] BaseLayer self-host ready at $BASELAYER_API_URL"
+}
 
 mkdir -p logs
 LOG_FILE="logs/cron-$(date -u +%Y-%m-%dT%H-%M-%SZ)-${REGION}.log"
@@ -65,6 +169,8 @@ else
   echo "[WARN] no .env found; provider env vars must already be exported"
 fi
 
+setup_baselayer_selfhost
+
 # Sanity: at least one provider in this region has its env var set. Mirrors
 # the env-var map in src/providers/index.ts.
 have_any=0
@@ -76,6 +182,7 @@ for p in "${PROV_LIST[@]}"; do
     hyperbrowser)    v="${HYPERBROWSER_API_KEY:-}" ;;
     anchorbrowser)   v="${ANCHORBROWSER_API_KEY:-}" ;;
     browser-use)     v="${BROWSER_USE_API_KEY:-}" ;;
+    baselayer)        v="${BASELAYER_API_URL:-}" ;;
     notte)           v="${NOTTE_API_KEY:-}" ;;
     browserbase)     v="${BROWSERBASE_API_KEY:-}" ;;
     *) echo "[ERROR] unknown provider in region map: $p" >&2; exit 2 ;;

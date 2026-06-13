@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="bdr-rim" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e8e6dc"/>
+      <stop offset="0.35" stop-color="#a8a49a"/>
+      <stop offset="0.7" stop-color="#3a3832"/>
+      <stop offset="1" stop-color="#14120e"/>
+    </linearGradient>
+    <linearGradient id="bdr-enamel" x1="0.2" y1="0" x2="0.8" y2="1">
+      <stop offset="0" stop-color="#1f1d18"/>
+      <stop offset="0.5" stop-color="#0d0c09"/>
+      <stop offset="1" stop-color="#050403"/>
+    </linearGradient>
+    <linearGradient id="bdr-recess" x1="0" y1="0" x2="0.4" y2="1">
+      <stop offset="0" stop-color="#6a665b"/>
+      <stop offset="1" stop-color="#2a2823"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="32" cy="58" rx="22" ry="1.6" fill="#000" opacity="0.4"/>
+  <!-- Outer stepped silhouette — metallic rim -->
+  <path d="M6 54 L6 40 L18 40 L18 28 L30 28 L30 14 L48 14 L48 54 Z" fill="url(#bdr-rim)"/>
+  <!-- Dark enamel body — inset ~2px from rim -->
+  <path d="M8 52 L8 42 L20 42 L20 30 L32 30 L32 16 L46 16 L46 52 Z" fill="url(#bdr-enamel)"/>
+  <!-- Inset recessed step -->
+  <path d="M14 52 L14 46 L24 46 L24 36 L36 36 L36 52 Z" fill="url(#bdr-recess)"/>
+  <!-- Top edge specular highlights per step -->
+  <path d="M8 42 L20 42 L20 44 L8 44 Z" fill="#ffffff" opacity="0.18"/>
+  <path d="M20 30 L32 30 L32 32 L20 32 Z" fill="#ffffff" opacity="0.22"/>
+  <path d="M32 16 L46 16 L46 18 L32 18 Z" fill="#ffffff" opacity="0.28"/>
+  <!-- Rim top-edge shine -->
+  <path d="M6 40 L18 40 L20 42 L8 42 Z" fill="#ffffff" opacity="0.35"/>
+  <path d="M18 28 L30 28 L32 30 L20 30 Z" fill="#ffffff" opacity="0.3"/>
+  <path d="M30 14 L48 14 L46 16 L32 16 Z" fill="#ffffff" opacity="0.4"/>
+  <!-- Dark rim right + bottom -->
+  <path d="M48 14 L48 54 L46 52 L46 16 Z" fill="#000" opacity="0.55"/>
+  <path d="M6 54 L48 54 L46 52 L8 52 Z" fill="#000" opacity="0.5"/>
+  <!-- Inset recess top highlight -->
+  <path d="M14 46 L24 46 L24 48 L14 48 Z" fill="#ffffff" opacity="0.1"/>
+  <path d="M24 36 L36 36 L36 38 L24 38 Z" fill="#ffffff" opacity="0.12"/>
+  <!-- Accent glint on top step -->
+  <rect x="40" y="18" width="4" height="1.5" fill="#3f463d" opacity="0.75"/>
+</svg>
