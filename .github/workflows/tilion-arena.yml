@@ -1,0 +1,45 @@
+name: Tilion Arena Bench
+
+on:
+  workflow_dispatch:
+    inputs:
+      runs:
+        description: 'iterations'
+        required: false
+        default: '100'
+      concurrency:
+        description: 'concurrency'
+        required: false
+        default: '1'
+      benchmark:
+        description: 'benchmark'
+        required: false
+        default: 'hello-browser'
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: 'npm'
+      - run: npm ci
+      - name: Run arena benchmark
+        env:
+          TILION_API_KEY: ${{ secrets.TILION_API_KEY }}
+        run: |
+          npm run bench -- --provider tilion --benchmark ${{ inputs.benchmark }} --runs ${{ inputs.runs }} --concurrency ${{ inputs.concurrency }}
+      - name: Show results
+        if: always()
+        run: |
+          find results -type f -name '*.json' -newermt '-40 minutes' | while read f; do
+            echo "--- $f ---"; cat "$f"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: arena-results
+          path: results/
