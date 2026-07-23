@@ -6,7 +6,7 @@ import { requireEnv } from "../utils/env.js";
 // Playwright, release. Non-stealth session to match how the other providers are benched.
 export class TilionProvider implements ProviderClient {
   readonly name = "TILION";
-  private base = (process.env.TILION_BASE_URL || "https://tilion-control.fly.dev").replace(/\/+$/, "");
+  private base = (process.env.TILION_BASE_URL || "https://api.tilion.dev").replace(/\/+$/, "");
 
   // List price, $0.03/hr per session.
   computeCost(seconds: number): number {
