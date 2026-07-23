@@ -29,7 +29,7 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@browserbasehq/sdk": "^2.6.0",
+    "@browserbasehq/sdk": "^2.16.0",
     "anchorbrowser": "^0.16.3",
     "steel-sdk": "^0.14.0",
     "@hyperbrowser/sdk": "^0.71.0",
