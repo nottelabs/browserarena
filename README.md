@@ -31,6 +31,7 @@ Create session → Connect via CDP → Navigate page → Release session
 | Provider | Region | Website |
 |---|---|---|
 | Notte | us-west-2 | [notte.cc](https://www.notte.cc) |
+| Tilion (beta) | us-east-1 | [tilion.dev](https://tilion.dev) |
 | Browserbase | us-west-2 | [browserbase.com](https://www.browserbase.com) |
 | Steel | us-east-1 | [steel.dev](https://www.steel.dev) |
 | Kernel | us-east-1 | [kernel.sh](https://www.kernel.sh) |
