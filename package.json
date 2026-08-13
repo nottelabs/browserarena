@@ -34,7 +34,7 @@
     "steel-sdk": "^0.14.0",
     "@hyperbrowser/sdk": "^0.71.0",
     "@onkernel/sdk": "^0.76.0",
-    "dotenv": "^17.2.3",
+    "dotenv": "^17.4.2",
     "playwright-core": "^1.61.1"
   }
 }
