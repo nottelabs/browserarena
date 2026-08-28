@@ -1,6 +1,8 @@
 import type { ProviderClient, ProviderSession, RecordingResult } from "../types.js";
 import { requireEnv } from "../utils/env.js";
 
+const API_BASE = "https://api.browser-use.com/api/v4";
+
 export class BrowserUseProvider implements ProviderClient {
   readonly name = "BROWSER_USE";
 
@@ -10,15 +12,18 @@ export class BrowserUseProvider implements ProviderClient {
     return Math.round((billedSeconds / 3600) * perHour * 1e8) / 1e8;
   }
 
-  async create(): Promise<ProviderSession> {
+  async create(opts?: { recording?: boolean }): Promise<ProviderSession> {
     const apiKey = requireEnv("BROWSER_USE_API_KEY");
-    const res = await fetch("https://api.browser-use.com/api/v3/browsers", {
+    const res = await fetch(`${API_BASE}/browsers`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "X-Browser-Use-API-Key": apiKey,
       },
-      body: JSON.stringify({ proxyCountryCode: null }),
+      body: JSON.stringify({
+        proxyCountryCode: null,
+        enableRecording: opts?.recording ?? false,
+      }),
       signal: AbortSignal.timeout(90_000),
     });
     if (!res.ok) {
@@ -34,7 +39,7 @@ export class BrowserUseProvider implements ProviderClient {
 
   async release(id: string): Promise<void> {
     const apiKey = requireEnv("BROWSER_USE_API_KEY");
-    const res = await fetch(`https://api.browser-use.com/api/v3/browsers/${id}`, {
+    const res = await fetch(`${API_BASE}/browsers/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -55,7 +60,7 @@ export class BrowserUseProvider implements ProviderClient {
     const delayMs = 3000;
 
     for (let i = 0; i < maxAttempts; i++) {
-      const res = await fetch(`https://api.browser-use.com/api/v3/sessions/${sessionId}`, {
+      const res = await fetch(`${API_BASE}/browsers/${sessionId}`, {
         headers: { "X-Browser-Use-API-Key": apiKey },
         signal: AbortSignal.timeout(30_000),
       });
