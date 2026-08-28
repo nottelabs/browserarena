@@ -304,6 +304,11 @@ export function HistoryCharts({
         }))
         .filter((provider) => provider.points.length > 0)
         .sort((a, b) => {
+          // Notte leads the selector; the rest stay ordered by value score.
+          if (a.provider !== b.provider) {
+            if (a.provider === "NOTTE") return -1;
+            if (b.provider === "NOTTE") return 1;
+          }
           const latestA = [...a.points].sort((x, y) => y.date.localeCompare(x.date))[0];
           const latestB = [...b.points].sort((x, y) => y.date.localeCompare(x.date))[0];
           const scoreA = latestA
