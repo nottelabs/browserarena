@@ -63,10 +63,7 @@ export function PageShell({
           <p className="mt-0 sm:mt-2 sm:max-w-2xl text-[0.78rem] sm:text-sm leading-relaxed text-muted-foreground">
             Comparing cloud browser infrastructure providers{' '}
             <br className="sm:hidden" />
-            on speed, reliability, and cost.{' '}
-            <br className="hidden sm:block" />
-            Open-source and reproducible on Railway. Built by{' '}
-            <a href="https://notte.cc" target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline">Notte</a>.
+            on speed, reliability, and cost.
           </p>
         </section>
         {children}

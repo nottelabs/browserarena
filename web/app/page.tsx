@@ -84,7 +84,9 @@ export default async function Home({
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <span className="text-sm text-muted-foreground">
-          We&apos;re open-source and reproducible!<span className="hidden sm:inline"> Contribute.</span>
+          We&apos;re open-source and reproducible!<span className="hidden sm:inline"> Contribute.</span>{' '}
+          Built by{' '}
+          <a href="https://notte.cc" target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline">Notte</a>.
         </span>
         <div className="flex items-center gap-3 flex-wrap">
           <a
