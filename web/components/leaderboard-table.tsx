@@ -131,9 +131,9 @@ function computeValueScores(
 }
 
 const WEIGHT_PRESETS: { label: string; weights: { latency: number; reliability: number; cost: number } }[] = [
-  { label: "Reliable first", weights: { latency: 20, reliability: 60, cost: 20 } },
-  { label: "Speed first", weights: { latency: 60, reliability: 20, cost: 20 } },
-  { label: "Budget first", weights: { latency: 20, reliability: 20, cost: 60 } },
+  { label: "Fastest", weights: { latency: 100, reliability: 0, cost: 0 } },
+  { label: "Cheapest", weights: { latency: 0, reliability: 0, cost: 100 } },
+  { label: "Most reliable", weights: { latency: 5, reliability: 90, cost: 5 } },
   { label: "Balanced", weights: { latency: 33, reliability: 33, cost: 33 } },
 ];
 
