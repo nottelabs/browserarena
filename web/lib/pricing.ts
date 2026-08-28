@@ -9,7 +9,7 @@ interface UnitPricing {
 
 const PRICING: Record<string, { unit: UnitPricing }> = {
   NOTTE: {
-    unit: { ratePerHour: 0.05, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
+    unit: { ratePerHour: 0, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
   },
   STEEL: {
     unit: { ratePerHour: 0.1, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
