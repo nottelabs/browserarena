@@ -23,7 +23,7 @@ export class NotteProvider implements ProviderClient {
   private baseUrl: string;
 
   computeCost(seconds: number): number {
-    const perHour = 0.05;
+    const perHour = 0;
     const billedSeconds = Math.max(60, Math.ceil(seconds / 60) * 60);
     return Math.round((billedSeconds / 3600) * perHour * 1e8) / 1e8;
   }
