@@ -29,6 +29,9 @@ const PRICING: Record<string, { unit: UnitPricing }> = {
   BROWSER_USE: {
     unit: { ratePerHour: 0.02, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
   },
+  TILION: {
+    unit: { ratePerHour: 0.03, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+  },
 };
 
 function computeUnitCost(pricing: UnitPricing, durationSeconds: number): number {
