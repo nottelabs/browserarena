@@ -82,6 +82,7 @@ const PROVIDER_META: Record<
   },
   STEEL: { displayName: "Steel", url: "https://www.steel.dev", browserRegion: "us-east-1" },
   BROWSER_USE: { displayName: "Browser Use", url: "https://www.browser-use.com", browserRegion: "us-east-1" },
+  TILION: { displayName: "Tilion", url: "https://tilion.dev" },
 };
 
 function median(values: number[]): number {
