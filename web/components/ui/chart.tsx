@@ -55,7 +55,7 @@ function ChartContainer({
         data-slot="chart"
         data-chart={chartId}
         className={cn(
-          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden",
+          "flex aspect-video justify-center text-xs [&_.recharts-cartesian-axis-tick_text]:fill-muted-foreground [&_.recharts-cartesian-grid_line[stroke='#ccc']]:stroke-border/50 [&_.recharts-curve.recharts-tooltip-cursor]:stroke-border [&_.recharts-dot[stroke='#fff']]:stroke-transparent [&_.recharts-layer]:outline-hidden [&_.recharts-polar-grid_[stroke='#ccc']]:stroke-border [&_.recharts-radial-bar-background-sector]:fill-muted [&_.recharts-rectangle.recharts-tooltip-cursor]:fill-muted [&_.recharts-reference-line_[stroke='#ccc']]:stroke-border [&_.recharts-sector]:outline-hidden [&_.recharts-sector[stroke='#fff']]:stroke-transparent [&_.recharts-surface]:outline-hidden [&_.recharts-surface:focus-visible]:outline-solid [&_.recharts-surface:focus-visible]:outline-2 [&_.recharts-surface:focus-visible]:outline-ring",
           className
         )}
         {...props}
@@ -125,7 +125,7 @@ function ChartTooltipContent({
     indicator?: "line" | "dot" | "dashed"
     nameKey?: string
     labelKey?: string
-  }) {
+  } & Omit<RechartsPrimitive.DefaultTooltipContentProps, "accessibilityLayer">) {
   const { config } = useChart()
 
   const tooltipLabel = React.useMemo(() => {
@@ -188,7 +188,7 @@ function ChartTooltipContent({
 
             return (
               <div
-                key={item.dataKey}
+                key={String(item.dataKey ?? index)}
                 className={cn(
                   "flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5 [&>svg]:text-muted-foreground",
                   indicator === "dot" && "items-center"
@@ -259,7 +259,7 @@ function ChartLegendContent({
   verticalAlign = "bottom",
   nameKey,
 }: React.ComponentProps<"div"> &
-  Pick<RechartsPrimitive.LegendProps, "payload" | "verticalAlign"> & {
+  RechartsPrimitive.DefaultLegendContentProps & {
     hideIcon?: boolean
     nameKey?: string
   }) {
@@ -267,6 +267,15 @@ function ChartLegendContent({
 
   if (!payload?.length) {
     return null
+  }
+
+  const configKeys = Object.keys(config)
+  const itemKey = (item: RechartsPrimitive.LegendPayload) =>
+    `${nameKey || item.dataKey || "value"}`
+  // Legend sorts items alphabetically by default, so restore the config order.
+  const configIndex = (item: RechartsPrimitive.LegendPayload) => {
+    const index = configKeys.indexOf(itemKey(item))
+    return index === -1 ? configKeys.length : index
   }
 
   return (
@@ -279,8 +288,9 @@ function ChartLegendContent({
     >
       {payload
         .filter((item) => item.type !== "none")
+        .sort((a, b) => configIndex(a) - configIndex(b))
         .map((item) => {
-          const key = `${nameKey || item.dataKey || "value"}`
+          const key = itemKey(item)
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
 
           return (
