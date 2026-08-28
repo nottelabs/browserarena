@@ -31,7 +31,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$REGION" in
-  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase" ;;
+  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion" ;;
   us-west) PROVIDERS="notte" ;;
   "")      echo "[ERROR] --region us-east|us-west required" >&2; exit 2 ;;
   *)       echo "[ERROR] invalid --region: $REGION (want us-east or us-west)" >&2; exit 2 ;;
@@ -78,6 +78,7 @@ for p in "${PROV_LIST[@]}"; do
     browser-use)     v="${BROWSER_USE_API_KEY:-}" ;;
     notte)           v="${NOTTE_API_KEY:-}" ;;
     browserbase)     v="${BROWSERBASE_API_KEY:-}" ;;
+    tilion)          v="${TILION_API_KEY:-}" ;;
     *) echo "[ERROR] unknown provider in region map: $p" >&2; exit 2 ;;
   esac
   [[ -n "$v" ]] && have_any=1
