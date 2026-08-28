@@ -53,6 +53,7 @@ const PROVIDER_LOGOS: Record<string, string> = {
   KERNEL: "/logos/kernel.png",
   STEEL: "/logos/steel.png",
   BROWSER_USE: "/logos/browseruse.png",
+  TILION: "/logos/tilion.png",
 };
 
 type SortDirection = "asc" | "desc";
