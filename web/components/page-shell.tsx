@@ -50,8 +50,8 @@ export function PageShell({
         </NavBarContent>
       </NavBar>
 
-      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-10 pt-6 sm:pt-10 pb-5 sm:pb-10">
-        <section className="mb-4 sm:mb-10">
+      <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-10 pt-6 sm:pt-5 pb-5 sm:pb-10">
+        <section className="mb-4 sm:mb-5">
           <div className="sm:hidden flex justify-center mb-3">
             <span className="rounded-[3px] bg-purple-500/15 px-3 py-1 text-[0.68rem] font-semibold text-purple-600 tracking-wide">
               Open site on desktop to see full evaluations
@@ -60,7 +60,7 @@ export function PageShell({
           <h1 className="hidden sm:block text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">
             The Browser Arena
           </h1>
-          <p className="mt-0 sm:mt-3 sm:max-w-2xl text-[0.78rem] sm:text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-0 sm:mt-2 sm:max-w-2xl text-[0.78rem] sm:text-sm leading-relaxed text-muted-foreground">
             Comparing cloud browser infrastructure providers{' '}
             <br className="sm:hidden" />
             on speed, reliability, and cost.{' '}

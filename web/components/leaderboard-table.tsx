@@ -541,12 +541,12 @@ export function LeaderboardTable({
                 key={p.provider}
                 className={`transition-none h-10 sm:h-12 ${isWinner ? "bg-primary/6 hover:bg-primary/10" : ""}`}
               >
-                <TableCell className="text-center py-2.5">
+                <TableCell className="text-center py-2">
                   <span className="text-[0.65rem] text-muted-foreground">
                     {rank}
                   </span>
                 </TableCell>
-                <TableCell className="py-2.5">
+                <TableCell className="py-2">
                   <div className="flex flex-col gap-1 items-start">
                     <div className="flex items-center gap-x-2 gap-y-0.5 flex-nowrap">
                       {PROVIDER_LOGOS[p.provider] && (
@@ -578,10 +578,10 @@ export function LeaderboardTable({
                     ) : null}
                   </div>
                 </TableCell>
-                <TableCell className="hidden sm:table-cell py-2.5 font-mono text-[0.82rem] text-foreground tabular-nums">
+                <TableCell className="hidden sm:table-cell py-2 font-mono text-[0.82rem] text-foreground tabular-nums">
                   {p.browserRegion ?? "—"}
                 </TableCell>
-                <TableCell className="hidden sm:table-cell py-2.5 text-right font-mono text-[0.82rem] text-foreground tabular-nums">
+                <TableCell className="hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] text-foreground tabular-nums">
                   <span>{p.totalRuns.toLocaleString("en-US")}</span>
                   {p.concurrency > 1 && (
                     <span className="block text-[0.6rem] text-muted-foreground">
@@ -589,7 +589,7 @@ export function LeaderboardTable({
                     </span>
                   )}
                 </TableCell>
-                <TableCell className={`hidden sm:table-cell py-2.5 text-right ${sc("reliability")}`}>
+                <TableCell className={`hidden sm:table-cell py-2 text-right ${sc("reliability")}`}>
                   <div className="flex flex-col items-end h-[2.25rem] justify-center">
                     <span className="font-mono text-[0.82rem] tabular-nums leading-tight text-foreground">
                       {p.successRate.toFixed(1)}%
@@ -610,23 +610,23 @@ export function LeaderboardTable({
                   return (
                   <TableCell
                     key={i}
-                    className={`hidden sm:table-cell py-2.5 text-right font-mono text-[0.82rem] text-foreground tabular-nums ${sc(segSortKeys[i])}`}
+                    className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] text-foreground tabular-nums ${sc(segSortKeys[i])}`}
                   >
                     {Math.round((p[key] as number)).toLocaleString("en-US")}
                   </TableCell>
                   );
                 })}
                 <TableCell
-                  className={`hidden sm:table-cell py-2.5 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("latency")}`}
+                  className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("latency")}`}
                 >
                   {Math.round(totalMs).toLocaleString("en-US")}
                 </TableCell>
-                <TableCell className={`hidden sm:table-cell py-2.5 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("cost")}`}>
+                <TableCell className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("cost")}`}>
                   {p.pricePerHour != null ? (
                     <>${p.pricePerHour.toFixed(2)}/hr</>
                   ) : "—"}
                 </TableCell>
-                <TableCell className={`py-2.5 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("value")}`}>
+                <TableCell className={`py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("value")}`}>
                   {(valueScores.get(p.provider) ?? 0).toFixed(3)}
                 </TableCell>
               </TableRow>
