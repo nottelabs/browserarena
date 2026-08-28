@@ -25,16 +25,16 @@
   "author": "junhsss <junhsssr@gmail.com>",
   "devDependencies": {
     "@types/node": "^26.1.1",
-    "tsx": "^4.20.6",
+    "tsx": "^4.23.1",
     "typescript": "^7.0.2"
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.6.0",
     "anchorbrowser": "^0.16.3",
-    "steel-sdk": "^0.14.0",
+    "steel-sdk": "^0.18.0",
     "@hyperbrowser/sdk": "^0.71.0",
-    "@onkernel/sdk": "^0.76.0",
-    "dotenv": "^17.2.3",
+    "@onkernel/sdk": "^0.81.0",
+    "dotenv": "^17.4.2",
     "playwright-core": "^1.61.1"
   }
 }
