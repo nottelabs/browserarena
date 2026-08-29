@@ -46,7 +46,7 @@ export class NotteProvider implements ProviderClient {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${this.getApiKey()}`,
       },
-      body: JSON.stringify({}),
+      body: JSON.stringify({ proxies: false }),
     });
 
     if (!startResponse.ok) {
