@@ -122,17 +122,49 @@ Or deploy directly on Railway:
 
 ### Automated runs
 
-Daily results are produced by `scripts/run-and-publish.sh`, which runs the benchmark for one region's providers (c1 + c10, 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`. Two EC2 boxes share the script; the cron line differs only in `--region`:
+Daily results are produced by `scripts/run-and-publish.sh`, which runs the benchmark for one region's providers (c1 + c10, 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`.
 
-```cron
-# us-east-1 box (Steel, Kernel, Hyperbrowser, Anchor Browser, Browser Use)
-0 3 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east
+The scheduler is the [`Benchmark` workflow](.github/workflows/benchmark.yml). It does not run the benchmark on a GitHub runner — it triggers the script on the EC2 box for each region via [AWS SSM](https://docs.aws.amazon.com/systems-manager/latest/userguide/run-command.html) Run Command, then streams the status and tails the log back into the Actions run. Provider API keys, the benchmark itself, and the push to `main` all stay on the instance.
 
-# us-west-1 box (Notte, Browserbase) — staggered 1h to avoid push races
-0 4 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west
+```
+GitHub Actions (cron)  ──OIDC──>  AWS SSM  ──>  EC2 box  ──>  run-and-publish.sh  ──>  push to main
 ```
 
-Per-EC2 setup: clone the repo, populate `.env` with that region's provider keys, and add an SSH key as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) with write access (one key per box). Cron logs go to `logs/` (gitignored).
+Two schedules, one per region, matching the times the boxes previously used. `us-east` runs eight providers and takes about an hour, so `us-west` is staggered behind it to keep the two `git push`es apart:
+
+| Schedule (UTC) | Region | Providers |
+|---|---|---|
+| `0 3 * * *` | us-east-1 | Steel, Kernel, Kernel (headful), Hyperbrowser, Anchor Browser, Browser Use, Browserbase, Tilion |
+| `0 4 * * *` | us-west-1 | Notte |
+
+The workflow can also be dispatched manually with `region` (`both`, `us-east-1`, `us-west-1`), `provider` (`all` or a single provider), `runs`, and `dry_run`. Picking `region: both` with a single provider narrows to whichever box owns it, so `provider: notte` only ever dispatches to us-west-1. Requesting a provider from the wrong box fails before any provider quota is spent.
+
+```bash
+# Same thing locally on a box, bypassing GitHub
+scripts/run-and-publish.sh --region us-west --provider notte --runs 100
+scripts/run-and-publish.sh --region us-east --provider all --dry-run
+```
+
+Only one run per box happens at a time; a second dispatch queues rather than cancelling the in-flight benchmark.
+
+#### Setup
+
+Per EC2 box:
+
+1. Clone the repo to `/home/ubuntu/browserarena` and populate `.env` with that region's provider keys.
+2. Add an SSH key as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) with write access (one key per box), so the box can push results.
+3. Ensure the SSM agent is running and the instance profile grants `AmazonSSMManagedInstanceCore`. No inbound ports are needed — the agent polls outbound.
+4. Remove any leftover `run-and-publish.sh` crontab entry. The workflow is the only scheduler; leaving cron in place would run the benchmark twice a day and double provider spend.
+
+In the repo, create an IAM role trusting GitHub's OIDC provider (scoped to this repo) with permission to call `ssm:SendCommand`, `ssm:GetCommandInvocation`, and `ssm:CancelCommand` on the two instances, then set three secrets:
+
+| Secret | Value |
+|---|---|
+| `AWS_ROLE_ARN` | ARN of the OIDC role to assume |
+| `US_EAST_1_INSTANCE_ID` | `i-...` for the us-east-1 box |
+| `US_WEST_1_INSTANCE_ID` | `i-...` for the us-west-1 box |
+
+Full run logs stay on the box in `logs/` (gitignored) and `/tmp/browserarena-<region>.log`; the Actions run shows the last 20 KB.
 
 ## License
 

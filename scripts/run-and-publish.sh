@@ -3,39 +3,63 @@
 # push the new results to main. Designed to be invoked from cron on each EC2.
 #
 # Usage:
-#   scripts/run-and-publish.sh --region us-east|us-west [--runs N] [--dry-run] [--no-reset]
+#   scripts/run-and-publish.sh --region us-east|us-west
+#     [--provider all|<csv>] [--runs N] [--dry-run] [--no-reset]
 #
-# Cron does git pull/reset + npm ci + bench + git commit/push. The two regions
+# --provider defaults to `all`, meaning every provider owned by the region.
+# A subset must be owned by --region; running a provider from the wrong box
+# fails fast because its API key only exists on the box that owns it.
+#
+# Does git pull/reset + npm ci + bench + git commit/push. The two regions
 # write to disjoint provider directories, so simultaneous runs only race on
 # `git push` itself; the retry loop handles that.
 
 set -euo pipefail
 
 REGION=""
+PROVIDER_ARG="all"
 RUNS=100
 DRY_RUN=0
 NO_RESET=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
-    --region)    REGION="${2:-}"; shift 2 ;;
-    --region=*)  REGION="${1#*=}"; shift ;;
-    --runs)      RUNS="${2:-}"; shift 2 ;;
-    --runs=*)    RUNS="${1#*=}"; shift ;;
-    --dry-run)   DRY_RUN=1; shift ;;
-    --no-reset)  NO_RESET=1; shift ;;
+    --region)     REGION="${2:-}"; shift 2 ;;
+    --region=*)   REGION="${1#*=}"; shift ;;
+    --provider)   PROVIDER_ARG="${2:-}"; shift 2 ;;
+    --provider=*) PROVIDER_ARG="${1#*=}"; shift ;;
+    --runs)       RUNS="${2:-}"; shift 2 ;;
+    --runs=*)     RUNS="${1#*=}"; shift ;;
+    --dry-run)    DRY_RUN=1; shift ;;
+    --no-reset)   NO_RESET=1; shift ;;
     -h|--help)
-      sed -n '2,12p' "$0"; exit 0 ;;
+      sed -n '2,15p' "$0"; exit 0 ;;
     *) echo "[ERROR] unknown arg: $1" >&2; exit 2 ;;
   esac
 done
 
 case "$REGION" in
-  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion" ;;
-  us-west) PROVIDERS="notte" ;;
+  us-east) REGION_PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion" ;;
+  us-west) REGION_PROVIDERS="notte" ;;
   "")      echo "[ERROR] --region us-east|us-west required" >&2; exit 2 ;;
   *)       echo "[ERROR] invalid --region: $REGION (want us-east or us-west)" >&2; exit 2 ;;
 esac
+
+# `all` runs the region's full list; anything else is a subset that must be
+# owned by this region, so a typo or a wrong-box dispatch fails before spending
+# any provider quota.
+if [[ -z "$PROVIDER_ARG" || "$PROVIDER_ARG" == "all" ]]; then
+  PROVIDERS="$REGION_PROVIDERS"
+else
+  IFS=',' read -ra REQUESTED <<< "$PROVIDER_ARG"
+  for p in "${REQUESTED[@]}"; do
+    if [[ ",$REGION_PROVIDERS," != *",$p,"* ]]; then
+      echo "[ERROR] provider '$p' is not run from region $REGION (owns: $REGION_PROVIDERS)" >&2
+      exit 2
+    fi
+  done
+  PROVIDERS="$PROVIDER_ARG"
+fi
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
@@ -44,7 +68,7 @@ mkdir -p logs
 LOG_FILE="logs/cron-$(date -u +%Y-%m-%dT%H-%M-%SZ)-${REGION}.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 
-echo "[INFO] start region=$REGION runs=$RUNS dry_run=$DRY_RUN no_reset=$NO_RESET repo=$REPO_ROOT"
+echo "[INFO] start region=$REGION providers=$PROVIDERS runs=$RUNS dry_run=$DRY_RUN no_reset=$NO_RESET repo=$REPO_ROOT"
 
 if [[ $NO_RESET -eq 0 ]]; then
   echo "[INFO] resetting working tree to origin/main"
@@ -139,7 +163,12 @@ GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
 
-git commit -m "results: $REGION $DATE"
+COMMIT_MSG="results: $REGION $DATE"
+if [[ "$PROVIDERS" != "$REGION_PROVIDERS" ]]; then
+  COMMIT_MSG="$COMMIT_MSG ($PROVIDERS)"
+fi
+
+git commit -m "$COMMIT_MSG"
 
 # Push with retry. Disjoint dirs across regions mean rebase always auto-applies.
 attempts=5
