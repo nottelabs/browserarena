@@ -392,7 +392,9 @@ export function LeaderboardTable({
     dir: "desc",
   });
 
-  const [rawWeights, setRawWeights] = useState({ latency: 33, reliability: 33, cost: 33 });
+  // Defaults to the first preset ("Fastest") so the highlighted button and the
+  // initial weights cannot drift apart.
+  const [rawWeights, setRawWeights] = useState(WEIGHT_PRESETS[0].weights);
 
   const normalizedWeights = useMemo(() => {
     const total = rawWeights.latency + rawWeights.reliability + rawWeights.cost;
