@@ -36,5 +36,7 @@ jobs:
         working-directory: web
       - run: npm run build
         working-directory: web
+      - run: npm test
+        working-directory: web
       - run: npm audit --package-lock-only
         working-directory: web

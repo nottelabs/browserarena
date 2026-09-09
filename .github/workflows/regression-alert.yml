@@ -1,0 +1,113 @@
+name: Regression Alert
+
+# Watches the committed benchmark results for sustained latency regressions,
+# success-rate drops, and a dead cron. See docs/regression-detection.md.
+#
+# Dedup is stateless and edge-triggered, so this workflow needs no write
+# access and never commits back to main (which would race the two EC2 runners'
+# `git push` retry loop in scripts/run-and-publish.sh).
+
+on:
+  push:
+    branches: [main]
+    paths: ["results/**"]
+  schedule:
+    # Staleness sweep, ~8h after the 03:00/04:00 UTC benchmark runs. This is the
+    # only trigger that can catch a dead cron: no run means no commit, so the
+    # push trigger never fires.
+    - cron: "0 12 * * *"
+    # Monday digest — backstop for an edge lost to a missed workflow run.
+    - cron: "0 13 * * 1"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "edge | staleness | digest"
+        required: false
+        default: "edge"
+      as_of:
+        description: "Replay a past date, YYYY-MM-DD"
+        required: false
+      dry_run:
+        description: "Print the Slack payload instead of posting"
+        required: false
+        default: "true"
+
+permissions:
+  contents: read
+
+# The us-east and us-west boxes push minutes apart. Queue rather than cancel:
+# cancelling the first run could drop an open/close edge permanently.
+concurrency:
+  group: regression-alert
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    steps:
+      # Actions are pinned to full commit SHAs, not tags. This job holds the
+      # Slack webhook in its environment, so a moved or compromised tag could
+      # tamper with the workspace it later runs.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+        working-directory: web
+
+      # Dispatch inputs are attacker-controlled by anyone with write access, so
+      # they are read from the environment and quoted rather than interpolated
+      # into the shell, and validated before use.
+      - name: Select mode
+        id: mode
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_MODE: ${{ github.event.inputs.mode }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            case "$SCHEDULE" in
+              "0 13 * * 1") MODE=digest ;;
+              *)            MODE=staleness ;;
+            esac
+          else
+            MODE="${INPUT_MODE:-edge}"
+          fi
+          case "$MODE" in
+            edge|staleness|digest) ;;
+            *) echo "Invalid mode: $MODE" >&2; exit 1 ;;
+          esac
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
+
+      - name: Check for regressions
+        working-directory: web
+        env:
+          # Absent on forks and on dry runs — the script then prints the
+          # payload instead of posting.
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GITHUB_SHA: ${{ github.sha }}
+          # Only the upstream repo is expected to be able to post, so a missing
+          # secret fails the run loudly there while forks stay green.
+          ALERT_REQUIRE_WEBHOOK: ${{ github.repository == 'nottelabs/browserarena' }}
+          MODE: ${{ steps.mode.outputs.mode }}
+          AS_OF: ${{ github.event.inputs.as_of }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
+        run: |
+          set -euo pipefail
+          args=(--mode "$MODE" --concurrency 1,10)
+          if [ -n "${AS_OF:-}" ]; then
+            if ! printf '%s' "$AS_OF" | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
+              echo "Invalid as_of (expected YYYY-MM-DD): $AS_OF" >&2
+              exit 1
+            fi
+            args+=(--as-of "$AS_OF")
+          fi
+          if [ "${DRY_RUN:-}" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          npm run check-regressions -- "${args[@]}"

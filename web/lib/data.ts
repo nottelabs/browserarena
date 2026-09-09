@@ -85,7 +85,8 @@ const PROVIDER_META: Record<
   TILION: { displayName: "Tilion", url: "https://tilion.dev", browserRegion: "us-east-1" },
 };
 
-function median(values: number[]): number {
+/** Exported for the regression detector (`lib/regression.ts`). */
+export function median(values: number[]): number {
   if (values.length === 0) return 0;
   const sorted = [...values].sort((a, b) => a - b);
   const mid = Math.floor(sorted.length / 2);
@@ -502,6 +503,15 @@ function summarizeHistoricalPoint(
   const successful = entries.filter((e) => e.success);
   const successRate = (successful.length / entries.length) * 100;
 
+  // ISO-8601 Zulu strings sort lexicographically, so string compare beats
+  // allocating a Date per entry.
+  let lastEntryAt: string | undefined;
+  for (const e of entries) {
+    if (e.created_at && (!lastEntryAt || e.created_at > lastEntryAt)) {
+      lastEntryAt = e.created_at;
+    }
+  }
+
   const creationTimes = successful.map((e) => e.session_creation_ms ?? 0);
   const connectTimes = successful.map((e) => e.session_connect_ms ?? 0);
   const gotoTimes = successful.map((e) => e.page_goto_ms ?? 0);
@@ -528,6 +538,7 @@ function summarizeHistoricalPoint(
 
   return {
     date,
+    lastEntryAt,
     totalRuns: entries.length,
     successRate,
     medianCreationMs,

@@ -134,6 +134,21 @@ Daily results are produced by `scripts/run-and-publish.sh`, which runs the bench
 
 Per-EC2 setup: clone the repo, populate `.env` with that region's provider keys, and add an SSH key as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) with write access (one key per box). Cron logs go to `logs/` (gitignored).
 
+### Regression alerts
+
+`GET https://www.browserarena.ai/api/health` reports whether a provider has regressed against its own 28-day baseline. It answers **200** when healthy and **503** when degraded or when results have gone stale, so an uptime monitor can alert on it with no custom code — point Better Stack, Checkly or Cronitor at the URL.
+
+```console
+$ curl -s https://www.browserarena.ai/api/health | jq -r .summary
+Notte session release 26ms -> 1.07s (41.2x) since 2026-09-05
+```
+
+Use the `www.` host: the apex 307-redirects, and monitors that don't follow redirects misread the 307.
+
+A metric only counts as regressed when **2 of the last 3 run-days** exceed the baseline by **both** 1.5x and 50ms. That combination is what separates a sustained step change from a one-day spike; a day-over-day check fires on the noise and still misses the real thing. `.github/workflows/regression-alert.yml` posts open/close events to Slack, deduped so one incident is one message.
+
+See [docs/regression-detection.md](docs/regression-detection.md) for the thresholds, the calibration against real history, and why there is deliberately no fast path below 24 hours.
+
 ## License
 
 MIT
