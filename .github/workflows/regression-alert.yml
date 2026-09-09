@@ -45,9 +45,12 @@ jobs:
   detect:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.1
+      # Actions are pinned to full commit SHAs, not tags. This job holds the
+      # Slack webhook in its environment, so a moved or compromised tag could
+      # tamper with the workspace it later runs.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         with:
           node-version: 26
           cache: npm
@@ -56,17 +59,30 @@ jobs:
       - run: npm ci
         working-directory: web
 
+      # Dispatch inputs are attacker-controlled by anyone with write access, so
+      # they are read from the environment and quoted rather than interpolated
+      # into the shell, and validated before use.
       - name: Select mode
         id: mode
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+          INPUT_MODE: ${{ github.event.inputs.mode }}
         run: |
-          if [ "${{ github.event_name }}" = "schedule" ]; then
-            case "${{ github.event.schedule }}" in
-              "0 13 * * 1") echo "mode=digest"    >> "$GITHUB_OUTPUT" ;;
-              *)            echo "mode=staleness" >> "$GITHUB_OUTPUT" ;;
+          set -euo pipefail
+          if [ "$EVENT_NAME" = "schedule" ]; then
+            case "$SCHEDULE" in
+              "0 13 * * 1") MODE=digest ;;
+              *)            MODE=staleness ;;
             esac
           else
-            echo "mode=${{ github.event.inputs.mode || 'edge' }}" >> "$GITHUB_OUTPUT"
+            MODE="${INPUT_MODE:-edge}"
           fi
+          case "$MODE" in
+            edge|staleness|digest) ;;
+            *) echo "Invalid mode: $MODE" >&2; exit 1 ;;
+          esac
+          echo "mode=$MODE" >> "$GITHUB_OUTPUT"
 
       - name: Check for regressions
         working-directory: web
@@ -78,9 +94,20 @@ jobs:
           # Only the upstream repo is expected to be able to post, so a missing
           # secret fails the run loudly there while forks stay green.
           ALERT_REQUIRE_WEBHOOK: ${{ github.repository == 'nottelabs/browserarena' }}
+          MODE: ${{ steps.mode.outputs.mode }}
+          AS_OF: ${{ github.event.inputs.as_of }}
+          DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: |
-          npm run check-regressions -- \
-            --mode "${{ steps.mode.outputs.mode }}" \
-            --concurrency 1,10 \
-            ${{ github.event.inputs.as_of && format('--as-of {0}', github.event.inputs.as_of) || '' }} \
-            ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}
+          set -euo pipefail
+          args=(--mode "$MODE" --concurrency 1,10)
+          if [ -n "${AS_OF:-}" ]; then
+            if ! printf '%s' "$AS_OF" | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
+              echo "Invalid as_of (expected YYYY-MM-DD): $AS_OF" >&2
+              exit 1
+            fi
+            args+=(--as-of "$AS_OF")
+          fi
+          if [ "${DRY_RUN:-}" = "true" ]; then
+            args+=(--dry-run)
+          fi
+          npm run check-regressions -- "${args[@]}"

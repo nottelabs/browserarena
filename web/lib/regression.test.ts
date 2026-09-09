@@ -164,6 +164,12 @@ test("stale data is reported as stale, and staleness outranks degraded", async (
   );
   assert.equal(series.status, "stale");
   assert.ok(series.ageHours! > DEFAULT_CONFIG.stalenessHours);
+
+  // A stale series still carries breaches, computed from its last known data.
+  // Anything reporting on breaches must therefore check `status` first, or it
+  // will describe old numbers as an active regression in the same breath as
+  // saying the data is stale.
+  assert.ok(series.breaches.length > 0, "expected stale series to retain breaches");
 });
 
 test("cold start reports unknown and never pages", async () => {

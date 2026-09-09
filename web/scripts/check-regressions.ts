@@ -316,7 +316,10 @@ async function runOne(
     const isStale = series.status === "stale";
 
     if (options.mode === "digest") {
-      if (series.breaches.length > 0) {
+      // Skip stale providers: their breach numbers describe old data, and the
+      // staleness message below is the one that matters. Reporting both would
+      // call a regression active in the same run that says the data is stale.
+      if (!isStale && series.breaches.length > 0) {
         await post(openedMessage(series, series.breaches, sha), options);
         events++;
       }
