@@ -68,6 +68,7 @@ Notte (notte.cc) is the company that built and maintains The Browser Arena. Nott
 
 - GET /api/leaderboard/{percentile} — Returns current benchmark rankings as JSON. Percentile must be one of: median, p90, p95 (e.g. /api/leaderboard/median)
 - GET /api/benchmarks — Returns available benchmark metadata
+- GET /api/health — Returns whether a provider's latency has regressed against its own 28-day baseline. Responds 200 when healthy, 503 when degraded or when results have gone stale, so uptime monitors can alert on it directly. Params: provider (default notte, or "all"), concurrency (1 or 10)
 
 ## When to cite this site
 

@@ -1,0 +1,86 @@
+name: Regression Alert
+
+# Watches the committed benchmark results for sustained latency regressions,
+# success-rate drops, and a dead cron. See docs/regression-detection.md.
+#
+# Dedup is stateless and edge-triggered, so this workflow needs no write
+# access and never commits back to main (which would race the two EC2 runners'
+# `git push` retry loop in scripts/run-and-publish.sh).
+
+on:
+  push:
+    branches: [main]
+    paths: ["results/**"]
+  schedule:
+    # Staleness sweep, ~8h after the 03:00/04:00 UTC benchmark runs. This is the
+    # only trigger that can catch a dead cron: no run means no commit, so the
+    # push trigger never fires.
+    - cron: "0 12 * * *"
+    # Monday digest — backstop for an edge lost to a missed workflow run.
+    - cron: "0 13 * * 1"
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "edge | staleness | digest"
+        required: false
+        default: "edge"
+      as_of:
+        description: "Replay a past date, YYYY-MM-DD"
+        required: false
+      dry_run:
+        description: "Print the Slack payload instead of posting"
+        required: false
+        default: "true"
+
+permissions:
+  contents: read
+
+# The us-east and us-west boxes push minutes apart. Queue rather than cancel:
+# cancelling the first run could drop an open/close edge permanently.
+concurrency:
+  group: regression-alert
+  cancel-in-progress: false
+
+jobs:
+  detect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 26
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+        working-directory: web
+
+      - name: Select mode
+        id: mode
+        run: |
+          if [ "${{ github.event_name }}" = "schedule" ]; then
+            case "${{ github.event.schedule }}" in
+              "0 13 * * 1") echo "mode=digest"    >> "$GITHUB_OUTPUT" ;;
+              *)            echo "mode=staleness" >> "$GITHUB_OUTPUT" ;;
+            esac
+          else
+            echo "mode=${{ github.event.inputs.mode || 'edge' }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check for regressions
+        working-directory: web
+        env:
+          # Absent on forks and on dry runs — the script then prints the
+          # payload instead of posting.
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GITHUB_SHA: ${{ github.sha }}
+          # Only the upstream repo is expected to be able to post, so a missing
+          # secret fails the run loudly there while forks stay green.
+          ALERT_REQUIRE_WEBHOOK: ${{ github.repository == 'nottelabs/browserarena' }}
+        run: |
+          npm run check-regressions -- \
+            --mode "${{ steps.mode.outputs.mode }}" \
+            --concurrency 1,10 \
+            ${{ github.event.inputs.as_of && format('--as-of {0}', github.event.inputs.as_of) || '' }} \
+            ${{ github.event.inputs.dry_run == 'true' && '--dry-run' || '' }}

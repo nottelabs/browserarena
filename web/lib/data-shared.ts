@@ -81,6 +81,8 @@ export interface LeaderboardResult {
 
 export interface HistoricalProviderPoint {
   date: string;
+  /** Max `created_at` across the day's entries; used for staleness detection. */
+  lastEntryAt?: string;
   totalRuns: number;
   successRate: number;
   medianCreationMs: number;

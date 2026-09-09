@@ -5,7 +5,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "check-regressions": "tsx scripts/check-regressions.ts",
+    "test": "tsx --test lib/*.test.ts"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -26,6 +28,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "shadcn": "^4.14.0",
     "tailwindcss": "^4.3.2",
+    "tsx": "^4.23.13",
     "tw-animate-css": "^1.4.0",
     "typescript": "^5"
   },
