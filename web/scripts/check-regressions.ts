@@ -40,6 +40,24 @@ interface Options {
 
 const SITE = "https://www.browserarena.ai";
 
+/**
+ * A shape check alone would accept an impossible date like 2026-99-99, which
+ * becomes an Invalid Date, makes `ageHours` NaN, and silently disables
+ * staleness detection. Round-tripping through Date catches that, and 2026-02-30.
+ */
+function parseAsOf(raw: string | null): string | null {
+  if (raw === null) return null;
+  const parsed = new Date(`${raw}T00:00:00.000Z`);
+  if (
+    !/^\d{4}-\d{2}-\d{2}$/.test(raw) ||
+    Number.isNaN(parsed.getTime()) ||
+    parsed.toISOString().slice(0, 10) !== raw
+  ) {
+    throw new Error(`Invalid --as-of date: ${raw} (expected a real YYYY-MM-DD)`);
+  }
+  return raw;
+}
+
 function parseArgs(argv: string[]): Options {
   const get = (flag: string): string | null => {
     const i = argv.indexOf(flag);
@@ -47,7 +65,7 @@ function parseArgs(argv: string[]): Options {
   };
   const providers = get("--providers");
   return {
-    asOf: get("--as-of"),
+    asOf: parseAsOf(get("--as-of")),
     dryRun: argv.includes("--dry-run") || !process.env.SLACK_WEBHOOK_URL,
     dryRunFlag: argv.includes("--dry-run"),
     concurrency: (get("--concurrency") ?? "1")
