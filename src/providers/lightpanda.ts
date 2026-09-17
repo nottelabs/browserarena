@@ -25,7 +25,13 @@ export class LightpandaProvider implements ProviderClient {
 
   // No session API: connecting to the CDP URL starts a session.
   async create(): Promise<ProviderSession> {
-    return { id: "", cdpUrl: `${this.cdpUrl}?token=${this.getApiKey()}&browser=lightpanda` };
+    // Built through URL so an endpoint override that already carries query
+    // parameters keeps them. The cloud serves Lightpanda by default but also
+    // serves Chrome, so pin the browser explicitly.
+    const url = new URL(this.cdpUrl);
+    url.searchParams.set("token", this.getApiKey());
+    url.searchParams.set("browser", "lightpanda");
+    return { id: "", cdpUrl: url.toString() };
   }
 
   // No release API: the runners end the session with browser.close().
