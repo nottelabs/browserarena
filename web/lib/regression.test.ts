@@ -22,11 +22,15 @@ import {
 
 const CONCURRENCY = 1;
 
+// The cron commits new results every day. Freeze the history at the date these
+// assertions were calibrated on, so tomorrow's run cannot change the backtest.
+const SNAPSHOT_DATE = "2026-09-09";
+
 async function pointsFor(provider: string): Promise<HistoricalProviderPoint[]> {
   const history = await loadHistoricalLeaderboard("hello-browser", CONCURRENCY);
   const series = history.providers.find((p) => p.provider === provider);
   assert.ok(series, `no history for ${provider}`);
-  return series.points;
+  return series.points.filter((p) => p.date <= SNAPSHOT_DATE);
 }
 
 /** Replays the edge-triggered dedup and returns "<date>/<metrics>" per open event. */
