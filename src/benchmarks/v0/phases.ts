@@ -68,14 +68,29 @@ async function extractFull(page: Page): Promise<ExtractedArticle> {
       .filter((t) => t.length > 0 && t !== "edit")
       .slice(0, 10);
 
+    // Article links: same-origin /wiki/ paths, no ":" (namespaces) and no
+    // fragment, kept in "/wiki/..." form. Resolved in JS rather than matched
+    // with a[href^="/wiki/"], because an href can be absolute — Lightpanda's
+    // getAttribute returns the resolved URL, and attribute selectors compare
+    // against that.
+    const articleLinks: string[] = [];
+    for (const a of document.querySelectorAll("#mw-content-text a[href]")) {
+      let url: URL;
+      try {
+        url = new URL(a.getAttribute("href")!, location.href);
+      } catch {
+        continue;
+      }
+      if (url.origin !== location.origin) continue;
+      if (url.hash || url.pathname.includes(":")) continue;
+      if (!url.pathname.startsWith("/wiki/")) continue;
+      articleLinks.push(url.pathname + url.search);
+    }
+
     // Internal links (for crawling)
     const seen = new Set<string>();
     const internalLinks: string[] = [];
-    const anchors = document.querySelectorAll(
-      '#mw-content-text a[href^="/wiki/"]:not([href*=":"]):not([href*="#"])'
-    );
-    for (const a of anchors) {
-      const href = a.getAttribute("href")!;
+    for (const href of articleLinks) {
       if (!seen.has(href) && internalLinks.length < 5) {
         seen.add(href);
         internalLinks.push(href);
@@ -90,9 +105,7 @@ async function extractFull(page: Page): Promise<ExtractedArticle> {
     const imageCount = document.querySelectorAll("#mw-content-text img").length;
 
     // Total outbound link count
-    const outboundLinkCount = document.querySelectorAll(
-      '#mw-content-text a[href^="/wiki/"]:not([href*=":"]):not([href*="#"])'
-    ).length;
+    const outboundLinkCount = articleLinks.length;
 
     return { title, summary, infoboxFacts, sectionHeadings, internalLinks, wordCount, imageCount, outboundLinkCount };
   });
@@ -125,18 +138,27 @@ async function extractCrawled(page: Page, visitedPaths: Set<string>): Promise<Cr
     const bodyText = document.querySelector("#mw-content-text")?.textContent ?? "";
     const wordCount = bodyText.split(/\s+/).filter((w) => w.length > 0).length;
     const imageCount = document.querySelectorAll("#mw-content-text img").length;
-    const outboundLinkCount = document.querySelectorAll(
-      '#mw-content-text a[href^="/wiki/"]:not([href*=":"]):not([href*="#"])'
-    ).length;
+
+    // Same article-link filter as extractFull (see the comment there).
+    const articleLinks: string[] = [];
+    for (const a of document.querySelectorAll("#mw-content-text a[href]")) {
+      let url: URL;
+      try {
+        url = new URL(a.getAttribute("href")!, location.href);
+      } catch {
+        continue;
+      }
+      if (url.origin !== location.origin) continue;
+      if (url.hash || url.pathname.includes(":")) continue;
+      if (!url.pathname.startsWith("/wiki/")) continue;
+      articleLinks.push(url.pathname + url.search);
+    }
+    const outboundLinkCount = articleLinks.length;
 
     // Find unvisited internal links for second-level crawl
     const visitedSet = new Set(visited);
     const nextLinks: string[] = [];
-    const anchors = document.querySelectorAll(
-      '#mw-content-text a[href^="/wiki/"]:not([href*=":"]):not([href*="#"])'
-    );
-    for (const a of anchors) {
-      const href = a.getAttribute("href")!;
+    for (const href of articleLinks) {
       if (!visitedSet.has(href) && nextLinks.length < 2) {
         nextLinks.push(href);
       }
@@ -217,6 +239,23 @@ export async function phaseCrawl(
 }
 
 /**
+ * page.fill, falling back to setting the value in the page and dispatching
+ * input/change events (Lightpanda's page.fill fails on <input type="email">).
+ */
+async function fillWithFallback(page: Page, selector: string, value: string): Promise<void> {
+  try {
+    await page.fill(selector, value);
+  } catch {
+    await page.locator(selector).evaluate((el, v) => {
+      const input = el as HTMLInputElement;
+      input.value = v;
+      input.dispatchEvent(new Event("input", { bubbles: true }));
+      input.dispatchEvent(new Event("change", { bubbles: true }));
+    }, value);
+  }
+}
+
+/**
  * Phase 3: Navigate to httpbin form, fill it with data from Phases 1 & 2, submit, verify.
  */
 export async function phaseForm(
@@ -237,7 +276,7 @@ export async function phaseForm(
 
   // Fill email from the article slug
   const slug = article.title.toLowerCase().replace(/\s+/g, ".");
-  await page.fill('input[name="custemail"]', `${slug}@research.test`);
+  await fillWithFallback(page, 'input[name="custemail"]', `${slug}@research.test`);
 
   // Select a pizza size based on section count
   const sizes = ["small", "medium", "large"];
