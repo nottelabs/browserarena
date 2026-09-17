@@ -8,6 +8,7 @@ import {
   type PercentileType,
   type VmMeta,
 } from "@/lib/data-shared";
+import { PROVIDERS } from "@/lib/providers";
 import {
   Table,
   TableBody,
@@ -45,16 +46,9 @@ const TOTAL_KEYS: Record<PercentileType, keyof ProviderStats> = {
   p95: "p95TotalMs",
 };
 
-const PROVIDER_LOGOS: Record<string, string> = {
-  NOTTE: "/logos/notte.jpg",
-  ANCHORBROWSER: "/logos/anchorbrowser.png",
-  BROWSERBASE: "/logos/browserbase.png",
-  HYPERBROWSER: "/logos/hyperbrowser.png",
-  KERNEL: "/logos/kernel.png",
-  STEEL: "/logos/steel.png",
-  BROWSER_USE: "/logos/browseruse.png",
-  TILION: "/logos/tilion.png",
-};
+const PROVIDER_LOGOS: Record<string, string> = Object.fromEntries(
+  PROVIDERS.flatMap((p) => (p.logo ? [[p.id, p.logo]] : []))
+);
 
 type SortDirection = "asc" | "desc";
 type SortKey =

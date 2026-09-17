@@ -1,6 +1,14 @@
 import { ImageResponse } from "next/og";
+import { MARKETED_PROVIDER_NAMES } from "@/lib/providers";
 
 export const runtime = "edge";
+
+// Notte (the site's author) is kept in the third slot rather than leading the row.
+const OG_PROVIDER_NAMES = (() => {
+  const names = MARKETED_PROVIDER_NAMES.filter((name) => name !== "Notte");
+  names.splice(2, 0, "Notte");
+  return names;
+})();
 
 export async function GET() {
   return new ImageResponse(
@@ -71,19 +79,10 @@ export async function GET() {
               color: "#a3a3a3",
             }}
           >
-            <span>Browserbase</span>
-            <span style={{ color: "#d4d4d4" }}>·</span>
-            <span>Steel</span>
-            <span style={{ color: "#d4d4d4" }}>·</span>
-            <span>Notte</span>
-            <span style={{ color: "#d4d4d4" }}>·</span>
-            <span>Hyperbrowser</span>
-            <span style={{ color: "#d4d4d4" }}>·</span>
-            <span>Kernel</span>
-            <span style={{ color: "#d4d4d4" }}>·</span>
-            <span>Anchor Browser</span>
-            <span style={{ color: "#d4d4d4" }}>·</span>
-            <span>Browser Use</span>
+            {OG_PROVIDER_NAMES.flatMap((name, i) => [
+              ...(i > 0 ? [<span key={`sep-${name}`} style={{ color: "#d4d4d4" }}>·</span>] : []),
+              <span key={name}>{name}</span>,
+            ])}
           </div>
         </div>
 

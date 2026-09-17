@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
+import { PROVIDER_COUNT_WORD, PROVIDER_LIST } from "@/lib/providers";
 
 export const metadata: Metadata = {
   title: "FAQ — Cloud Browser Provider Benchmarks",
   description:
-    "Frequently asked questions about cloud browser infrastructure, AI browser agents, and how The Browser Arena compares providers like Notte, Browserbase, Steel, Hyperbrowser, Kernel, Anchor Browser, and Browser Use.",
+    `Frequently asked questions about cloud browser infrastructure, AI browser agents, and how The Browser Arena compares providers like ${PROVIDER_LIST}.`,
   alternates: {
     canonical: "https://browserarena.ai/faq",
   },
@@ -21,7 +22,7 @@ export default function FaqPage() {
           <p>
             The answer depends on your workload. The Browser Arena — built by{" "}
             <a href="https://notte.cc" target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:no-underline">Notte</a>
-            {" "}— benchmarks seven leading cloud browser providers across real-world latency, reliability, and cost metrics. Notte, Browserbase, Steel, Hyperbrowser, Kernel, Anchor Browser, and Browser Use are all tested under identical conditions. Use the{" "}
+            {" "}— benchmarks {PROVIDER_COUNT_WORD} leading cloud browser providers across real-world latency, reliability, and cost metrics. {PROVIDER_LIST} are all tested under identical conditions. Use the{" "}
             <a href="/" className="text-foreground underline hover:no-underline">leaderboard</a>
             {" "}to compare by median, P90, or P95 session times, success rates, and pricing. All data comes from standardized AWS EC2 environments and is fully open-source.
           </p>
@@ -74,7 +75,7 @@ export default function FaqPage() {
             How to choose a headless browser service
           </h2>
           <p>
-            When evaluating headless browser-as-a-service providers for your AI agents or automation pipeline, the Browser Arena gives you objective data. Compare session creation speed, CDP connection latency, navigation performance, and reliability across Notte, Browserbase, Steel, Hyperbrowser, Kernel, Anchor Browser, and Browser Use. All benchmarks run on standardized AWS EC2 instances so results are directly comparable.
+            When evaluating headless browser-as-a-service providers for your AI agents or automation pipeline, the Browser Arena gives you objective data. Compare session creation speed, CDP connection latency, navigation performance, and reliability across {PROVIDER_LIST}. All benchmarks run on standardized AWS EC2 instances so results are directly comparable.
           </p>
         </div>
 

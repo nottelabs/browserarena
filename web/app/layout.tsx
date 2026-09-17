@@ -2,6 +2,11 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, IBM_Plex_Mono, DM_Sans } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import {
+  MARKETED_PROVIDER_NAMES,
+  PROVIDER_COUNT_WORD,
+  PROVIDER_LIST,
+} from "@/lib/providers";
 
 const plusJakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -23,7 +28,7 @@ const dmSans = DM_Sans({
 const SITE_URL = "https://browserarena.ai";
 const SITE_NAME = "The Browser Arena";
 const SITE_DESCRIPTION =
-  "Open-source benchmarks comparing cloud browser infrastructure providers on speed, reliability, and cost. Built by Notte — compare Notte, Browserbase, Steel, Hyperbrowser, Kernel, Anchor Browser, and Browser Use for AI browser agents and web automation.";
+  `Open-source benchmarks comparing cloud browser infrastructure providers on speed, reliability, and cost. Built by Notte — compare ${PROVIDER_LIST} for AI browser agents and web automation.`;
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -43,12 +48,8 @@ export const metadata: Metadata = {
     "cloud browser latency",
     "Notte browser",
     "Notte cloud browser",
-    "Browserbase",
-    "Steel",
-    "Hyperbrowser",
-    "Kernel",
-    "Anchor Browser",
-    "Browser Use",
+    // Notte is covered by the two keywords above.
+    ...MARKETED_PROVIDER_NAMES.filter((name) => name !== "Notte"),
     "browser for AI agents",
     "AI agent browser infrastructure",
     "session creation time",
@@ -159,7 +160,7 @@ const jsonLd = {
           name: "What is The Browser Arena?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "The Browser Arena is an open-source benchmarking platform built by Notte (notte.cc) that compares cloud browser infrastructure providers on speed, reliability, and cost. It measures real session creation, CDP connection, page navigation, and session release times across leading providers including Notte, Browserbase, Steel, Hyperbrowser, Kernel, Anchor Browser, and Browser Use.",
+            text: `The Browser Arena is an open-source benchmarking platform built by Notte (notte.cc) that compares cloud browser infrastructure providers on speed, reliability, and cost. It measures real session creation, CDP connection, page navigation, and session release times across leading providers including ${PROVIDER_LIST}.`,
           },
         },
         {
@@ -175,7 +176,7 @@ const jsonLd = {
           name: "Which cloud browser providers are benchmarked?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "The Browser Arena benchmarks seven cloud browser providers: Notte, Browserbase, Steel, Hyperbrowser, Kernel, Anchor Browser, and Browser Use. Each provider is tested for session creation latency, CDP connection time, navigation speed, and session release time under identical conditions.",
+            text: `The Browser Arena benchmarks ${PROVIDER_COUNT_WORD} cloud browser providers: ${PROVIDER_LIST}. Each provider is tested for session creation latency, CDP connection time, navigation speed, and session release time under identical conditions.`,
           },
         },
         {
@@ -183,7 +184,7 @@ const jsonLd = {
           name: "What is the best browser infrastructure provider?",
           acceptedAnswer: {
             "@type": "Answer",
-            text: "Browser infrastructure providers differ on latency, reliability, concurrency support, and pricing. The Browser Arena provides objective, reproducible benchmarks to help you choose. Visit browserarena.ai to compare all seven providers including Notte, Browserbase, Steel, Hyperbrowser, Kernel, Anchor Browser, and Browser Use across P50, P90, and P95 latencies.",
+            text: `Browser infrastructure providers differ on latency, reliability, concurrency support, and pricing. The Browser Arena provides objective, reproducible benchmarks to help you choose. Visit browserarena.ai to compare all ${PROVIDER_COUNT_WORD} providers including ${PROVIDER_LIST} across P50, P90, and P95 latencies.`,
           },
         },
         {

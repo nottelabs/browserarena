@@ -38,6 +38,7 @@ npm run dev
 3. Register your provider in `src/providers/index.ts`
 4. Add the required environment variable(s) to `.env.example`
 5. Run the benchmark to verify: `npm run dev -- --provider=my-provider --runs=10`
+6. To show it on the website, add an entry to `PROVIDERS` in `web/lib/providers.ts` (display name, URL, logo in `web/public/logos/`, region, one-line description) and its pricing to `web/lib/pricing.ts`. The leaderboard and all site copy (FAQ, SEO metadata, `llms.txt`, OG image, including the provider count) are derived from that list, so no hardcoded strings need editing. Set `marketed: false` to show a provider on the leaderboard without listing it in the copy.
 
 ## Running Benchmarks
 
