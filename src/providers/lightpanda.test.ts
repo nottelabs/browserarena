@@ -60,8 +60,8 @@ test("releasing is a no-op and cost follows the hourly rate", async () => {
 
   await provider.release("");
 
-  // $0.08/hr, billed per second with no minimum.
-  assert.equal(provider.computeCost(3600), 0.08);
-  assert.equal(provider.computeCost(90), 0.002);
+  // $0.06/hr, billed per second with no minimum.
+  assert.equal(provider.computeCost(3600), 0.06);
+  assert.equal(provider.computeCost(90), 0.0015);
   assert.equal(provider.computeCost(0), 0);
 });

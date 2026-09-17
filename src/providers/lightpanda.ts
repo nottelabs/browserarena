@@ -7,8 +7,8 @@ export class LightpandaProvider implements ProviderClient {
   private cdpUrl: string;
 
   computeCost(seconds: number): number {
-    // Builder plan overage rate (lightpanda.io/pricing).
-    const perHour = 0.08;
+    // Builder plan: $19/month for 300 hours (lightpanda.io/pricing).
+    const perHour = 0.06;
     return Math.round((seconds / 3600) * perHour * 1e8) / 1e8;
   }
 

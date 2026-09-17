@@ -33,7 +33,7 @@ const PRICING: Record<string, { unit: UnitPricing }> = {
     unit: { ratePerHour: 0.03, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
   },
   LIGHTPANDA: {
-    unit: { ratePerHour: 0.08, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+    unit: { ratePerHour: 0.06, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
   },
 };
 
