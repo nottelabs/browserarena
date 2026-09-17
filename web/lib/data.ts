@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { getMedianCostUsd, getPricePerHour, getPerSessionFee } from "./pricing";
+import { PROVIDERS_BY_ID } from "./providers";
 
 export type {
   PercentileType,
@@ -59,31 +60,7 @@ interface BenchmarkEntry {
   _runDate?: string;
 }
 
-const PROVIDER_META: Record<
-  string,
-  { displayName: string; url: string; disclaimer?: string; browserRegion?: string }
-> = {
-  NOTTE: { displayName: "Notte", url: "https://www.notte.cc", browserRegion: "us-west-2" },
-  ANCHORBROWSER: {
-    displayName: "Anchor Browser",
-    url: "https://www.anchorbrowser.io",
-    browserRegion: "us-east-1",
-  },
-  BROWSERBASE: { displayName: "Browserbase", url: "https://www.browserbase.com", browserRegion: "us-west-2" },
-  HYPERBROWSER: {
-    displayName: "Hyperbrowser",
-    url: "https://www.hyperbrowser.ai",
-    browserRegion: "us-east-1",
-  },
-  KERNEL: {
-    displayName: "KERNEL",
-    url: "https://www.kernel.sh",
-    browserRegion: "us-east-1",
-  },
-  STEEL: { displayName: "Steel", url: "https://www.steel.dev", browserRegion: "us-east-1" },
-  BROWSER_USE: { displayName: "Browser Use", url: "https://www.browser-use.com", browserRegion: "us-east-1" },
-  TILION: { displayName: "Tilion", url: "https://tilion.dev", browserRegion: "us-east-1" },
-};
+const PROVIDER_META = PROVIDERS_BY_ID;
 
 /** Exported for the regression detector (`lib/regression.ts`). */
 export function median(values: number[]): number {
