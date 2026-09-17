@@ -32,6 +32,9 @@ const PRICING: Record<string, { unit: UnitPricing }> = {
   TILION: {
     unit: { ratePerHour: 0.03, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
   },
+  LIGHTPANDA: {
+    unit: { ratePerHour: 0.08, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+  },
 };
 
 function computeUnitCost(pricing: UnitPricing, durationSeconds: number): number {

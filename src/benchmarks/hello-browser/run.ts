@@ -127,7 +127,12 @@ export async function runSingleSession(
 
     stage = "page_goto";
     const t2 = nowNs();
-    const context = browser.contexts()[0] || (await browser.newContext());
+    // Lightpanda needs a new context for each session.
+    const context =
+      provider.name === "LIGHTPANDA"
+        ? await browser.newContext()
+        : browser.contexts()[0] || (await browser.newContext());
+
     page = context.pages()[0] || (await context.newPage());
     await page.goto(url, { waitUntil: "domcontentloaded" });
     result.page_goto_ms = msSince(t2);
@@ -152,7 +157,22 @@ export async function runSingleSession(
       );
     }
   } finally {
-    if (session?.id) {
+    if (provider.name === "LIGHTPANDA") {
+      // Closing the connection ends a Lightpanda session.
+      if (browser) {
+        try {
+          stage = "session_release";
+          const t3 = nowNs();
+          await browser.close();
+          result.session_release_ms = msSince(t3);
+          console.error(`[Session released] ${result.session_release_ms}ms`);
+        } catch (e: unknown) {
+          console.error(
+            `[SESSION_RELEASE_ERROR] id=${result.id} ${(e as Error)?.message || e}`
+          );
+        }
+      }
+    } else if (session?.id) {
       try {
         stage = "session_release";
         const t3 = nowNs();

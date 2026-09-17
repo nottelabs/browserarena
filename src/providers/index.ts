@@ -7,6 +7,7 @@ import { KernelProvider, KernelHeadfulProvider } from "./kernel.js";
 import { NotteProvider } from "./notte.js";
 import { BrowserUseProvider } from "./browser-use.js";
 import { TilionProvider } from "./tilion.js";
+import { LightpandaProvider } from "./lightpanda.js";
 
 export function getRequiredEnvVarsForProvider(name: string): string[] {
   const key = name.trim().toLowerCase();
@@ -22,6 +23,8 @@ export function getRequiredEnvVarsForProvider(name: string): string[] {
   if (key === "browser-use" || key === "browseruse" || key === "bu")
     return ["BROWSER_USE_API_KEY"];
   if (key === "tilion") return ["TILION_API_KEY"];
+  if (key === "lightpanda" || key === "lp")
+    return ["LIGHTPANDA_API_KEY"];
   throw new Error(`Unknown provider: ${name}`);
 }
 
@@ -45,5 +48,6 @@ export function resolveProvider(name: string): ProviderClient {
   if (key === "browser-use" || key === "browseruse" || key === "bu")
     return new BrowserUseProvider();
   if (key === "tilion") return new TilionProvider();
+  if (key === "lightpanda" || key === "lp") return new LightpandaProvider();
   throw new Error(`Unknown provider: ${name}`);
 }

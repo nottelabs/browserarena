@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import { chromium } from "playwright-core";
+import type { Browser } from "playwright-core";
 import type { ProviderClient } from "../../types.js";
 import { isoUtcNow, nowNs, msSince } from "../../utils/time.js";
 import { sanitizeErrorMessage } from "../../utils/sanitize.js";
@@ -14,6 +15,7 @@ export async function runSingleSession(
   concurrency: number = 1
 ): Promise<V0Record> {
   let session: { id: string } | null = null;
+  let browser: Browser | null = null;
   let stage = "init";
 
   const result: V0Record = {
@@ -79,11 +81,15 @@ export async function runSingleSession(
 
     stage = "connect_over_cdp";
     const t1 = nowNs();
-    const browser = await chromium.connectOverCDP(cdpUrl);
+    browser = await chromium.connectOverCDP(cdpUrl);
     result.session_connect_ms = msSince(t1);
     console.error(`[Browser connected] ${result.session_connect_ms}ms`);
 
-    const context = browser.contexts()[0] || (await browser.newContext());
+    // Lightpanda needs a new context for each session.
+    const context =
+      provider.name === "LIGHTPANDA"
+        ? await browser.newContext()
+        : browser.contexts()[0] || (await browser.newContext());
     const page = context.pages()[0] || (await context.newPage());
 
     const agentStart = nowNs();
@@ -140,7 +146,22 @@ export async function runSingleSession(
     result.error_message = message;
     console.error(`[ERROR] stage=${stage} id=${result.id} ${message}`);
   } finally {
-    if (session?.id) {
+    if (provider.name === "LIGHTPANDA") {
+      // Closing the connection ends a Lightpanda session.
+      if (browser) {
+        try {
+          stage = "session_release";
+          const t3 = nowNs();
+          await browser.close();
+          result.session_release_ms = msSince(t3);
+          console.error(`[Session released] ${result.session_release_ms}ms`);
+        } catch (e: unknown) {
+          console.error(
+            `[SESSION_RELEASE_ERROR] id=${result.id} ${(e as Error)?.message || e}`
+          );
+        }
+      }
+    } else if (session?.id) {
       try {
         stage = "session_release";
         const t3 = nowNs();
