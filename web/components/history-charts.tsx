@@ -24,7 +24,14 @@ import type {
 } from "@/lib/data-shared";
 
 const HISTORY_START_DATE = "2026-05-15";
-const HISTORY_DATE_CAP = 7;
+const HISTORY_RANGES = [
+  { key: "1w", label: "Last week", days: 7 },
+  { key: "1m", label: "Last month", days: 30 },
+  { key: "3m", label: "Last 3 months", days: 90 },
+] as const;
+type HistoryRangeKey = (typeof HISTORY_RANGES)[number]["key"];
+// Above this many points, per-point dots turn the lines into noise.
+const LINE_DOT_MAX_POINTS = 14;
 const BREAKDOWN_AXIS_LEAD_MS = 360;
 
 type PhaseMetricKeys = {
@@ -102,6 +109,13 @@ const VALUE_ANCHORS = {
 function formatDateLabel(ymd: string): string {
   const [, month, day] = ymd.split("-");
   return month && day ? `${month}/${day}` : ymd;
+}
+
+// Earliest YYYY-MM-DD included in a window of `days` calendar days ending at `latest`.
+function rangeStartDate(latest: string, days: number): string {
+  const start = new Date(`${latest}T00:00:00Z`);
+  start.setUTCDate(start.getUTCDate() - (days - 1));
+  return start.toISOString().slice(0, 10);
 }
 
 function formatMs(value: unknown): string {
@@ -286,13 +300,18 @@ export function HistoryCharts({
   percentile?: PercentileType;
   initialProvider?: string;
 }) {
-  const visibleDates = useMemo(
-    () =>
-      history.dates
-        .filter((date) => date >= HISTORY_START_DATE)
-        .slice(-HISTORY_DATE_CAP),
-    [history.dates]
-  );
+  const [range, setRange] = useState<HistoryRangeKey>("1w");
+  const activeRange =
+    HISTORY_RANGES.find((option) => option.key === range) ?? HISTORY_RANGES[0];
+  const visibleDates = useMemo(() => {
+    const dates = history.dates.filter((date) => date >= HISTORY_START_DATE);
+    const latest = dates[dates.length - 1];
+    if (!latest) return dates;
+    const start = rangeStartDate(latest, activeRange.days);
+    return dates.filter((date) => date >= start);
+  }, [activeRange.days, history.dates]);
+  const visibleDateSet = useMemo(() => new Set(visibleDates), [visibleDates]);
+  const showLineDots = visibleDates.length <= LINE_DOT_MAX_POINTS;
   const keys = PHASE_KEYS[percentile];
 
   const providerOptions = useMemo(
@@ -300,7 +319,7 @@ export function HistoryCharts({
       history.providers
         .map((provider) => ({
           ...provider,
-          points: provider.points.filter((point) => visibleDates.includes(point.date)),
+          points: provider.points.filter((point) => visibleDateSet.has(point.date)),
         }))
         .filter((provider) => provider.points.length > 0)
         .sort((a, b) => {
@@ -328,7 +347,7 @@ export function HistoryCharts({
           if (scoreB !== scoreA) return scoreB - scoreA;
           return a.displayName.localeCompare(b.displayName);
         }),
-    [history.providers, keys.total, visibleDates]
+    [history.providers, keys.total, visibleDateSet]
   );
   const [selectedProvider, setSelectedProvider] = useState(
     initialProvider && providerOptions.some((p) => p.provider === initialProvider)
@@ -509,8 +528,29 @@ export function HistoryCharts({
             History
           </h2>
           <p className="mt-1 text-[0.72rem] sm:text-[0.78rem] text-muted-foreground">
-            Showing the latest {HISTORY_DATE_CAP} available run dates since May 15, 2026.
+            Showing {visibleDates.length} run {visibleDates.length === 1 ? "date" : "dates"} from
+            the {activeRange.label.toLowerCase()}.
           </p>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {HISTORY_RANGES.map((option) => {
+              const active = option.key === range;
+              return (
+                <button
+                  key={option.key}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setRange(option.key)}
+                  className={`shrink-0 rounded-[3px] border px-3 py-1.5 text-[0.68rem] font-medium transition-colors ${
+                    active
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
         <div className="flex min-w-0 flex-wrap items-center justify-start gap-1.5 sm:justify-end">
           {providerOptions.map((provider) => {
@@ -576,7 +616,7 @@ export function HistoryCharts({
                   dataKey={provider.provider}
                   stroke={`var(--color-${provider.provider})`}
                   strokeWidth={2}
-                  dot={{ r: 2 }}
+                  dot={showLineDots ? { r: 2 } : false}
                   activeDot={{ r: 4 }}
                   connectNulls={false}
                   isAnimationActive
