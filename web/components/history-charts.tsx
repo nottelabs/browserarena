@@ -388,14 +388,18 @@ export function HistoryCharts({
 
   const stackedData = useMemo(() => {
     if (!displayedBreakdownSeries) return [];
-    return displayedBreakdownSeries.points.map((point) => ({
-      date: point.date,
-      label: formatDateLabel(point.date),
-      create: point[keys.create],
-      connect: point[keys.connect],
-      goto: point[keys.goto],
-      release: point[keys.release],
-    }));
+    return displayedBreakdownSeries.points.map((point) => {
+      // Keep the date on the axis, but draw no bar when nothing was measured.
+      const measured = hasSuccessfulRuns(point);
+      return {
+        date: point.date,
+        label: formatDateLabel(point.date),
+        create: measured ? point[keys.create] : null,
+        connect: measured ? point[keys.connect] : null,
+        goto: measured ? point[keys.goto] : null,
+        release: measured ? point[keys.release] : null,
+      };
+    });
   }, [displayedBreakdownSeries, keys]);
 
   const displayedBreakdownDomain = useMemo(
