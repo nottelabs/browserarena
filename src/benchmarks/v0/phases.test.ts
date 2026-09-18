@@ -6,7 +6,9 @@
  * today — absolute same-origin hrefs (MediaWiki 1.47) — and asserts the filter
  * keeps article links and drops everything else.
  *
- * Needs a local Google Chrome; skipped when there is none.
+ * Needs a Chromium: CI installs Playwright's build (`playwright-core install
+ * chromium`), and a local Google Chrome works too. Skipped when neither is
+ * present, so a fresh clone can still run `npm test`.
  */
 
 import assert from "node:assert/strict";
@@ -70,7 +72,12 @@ async function startFixtureServer(): Promise<{ url: string; close: () => Promise
   };
 }
 
-async function launchChrome(): Promise<Browser | null> {
+async function launchChromium(): Promise<Browser | null> {
+  try {
+    return await chromium.launch();
+  } catch {
+    // No Playwright build downloaded — fall back to a system Chrome.
+  }
   try {
     return await chromium.launch({ channel: "chrome" });
   } catch {
@@ -79,9 +86,9 @@ async function launchChrome(): Promise<Browser | null> {
 }
 
 test("extract keeps article links whether the href is absolute or relative", async (t) => {
-  const browser = await launchChrome();
+  const browser = await launchChromium();
   if (!browser) {
-    t.skip("no local Google Chrome");
+    t.skip("no Chromium available");
     return;
   }
 
