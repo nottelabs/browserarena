@@ -32,7 +32,7 @@ done
 
 case "$REGION" in
   us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion" ;;
-  us-west) PROVIDERS="notte" ;;
+  us-west) PROVIDERS="notte,lightpanda" ;;
   "")      echo "[ERROR] --region us-east|us-west required" >&2; exit 2 ;;
   *)       echo "[ERROR] invalid --region: $REGION (want us-east or us-west)" >&2; exit 2 ;;
 esac
@@ -79,6 +79,7 @@ for p in "${PROV_LIST[@]}"; do
     notte)           v="${NOTTE_API_KEY:-}" ;;
     browserbase)     v="${BROWSERBASE_API_KEY:-}" ;;
     tilion)          v="${TILION_API_KEY:-}" ;;
+    lightpanda)      v="${LIGHTPANDA_API_KEY:-}" ;;
     *) echo "[ERROR] unknown provider in region map: $p" >&2; exit 2 ;;
   esac
   [[ -n "$v" ]] && have_any=1

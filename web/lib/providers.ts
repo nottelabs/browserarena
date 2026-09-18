@@ -91,6 +91,15 @@ export const PROVIDERS: ProviderInfo[] = [
     marketed: true,
   },
   {
+    id: "LIGHTPANDA",
+    displayName: "Lightpanda",
+    url: "https://lightpanda.io",
+    logo: "/logos/lightpanda.png",
+    browserRegion: "us-west-1",
+    description: "Headless browser for machines",
+    marketed: true,
+  },
+  {
     // Beta: shown on the leaderboard but not yet in marketing copy.
     id: "TILION",
     displayName: "Tilion",

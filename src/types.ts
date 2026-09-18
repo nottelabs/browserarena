@@ -7,7 +7,8 @@ export type ProviderName =
   | "KERNEL_HEADFUL"
   | "NOTTE"
   | "BROWSER_USE"
-  | "TILION";
+  | "TILION"
+  | "LIGHTPANDA";
 
 export type ProviderSession = {
   id: string;

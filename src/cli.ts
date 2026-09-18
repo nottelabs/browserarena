@@ -13,7 +13,7 @@ import { sanitizeErrorMessage } from "./utils/sanitize.js";
 type BenchmarkName = "hello-browser" | "v0";
 
 const DEFAULT_PROVIDERS =
-  "browserbase,steel,kernel,kernel-headful,notte,hyperbrowser,anchorbrowser,browser-use";
+  "browserbase,steel,kernel,kernel-headful,notte,hyperbrowser,anchorbrowser,browser-use,lightpanda";
 
 function hasFlag(name: string): boolean {
   return process.argv.slice(2).some(
