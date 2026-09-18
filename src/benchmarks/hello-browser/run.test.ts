@@ -47,6 +47,12 @@ class FakeProvider implements ProviderClient {
   }
 }
 
+/** True when the browser is simply not installed, as on a fresh clone. */
+function isMissingBrowser(e: unknown): boolean {
+  const message = e instanceof Error ? e.message : String(e);
+  return /Executable doesn't exist|is not found|ENOENT/i.test(message);
+}
+
 async function startPageServer(): Promise<{ url: string; close: () => Promise<void> }> {
   const server = http.createServer((_req, res) => {
     res.writeHead(200, { "content-type": "text/html; charset=utf-8" });
@@ -77,8 +83,13 @@ async function startCdpBrowser(): Promise<{ cdpUrl: string; close: () => Promise
         args: ["--remote-debugging-port=0"],
       });
       break;
-    } catch {
-      // Try the next browser.
+    } catch (e) {
+      // Only a browser that is not installed may be skipped; anything else is
+      // a real failure and must surface instead of quietly passing.
+      if (!isMissingBrowser(e)) {
+        fs.rmSync(userDataDir, { recursive: true, force: true });
+        throw e;
+      }
     }
   }
   if (!context) {
