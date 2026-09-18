@@ -22,14 +22,14 @@ import type {
   HistoricalProviderPoint,
   PercentileType,
 } from "@/lib/data-shared";
+import {
+  HISTORY_RANGES,
+  filterDatesToRange,
+  isIsolatedPoint,
+  type HistoryRangeKey,
+} from "@/lib/history-range";
 
 const HISTORY_START_DATE = "2026-05-15";
-const HISTORY_RANGES = [
-  { key: "1w", label: "Last week", days: 7 },
-  { key: "1m", label: "Last month", days: 30 },
-  { key: "3m", label: "Last 3 months", days: 90 },
-] as const;
-type HistoryRangeKey = (typeof HISTORY_RANGES)[number]["key"];
 // Above this many points, per-point dots turn the lines into noise.
 const LINE_DOT_MAX_POINTS = 14;
 const BREAKDOWN_AXIS_LEAD_MS = 360;
@@ -109,13 +109,6 @@ const VALUE_ANCHORS = {
 function formatDateLabel(ymd: string): string {
   const [, month, day] = ymd.split("-");
   return month && day ? `${month}/${day}` : ymd;
-}
-
-// Earliest YYYY-MM-DD included in a window of `days` calendar days ending at `latest`.
-function rangeStartDate(latest: string, days: number): string {
-  const start = new Date(`${latest}T00:00:00Z`);
-  start.setUTCDate(start.getUTCDate() - (days - 1));
-  return start.toISOString().slice(0, 10);
 }
 
 function formatMs(value: unknown): string {
@@ -303,13 +296,10 @@ export function HistoryCharts({
   const [range, setRange] = useState<HistoryRangeKey>("1w");
   const activeRange =
     HISTORY_RANGES.find((option) => option.key === range) ?? HISTORY_RANGES[0];
-  const visibleDates = useMemo(() => {
-    const dates = history.dates.filter((date) => date >= HISTORY_START_DATE);
-    const latest = dates[dates.length - 1];
-    if (!latest) return dates;
-    const start = rangeStartDate(latest, activeRange.days);
-    return dates.filter((date) => date >= start);
-  }, [activeRange.days, history.dates]);
+  const visibleDates = useMemo(
+    () => filterDatesToRange(history.dates, activeRange.days, HISTORY_START_DATE),
+    [activeRange.days, history.dates]
+  );
   const visibleDateSet = useMemo(() => new Set(visibleDates), [visibleDates]);
   const showLineDots = visibleDates.length <= LINE_DOT_MAX_POINTS;
   const keys = PHASE_KEYS[percentile];
@@ -499,6 +489,16 @@ export function HistoryCharts({
     });
   }, [keys.total, providerOptions, visibleDates]);
 
+  const scoresByProvider = useMemo(() => {
+    const scores: Record<string, Array<number | null>> = {};
+    for (const provider of providerOptions) {
+      scores[provider.provider] = lineData.map(
+        (row) => row[provider.provider] as number | null
+      );
+    }
+    return scores;
+  }, [lineData, providerOptions]);
+
   const scoreDomain = useMemo<[number, number]>(() => {
     const values = lineData.flatMap((row) =>
       providerOptions
@@ -616,7 +616,31 @@ export function HistoryCharts({
                   dataKey={provider.provider}
                   stroke={`var(--color-${provider.provider})`}
                   strokeWidth={2}
-                  dot={showLineDots ? { r: 2 } : false}
+                  dot={
+                    showLineDots
+                      ? { r: 2 }
+                      : ({ key, cx, cy, index }) =>
+                          // Keep markers for points with no neighbours, which
+                          // would otherwise draw nothing at all.
+                          typeof cx === "number" &&
+                          typeof cy === "number" &&
+                          isIsolatedPoint(
+                            scoresByProvider[provider.provider] ?? [],
+                            index
+                          ) ? (
+                            <circle
+                              key={key}
+                              cx={cx}
+                              cy={cy}
+                              r={2}
+                              fill="var(--background)"
+                              stroke={`var(--color-${provider.provider})`}
+                              strokeWidth={2}
+                            />
+                          ) : (
+                            <g key={key} />
+                          )
+                  }
                   activeDot={{ r: 4 }}
                   connectNulls={false}
                   isAnimationActive
