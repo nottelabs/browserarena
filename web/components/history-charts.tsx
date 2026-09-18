@@ -22,9 +22,16 @@ import type {
   HistoricalProviderPoint,
   PercentileType,
 } from "@/lib/data-shared";
+import {
+  HISTORY_RANGES,
+  filterDatesToRange,
+  isIsolatedPoint,
+  type HistoryRangeKey,
+} from "@/lib/history-range";
 
 const HISTORY_START_DATE = "2026-05-15";
-const HISTORY_DATE_CAP = 7;
+// Above this many points, per-point dots turn the lines into noise.
+const LINE_DOT_MAX_POINTS = 14;
 const BREAKDOWN_AXIS_LEAD_MS = 360;
 
 type PhaseMetricKeys = {
@@ -286,13 +293,15 @@ export function HistoryCharts({
   percentile?: PercentileType;
   initialProvider?: string;
 }) {
+  const [range, setRange] = useState<HistoryRangeKey>("1w");
+  const activeRange =
+    HISTORY_RANGES.find((option) => option.key === range) ?? HISTORY_RANGES[0];
   const visibleDates = useMemo(
-    () =>
-      history.dates
-        .filter((date) => date >= HISTORY_START_DATE)
-        .slice(-HISTORY_DATE_CAP),
-    [history.dates]
+    () => filterDatesToRange(history.dates, activeRange.days, HISTORY_START_DATE),
+    [activeRange.days, history.dates]
   );
+  const visibleDateSet = useMemo(() => new Set(visibleDates), [visibleDates]);
+  const showLineDots = visibleDates.length <= LINE_DOT_MAX_POINTS;
   const keys = PHASE_KEYS[percentile];
 
   const providerOptions = useMemo(
@@ -300,7 +309,7 @@ export function HistoryCharts({
       history.providers
         .map((provider) => ({
           ...provider,
-          points: provider.points.filter((point) => visibleDates.includes(point.date)),
+          points: provider.points.filter((point) => visibleDateSet.has(point.date)),
         }))
         .filter((provider) => provider.points.length > 0)
         .sort((a, b) => {
@@ -328,7 +337,7 @@ export function HistoryCharts({
           if (scoreB !== scoreA) return scoreB - scoreA;
           return a.displayName.localeCompare(b.displayName);
         }),
-    [history.providers, keys.total, visibleDates]
+    [history.providers, keys.total, visibleDateSet]
   );
   const [selectedProvider, setSelectedProvider] = useState(
     initialProvider && providerOptions.some((p) => p.provider === initialProvider)
@@ -480,6 +489,16 @@ export function HistoryCharts({
     });
   }, [keys.total, providerOptions, visibleDates]);
 
+  const scoresByProvider = useMemo(() => {
+    const scores: Record<string, Array<number | null>> = {};
+    for (const provider of providerOptions) {
+      scores[provider.provider] = lineData.map(
+        (row) => row[provider.provider] as number | null
+      );
+    }
+    return scores;
+  }, [lineData, providerOptions]);
+
   const scoreDomain = useMemo<[number, number]>(() => {
     const values = lineData.flatMap((row) =>
       providerOptions
@@ -509,8 +528,29 @@ export function HistoryCharts({
             History
           </h2>
           <p className="mt-1 text-[0.72rem] sm:text-[0.78rem] text-muted-foreground">
-            Showing the latest {HISTORY_DATE_CAP} available run dates since May 15, 2026.
+            Showing {visibleDates.length} run {visibleDates.length === 1 ? "date" : "dates"} from
+            the {activeRange.label.toLowerCase()}.
           </p>
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            {HISTORY_RANGES.map((option) => {
+              const active = option.key === range;
+              return (
+                <button
+                  key={option.key}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => setRange(option.key)}
+                  className={`shrink-0 rounded-[3px] border px-3 py-1.5 text-[0.68rem] font-medium transition-colors ${
+                    active
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground"
+                  }`}
+                >
+                  {option.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
         <div className="flex min-w-0 flex-wrap items-center justify-start gap-1.5 sm:justify-end">
           {providerOptions.map((provider) => {
@@ -576,7 +616,31 @@ export function HistoryCharts({
                   dataKey={provider.provider}
                   stroke={`var(--color-${provider.provider})`}
                   strokeWidth={2}
-                  dot={{ r: 2 }}
+                  dot={
+                    showLineDots
+                      ? { r: 2 }
+                      : ({ key, cx, cy, index }) =>
+                          // Keep markers for points with no neighbours, which
+                          // would otherwise draw nothing at all.
+                          typeof cx === "number" &&
+                          typeof cy === "number" &&
+                          isIsolatedPoint(
+                            scoresByProvider[provider.provider] ?? [],
+                            index
+                          ) ? (
+                            <circle
+                              key={key}
+                              cx={cx}
+                              cy={cy}
+                              r={2}
+                              fill="var(--background)"
+                              stroke={`var(--color-${provider.provider})`}
+                              strokeWidth={2}
+                            />
+                          ) : (
+                            <g key={key} />
+                          )
+                  }
                   activeDot={{ r: 4 }}
                   connectNulls={false}
                   isAnimationActive
