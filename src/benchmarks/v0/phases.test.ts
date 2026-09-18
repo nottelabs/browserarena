@@ -72,15 +72,27 @@ async function startFixtureServer(): Promise<{ url: string; close: () => Promise
   };
 }
 
+/** True when the browser is simply not installed, as on a fresh clone. */
+function isMissingBrowser(e: unknown): boolean {
+  const message = e instanceof Error ? e.message : String(e);
+  return /Executable doesn't exist|is not found|ENOENT/i.test(message);
+}
+
+/**
+ * Playwright's chromium, else a system Chrome. Returns null only when neither
+ * is installed — any other launch failure is a real problem and must surface
+ * rather than quietly skipping the test.
+ */
 async function launchChromium(): Promise<Browser | null> {
   try {
     return await chromium.launch();
-  } catch {
-    // No Playwright build downloaded — fall back to a system Chrome.
+  } catch (e) {
+    if (!isMissingBrowser(e)) throw e;
   }
   try {
     return await chromium.launch({ channel: "chrome" });
-  } catch {
+  } catch (e) {
+    if (!isMissingBrowser(e)) throw e;
     return null;
   }
 }
