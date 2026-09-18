@@ -28,6 +28,7 @@ import {
   isIsolatedPoint,
   type HistoryRangeKey,
 } from "@/lib/history-range";
+import { hasSuccessfulRuns } from "@/lib/ranking";
 
 const HISTORY_START_DATE = "2026-05-15";
 // Above this many points, per-point dots turn the lines into noise.
@@ -320,14 +321,14 @@ export function HistoryCharts({
           }
           const latestA = [...a.points].sort((x, y) => y.date.localeCompare(x.date))[0];
           const latestB = [...b.points].sort((x, y) => y.date.localeCompare(x.date))[0];
-          const scoreA = latestA
+          const scoreA = latestA && hasSuccessfulRuns(latestA)
             ? computeValueScore({
                 latencyMs: latestA[keys.total] as number,
                 successRate: latestA.successRate,
                 pricePerHour: a.pricePerHour,
               })
             : -Infinity;
-          const scoreB = latestB
+          const scoreB = latestB && hasSuccessfulRuns(latestB)
             ? computeValueScore({
                 latencyMs: latestB[keys.total] as number,
                 successRate: latestB.successRate,
@@ -477,7 +478,8 @@ export function HistoryCharts({
       };
       for (const provider of providerOptions) {
         const point = provider.points.find((p) => p.date === date);
-        row[provider.provider] = point
+        // A day with no successful runs has no latency to score: leave a gap.
+        row[provider.provider] = point && hasSuccessfulRuns(point)
           ? computeValueScore({
               latencyMs: point[keys.total] as number,
               successRate: point.successRate,

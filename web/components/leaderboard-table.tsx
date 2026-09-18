@@ -9,6 +9,7 @@ import {
   type VmMeta,
 } from "@/lib/data-shared";
 import { PROVIDERS } from "@/lib/providers";
+import { hasSuccessfulRuns, sortRanked } from "@/lib/ranking";
 import {
   Table,
   TableBody,
@@ -86,6 +87,20 @@ const VALUE_ANCHORS = {
 
 const DEFAULT_WEIGHTS: ValueWeights = { latency: 1 / 3, reliability: 1 / 3, cost: 1 / 3 };
 
+// Shown in place of a metric that needs at least one successful run.
+function NotAvailable() {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <span className="cursor-help text-muted-foreground">N/A</span>
+      </TooltipTrigger>
+      <TooltipContent side="bottom" className="max-w-[14rem] text-xs font-sans">
+        No successful runs, so there is nothing to measure or rank.
+      </TooltipContent>
+    </Tooltip>
+  );
+}
+
 function clamp01(v: number): number {
   return Math.max(0, Math.min(1, v));
 }
@@ -109,6 +124,8 @@ function computeValueScores(
   const costRange = costA.floor - costA.ceiling;
 
   for (const p of providers) {
+    // No successful runs means no latency to score; leave the provider unscored.
+    if (!hasSuccessfulRuns(p)) continue;
     const lat = (p[totalKey] as number) ?? latA.floor;
     const rel = p.successRate;
     const cost = p.pricePerHour;
@@ -432,15 +449,18 @@ export function LeaderboardTable({
 
   const sorted = useMemo(() => {
     const tiebreaker = new Map(data.map((p) => [p.provider, Math.random()]));
-    const arr = [...data];
-    arr.sort((a, b) => {
-      const av = accessor(a, sort.key);
-      const bv = accessor(b, sort.key);
-      const diff = sort.dir === "asc" ? av - bv : bv - av;
-      if (diff !== 0) return diff;
-      return (tiebreaker.get(a.provider) ?? 0) - (tiebreaker.get(b.provider) ?? 0);
-    });
-    return arr;
+    return sortRanked(
+      data,
+      hasSuccessfulRuns,
+      (a, b) => {
+        const av = accessor(a, sort.key);
+        const bv = accessor(b, sort.key);
+        const diff = sort.dir === "asc" ? av - bv : bv - av;
+        if (diff !== 0) return diff;
+        return (tiebreaker.get(a.provider) ?? 0) - (tiebreaker.get(b.provider) ?? 0);
+      },
+      (a, b) => a.displayName.localeCompare(b.displayName)
+    );
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, sort.key, sort.dir, percentile, valueScores]);
 
@@ -448,6 +468,8 @@ export function LeaderboardTable({
     const map = new Map<string, number>();
     let currentRank = 1;
     for (let i = 0; i < sorted.length; i++) {
+      // Unranked providers sit after the ranked ones and get no position.
+      if (!hasSuccessfulRuns(sorted[i])) break;
       if (i > 0 && accessor(sorted[i], sort.key) !== accessor(sorted[i - 1], sort.key)) {
         currentRank = i + 1;
       }
@@ -529,8 +551,9 @@ export function LeaderboardTable({
         </TableHeader>
         <TableBody>
           {sorted.map((p, idx) => {
+            const ranked = hasSuccessfulRuns(p);
             const rank = ranks.get(p.provider) ?? (idx + 1);
-            const isWinner = rank === 1;
+            const isWinner = ranked && rank === 1;
             const totalMs = p[totalKey] as number;
             const sc = (key: SortKey) => sort.key === key ? "text-foreground font-medium" : "";
             return (
@@ -540,7 +563,7 @@ export function LeaderboardTable({
               >
                 <TableCell className="text-center py-2">
                   <span className="text-[0.65rem] text-muted-foreground">
-                    {rank}
+                    {ranked ? rank : "—"}
                   </span>
                 </TableCell>
                 <TableCell className="py-2">
@@ -609,14 +632,14 @@ export function LeaderboardTable({
                     key={i}
                     className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] text-foreground tabular-nums ${sc(segSortKeys[i])}`}
                   >
-                    {Math.round((p[key] as number)).toLocaleString("en-US")}
+                    {ranked ? Math.round((p[key] as number)).toLocaleString("en-US") : <NotAvailable />}
                   </TableCell>
                   );
                 })}
                 <TableCell
                   className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("latency")}`}
                 >
-                  {Math.round(totalMs).toLocaleString("en-US")}
+                  {ranked ? Math.round(totalMs).toLocaleString("en-US") : <NotAvailable />}
                 </TableCell>
                 <TableCell className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("cost")}`}>
                   {p.pricePerHour != null ? (
@@ -624,7 +647,7 @@ export function LeaderboardTable({
                   ) : "—"}
                 </TableCell>
                 <TableCell className={`py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("value")}`}>
-                  {(valueScores.get(p.provider) ?? 0).toFixed(3)}
+                  {ranked ? (valueScores.get(p.provider) ?? 0).toFixed(3) : <NotAvailable />}
                 </TableCell>
               </TableRow>
             );
