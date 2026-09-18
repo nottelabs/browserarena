@@ -21,6 +21,7 @@
     "dev": "tsx src/cli.ts",
     "build": "tsc -p tsconfig.json",
     "bench": "npm run build && node dist/cli.js",
+    "test": "tsx --test src/providers/*.test.ts src/benchmarks/*/*.test.ts",
     "check-regressions": "npm --prefix web run check-regressions --"
   },
   "author": "junhsss <junhsssr@gmail.com>",

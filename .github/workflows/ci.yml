@@ -20,7 +20,10 @@ jobs:
           cache: npm
           cache-dependency-path: package-lock.json
       - run: npm ci
+      # The v0 extraction test drives a real browser.
+      - run: npx playwright-core install --with-deps chromium
       - run: npm run build
+      - run: npm test
       - run: npm audit --package-lock-only
 
   web:
