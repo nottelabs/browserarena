@@ -28,6 +28,7 @@ import {
   isIsolatedPoint,
   type HistoryRangeKey,
 } from "@/lib/history-range";
+import { hasSuccessfulRuns } from "@/lib/ranking";
 
 const HISTORY_START_DATE = "2026-05-15";
 // Above this many points, per-point dots turn the lines into noise.
@@ -320,14 +321,14 @@ export function HistoryCharts({
           }
           const latestA = [...a.points].sort((x, y) => y.date.localeCompare(x.date))[0];
           const latestB = [...b.points].sort((x, y) => y.date.localeCompare(x.date))[0];
-          const scoreA = latestA
+          const scoreA = latestA && hasSuccessfulRuns(latestA)
             ? computeValueScore({
                 latencyMs: latestA[keys.total] as number,
                 successRate: latestA.successRate,
                 pricePerHour: a.pricePerHour,
               })
             : -Infinity;
-          const scoreB = latestB
+          const scoreB = latestB && hasSuccessfulRuns(latestB)
             ? computeValueScore({
                 latencyMs: latestB[keys.total] as number,
                 successRate: latestB.successRate,
@@ -387,14 +388,18 @@ export function HistoryCharts({
 
   const stackedData = useMemo(() => {
     if (!displayedBreakdownSeries) return [];
-    return displayedBreakdownSeries.points.map((point) => ({
-      date: point.date,
-      label: formatDateLabel(point.date),
-      create: point[keys.create],
-      connect: point[keys.connect],
-      goto: point[keys.goto],
-      release: point[keys.release],
-    }));
+    return displayedBreakdownSeries.points.map((point) => {
+      // Keep the date on the axis, but draw no bar when nothing was measured.
+      const measured = hasSuccessfulRuns(point);
+      return {
+        date: point.date,
+        label: formatDateLabel(point.date),
+        create: measured ? point[keys.create] : null,
+        connect: measured ? point[keys.connect] : null,
+        goto: measured ? point[keys.goto] : null,
+        release: measured ? point[keys.release] : null,
+      };
+    });
   }, [displayedBreakdownSeries, keys]);
 
   const displayedBreakdownDomain = useMemo(
@@ -477,7 +482,8 @@ export function HistoryCharts({
       };
       for (const provider of providerOptions) {
         const point = provider.points.find((p) => p.date === date);
-        row[provider.provider] = point
+        // A day with no successful runs has no latency to score: leave a gap.
+        row[provider.provider] = point && hasSuccessfulRuns(point)
           ? computeValueScore({
               latencyMs: point[keys.total] as number,
               successRate: point.successRate,
