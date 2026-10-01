@@ -101,6 +101,7 @@ export class AwsAgentCoreProvider implements ProviderClient {
         protocol: "https:",
         hostname: url.hostname,
         path: url.pathname,
+        query: Object.fromEntries(url.searchParams),
         headers: { host: url.host },
       })
     );
