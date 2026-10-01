@@ -129,12 +129,17 @@ test("temporary credentials add a signed session token", async () => {
   assert.ok(headers.authorization!.endsWith(`Signature=${signature}`));
 });
 
-test("a start without an automation stream is an error", async () => {
-  const { client } = fakeClient({ accessKeyId: "AKIDEXAMPLE", secretAccessKey: SECRET }, () => ({
+test("a session that starts without an automation stream is stopped", async () => {
+  const { client, commands } = fakeClient({ accessKeyId: "AKIDEXAMPLE", secretAccessKey: SECRET }, () => ({
     sessionId: "SESSION1",
   }));
 
-  await assert.rejects(() => new AwsAgentCoreProvider(client).create(), /missing sessionId or automation/);
+  await assert.rejects(() => new AwsAgentCoreProvider(client).create(), /missing automation stream/);
+
+  // The runner never sees the id, so nothing else would release the session.
+  assert.equal(commands.length, 2);
+  assert.ok(commands[1] instanceof StopBrowserSessionCommand);
+  assert.equal((commands[1] as StopBrowserSessionCommand).input.sessionId, "SESSION1");
 });
 
 test("errors keep the status for throttling and drop the caller's ARN", async () => {
