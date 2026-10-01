@@ -32,8 +32,9 @@ npm run dev
 1. Create a new file in `src/providers/` (e.g. `src/providers/my-provider.ts`)
 2. Implement the `ProviderClient` interface from `src/types.ts`:
    - `name`: provider identifier (uppercase)
-   - `create()`: create a browser session, return `{ id, cdpUrl }`
+   - `create()`: create a browser session, return `{ id, cdpUrl }`. Add `headers` when the CDP endpoint authenticates the connect request by header rather than by URL.
    - `release(id)`: tear down the session
+   - `releasesOnDisconnect`: set to `true` when there is no session API and connecting over CDP starts the session; the runner then releases it by closing the browser
    - `computeCost(seconds)`: return estimated cost in USD
 3. Register your provider in `src/providers/index.ts`
 4. Add the required environment variable(s) to `.env.example`

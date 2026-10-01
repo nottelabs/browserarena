@@ -49,12 +49,13 @@ export async function runSingleSession(
     stage = "session_create";
     let id: string;
     let cdpUrl: string;
+    let headers: Record<string, string> | undefined;
 
     while (true) {
       try {
         const t0 = nowNs();
         const created = await provider.create();
-        ({ id, cdpUrl } = created);
+        ({ id, cdpUrl, headers } = created);
         result.id = id;
         session = { id };
         result.session_creation_ms = msSince(t0);
@@ -81,7 +82,7 @@ export async function runSingleSession(
 
     stage = "connect_over_cdp";
     const t1 = nowNs();
-    browser = await chromium.connectOverCDP(cdpUrl);
+    browser = await chromium.connectOverCDP(cdpUrl, headers ? { headers } : undefined);
     result.session_connect_ms = msSince(t1);
     console.error(`[Browser connected] ${result.session_connect_ms}ms`);
 
@@ -146,8 +147,8 @@ export async function runSingleSession(
     result.error_message = message;
     console.error(`[ERROR] stage=${stage} id=${result.id} ${message}`);
   } finally {
-    if (provider.name === "LIGHTPANDA") {
-      // Closing the connection ends a Lightpanda session.
+    if (provider.releasesOnDisconnect) {
+      // Closing the connection ends the session.
       if (browser) {
         try {
           stage = "session_release";
