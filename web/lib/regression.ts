@@ -118,9 +118,9 @@ export interface MetricVerdict {
   delta: number;
   breachDays: number;
   breached: boolean;
-  /** Date the current run of consecutive breaching days began. */
+  /** Date the latest run of consecutive breaching days began. */
   onsetDate: string | null;
-  /** How many consecutive days back the breach extends. */
+  /** How many consecutive days that run covers. */
   breachAgeDays: number;
   recent: { date: string; value: number; breached: boolean }[];
   /** Last 14 daily values, oldest first. */
@@ -251,12 +251,21 @@ function buildVerdict(
     breached: isBreachingDay(metricValue(p, spec.key), baselineValue, spec, config),
   }));
 
-  // Walk backwards from `index` while days keep breaching, to find when this
-  // episode started. Reported as the onset date in the alert.
+  const breachesAt = (i: number) =>
+    isBreachingDay(metricValue(points[i], spec.key), baselineValue, spec, config);
+
+  // A breach needs only `minBreachDays` of the recent window, so the latest
+  // day can itself be clean. Start from the last breaching day in the window.
+  const recentStart = Math.max(0, index - config.recentDays + 1);
+  let latestBreach = index;
+  while (latestBreach > recentStart && !breachesAt(latestBreach)) latestBreach--;
+
+  // Walk backwards while days keep breaching, to find when this episode
+  // started. Reported as the onset date in the alert.
   let breachAgeDays = 0;
   let onsetDate: string | null = null;
-  for (let i = index; i >= 0; i--) {
-    if (!isBreachingDay(metricValue(points[i], spec.key), baselineValue, spec, config)) {
+  for (let i = latestBreach; i >= 0; i--) {
+    if (!breachesAt(i)) {
       break;
     }
     breachAgeDays++;
