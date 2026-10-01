@@ -4,6 +4,7 @@ import { requireEnv } from "../utils/env.js";
 export class LightpandaProvider implements ProviderClient {
   readonly name = "LIGHTPANDA";
   readonly proxyUnsupportedReason = "Lightpanda's built-in proxies are datacenter proxies; country-targeted residential proxies require a separately configured account proxy";
+  readonly releasesOnDisconnect = true;
   private apiKey: string | null = null;
   private cdpUrl: string;
 
