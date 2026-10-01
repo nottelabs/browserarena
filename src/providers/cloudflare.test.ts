@@ -7,8 +7,8 @@ const originalAccountId = process.env.CLOUDFLARE_ACCOUNT_ID;
 const originalApiToken = process.env.CLOUDFLARE_API_TOKEN;
 const originalFetch = globalThis.fetch;
 
-const BASE = "https://api.cloudflare.com/client/v4/accounts/acct-1/browser-run/devtools/browser";
-const WS_URL = "wss://api.cloudflare.com/client/v4/accounts/acct-1/browser-run/devtools/browser/sess-1";
+const BASE = "https://api.cloudflare.com/client/v4/accounts/acct-1/browser-rendering/devtools/browser";
+const WS_URL = "wss://api.cloudflare.com/client/v4/accounts/acct-1/browser-rendering/devtools/browser/sess-1";
 
 type Call = { url: string; method?: string; authorization: string | null };
 
@@ -55,8 +55,8 @@ test("creates a session and hands the bearer token to the CDP connect", async ()
   assert.deepEqual(session.headers, { Authorization: "Bearer test-token" });
 });
 
-test("accepts the session wrapped in a v4 result envelope", async () => {
-  stubFetch(200, { success: true, result: { sessionId: "sess-1", webSocketDebuggerUrl: WS_URL } });
+test("a response without a websocket URL connects to the session endpoint", async () => {
+  stubFetch(200, { sessionId: "sess-1" });
 
   const session = await new CloudflareProvider().create();
 

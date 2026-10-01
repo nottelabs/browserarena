@@ -3,8 +3,6 @@ import { requireEnv } from "../utils/env.js";
 
 const API_BASE = "https://api.cloudflare.com/client/v4";
 
-type SessionResponse = { sessionId?: string; webSocketDebuggerUrl?: string };
-
 // Cloudflare Browser Run, driven from outside Workers through its CDP endpoints.
 // The API token needs the "Browser Rendering - Edit" permission.
 export class CloudflareProvider implements ProviderClient {
@@ -17,8 +15,10 @@ export class CloudflareProvider implements ProviderClient {
     return Math.round((seconds / 3600) * perHour * 1e8) / 1e8;
   }
 
+  // Cloudflare's guides spell this route `browser-run` since the product was
+  // renamed; the API reference and the official SDK still use `browser-rendering`.
   private endpoint(sessionId?: string): string {
-    const base = `${API_BASE}/accounts/${requireEnv("CLOUDFLARE_ACCOUNT_ID")}/browser-run/devtools/browser`;
+    const base = `${API_BASE}/accounts/${requireEnv("CLOUDFLARE_ACCOUNT_ID")}/browser-rendering/devtools/browser`;
     return sessionId ? `${base}/${sessionId}` : base;
   }
 
@@ -37,15 +37,16 @@ export class CloudflareProvider implements ProviderClient {
       const body = await res.text();
       throw new Error(`Cloudflare create failed: HTTP ${res.status} - ${body}`);
     }
-    // The docs show the session at the top level; accept the usual v4
-    // `result` envelope as well.
-    const body = (await res.json()) as SessionResponse & { result?: SessionResponse };
-    const { sessionId, webSocketDebuggerUrl } = body.result ?? body;
-    if (!sessionId || !webSocketDebuggerUrl) {
-      throw new Error("Invalid Cloudflare response: missing sessionId or webSocketDebuggerUrl");
-    }
+    const { sessionId, webSocketDebuggerUrl } = (await res.json()) as {
+      sessionId?: string;
+      webSocketDebuggerUrl?: string;
+    };
+    if (!sessionId) throw new Error("Invalid Cloudflare response: missing sessionId");
+    // The URL is optional in the API schema; a session is always reachable at
+    // its own endpoint over wss.
+    const cdpUrl = webSocketDebuggerUrl ?? this.endpoint(sessionId).replace("https://", "wss://");
     // The websocket takes the same bearer token as the REST API, as a header.
-    return { id: sessionId, cdpUrl: webSocketDebuggerUrl, headers };
+    return { id: sessionId, cdpUrl, headers };
   }
 
   async release(id: string): Promise<void> {

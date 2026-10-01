@@ -64,10 +64,18 @@ export class AwsAgentCoreProvider implements ProviderClient {
     } catch (e: unknown) {
       throw describeError("StartBrowserSession", e);
     }
-    if (!id || !cdpUrl) {
-      throw new Error("Invalid AgentCore response: missing sessionId or automation stream endpoint");
+    if (!id) throw new Error("Invalid AgentCore response: missing sessionId");
+    try {
+      if (!cdpUrl) {
+        throw new Error("Invalid AgentCore response: missing automation stream endpoint");
+      }
+      return { id, cdpUrl, headers: await this.signConnect(client, cdpUrl) };
+    } catch (e: unknown) {
+      // The runners only learn the id from a successful create, so a session
+      // that started but cannot be connected has to be stopped here.
+      await this.release(id).catch(() => {});
+      throw e;
     }
-    return { id, cdpUrl, headers: await this.signConnect(client, cdpUrl) };
   }
 
   /**
