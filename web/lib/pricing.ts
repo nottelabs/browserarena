@@ -1,4 +1,4 @@
-type BillingGranularity = "per_minute" | "per_second";
+type BillingGranularity = "per_minute" | "per_30_seconds" | "per_second";
 
 interface UnitPricing {
   ratePerHour: number;
@@ -35,6 +35,17 @@ const PRICING: Record<string, { unit: UnitPricing }> = {
   LIGHTPANDA: {
     unit: { ratePerHour: 0.06, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
   },
+  // $25 for 20,000 units of 30 seconds each.
+  BROWSERLESS: {
+    unit: { ratePerHour: 0.15, billing: "per_30_seconds", minimumSeconds: 30, perSessionCreationFee: 0 },
+  },
+  CLOUDFLARE: {
+    unit: { ratePerHour: 0.09, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+  },
+  // Billed on CPU and memory actually used; this is the 1 vCPU / 4 GB ceiling.
+  AWS_AGENTCORE: {
+    unit: { ratePerHour: 0.1273, billing: "per_second", minimumSeconds: 1, perSessionCreationFee: 0 },
+  },
 };
 
 function computeUnitCost(pricing: UnitPricing, durationSeconds: number): number {
@@ -43,6 +54,11 @@ function computeUnitCost(pricing: UnitPricing, durationSeconds: number): number 
     billedSeconds = Math.max(
       pricing.minimumSeconds,
       Math.ceil(durationSeconds / 60) * 60
+    );
+  } else if (pricing.billing === "per_30_seconds") {
+    billedSeconds = Math.max(
+      pricing.minimumSeconds,
+      Math.ceil(durationSeconds / 30) * 30
     );
   } else {
     billedSeconds = Math.max(pricing.minimumSeconds, durationSeconds);

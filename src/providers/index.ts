@@ -8,6 +8,9 @@ import { NotteProvider } from "./notte.js";
 import { BrowserUseProvider } from "./browser-use.js";
 import { TilionProvider } from "./tilion.js";
 import { LightpandaProvider } from "./lightpanda.js";
+import { BrowserlessProvider } from "./browserless.js";
+import { CloudflareProvider } from "./cloudflare.js";
+import { AwsAgentCoreProvider } from "./aws-agentcore.js";
 
 export function getRequiredEnvVarsForProvider(name: string): string[] {
   const key = name.trim().toLowerCase();
@@ -25,6 +28,11 @@ export function getRequiredEnvVarsForProvider(name: string): string[] {
   if (key === "tilion") return ["TILION_API_KEY"];
   if (key === "lightpanda" || key === "lp")
     return ["LIGHTPANDA_API_KEY"];
+  if (key === "browserless") return ["BROWSERLESS_API_KEY"];
+  if (key === "cloudflare" || key === "cf")
+    return ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"];
+  // Credentials come from the standard AWS chain, which may not use env vars.
+  if (key === "aws-agentcore" || key === "agentcore") return ["AWS_REGION"];
   throw new Error(`Unknown provider: ${name}`);
 }
 
@@ -49,5 +57,9 @@ export function resolveProvider(name: string): ProviderClient {
     return new BrowserUseProvider();
   if (key === "tilion") return new TilionProvider();
   if (key === "lightpanda" || key === "lp") return new LightpandaProvider();
+  if (key === "browserless") return new BrowserlessProvider();
+  if (key === "cloudflare" || key === "cf") return new CloudflareProvider();
+  if (key === "aws-agentcore" || key === "agentcore")
+    return new AwsAgentCoreProvider();
   throw new Error(`Unknown provider: ${name}`);
 }
