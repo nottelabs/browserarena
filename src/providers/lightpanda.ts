@@ -3,6 +3,7 @@ import { requireEnv } from "../utils/env.js";
 
 export class LightpandaProvider implements ProviderClient {
   readonly name = "LIGHTPANDA";
+  readonly releasesOnDisconnect = true;
   private apiKey: string | null = null;
   private cdpUrl: string;
 

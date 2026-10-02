@@ -19,7 +19,7 @@ export async function runRecordedSession(
 
   // 1. Create session (with recording flag for providers that need it)
   console.error(`[RECORD] Creating session...`);
-  const { id, cdpUrl } = await provider.create({ recording: true });
+  const { id, cdpUrl, headers } = await provider.create({ recording: true });
   console.error(`[RECORD] Session created: id=${id}`);
 
   let recordingId: string | undefined;
@@ -35,7 +35,7 @@ export async function runRecordedSession(
 
     // 3. Connect via CDP and run actions
     console.error(`[RECORD] Connecting over CDP...`);
-    const browser = await chromium.connectOverCDP(cdpUrl);
+    const browser = await chromium.connectOverCDP(cdpUrl, headers ? { headers } : undefined);
     console.error(`[RECORD] Connected`);
 
     const context = browser.contexts()[0] || (await browser.newContext());

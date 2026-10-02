@@ -1,10 +1,11 @@
 /**
  * Integration coverage for the hello-browser runner's two session lifecycles.
  *
- * Lightpanda has no session API: the session starts on CDP connect and ends
- * when the client disconnects, so the runner must release it with
- * `browser.close()` and leave `provider.release()` alone. Every other provider
- * is the reverse. Both paths are exercised against a real browser over CDP.
+ * Lightpanda and Browserless have no session API: the session starts on CDP
+ * connect and ends when the client disconnects, so the runner must release it
+ * with `browser.close()` and leave `provider.release()` alone. Every other
+ * provider is the reverse. Both paths are exercised against a real browser
+ * over CDP.
  *
  * Needs a Chromium: CI installs Playwright's build (`playwright-core install
  * chromium`), and a local Google Chrome works too. Skipped when neither is
@@ -28,18 +29,28 @@ import { runSingleSession } from "./run.js";
 /** A provider backed by a local browser, recording what the runner asks of it. */
 class FakeProvider implements ProviderClient {
   readonly releases: string[] = [];
+  readonly releasesOnDisconnect: boolean;
+  private readonly headers?: Record<string, string>;
 
   constructor(
     readonly name: ProviderName,
-    private readonly cdpUrl: string
-  ) {}
+    private readonly cdpUrl: string,
+    opts: { releasesOnDisconnect?: boolean; headers?: Record<string, string> } = {}
+  ) {
+    this.releasesOnDisconnect = opts.releasesOnDisconnect ?? false;
+    this.headers = opts.headers;
+  }
 
   computeCost(): number {
     return 0;
   }
 
   async create(): Promise<ProviderSession> {
-    return { id: this.name === "LIGHTPANDA" ? "" : "session-1", cdpUrl: this.cdpUrl };
+    return {
+      id: this.releasesOnDisconnect ? "" : "session-1",
+      cdpUrl: this.cdpUrl,
+      headers: this.headers,
+    };
   }
 
   async release(id: string): Promise<void> {
@@ -146,7 +157,7 @@ test("Lightpanda is released by closing the browser", async (t) => {
   const page = await startPageServer();
 
   try {
-    const provider = new FakeProvider("LIGHTPANDA", browser.cdpUrl);
+    const provider = new FakeProvider("LIGHTPANDA", browser.cdpUrl, { releasesOnDisconnect: true });
 
     const record = await runSingleSession(provider, page.url, 1);
 
@@ -172,7 +183,9 @@ test("Lightpanda is released by closing the browser", async (t) => {
 });
 
 test("a failed connect records the stage instead of throwing", async () => {
-  const provider = new FakeProvider("LIGHTPANDA", "ws://127.0.0.1:1/devtools/browser/none");
+  const provider = new FakeProvider("LIGHTPANDA", "ws://127.0.0.1:1/devtools/browser/none", {
+    releasesOnDisconnect: true,
+  });
 
   const record = await runSingleSession(provider, "http://127.0.0.1:1/", 1);
 
@@ -182,4 +195,33 @@ test("a failed connect records the stage instead of throwing", async () => {
 
   // Nothing connected, so there is nothing to close and nothing to time.
   assert.equal(record.session_release_ms, null);
+});
+
+test("session headers are sent with the CDP connect", async () => {
+  // Stands in for an endpoint that authenticates the upgrade request by
+  // header: it records what arrived, then drops the connection.
+  let authorization: string | undefined;
+  const server = http.createServer();
+  server.on("upgrade", (req, socket) => {
+    authorization = req.headers.authorization;
+    socket.destroy();
+  });
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const { port } = server.address() as AddressInfo;
+
+  try {
+    const provider = new FakeProvider("CLOUDFLARE", `ws://127.0.0.1:${port}/devtools/browser/x`, {
+      headers: { Authorization: "Bearer test-token" },
+    });
+
+    const record = await runSingleSession(provider, "http://127.0.0.1:1/", 1);
+
+    assert.equal(authorization, "Bearer test-token");
+    assert.equal(record.error_stage, "connect_over_cdp");
+
+    // The session was created, so it is still released through the API.
+    assert.deepEqual(provider.releases, ["session-1"]);
+  } finally {
+    await new Promise<void>((resolve) => server.close(() => resolve()));
+  }
 });
