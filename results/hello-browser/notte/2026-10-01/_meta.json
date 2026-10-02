@@ -1,0 +1,17 @@
+{
+  "region": "us-west-1",
+  "instance_type": "t3.small",
+  "cloud": "aws",
+  "os": "linux x64",
+  "node_version": "v22.22.2",
+  "started_at": "2026-10-02T07:56:40.672Z",
+  "finished_at": "2026-10-02T07:57:38.585Z",
+  "backfill": {
+    "target_date": "2026-10-01",
+    "measurement_date": "2026-10-02",
+    "reason": "The scheduled 2026-10-01 us-west run stopped before benchmarking because the runner disk was full.",
+    "method": "Fresh rerun on the same us-west runner, using 100 measured sessions at each concurrency level (1 and 10).",
+    "note": "Replacement measurements collected on 2026-10-02; these are not observations from 2026-10-01. Original measurement timestamps are preserved.",
+    "source_commit": "46a9e1540a0a240e14e56c036ce9fcaabecf7d03"
+  }
+}
