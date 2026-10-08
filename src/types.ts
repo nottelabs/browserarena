@@ -8,11 +8,16 @@ export type ProviderName =
   | "NOTTE"
   | "BROWSER_USE"
   | "TILION"
-  | "LIGHTPANDA";
+  | "LIGHTPANDA"
+  | "BROWSERLESS"
+  | "CLOUDFLARE"
+  | "AWS_AGENTCORE";
 
 export type ProviderSession = {
   id: string;
   cdpUrl: string;
+  /** Sent with the CDP connect request, for providers that authenticate it with headers rather than the URL. */
+  headers?: Record<string, string>;
 };
 
 export interface RecordingResult {
@@ -23,6 +28,11 @@ export interface RecordingResult {
 
 export interface ProviderClient {
   readonly name: ProviderName;
+  /**
+   * True when the provider has no session API: connecting over CDP starts the
+   * session, and the runners end it with browser.close() instead of release().
+   */
+  readonly releasesOnDisconnect?: boolean;
   /** Returns estimated cost in USD for given session duration. Note: some providers charge for startup/creation; others have tier-dependent rates. This is a simplified estimate. */
   computeCost(seconds: number): number;
   create(opts?: { recording?: boolean }): Promise<ProviderSession>;

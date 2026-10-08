@@ -201,3 +201,30 @@ test("no-data series is unknown, not a false alarm", () => {
   assert.equal(series.status, "unknown");
   assert.equal(series.reason, "no_data");
 });
+
+test("a breach whose latest day recovered still names its onset", () => {
+  // Ten quiet days at 100ms, two bad days at 300ms, then a clean day. Two of
+  // the three recent days breach, so goto is degraded, but the latest is not.
+  const gotoMs = [...Array(10).fill(100), 300, 300, 100];
+  const points = gotoMs.map((ms, i) => ({
+    date: `2026-09-${String(i + 1).padStart(2, "0")}`,
+    successRate: 100,
+    medianCreationMs: 100,
+    medianConnectMs: 100,
+    medianGotoMs: ms,
+    medianReleaseMs: 100,
+    totalTimeMs: 300 + ms,
+  })) as HistoricalProviderPoint[];
+
+  const series = evaluateSeries(
+    points,
+    { provider: "SYNTHETIC", displayName: "Synthetic", concurrency: CONCURRENCY },
+    new Date("2026-09-13T12:00:00Z")
+  );
+
+  assert.equal(series.status, "degraded");
+  const goto = series.breaches.find((b) => b.metric === "goto");
+  assert.ok(goto, "expected a goto breach");
+  assert.equal(goto.onsetDate, "2026-09-11");
+  assert.equal(goto.breachAgeDays, 2);
+});
