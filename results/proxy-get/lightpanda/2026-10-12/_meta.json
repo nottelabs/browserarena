@@ -4,7 +4,7 @@
   "cloud": "aws",
   "os": "linux x64",
   "node_version": "v22.23.2",
-  "started_at": "2026-10-12T16:28:05.826Z",
+  "started_at": "2026-10-12T12:18:54Z",
   "finished_at": "2026-10-12T17:24:27.537Z",
   "benchmark": "proxy-get",
   "run_id": "premerge-50-2026-10-12",
@@ -25,7 +25,7 @@
   "rate": 10,
   "runId": "premerge-50-2026-10-12",
   "suite_started_at": "2026-10-12T12:18:54Z",
-  "suite_finished_at": "2026-10-12T17:24:27Z",
+  "suite_finished_at": "2026-10-12T17:24:27.537Z",
   "cumulative_targets": [
     10,
     20,
@@ -34,5 +34,7 @@
     50
   ],
   "target_note": "Temporary Cloudflare HTTPS tunnel from us-east-1 EC2; see docs/proxy-get-live-run-2026-10-12.md",
-  "monitor_initial_gap_seconds": 287.499
+  "monitor_initial_gap_seconds": 287.499,
+  "final_batch_started_at": "2026-10-12T16:28:05.826Z",
+  "final_batch_finished_at": "2026-10-12T17:24:27.537Z"
 }

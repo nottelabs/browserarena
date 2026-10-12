@@ -164,7 +164,10 @@ Earlier dates, the 50-attempt corrected Notte suite and its separate 50-attempt
 blocked control are retained byte-for-byte. The dashboard selects the latest
 provider suite rather than pooling the old Notte attempts into this 250-attempt
 measurement. The old Notte metadata is archived alongside the new audit before
-writing metadata for the new suite. The results index includes all saved dates.
+writing metadata for the new suite. Each new metadata file uses `started_at`
+and `finished_at` for the full suite, retaining the runner's original final-batch
+window in `final_batch_started_at` and `final_batch_finished_at`. The results
+index includes all saved dates.
 
 - [Analysis and failure correlations](../results/proxy-get/diagnostics/2026-10-12-premerge50/analysis.json)
 - [Selected session status audit](../results/proxy-get/diagnostics/2026-10-12-premerge50/session-audit.jsonl)
@@ -183,8 +186,12 @@ not activate it. Production reads published results from GitHub main with a
 60-second cache, so finishing this EC2 process alone does not update the dashboard.
 
 Validation before publication: the root TypeScript build and 57 benchmark/provider
-tests pass; the web production build and 93 web-library tests pass. Loading the
+tests pass; the web production build and 96 web-library tests pass. Loading the
 actual result files through the dashboard summarizer selects nine provider rows
 for every country, exactly 50 attempts for each supported pair, the expected
 Notte country counts, and the new suite ID. All existing tracked JSONL files were
 checked byte-for-byte for preservation, including the earlier Notte control.
+The publication integration tests in `web/lib/proxy-publication.test.ts` load
+the actual saved artifacts, verify every provider/country count and retained
+failure, check metadata coverage, and exercise dashboard history and API exports
+for all five countries. Unsupported markers contribute no attempts or latency.
