@@ -225,6 +225,35 @@ test("Browser Use: a breach whose latest day dipped under the threshold still ha
   }
 });
 
+test("onset reaches back past the recent window when the latest day is clean", async () => {
+  const template = (await pointsFor("NOTTE"))[0];
+  const day = (n: number, creation: number): HistoricalProviderPoint => ({
+    ...template,
+    date: `2026-01-${String(n).padStart(2, "0")}`,
+    lastEntryAt: undefined,
+    medianCreationMs: creation,
+  });
+  // 10 clean days, then 3 breaching days, then one clean day. The recent
+  // window (days 12-14) breaches 2 of 3, and the episode began on day 11.
+  const points = [
+    ...Array.from({ length: 10 }, (_, i) => day(i + 1, 100)),
+    day(11, 300),
+    day(12, 300),
+    day(13, 300),
+    day(14, 100),
+  ];
+
+  const series = evaluateSeries(
+    points,
+    { provider: "SYNTH", displayName: "Synthetic", concurrency: CONCURRENCY },
+    new Date("2026-01-14T12:00:00Z")
+  );
+  const creation = series.breaches.find((b) => b.metric === "creation");
+  assert.ok(creation, "expected creation to be breached");
+  assert.equal(creation.onsetDate, "2026-01-11");
+  assert.equal(creation.breachAgeDays, 3);
+});
+
 test("no-data series is unknown, not a false alarm", () => {
   const series = evaluateSeries(
     [],

@@ -267,22 +267,12 @@ function buildVerdict(
   while (start >= recentStart && !recentDetail[start - recentStart].breached) {
     start--;
   }
-  for (let i = start; i >= recentStart; i--) {
+  for (let i = start >= recentStart ? start : -1; i >= 0; i--) {
     if (!isBreachingDay(metricValue(points[i], spec.key), baselineValue, spec, config)) {
       break;
     }
     breachAgeDays++;
     onsetDate = points[i].date;
-  }
-  if (breachAgeDays === recent.length) {
-    // The whole window breaches; keep walking into the baseline-era history.
-    for (let i = recentStart - 1; i >= 0; i--) {
-      if (!isBreachingDay(metricValue(points[i], spec.key), baselineValue, spec, config)) {
-        break;
-      }
-      breachAgeDays++;
-      onsetDate = points[i].date;
-    }
   }
 
   const sparkline = points
