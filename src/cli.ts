@@ -15,6 +15,7 @@ import { parseCountries } from "./benchmarks/proxy-get/schema.js";
 import { loadProxyPricing } from "./benchmarks/proxy-get/pricing.js";
 import { PAYLOAD_BYTES, PAYLOAD_SHA256 } from "./benchmarks/proxy-get/payload.js";
 import { validateProxyGetUrls } from "./benchmarks/proxy-get/validate.js";
+import { writeProxyResultsIndex } from "./benchmarks/proxy-get/manifest.js";
 
 type BenchmarkName = "hello-browser" | "v0" | "proxy-get";
 
@@ -152,7 +153,11 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
     writeMeta("");
     const stopLogging = startLogging(`logs/proxy-get-${Date.now()}.log`);
     try { await runProxyGetSuite(providers, options, pricing); }
-    finally { writeMeta(new Date().toISOString()); stopLogging(); }
+    finally {
+      writeMeta(new Date().toISOString());
+      if (!outArg) writeProxyResultsIndex();
+      stopLogging();
+    }
     return;
   }
 

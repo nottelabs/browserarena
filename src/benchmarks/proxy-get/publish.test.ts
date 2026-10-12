@@ -32,6 +32,7 @@ dir="results/proxy-get/steel/$(date -u +%Y-%m-%d)"
 mkdir -p "$dir"
 printf '{"test":true}\\n' > "$dir/results.jsonl"
 printf '{}\\n' > "$dir/_meta.json"
+printf '{"version":1,"providers":[]}\\n' > results/proxy-get/index.json
 `);
   const run = (args: string[], extra: Record<string, string> = {}) => spawnSync("bash", ["scripts/run-proxy-and-publish.sh", ...args], {
     cwd: repo, encoding: "utf8", env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, ...extra },
@@ -60,8 +61,9 @@ test("proxy publisher pushes only result paths and blocks unrelated staged files
     assert.equal(result.status, 0, result.stdout + result.stderr);
     assert.equal(f.git("rev-parse", "HEAD"), f.git("rev-parse", "origin/main"));
     const files = f.git("diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").trim().split("\n");
-    assert.equal(files.length, 2);
-    assert.ok(files.every(file => /^results\/proxy-get\/steel\/\d{4}-\d{2}-\d{2}\/(results.jsonl|_meta.json)$/.test(file)));
+    assert.equal(files.length, 3);
+    assert.ok(files.every(file => file === "results/proxy-get/index.json"
+      || /^results\/proxy-get\/steel\/\d{4}-\d{2}-\d{2}\/(results.jsonl|_meta.json)$/.test(file)));
     const calls = fs.readFileSync(path.join(f.repo, "logs/calls.log"), "utf8");
     assert.match(calls, /--runs=50/);
     f.git("add", "unrelated-private.txt");

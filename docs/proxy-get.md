@@ -262,6 +262,10 @@ available through the CLI but is not part of this default daily budget.
 The publisher uses a lock, checks every supported provider's required keys and
 the target before sessions, preserves partial results, stages only this day's
 proxy files, and rebases/retries pushes against concurrent lifecycle publication.
+Each CLI suite writes `results/proxy-get/index.json`; the publisher commits it
+with the samples. Deployed Vercel pages fetch the index and JSONL from raw GitHub
+with a 60-second cache, rather than relying on immutable build-time results or
+the unauthenticated Contents API quota. Local development still reads files.
 It never resets the checkout. It requires `main` for publication; `--check` can
 verify a feature branch without sessions or publication. Logs and every failure's
 diagnostics remain on EC2; per-attempt diagnostics are also in the published JSONL.
@@ -306,6 +310,14 @@ EC2/hosting; unknown charges and browser-observed traffic prevent an exact invoi
 Operational activation requires the deployed HTTPS endpoints to pass preflight,
 the existing write-enabled Git deploy key, and successful EC2 `--check`. This
 commit prepares the scripts and schedule; it does not merge the PR or install cron.
+
+On October 12 the east runner was checked directly: Node 22.23.2, active cron,
+UTC timezone, all eight required paid-integration credential sets present, 8.1 GB
+disk available, and successful lifecycle Git publication earlier that day. A
+dedicated `/home/ubuntu/browserarena-proxy-daily` checkout was prepared on the PR
+branch with private environment permissions. Its build passes; production
+preflight stops on the undeployed payload's HTTP 404 before any sessions. After
+merge, switch that checkout to `main`, pull, pass `--check`, then install cron.
 
 `/proxy-get` reads local results in development and falls back to the configured
 GitHub results repository in a web-only deployment. `RESULTS_DIR` optionally

@@ -58,12 +58,12 @@ env -u OUTPUT node dist/cli.js "${ARGS[@]}" --preflight
 env -u OUTPUT node dist/cli.js "${ARGS[@]}"
 
 IFS=',' read -ra PROVIDER_LIST <<< "$PROVIDERS"
-PATHS=()
+PATHS=(results/proxy-get/index.json)
 for provider in "${PROVIDER_LIST[@]}"; do
   dir="results/proxy-get/$provider/$DATE"
   [[ ! -d "$dir" ]] || PATHS+=("$dir")
 done
-[[ ${#PATHS[@]} -gt 0 ]] || { echo "[ERROR] no results written"; exit 1; }
+[[ ${#PATHS[@]} -gt 1 ]] || { echo "[ERROR] no results written"; exit 1; }
 git add -- "${PATHS[@]}"
 git diff --cached --quiet && { echo "[INFO] daily target already published"; exit 0; }
 export GIT_AUTHOR_NAME="browserarena-bot (proxy)" GIT_AUTHOR_EMAIL="bot@browserarena.ai"

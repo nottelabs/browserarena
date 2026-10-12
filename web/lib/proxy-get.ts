@@ -95,7 +95,8 @@ export function parseProxyGetJsonl(content: string): ProxyGetRecord[] {
 export async function loadProxyGetEntries(allDates = false): Promise<ProxyGetRecord[]> {
   const base = path.resolve(process.env.RESULTS_DIR || path.join(process.cwd(), "..", "results"), "proxy-get");
   let entries: ProxyGetRecord[] = [];
-  if (fs.existsSync(base)) {
+  // Vercel's build-time files are immutable: published daily data comes from GitHub.
+  if (fs.existsSync(base) && (!process.env.VERCEL || process.env.RESULTS_DIR)) {
     for (const provider of fs.readdirSync(base, { withFileTypes: true }).filter(e => e.isDirectory())) {
       const dir = path.join(base, provider.name);
       const dates = fs.readdirSync(dir, { withFileTypes: true }).filter(d => d.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(d.name)).map(d => d.name).sort();
@@ -113,10 +114,23 @@ export async function loadProxyGetEntries(allDates = false): Promise<ProxyGetRec
       if (!response.ok) throw new Error(`Proxy results listing failed: HTTP ${response.status}`);
       return await response.json();
     };
-    const providers = (await list("results/proxy-get")).filter(d => d.type === "dir");
+    const indexResponse = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/results/proxy-get/index.json`, { next: { revalidate: 60 } });
+    let indexedProviders: { name: string; dates: string[] }[] | null = null;
+    if (indexResponse.ok) {
+      const index = await indexResponse.json();
+      if (index.version !== 1 || !Array.isArray(index.providers) || index.providers.some((p: { name?: unknown; dates?: unknown }) =>
+        typeof p.name !== "string" || !/^[a-z0-9-]+$/.test(p.name) || !Array.isArray(p.dates)
+        || p.dates.some(d => typeof d !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(d)))) {
+        throw new Error("Invalid proxy results index");
+      }
+      indexedProviders = index.providers;
+    } else if (indexResponse.status !== 404) {
+      throw new Error(`Proxy results index fetch failed: HTTP ${indexResponse.status}`);
+    }
+    const providers = indexedProviders ?? (await list("results/proxy-get")).filter(d => d.type === "dir");
     const loaded = await Promise.all(providers.map(async p => {
-      const dates = (await list(`results/proxy-get/${p.name}`)).filter(d => d.type === "dir" && /^\d{4}-\d{2}-\d{2}$/.test(d.name))
-        .map(d => d.name).sort();
+      const dates = ("dates" in p ? p.dates : (await list(`results/proxy-get/${p.name}`))
+        .filter(d => d.type === "dir" && /^\d{4}-\d{2}-\d{2}$/.test(d.name)).map(d => d.name)).toSorted();
       // Load sequentially per provider to keep repository requests bounded.
       const records: ProxyGetRecord[] = [];
       for (const date of allDates ? dates : dates.slice(-1)) {

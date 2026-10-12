@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "providers": [
+    {
+      "name": "anchorbrowser",
+      "dates": [
+        "2026-10-08"
+      ]
+    },
+    {
+      "name": "browser-use",
+      "dates": [
+        "2026-10-08"
+      ]
+    },
+    {
+      "name": "browserbase",
+      "dates": [
+        "2026-10-08"
+      ]
+    },
+    {
+      "name": "hyperbrowser",
+      "dates": [
+        "2026-10-08"
+      ]
+    },
+    {
+      "name": "kernel",
+      "dates": [
+        "2026-10-08"
+      ]
+    },
+    {
+      "name": "lightpanda",
+      "dates": [
+        "2026-10-11"
+      ]
+    },
+    {
+      "name": "notte",
+      "dates": [
+        "2026-10-08",
+        "2026-10-12"
+      ]
+    },
+    {
+      "name": "steel",
+      "dates": [
+        "2026-10-08"
+      ]
+    },
+    {
+      "name": "tilion",
+      "dates": [
+        "2026-10-11"
+      ]
+    }
+  ]
+}

@@ -208,6 +208,7 @@ test("GitHub fallback loads historical folders and keeps default exports on the 
     process.env.RESULTS_DIR = base;
     globalThis.fetch = async input => {
       const url = input instanceof Request ? input.url : String(input);
+      if (url.endsWith("/index.json")) return new Response("", { status: 404 });
       requests.push(url);
       if (url.includes("api.github.com") && url.includes("contents/results/proxy-get/steel")) return Response.json([
         { name: "2026-10-07", type: "dir" }, { name: "2026-10-08", type: "dir" }, { name: "README.md", type: "file" },
@@ -228,6 +229,40 @@ test("GitHub fallback loads historical folders and keeps default exports on the 
     globalThis.fetch = originalFetch;
     if (originalDirectory === undefined) delete process.env.RESULTS_DIR;
     else process.env.RESULTS_DIR = originalDirectory;
+    fs.rmSync(base, { recursive: true, force: true });
+  }
+});
+
+test("Vercel reads fresh indexed results instead of immutable build files or the Contents API", async () => {
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), "proxy-vercel-"));
+  const cwd = process.cwd();
+  const originalDirectory = process.env.RESULTS_DIR;
+  const originalVercel = process.env.VERCEL;
+  const originalFetch = globalThis.fetch;
+  const requests: string[] = [];
+  fs.mkdirSync(path.join(base, "web"));
+  const old = path.join(base, "results/proxy-get/steel/2026-10-01");
+  fs.mkdirSync(old, { recursive: true });
+  fs.writeFileSync(path.join(old, "results.jsonl"), JSON.stringify(entry("2026-10-01")) + "\n");
+  try {
+    process.chdir(path.join(base, "web"));
+    delete process.env.RESULTS_DIR;
+    process.env.VERCEL = "1";
+    globalThis.fetch = async input => {
+      const url = input instanceof Request ? input.url : String(input);
+      requests.push(url);
+      assert.ok(url.startsWith("https://raw.githubusercontent.com/"), "directory API must not be used");
+      if (url.endsWith("/index.json")) return Response.json({ version: 1, providers: [{ name: "steel", dates: ["2026-10-12"] }] });
+      assert.ok(url.endsWith("/steel/2026-10-12/results.jsonl"));
+      return new Response(JSON.stringify(entry("2026-10-12")) + "\n");
+    };
+    assert.equal((await loadProxyGet("US")).providers[0].runDate, "2026-10-12");
+    assert.equal(requests.length, 2);
+  } finally {
+    process.chdir(cwd);
+    globalThis.fetch = originalFetch;
+    if (originalDirectory === undefined) delete process.env.RESULTS_DIR; else process.env.RESULTS_DIR = originalDirectory;
+    if (originalVercel === undefined) delete process.env.VERCEL; else process.env.VERCEL = originalVercel;
     fs.rmSync(base, { recursive: true, force: true });
   }
 });
