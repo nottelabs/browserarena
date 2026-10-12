@@ -17,8 +17,10 @@ import { PAYLOAD_BYTES, PAYLOAD_SHA256 } from "./benchmarks/proxy-get/payload.js
 import { validateProxyGetUrls } from "./benchmarks/proxy-get/validate.js";
 import { writeProxyResultsIndex } from "./benchmarks/proxy-get/manifest.js";
 import { proxySuiteOutput, readProxyResults } from "./benchmarks/proxy-get/output.js";
+import { runLoop as runBrowserThroughput, WARMUP_RUNS as BROWSER_THROUGHPUT_WARMUPS } from "./benchmarks/browser-throughput/run.js";
+import { resolveArticleUrls, type ArticleSource } from "./benchmarks/browser-throughput/articles.js";
 
-type BenchmarkName = "hello-browser" | "v0" | "proxy-get";
+type BenchmarkName = "hello-browser" | "v0" | "proxy-get" | "browser-throughput";
 
 const DEFAULT_PROVIDERS =
   "browserbase,steel,kernel,kernel-headful,notte,hyperbrowser,anchorbrowser,browser-use,lightpanda";
@@ -48,8 +50,9 @@ function startLogging(logPath: string): () => void {
 
 async function main() {
   if (hasFlag("help")) {
-    console.log(`Usage: npm run bench -- --benchmark=hello-browser|v0|proxy-get --provider=steel,kernel,...
+    console.log(`Usage: npm run bench -- --benchmark=hello-browser|v0|proxy-get|browser-throughput --provider=steel,kernel,...
 Common: --runs=N --out=PATH --rate=SESSIONS_PER_MINUTE --url=URL --concurrency=1,10 --record
+browser-throughput: --loops=N (10 actions per loop) --articles=fixed|random --action-timeout=MS
 Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fresh sessions)
   --preflight (check credentials and endpoints without sessions)
   --run-id=ID (resume a suite up to the cumulative --runs target)
@@ -63,7 +66,7 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
     "benchmark",
     process.env.BENCHMARK || "hello-browser"
   )! as BenchmarkName;
-  if (!["hello-browser", "v0", "proxy-get"].includes(benchmarkArg)) throw new Error(`Unknown benchmark: ${benchmarkArg}`);
+  if (!["hello-browser", "v0", "proxy-get", "browser-throughput"].includes(benchmarkArg)) throw new Error(`Unknown benchmark: ${benchmarkArg}`);
   const providerArg = getArg(
     "provider",
     process.env.PROVIDER || (benchmarkArg === "proxy-get" ? `${DEFAULT_PROVIDERS},tilion` : DEFAULT_PROVIDERS)
@@ -79,6 +82,13 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
   const rateArg = getArg("rate", process.env.RATE || undefined);
   const rate = rateArg ? Number(rateArg) : undefined;
   if (rate !== undefined && (!Number.isFinite(rate) || rate < 1)) throw new Error("--rate must be at least 1 session/minute");
+  // browser-throughput only: loops of 10 actions per session, start-page source, per-action timeout.
+  const loops = Number(getArg("loops", process.env.LOOPS || "1"));
+  if (!Number.isInteger(loops) || loops < 1) throw new Error(`--loops must be a positive integer, got "${getArg("loops", process.env.LOOPS || "1")}"`);
+  const articles = getArg("articles", process.env.ARTICLES || "fixed")! as ArticleSource;
+  if (articles !== "fixed" && articles !== "random") throw new Error(`--articles must be "fixed" or "random", got "${articles}"`);
+  const actionTimeoutArg = getArg("action-timeout", process.env.ACTION_TIMEOUT_MS || undefined);
+  const actionTimeoutMs = actionTimeoutArg ? Number(actionTimeoutArg) : undefined;
   const concurrencyArg = getArg("concurrency", process.env.CONCURRENCY || "1");
   const concurrencyLevels = concurrencyArg!
     .split(",")
@@ -208,6 +218,14 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
 
   const meta = await collectVmMeta();
 
+  // One start-page assignment per command, shared by every provider and
+  // concurrency level, so they all walk the same pages even when a random
+  // pool is in use or the run crosses midnight.
+  const urlFor =
+    benchmarkArg === "browser-throughput"
+      ? await resolveArticleUrls(articles, runs + BROWSER_THROUGHPUT_WARMUPS, loops, new Date())
+      : null;
+
   for (const providerName of providerNames) {
     const missing = getMissingEnvVarsForProvider(providerName);
     if (missing.length > 0) {
@@ -241,6 +259,12 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
           fs.mkdirSync(path.dirname(concOut), { recursive: true });
           const batches = Math.max(1, Math.ceil(runs / concurrency));
           await runHelloBrowser(provider, { runs: batches, url, out: concOut, rate, concurrency });
+        }
+      } else if (benchmarkArg === "browser-throughput") {
+        for (const concurrency of concurrencyLevels) {
+          const concOut = out.replace(/results\.jsonl$/, `c${concurrency}/results.jsonl`);
+          fs.mkdirSync(path.dirname(concOut), { recursive: true });
+          await runBrowserThroughput(provider, { runs, out: concOut, rate, concurrency, loops, urlFor: urlFor!, actionTimeoutMs });
         }
       } else {
         for (const concurrency of concurrencyLevels) {

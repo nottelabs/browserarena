@@ -10,6 +10,7 @@ import {
 } from "@/lib/data-shared";
 import { PROVIDERS } from "@/lib/providers";
 import { hasSuccessfulRuns, sortRanked } from "@/lib/ranking";
+import { computeValueScores, DEFAULT_WEIGHTS, TAIL_SHARE } from "@/lib/value-score";
 import {
   Table,
   TableBody,
@@ -42,12 +43,14 @@ const SEGMENT_KEYS: Record<
   ],
   p90: ["p90CreationMs", "p90ConnectMs", "p90GotoMs", "p90ReleaseMs"],
   p95: ["p95CreationMs", "p95ConnectMs", "p95GotoMs", "p95ReleaseMs"],
+  p99: ["p99CreationMs", "p99ConnectMs", "p99GotoMs", "p99ReleaseMs"],
 };
 
 const TOTAL_KEYS: Record<PercentileType, keyof ProviderStats> = {
   median: "totalTimeMs",
   p90: "p90TotalMs",
   p95: "p95TotalMs",
+  p99: "p99TotalMs",
 };
 
 const PROVIDER_LOGOS: Record<string, string> = Object.fromEntries(
@@ -76,20 +79,6 @@ const DEFAULT_DIRECTION: Record<SortKey, SortDirection> = {
   value: "desc",
 };
 
-interface ValueWeights {
-  latency: number;
-  reliability: number;
-  cost: number;
-}
-
-const VALUE_ANCHORS = {
-  latency:     { floor: 10_000, ceiling: 0 },
-  reliability: { floor: 90,     ceiling: 100 },
-  cost:        { floor: 0.20,   ceiling: 0 },
-};
-
-const DEFAULT_WEIGHTS: ValueWeights = { latency: 1 / 3, reliability: 1 / 3, cost: 1 / 3 };
-
 // Shown in place of a metric that needs at least one successful run.
 function NotAvailable() {
   return (
@@ -102,47 +91,6 @@ function NotAvailable() {
       </TooltipContent>
     </Tooltip>
   );
-}
-
-function clamp01(v: number): number {
-  return Math.max(0, Math.min(1, v));
-}
-
-function computeValueScores(
-  providers: ProviderStats[],
-  totalKey: keyof ProviderStats,
-  weights: ValueWeights
-): Map<string, number> {
-  const scores = new Map<string, number>();
-  if (providers.length === 0) return scores;
-
-  const total = weights.latency + weights.reliability + weights.cost;
-  const wLat = total > 0 ? weights.latency / total : 1 / 3;
-  const wRel = total > 0 ? weights.reliability / total : 1 / 3;
-  const wCost = total > 0 ? weights.cost / total : 1 / 3;
-
-  const { latency: latA, reliability: relA, cost: costA } = VALUE_ANCHORS;
-  const latRange = latA.floor - latA.ceiling;
-  const relRange = relA.ceiling - relA.floor;
-  const costRange = costA.floor - costA.ceiling;
-
-  for (const p of providers) {
-    // No successful runs means no latency to score; leave the provider unscored.
-    if (!hasSuccessfulRuns(p)) continue;
-    const lat = (p[totalKey] as number) ?? latA.floor;
-    const rel = p.successRate;
-    const cost = p.pricePerHour;
-
-    const normLat = latRange > 0 ? clamp01((latA.floor - lat) / latRange) : 1;
-    const normRel = relRange > 0 ? clamp01((rel - relA.floor) / relRange) : 1;
-    const normCost = cost != null && costRange > 0
-      ? clamp01((costA.floor - cost) / costRange)
-      : 0;
-
-    scores.set(p.provider, wLat * normLat + wRel * normRel + wCost * normCost);
-  }
-
-  return scores;
 }
 
 
@@ -300,14 +248,15 @@ export function LeaderboardTable({
     { label: "Connect", sortKey: "connect", align: "right", tooltip: "Time to connect to the browser via CDP (ms).", mobileHidden: true },
     { label: "Goto", sortKey: "goto", align: "right", tooltip: "Time to navigate to the target page (ms).", mobileHidden: true },
     { label: "Release", sortKey: "release", align: "right", tooltip: "Time to close and release the browser session (ms).", mobileHidden: true },
+    { label: "Cold create", align: "right", tooltip: "Session creation time of the run's very first session, before any warm-up (ms). One sample per run-day; excluded from every other number.", mobileHidden: true },
     { label: "Latency (ms)", sortKey: "latency", align: "right", tooltip: "Total end-to-end time for one full session lifecycle: create → connect → goto → release.", mobileHidden: true },
     { label: "Cost/hr ($)", sortKey: "cost", align: "right", tooltip: "Hourly rate charged by the provider for browser usage.", mobileHidden: true },
-    { label: "Value Score", sortKey: "value", align: "right", tooltip: "Weighted composite score (0–1) combining latency, reliability, and cost. Adjust weights above." },
+    { label: "Value Score", sortKey: "value", align: "right", tooltip: `Weighted composite score (0–1) combining latency, reliability, and cost. The latency term blends the selected percentile with the p95 tail (${Math.round(TAIL_SHARE * 100)}%). Adjust weights above.` },
   ];
 
   const [showBreakdown, setShowBreakdown] = useState(false);
 
-  const BREAKDOWN_LABELS = new Set(["Create", "Connect", "Goto", "Release"]);
+  const BREAKDOWN_LABELS = new Set(["Create", "Connect", "Goto", "Release", "Cold create"]);
 
   const visibleHeaders = headers.filter(
     (h) => !BREAKDOWN_LABELS.has(h.label) || showBreakdown
@@ -548,6 +497,11 @@ export function LeaderboardTable({
                   </TableCell>
                   );
                 })}
+                {showBreakdown && (
+                  <TableCell className="hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] text-muted-foreground tabular-nums">
+                    {p.coldStartCreationMs != null ? Math.round(p.coldStartCreationMs).toLocaleString("en-US") : "—"}
+                  </TableCell>
+                )}
                 <TableCell
                   className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("latency")}`}
                 >

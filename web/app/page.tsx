@@ -10,7 +10,7 @@ import { BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
 import { HistoryCharts } from "@/components/history-charts";
 import styles from "@/components/benchmarks/benchmark.module.css";
 
-const VALID_PERCENTILES: PercentileType[] = ["median", "p90", "p95"];
+const VALID_PERCENTILES: PercentileType[] = ["median", "p90", "p95", "p99"];
 const VALID_SORT: SortByType[] = ["latency", "reliability", "price"];
 
 export const metadata: Metadata = {

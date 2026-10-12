@@ -67,6 +67,13 @@ const PHASE_KEYS: Record<PercentileType, PhaseMetricKeys> = {
     release: "p95ReleaseMs",
     total: "p95TotalMs",
   },
+  p99: {
+    create: "p99CreationMs",
+    connect: "p99ConnectMs",
+    goto: "p99GotoMs",
+    release: "p99ReleaseMs",
+    total: "p99TotalMs",
+  },
 };
 
 const PHASE_CONFIG = {

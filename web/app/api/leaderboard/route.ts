@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const VALID_PERCENTILES = ["median", "p90", "p95"];
+const VALID_PERCENTILES = ["median", "p90", "p95", "p99"];
 
 /**
  * Backwards-compatible redirect: /api/leaderboard?percentile=p90

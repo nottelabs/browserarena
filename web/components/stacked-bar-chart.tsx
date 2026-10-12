@@ -24,6 +24,7 @@ const SEGMENT_KEYS: Record<PercentileType, (keyof ProviderStats)[]> = {
   ],
   p90: ["p90CreationMs", "p90ConnectMs", "p90GotoMs", "p90ReleaseMs"],
   p95: ["p95CreationMs", "p95ConnectMs", "p95GotoMs", "p95ReleaseMs"],
+  p99: ["p99CreationMs", "p99ConnectMs", "p99GotoMs", "p99ReleaseMs"],
 };
 
 const V0_SEGMENT_KEYS: Record<PercentileType, (keyof ProviderStats)[]> = {
@@ -47,6 +48,13 @@ const V0_SEGMENT_KEYS: Record<PercentileType, (keyof ProviderStats)[]> = {
     "p95GotoMs",
     "p95ScriptMs",
     "p95ReleaseMs",
+  ],
+  p99: [
+    "p99CreationMs",
+    "p99ConnectMs",
+    "p99GotoMs",
+    "p99ScriptMs",
+    "p99ReleaseMs",
   ],
 };
 

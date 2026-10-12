@@ -20,7 +20,7 @@ import { loadHealthReport, type HealthStatus } from "@/lib/regression";
  */
 export const dynamic = "force-dynamic";
 
-const VALID_CONCURRENCY = [1, 10];
+const VALID_CONCURRENCY = [1, 10, 25, 50];
 const DEFAULT_PROVIDER = "NOTTE";
 
 /** "browser-use" | "BROWSER_USE" -> "BROWSER_USE" */

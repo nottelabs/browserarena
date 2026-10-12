@@ -10,7 +10,7 @@ import { BenchmarkLink } from "./benchmark-navigation";
 const FLAGS = { US: "🇺🇸", FR: "🇫🇷", BR: "🇧🇷", IN: "🇮🇳", JP: "🇯🇵" };
 
 export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyLevels, date, simulated, proxyBasePath = "/test", publicRoutes = false, lifecycleQuery = "", sort }: {
-  benchmark: "hello-browser" | "proxy-get" | "all";
+  benchmark: "hello-browser" | "proxy-get" | "browser-throughput" | "all";
   country: (typeof PROXY_COUNTRIES)[number];
   concurrency: number;
   concurrencyLevels: number[];
@@ -59,6 +59,8 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
     if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) query.set("date", date);
     return `${proxyBasePath}?${query}`;
   };
+  const throughputHref = (level?: number) => `/browser-throughput${level !== undefined && level !== 1 ? `?concurrency=${level}` : ""}`;
+  const runModeHref = (level: number) => (benchmark === "browser-throughput" ? throughputHref(level) : lifecycleHref(level));
   const lifecycleHref = (level?: number) => {
     const query = new URLSearchParams(lifecycleQuery);
     if (!publicRoutes) query.set("benchmark", "hello-browser");
@@ -77,6 +79,7 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
         <nav className={styles.options} aria-label="Choose benchmark">
           <Link href={lifecycleHref()} className={linkClass(benchmark === "hello-browser")} aria-current={benchmark === "hello-browser" ? "page" : undefined} onClick={() => setOpen(false)}>Session Performance</Link>
           <Link href={publicRoutes ? "/proxy-get" : `${proxyBasePath}?benchmark=proxy-get&demo=${simulated ? "1" : "0"}`} className={linkClass(benchmark === "proxy-get")} aria-current={benchmark === "proxy-get" ? "page" : undefined} onClick={() => setOpen(false)}>Proxy Performance</Link>
+          <Link href="/browser-throughput" className={linkClass(benchmark === "browser-throughput")} aria-current={benchmark === "browser-throughput" ? "page" : undefined} onClick={() => setOpen(false)}>Browser Throughput</Link>
         </nav>
       </section>
       {benchmark !== "all" && <section className={styles.config}>
@@ -85,7 +88,7 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
         <nav className={styles.options} aria-label={benchmark === "proxy-get" ? "Proxy country" : "Run mode"}>
           {benchmark === "proxy-get" ? PROXY_COUNTRIES.map(c => <BenchmarkLink key={c} href={countryHref(c)} className={linkClass(c === country)} aria-current={c === country ? "page" : undefined} onClick={() => setOpen(false)}>
             <span className={styles.flag} aria-hidden="true">{FLAGS[c]}</span>{COUNTRY_NAMES[c]}
-          </BenchmarkLink>) : concurrencyLevels.map(c => <BenchmarkLink key={c} href={lifecycleHref(c)} className={linkClass(c === concurrency)} aria-current={c === concurrency ? "page" : undefined} onClick={() => setOpen(false)}>
+          </BenchmarkLink>) : concurrencyLevels.map(c => <BenchmarkLink key={c} href={runModeHref(c)} className={linkClass(c === concurrency)} aria-current={c === concurrency ? "page" : undefined} onClick={() => setOpen(false)}>
             <span>{c === 1 ? "Sequential runs" : <>Concurrent runs<span className={styles.optionDetail}>c = {c}</span></>}</span>
           </BenchmarkLink>)}
         </nav>

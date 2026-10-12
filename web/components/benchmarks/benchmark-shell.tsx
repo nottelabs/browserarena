@@ -11,6 +11,7 @@ import styles from "./benchmark.module.css";
 const DESCRIPTIONS = {
   "hello-browser": "Compare session creation, connection, navigation, and release speed, reliability, and cost.",
   "proxy-get": "Compare download speed, reliability, and cost through residential proxies across five countries.",
+  "browser-throughput": "Compare per-action speed inside a running session: navigate, wait, screenshot, read, click, back. Actions per second, tail latency, drift, and cost per 1,000 actions.",
   all: "Choose a benchmark to compare cloud browser providers on speed, reliability, and cost.",
 };
 

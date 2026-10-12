@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-# Run the hello-browser benchmark for one region's providers, then commit and
-# push the new results to main. Designed to be invoked from cron on each EC2.
+# Run one benchmark for one region's providers, then commit and push the new
+# results to main. Designed to be invoked from cron on each EC2.
 #
 # Usage:
-#   scripts/run-and-publish.sh --region us-east|us-west [--runs N] [--dry-run] [--no-reset]
+#   scripts/run-and-publish.sh --region us-east|us-west [--benchmark hello-browser|browser-throughput]
+#       [--concurrency 1,10] [--runs N] [--loops N] [--dry-run] [--no-reset]
+#
+# c25/c50 are valid --concurrency levels; check the provider plan's concurrent
+# session cap first, or the run reports plan limits as reliability.
 #
 # Cron does git pull/reset + npm ci + bench + git commit/push. The two regions
 # write to disjoint provider directories, so simultaneous runs only race on
@@ -12,7 +16,10 @@
 set -euo pipefail
 
 REGION=""
+BENCHMARK="hello-browser"
+CONCURRENCY="1,10"
 RUNS=100
+LOOPS=1
 DRY_RUN=0
 NO_RESET=0
 
@@ -20,12 +27,18 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --region)    REGION="${2:-}"; shift 2 ;;
     --region=*)  REGION="${1#*=}"; shift ;;
+    --benchmark)   BENCHMARK="${2:-}"; shift 2 ;;
+    --benchmark=*) BENCHMARK="${1#*=}"; shift ;;
+    --concurrency)   CONCURRENCY="${2:-}"; shift 2 ;;
+    --concurrency=*) CONCURRENCY="${1#*=}"; shift ;;
     --runs)      RUNS="${2:-}"; shift 2 ;;
     --runs=*)    RUNS="${1#*=}"; shift ;;
+    --loops)     LOOPS="${2:-}"; shift 2 ;;
+    --loops=*)   LOOPS="${1#*=}"; shift ;;
     --dry-run)   DRY_RUN=1; shift ;;
     --no-reset)  NO_RESET=1; shift ;;
     -h|--help)
-      sed -n '2,12p' "$0"; exit 0 ;;
+      sed -n '2,13p' "$0"; exit 0 ;;
     *) echo "[ERROR] unknown arg: $1" >&2; exit 2 ;;
   esac
 done
@@ -37,14 +50,28 @@ case "$REGION" in
   *)       echo "[ERROR] invalid --region: $REGION (want us-east or us-west)" >&2; exit 2 ;;
 esac
 
+case "$BENCHMARK" in
+  hello-browser|browser-throughput) ;;
+  *) echo "[ERROR] invalid --benchmark: $BENCHMARK (want hello-browser or browser-throughput)" >&2; exit 2 ;;
+esac
+
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
+# One job at a time per checkout. The hello-browser and browser-throughput cron lines
+# share this working tree; without a lock, a long first run and the second
+# run would both reset the tree and fight over the index.
+exec 9>"$REPO_ROOT/.run-and-publish.lock"
+if ! flock -w 7200 9; then
+  echo "[ERROR] another run-and-publish.sh held the lock for 2h; giving up" >&2
+  exit 1
+fi
+
 mkdir -p logs
-LOG_FILE="logs/cron-$(date -u +%Y-%m-%dT%H-%M-%SZ)-${REGION}.log"
+LOG_FILE="logs/cron-$(date -u +%Y-%m-%dT%H-%M-%SZ)-${REGION}-${BENCHMARK}.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 
-echo "[INFO] start region=$REGION runs=$RUNS dry_run=$DRY_RUN no_reset=$NO_RESET repo=$REPO_ROOT"
+echo "[INFO] start region=$REGION benchmark=$BENCHMARK concurrency=$CONCURRENCY runs=$RUNS loops=$LOOPS dry_run=$DRY_RUN no_reset=$NO_RESET repo=$REPO_ROOT"
 
 if [[ $NO_RESET -eq 0 ]]; then
   echo "[INFO] resetting working tree to origin/main"
@@ -90,12 +117,13 @@ if [[ $have_any -eq 0 ]]; then
 fi
 
 DATE="$(date -u +%Y-%m-%d)"
-echo "[INFO] running benchmark date=$DATE providers=$PROVIDERS"
+echo "[INFO] running benchmark=$BENCHMARK date=$DATE providers=$PROVIDERS"
 npm run bench -- \
-  --benchmark=hello-browser \
+  --benchmark="$BENCHMARK" \
   --provider="$PROVIDERS" \
-  --concurrency=1,10 \
-  --runs="$RUNS"
+  --concurrency="$CONCURRENCY" \
+  --runs="$RUNS" \
+  --loops="$LOOPS"
 
 # Pull just before staging/commit so the commit is based on any results the
 # other region pushed while this benchmark was running.
@@ -106,7 +134,7 @@ fi
 echo "[INFO] staging results for $REGION"
 staged_any=0
 for p in "${PROV_LIST[@]}"; do
-  dir="results/hello-browser/$p/$DATE"
+  dir="results/$BENCHMARK/$p/$DATE"
   if [[ -d "$dir" ]]; then
     git add -- "$dir"
     staged_any=1
@@ -140,7 +168,11 @@ GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
 GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
 export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
 
-git commit -m "results: $REGION $DATE"
+if [[ "$BENCHMARK" == "hello-browser" ]]; then
+  git commit -m "results: $REGION $DATE"
+else
+  git commit -m "results: $BENCHMARK $REGION $DATE"
+fi
 
 # Push with retry. Disjoint dirs across regions mean rebase always auto-applies.
 attempts=5

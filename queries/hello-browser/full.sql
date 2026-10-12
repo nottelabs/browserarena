@@ -1,16 +1,21 @@
+-- Rows are read as raw JSON objects so fields that older files lack (such as
+-- `warmup`, recorded since the warm-up sessions started being written) read
+-- as NULL instead of failing the query.
 WITH data AS (
-  SELECT *
-  FROM read_json_auto('results/hello-browser/**/*.jsonl', format='newline_delimited')
+  SELECT json
+  FROM read_ndjson_objects('results/hello-browser/**/*.jsonl')
 ),
 pre AS (
   SELECT
-    provider,
-    success,
-    try_cast(session_creation_ms AS DOUBLE) AS session_creation_ms,
-    try_cast(session_connect_ms  AS DOUBLE) AS session_connect_ms,
-    try_cast(page_goto_ms        AS DOUBLE) AS page_goto_ms,
-    try_cast(session_release_ms  AS DOUBLE) AS session_release_ms
+    json->>'provider'                                 AS provider,
+    try_cast(json->>'success' AS BOOLEAN)             AS success,
+    try_cast(json->>'session_creation_ms' AS DOUBLE)  AS session_creation_ms,
+    try_cast(json->>'session_connect_ms'  AS DOUBLE)  AS session_connect_ms,
+    try_cast(json->>'page_goto_ms'        AS DOUBLE)  AS page_goto_ms,
+    try_cast(json->>'session_release_ms'  AS DOUBLE)  AS session_release_ms
   FROM data
+  -- Warm-up sessions are recorded with warmup=true and never counted.
+  WHERE NOT COALESCE(try_cast(json->>'warmup' AS BOOLEAN), false)
 ),
 pre_success AS (
   SELECT *,

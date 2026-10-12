@@ -9,6 +9,10 @@ export type HelloBrowserRecord = {
   session_release_ms: number | null;
   provider: ProviderName;
   concurrency: number;
+  /** Warm-up sessions are written too, flagged so the leaderboard can skip them. */
+  warmup: boolean;
+  /** The first session of a run, the one most likely to be served cold. */
+  cold_start: boolean;
   success: boolean;
   error_stage: string | null;
   error_message: string | null;

@@ -34,7 +34,7 @@ The Browser Arena (browserarena.ai) is an open-source benchmarking platform by N
 - **Page navigation**: Time to navigate to a target URL and wait for load
 - **Session release**: Time to close and clean up the browser session
 
-Results are reported at median (P50), P90, and P95 percentiles. Benchmarks also measure success/failure rates and support concurrent session testing.
+Results are reported at median (P50), P90, P95, and P99 percentiles. Benchmarks also measure success/failure rates and support concurrent session testing. A second benchmark, browser throughput (/browser-throughput), times six action types (navigate, waitForSelector, screenshot, textContent, click, goBack) inside a running session and reports actions per second, per-action percentiles, within-session drift, and cost per 1,000 actions.
 
 **Proxy Performance** compares complete downloads through residential proxies in the US, France, Brazil, India, and Japan. It reports download latency, reliability, throughput, and estimated cost, with daily distributions and a seven-day rolling history. Download timing excludes session creation, connection, and release.
 

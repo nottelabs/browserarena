@@ -3,7 +3,7 @@ import {
   type PercentileType,
 } from "@/lib/data";
 
-const VALID_PERCENTILES: PercentileType[] = ["median", "p90", "p95"];
+const VALID_PERCENTILES: PercentileType[] = ["median", "p90", "p95", "p99"];
 
 const CACHE_HEADERS = {
   "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600",

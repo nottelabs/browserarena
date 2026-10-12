@@ -56,6 +56,24 @@ Two modes:
 - Sequential: 100 measured sessions per provider, one at a time
 - Concurrent: 100 measured sessions per provider, in batches of 10 parallel sessions
 
+`--concurrency` takes any list of levels (`1,10,25,50`). Check the provider plan's concurrent session cap before turning on c25 or c50, or a plan limit shows up as a reliability drop.
+
+### Browser throughput
+
+`hello-browser` measures how fast you get a browser. The browser throughput benchmark measures what a long-running agent pays once it has one: every session connects, sets a 1920x1080 viewport, and runs loops of ten actions on Wikipedia, each timed on its own.
+
+```
+navigate → waitForSelector → screenshot → textContent → click
+        → waitForSelector → screenshot → textContent → goBack → waitForSelector
+```
+
+Per provider it reports actions per second, task time, per-action median / p95 / p99 for the six action types, within-session drift (last loop over first loop, with `--loops` above 1), and cost per 1,000 actions on the provider's billing. A session is a success only when every action succeeded; the partial completion rate is shown alongside. Start pages come from a fixed pool rotated by date, so every provider walks the same pages on a given day. Live at [browserarena.ai/browser-throughput](https://browserarena.ai/browser-throughput) and `GET /api/browser-throughput`. See [docs/browser-throughput.md](docs/browser-throughput.md).
+
+```bash
+npm run bench -- --benchmark=browser-throughput --provider=notte --runs=100
+npm run bench -- --benchmark=browser-throughput --provider=notte --runs=25 --loops=5   # fifty actions, for drift
+```
+
 ## Methodology
 
 ### Proxy Performance benchmark
@@ -76,7 +94,7 @@ and failed attempts. Unknown prices remain unknown.
 
 ### Fairness
 
-- 10 warm-up runs before measurement to reduce cold-start effects
+- 10 warm-up runs before measurement to reduce cold-start effects. Warm-ups are recorded too, flagged `warmup: true` and excluded from every stat; the first session of a run is flagged `cold_start: true` and surfaced as the cold-start creation time
 - Same URL across all providers (`example.com`)
 - No provider-specific tuning, default SDK settings only
 - Automatic 30s backoff on 429 rate limit errors
@@ -100,9 +118,15 @@ All providers tested from the same EC2 instances. TCP+TLS round-trip times measu
 
 `create` and `release` timings reflect provider API design (sync vs async session management) more than browser speed. The `connect` + `goto` timings are the best proxy for actual browser performance.
 
+### Percentiles
+
+Every phase is reported at the median, p90, p95 and p99 (`?percentile=p99`). At 100 runs p99 is one of the two slowest runs, so p95 is the steadier tail; p99 is there for the shape of the distribution, not for ranking. Tail totals (p90, p95, p99 of Latency) are percentiles of per-session totals, not sums of per-phase percentiles, so they describe sessions that actually happened.
+
 ### Value Score
 
 Each provider gets a single 0-to-1 score combining reliability, latency, and cost. Default weighting is equal (33/33/33). You can shift it on the leaderboard with presets like "Speed first" or "Budget first."
+
+The latency dimension is not the selected percentile alone: 70% is the selected percentile and 30% is the p95 total, both normalized with the same anchors. Two providers with the same median no longer tie when one of them has a long tail, because for anything that runs for hours the tail is what you pay.
 
 Each dimension is normalized to a 0-1 scale using fixed anchors:
 
@@ -139,15 +163,19 @@ Or deploy directly on Railway:
 
 ### Automated runs
 
-Daily results are produced by `scripts/run-and-publish.sh`, which runs the benchmark for one region's providers (c1 + c10, 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`. Two EC2 boxes share the script; the cron line differs only in `--region`:
+Daily results are produced by `scripts/run-and-publish.sh`, which runs one benchmark for one region's providers (c1 + c10 by default, 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`. Two EC2 boxes share the script; the cron lines differ in `--region`, and the browser throughput benchmark is a second invocation offset from the first:
 
 ```cron
 # us-east-1 box (Steel, Kernel, Hyperbrowser, Anchor Browser, Browser Use)
 0 3 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east
+0 5 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east --benchmark browser-throughput
 
 # us-west-1 box (Notte, Browserbase) — staggered 1h to avoid push races
 0 4 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west
+0 6 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west --benchmark browser-throughput
 ```
+
+`--concurrency 1,10,25,50` and `--loops 5` are accepted on either line; see the plan-cap note above before raising concurrency. The script holds a lock on the checkout, so if the first job overruns its slot the second waits instead of racing it.
 
 Per-EC2 setup: clone the repo, populate `.env` with that region's provider keys, and add an SSH key as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) with write access (one key per box). Cron logs go to `logs/` (gitignored).
 

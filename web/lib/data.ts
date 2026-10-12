@@ -47,6 +47,9 @@ interface BenchmarkEntry {
   session_release_ms: number;
   provider: string;
   concurrency?: number;
+  /** Warm-up sessions are recorded too; every stat skips them. */
+  warmup?: boolean;
+  cold_start?: boolean;
   success: boolean;
   error_stage: string | null;
   error_message: string | null;
@@ -72,7 +75,22 @@ export function median(values: number[]): number {
     : (sorted[mid - 1] + sorted[mid]) / 2;
 }
 
-function percentile(values: number[], p: number): number {
+/** Measured sessions only: warm-ups are in the file, flagged, and never counted. */
+function isMeasured(e: BenchmarkEntry): boolean {
+  return e.warmup !== true;
+}
+
+function phaseSumMs(e: BenchmarkEntry): number {
+  return (
+    (e.session_creation_ms ?? 0) +
+    (e.session_connect_ms ?? 0) +
+    (e.page_goto_ms ?? 0) +
+    entryScriptMs(e) +
+    (e.session_release_ms ?? 0)
+  );
+}
+
+export function percentile(values: number[], p: number): number {
   if (values.length === 0) return 0;
   const sorted = [...values].sort((a, b) => a - b);
   const idx = Math.min(Math.ceil(p * sorted.length) - 1, sorted.length - 1);
@@ -183,11 +201,11 @@ function buildFailureInsights(
   return { failureCount: failed.length, byStage, patterns };
 }
 
-function getResultsDir(): string {
+export function getResultsDir(): string {
   return path.join(process.cwd(), "..", "results");
 }
 
-async function fetchFromGitHub(filePath: string): Promise<string> {
+export async function fetchFromGitHub(filePath: string): Promise<string> {
   const url = `https://raw.githubusercontent.com/${RESULTS_GITHUB_REPO}/${RESULTS_GITHUB_BRANCH}/${filePath}`;
   const res = await fetch(url, { next: { revalidate: 60 } });
   if (!res.ok) throw new Error(`Failed to fetch ${filePath}: ${res.status}`);
@@ -200,7 +218,7 @@ interface GitHubContentItem {
   type: "file" | "dir";
 }
 
-async function listFromGitHub(dirPath: string): Promise<GitHubContentItem[]> {
+export async function listFromGitHub(dirPath: string): Promise<GitHubContentItem[]> {
   const url = `https://api.github.com/repos/${RESULTS_GITHUB_REPO}/contents/${dirPath}?ref=${RESULTS_GITHUB_BRANCH}`;
   const res = await fetch(url, { next: { revalidate: 60 } });
   if (!res.ok) return [];
@@ -472,9 +490,10 @@ function readEntriesFromFsFile(filePath: string, runDate: string): BenchmarkEntr
 }
 
 function summarizeHistoricalPoint(
-  entries: BenchmarkEntry[],
+  allEntries: BenchmarkEntry[],
   date: string
 ): HistoricalProviderPoint | null {
+  const entries = allEntries.filter(isMeasured);
   if (entries.length === 0) return null;
 
   const successful = entries.filter((e) => e.success);
@@ -513,6 +532,13 @@ function summarizeHistoricalPoint(
   const p95ScriptMs = percentile(scriptTimes, 0.95);
   const p95ReleaseMs = percentile(releaseTimes, 0.95);
 
+  const p99CreationMs = percentile(creationTimes, 0.99);
+  const p99ConnectMs = percentile(connectTimes, 0.99);
+  const p99GotoMs = percentile(gotoTimes, 0.99);
+  const p99ScriptMs = percentile(scriptTimes, 0.99);
+  const p99ReleaseMs = percentile(releaseTimes, 0.99);
+  const sessionTotals = successful.map(phaseSumMs);
+
   return {
     date,
     lastEntryAt,
@@ -533,24 +559,21 @@ function summarizeHistoricalPoint(
     p95GotoMs,
     p95ScriptMs,
     p95ReleaseMs,
+    p99CreationMs,
+    p99ConnectMs,
+    p99GotoMs,
+    p99ScriptMs,
+    p99ReleaseMs,
+    // Headline: sum of phase medians. Tails: percentiles of per-session totals.
     totalTimeMs:
       medianCreationMs +
       medianConnectMs +
       medianGotoMs +
       medianScriptMs +
       medianReleaseMs,
-    p90TotalMs:
-      p90CreationMs +
-      p90ConnectMs +
-      p90GotoMs +
-      p90ScriptMs +
-      p90ReleaseMs,
-    p95TotalMs:
-      p95CreationMs +
-      p95ConnectMs +
-      p95GotoMs +
-      p95ScriptMs +
-      p95ReleaseMs,
+    p90TotalMs: percentile(sessionTotals, 0.90),
+    p95TotalMs: percentile(sessionTotals, 0.95),
+    p99TotalMs: percentile(sessionTotals, 0.99),
   };
 }
 
@@ -796,13 +819,26 @@ export async function loadLeaderboard(
 
   const stats: ProviderStats[] = [];
 
-  for (const [provider, entries] of providerMap) {
+  for (const [provider, providerEntries] of providerMap) {
+    const warmups = providerEntries.filter((e) => !isMeasured(e));
+    const entries = providerEntries.filter(isMeasured);
+    if (entries.length === 0) continue;
     const meta = PROVIDER_META[provider] || {
       displayName: provider,
       url: "#",
     };
     const successful = entries.filter((e) => e.success);
     const successRate = (successful.length / entries.length) * 100;
+
+    // The cold start is the run's very first session. One per run-day. A
+    // creation time is valid even when a later phase failed; the total needs
+    // the whole session.
+    const coldAll = warmups.filter((e) => e.cold_start === true);
+    const coldCreated = coldAll.filter((e) => typeof e.session_creation_ms === "number");
+    const coldComplete = coldAll.filter((e) => e.success);
+    const coldStartCreationMs =
+      coldCreated.length > 0 ? median(coldCreated.map((e) => e.session_creation_ms)) : null;
+    const coldStartTotalMs = coldComplete.length > 0 ? median(coldComplete.map(phaseSumMs)) : null;
 
     const creationTimes = successful.map((e) => e.session_creation_ms ?? 0);
     const connectTimes = successful.map((e) => e.session_connect_ms ?? 0);
@@ -828,6 +864,12 @@ export async function loadLeaderboard(
     const p95ScriptMs = percentile(scriptTimes, 0.95);
     const p95ReleaseMs = percentile(releaseTimes, 0.95);
 
+    const p99CreationMs = percentile(creationTimes, 0.99);
+    const p99ConnectMs = percentile(connectTimes, 0.99);
+    const p99GotoMs = percentile(gotoTimes, 0.99);
+    const p99ScriptMs = percentile(scriptTimes, 0.99);
+    const p99ReleaseMs = percentile(releaseTimes, 0.99);
+
     // v0 fields
     const extractTimes = successful.map((e) => e.extract_ms ?? 0);
     const crawlTimes = successful.map((e) => e.crawl_ms ?? 0);
@@ -837,21 +879,26 @@ export async function loadLeaderboard(
     const medianCrawlMs = median(crawlTimes);
     const medianFormMs = median(formTimes);
     const medianWorkMs = median(workTimes);
-    const p90WorkMs = percentile(workTimes, 0.90);
-    const p95WorkMs = percentile(workTimes, 0.95);
 
     // For v0, total = creation + connect + work + release
     // For hello-browser, total = creation + connect + goto + script + release
     const isV0 = medianWorkMs > 0;
+    // The headline total is the sum of phase medians (what the site has
+    // always shown and what the regression baselines are calibrated on). The
+    // tails are percentiles of per-session totals: summing per-phase tails
+    // describes a session that never happened, since the slow phases usually
+    // belong to different sessions.
     const totalTimeMs = isV0
       ? medianCreationMs + medianConnectMs + medianWorkMs + medianReleaseMs
       : medianCreationMs + medianConnectMs + medianGotoMs + medianScriptMs + medianReleaseMs;
-    const p90TotalMs = isV0
-      ? p90CreationMs + p90ConnectMs + p90WorkMs + p90ReleaseMs
-      : p90CreationMs + p90ConnectMs + p90GotoMs + p90ScriptMs + p90ReleaseMs;
-    const p95TotalMs = isV0
-      ? p95CreationMs + p95ConnectMs + p95WorkMs + p95ReleaseMs
-      : p95CreationMs + p95ConnectMs + p95GotoMs + p95ScriptMs + p95ReleaseMs;
+    const sessionTotals = successful.map((e) =>
+      isV0
+        ? (e.session_creation_ms ?? 0) + (e.session_connect_ms ?? 0) + (e.total_work_ms ?? 0) + (e.session_release_ms ?? 0)
+        : phaseSumMs(e)
+    );
+    const p90TotalMs = percentile(sessionTotals, 0.90);
+    const p95TotalMs = percentile(sessionTotals, 0.95);
+    const p99TotalMs = percentile(sessionTotals, 0.99);
 
     const successfulEntries = entries.filter((e) => e.success);
     const durationsMs = successfulEntries.map(
@@ -909,9 +956,15 @@ export async function loadLeaderboard(
       p95GotoMs,
       p95ScriptMs,
       p95ReleaseMs,
+      p99CreationMs,
+      p99ConnectMs,
+      p99GotoMs,
+      p99ScriptMs,
+      p99ReleaseMs,
       totalTimeMs,
       p90TotalMs,
       p95TotalMs,
+      p99TotalMs,
       medianExtractMs,
       medianCrawlMs,
       medianFormMs,
@@ -919,16 +972,21 @@ export async function loadLeaderboard(
       medianCostUsd,
       pricePerHour: getPricePerHour(provider),
       perSessionFee: getPerSessionFee(provider),
+      warmupRuns: warmups.length,
+      coldStartCreationMs,
+      coldStartTotalMs,
       rank: 0,
     });
   }
 
   const totalKey =
-    _percentile === "p95"
-      ? "p95TotalMs"
-      : _percentile === "p90"
-        ? "p90TotalMs"
-        : "totalTimeMs";
+    _percentile === "p99"
+      ? "p99TotalMs"
+      : _percentile === "p95"
+        ? "p95TotalMs"
+        : _percentile === "p90"
+          ? "p90TotalMs"
+          : "totalTimeMs";
 
   if (sortBy === "latency") {
     stats.sort((a, b) => (a[totalKey] as number) - (b[totalKey] as number));

@@ -67,6 +67,11 @@ export function getMedianCostUsd(
     : (sorted[mid - 1]! + sorted[mid]!) / 2;
 }
 
+/** The full unit pricing for a provider, for cost models other than per session. */
+export function getUnitPricing(provider: string): UnitPricing | null {
+  return PRICING[provider]?.unit ?? null;
+}
+
 export function getPricePerHour(provider: string): number | null {
   const pricing = PRICING[provider];
   if (!pricing) return null;

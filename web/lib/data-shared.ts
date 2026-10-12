@@ -1,4 +1,4 @@
-export type PercentileType = "median" | "p90" | "p95";
+export type PercentileType = "median" | "p90" | "p95" | "p99";
 
 export type SortByType = "latency" | "reliability" | "price" | "speed";
 
@@ -41,9 +41,18 @@ export interface ProviderStats {
   p95GotoMs: number;
   p95ScriptMs: number;
   p95ReleaseMs: number;
+  /** At 100 runs p99 is one of the two slowest runs; p95 is the steadier tail. */
+  p99CreationMs: number;
+  p99ConnectMs: number;
+  p99GotoMs: number;
+  p99ScriptMs: number;
+  p99ReleaseMs: number;
+  /** Sum of the phase medians: the headline latency, and what the regression detector is calibrated on. */
   totalTimeMs: number;
+  /** Tail totals are percentiles of per-session totals, so they describe sessions that actually happened. */
   p90TotalMs: number;
   p95TotalMs: number;
+  p99TotalMs: number;
   medianExtractMs: number;
   medianCrawlMs: number;
   medianFormMs: number;
@@ -51,6 +60,14 @@ export interface ProviderStats {
   medianCostUsd: number | null;
   pricePerHour: number | null;
   perSessionFee: number | null;
+  /** Warm-up sessions recorded for this run; they are excluded from every stat above. */
+  warmupRuns: number;
+  /**
+   * The first session of the run, before any warm-up: the one most likely to
+   * be served cold. One sample per run-day, so read it as an indication.
+   */
+  coldStartCreationMs: number | null;
+  coldStartTotalMs: number | null;
   rank: number;
   failureInsights?: ProviderFailureInsights;
 }
@@ -100,9 +117,15 @@ export interface HistoricalProviderPoint {
   p95GotoMs: number;
   p95ScriptMs: number;
   p95ReleaseMs: number;
+  p99CreationMs: number;
+  p99ConnectMs: number;
+  p99GotoMs: number;
+  p99ScriptMs: number;
+  p99ReleaseMs: number;
   totalTimeMs: number;
   p90TotalMs: number;
   p95TotalMs: number;
+  p99TotalMs: number;
 }
 
 export interface HistoricalProviderSeries {

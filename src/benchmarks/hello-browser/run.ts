@@ -63,7 +63,8 @@ export async function runSingleSession(
   provider: ProviderClient,
   url: string,
   concurrency: number = 1,
-  screenshotsDir?: string
+  screenshotsDir?: string,
+  flags: { warmup?: boolean; coldStart?: boolean } = {}
 ): Promise<HelloBrowserRecord> {
   let session: { id: string } | null = null;
   let stage = "init";
@@ -79,6 +80,8 @@ export async function runSingleSession(
     session_release_ms: null,
     provider: provider.name,
     concurrency,
+    warmup: flags.warmup ?? false,
+    cold_start: flags.coldStart ?? false,
     success: false,
     error_stage: null,
     error_message: null,
@@ -234,10 +237,17 @@ export async function runLoop(
 
   const screenshotsDir = path.join(path.dirname(out), "screenshots");
 
+  // Warm-ups are written too, flagged, so the leaderboard can skip them while
+  // the cold-start numbers survive. Only the first session of a run is cold:
+  // by the second, the provider has served this account seconds ago.
   for (let i = 1; i <= WARMUP_RUNS; i++) {
     const start = Date.now();
     console.error(`[WARMUP] ${i}/${WARMUP_RUNS}`);
-    await runSingleSession(provider, url, concurrency, screenshotsDir);
+    const record = await runSingleSession(provider, url, concurrency, screenshotsDir, {
+      warmup: true,
+      coldStart: i === 1,
+    });
+    fs.appendFileSync(out, JSON.stringify(record) + "\n", { encoding: "utf-8" });
     await throttle(start, minIntervalMs);
   }
 
