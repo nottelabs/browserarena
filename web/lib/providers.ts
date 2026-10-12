@@ -123,6 +123,7 @@ export const PROVIDERS: ProviderInfo[] = [
     marketingName: "Cloudflare Browser Run",
     url: "https://developers.cloudflare.com/browser-run/",
     logo: "/logos/cloudflare.png",
+    browserRegion: "global",
     marketed: false,
   },
   {
@@ -131,6 +132,7 @@ export const PROVIDERS: ProviderInfo[] = [
     marketingName: "Amazon Bedrock AgentCore Browser",
     url: "https://aws.amazon.com/bedrock/agentcore/",
     logo: "/logos/aws-agentcore.png",
+    browserRegion: "us-east-1",
     marketed: false,
   },
 ];
