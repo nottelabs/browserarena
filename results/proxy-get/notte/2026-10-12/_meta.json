@@ -4,11 +4,12 @@
   "cloud": "aws",
   "os": "linux x64",
   "node_version": "v22.23.2",
-  "started_at": "2026-10-12T09:09:42.212Z",
-  "finished_at": "2026-10-12T09:18:48.002Z",
+  "started_at": "2026-10-12T16:28:05.826Z",
+  "finished_at": "2026-10-12T17:24:27.537Z",
   "benchmark": "proxy-get",
-  "url": "https://tba-eternal-holdem-answer.trycloudflare.com/api/proxy-get/payload",
-  "bootstrapUrl": "https://tba-eternal-holdem-answer.trycloudflare.com/api/proxy-get/bootstrap",
+  "run_id": "premerge-50-2026-10-12",
+  "url": "https://southampton-band-computational-beef.trycloudflare.com/api/proxy-get/payload",
+  "bootstrapUrl": "https://southampton-band-computational-beef.trycloudflare.com/api/proxy-get/bootstrap",
   "countryUrl": "https://api.country.is/",
   "expectedBytes": 1048576,
   "expectedSha256": "7317cbc61ea73cc173a87aacd2f86645ba3932a5f7fb3f04b1c7169a633b7776",
@@ -20,16 +21,18 @@
     "IN",
     "JP"
   ],
-  "runs": 10,
+  "runs": 50,
   "rate": 10,
-  "run_id": "2031e9ca-fe52-4ac3-a2a7-eaba03aadcc5",
-  "session_settings": {
-    "block_ads": false,
-    "proxy_country": "per-attempt"
-  },
-  "runner_sha256": {
-    "dist/benchmarks/proxy-get/run.js": "81393394bb6de1b864926cb58df8ec231d525c90cbe34de89ca47d8b9a47198d",
-    "dist/benchmarks/proxy-get/diagnostics.js": "c3c136fdd934d39e24005732ffcdadfe37fbf16dd92ee0b8fd0a3d10127fb81b",
-    "dist/providers/notte.js": "5564385c971ce2362189a1581196e69de618e8b59908d851827a0385278a6bac"
-  }
+  "runId": "premerge-50-2026-10-12",
+  "suite_started_at": "2026-10-12T12:18:54Z",
+  "suite_finished_at": "2026-10-12T17:24:27Z",
+  "cumulative_targets": [
+    10,
+    20,
+    30,
+    40,
+    50
+  ],
+  "target_note": "Temporary Cloudflare HTTPS tunnel from us-east-1 EC2; see docs/proxy-get-live-run-2026-10-12.md",
+  "monitor_initial_gap_seconds": 287.499
 }

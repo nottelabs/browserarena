@@ -412,3 +412,8 @@ from October 8; use the day picker to inspect each workload separately.
 The [Notte reliability investigation](proxy-get-notte-investigation-2026-10-12.md)
 records the October 12 default-setting control, the ad-blocking correction, and
 the 48/50 corrected result with both remaining partial-download timeouts.
+
+The [October 12 full validation report](proxy-get-live-run-2026-10-12.md) records
+50 attempts per supported provider/country, all retained failures, target probe
+coverage, cleanup status and incomplete cost estimates. This temporary-target
+suite preserves the earlier corrected Notte run; daily proxy cron remains inactive.

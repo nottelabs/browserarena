@@ -1,0 +1,3272 @@
+{
+  "run_id": "premerge-50-2026-10-12",
+  "runner_commit": "26a69b3384abb0a8cf04aa5395cf2103b8520873",
+  "started_at": "2026-10-12T12:18:54Z",
+  "finished_at": "2026-10-12T17:24:27Z",
+  "suite_exit": 0,
+  "target": "https://southampton-band-computational-beef.trycloudflare.com/api/proxy-get/payload",
+  "payload_bytes": 1048576,
+  "payload_sha256": "7317cbc61ea73cc173a87aacd2f86645ba3932a5f7fb3f04b1c7169a633b7776",
+  "measured_attempts": 1800,
+  "successful": 1712,
+  "failed": 88,
+  "unsupported_markers": 9,
+  "unique_session_ids": 1756,
+  "known_cost_usd": 20.28906349,
+  "unknown_cost_attempts": 22,
+  "providers": [
+    {
+      "provider": "ANCHORBROWSER",
+      "attempts": 250,
+      "successes": 231,
+      "failures": 19,
+      "unsupported_markers": 0,
+      "known_cost_usd": 4.39936947,
+      "unknown_cost_attempts": 21,
+      "usage_errors": 0,
+      "cleanup_errors": 3,
+      "median_successful_get_ms": 2245.0999999996275,
+      "countries": [
+        {
+          "country": "US",
+          "attempts": 50,
+          "successes": 46
+        },
+        {
+          "country": "FR",
+          "attempts": 50,
+          "successes": 44
+        },
+        {
+          "country": "BR",
+          "attempts": 50,
+          "successes": 48
+        },
+        {
+          "country": "IN",
+          "attempts": 50,
+          "successes": 48
+        },
+        {
+          "country": "JP",
+          "attempts": 50,
+          "successes": 45
+        }
+      ]
+    },
+    {
+      "provider": "BROWSERBASE",
+      "attempts": 250,
+      "successes": 241,
+      "failures": 9,
+      "unsupported_markers": 0,
+      "known_cost_usd": 6.392,
+      "unknown_cost_attempts": 0,
+      "usage_errors": 250,
+      "cleanup_errors": 0,
+      "median_successful_get_ms": 2933.3000000000175,
+      "countries": [
+        {
+          "country": "US",
+          "attempts": 50,
+          "successes": 50
+        },
+        {
+          "country": "FR",
+          "attempts": 50,
+          "successes": 49
+        },
+        {
+          "country": "BR",
+          "attempts": 50,
+          "successes": 50
+        },
+        {
+          "country": "IN",
+          "attempts": 50,
+          "successes": 47
+        },
+        {
+          "country": "JP",
+          "attempts": 50,
+          "successes": 45
+        }
+      ]
+    },
+    {
+      "provider": "BROWSER_USE",
+      "attempts": 250,
+      "successes": 248,
+      "failures": 2,
+      "unsupported_markers": 0,
+      "known_cost_usd": 1.30333995,
+      "unknown_cost_attempts": 0,
+      "usage_errors": 0,
+      "cleanup_errors": 0,
+      "median_successful_get_ms": 2615.0499999999993,
+      "countries": [
+        {
+          "country": "US",
+          "attempts": 50,
+          "successes": 49
+        },
+        {
+          "country": "FR",
+          "attempts": 50,
+          "successes": 50
+        },
+        {
+          "country": "BR",
+          "attempts": 50,
+          "successes": 49
+        },
+        {
+          "country": "IN",
+          "attempts": 50,
+          "successes": 50
+        },
+        {
+          "country": "JP",
+          "attempts": 50,
+          "successes": 50
+        }
+      ]
+    },
+    {
+      "provider": "HYPERBROWSER",
+      "attempts": 250,
+      "successes": 243,
+      "failures": 7,
+      "unsupported_markers": 0,
+      "known_cost_usd": 2.62809112,
+      "unknown_cost_attempts": 0,
+      "usage_errors": 0,
+      "cleanup_errors": 0,
+      "median_successful_get_ms": 2313.7999999999993,
+      "countries": [
+        {
+          "country": "US",
+          "attempts": 50,
+          "successes": 47
+        },
+        {
+          "country": "FR",
+          "attempts": 50,
+          "successes": 49
+        },
+        {
+          "country": "BR",
+          "attempts": 50,
+          "successes": 50
+        },
+        {
+          "country": "IN",
+          "attempts": 50,
+          "successes": 49
+        },
+        {
+          "country": "JP",
+          "attempts": 50,
+          "successes": 48
+        }
+      ]
+    },
+    {
+      "provider": "KERNEL",
+      "attempts": 250,
+      "successes": 243,
+      "failures": 7,
+      "unsupported_markers": 0,
+      "known_cost_usd": 0.0397,
+      "unknown_cost_attempts": 0,
+      "usage_errors": 0,
+      "cleanup_errors": 0,
+      "median_successful_get_ms": 1806.6999999999534,
+      "countries": [
+        {
+          "country": "US",
+          "attempts": 50,
+          "successes": 48
+        },
+        {
+          "country": "FR",
+          "attempts": 50,
+          "successes": 50
+        },
+        {
+          "country": "BR",
+          "attempts": 50,
+          "successes": 49
+        },
+        {
+          "country": "IN",
+          "attempts": 50,
+          "successes": 49
+        },
+        {
+          "country": "JP",
+          "attempts": 50,
+          "successes": 47
+        }
+      ]
+    },
+    {
+      "provider": "LIGHTPANDA",
+      "attempts": 0,
+      "successes": 0,
+      "failures": 0,
+      "unsupported_markers": 5,
+      "known_cost_usd": 0,
+      "unknown_cost_attempts": 0,
+      "usage_errors": 0,
+      "cleanup_errors": 0,
+      "median_successful_get_ms": null,
+      "countries": [
+        {
+          "country": "US",
+          "attempts": 0,
+          "successes": 0
+        },
+        {
+          "country": "FR",
+          "attempts": 0,
+          "successes": 0
+        },
+        {
+          "country": "BR",
+          "attempts": 0,
+          "successes": 0
+        },
+        {
+          "country": "IN",
+          "attempts": 0,
+          "successes": 0
+        },
+        {
+          "country": "JP",
+          "attempts": 0,
+          "successes": 0
+        }
+      ]
+    },
+    {
+      "provider": "NOTTE",
+      "attempts": 250,
+      "successes": 242,
+      "failures": 8,
+      "unsupported_markers": 0,
+      "known_cost_usd": 2.56298039,
+      "unknown_cost_attempts": 1,
+      "usage_errors": 0,
+      "cleanup_errors": 0,
+      "median_successful_get_ms": 2773.8499999940395,
+      "countries": [
+        {
+          "country": "US",
+          "attempts": 50,
+          "successes": 50
+        },
+        {
+          "country": "FR",
+          "attempts": 50,
+          "successes": 49
+        },
+        {
+          "country": "BR",
+          "attempts": 50,
+          "successes": 48
+        },
+        {
+          "country": "IN",
+          "attempts": 50,
+          "successes": 48
+        },
+        {
+          "country": "JP",
+          "attempts": 50,
+          "successes": 47
+        }
+      ]
+    },
+    {
+      "provider": "STEEL",
+      "attempts": 250,
+      "successes": 239,
+      "failures": 11,
+      "unsupported_markers": 0,
+      "known_cost_usd": 2.93299924,
+      "unknown_cost_attempts": 0,
+      "usage_errors": 239,
+      "cleanup_errors": 0,
+      "median_successful_get_ms": 2911.9000000003725,
+      "countries": [
+        {
+          "country": "US",
+          "attempts": 50,
+          "successes": 47
+        },
+        {
+          "country": "FR",
+          "attempts": 50,
+          "successes": 48
+        },
+        {
+          "country": "BR",
+          "attempts": 50,
+          "successes": 48
+        },
+        {
+          "country": "IN",
+          "attempts": 50,
+          "successes": 49
+        },
+        {
+          "country": "JP",
+          "attempts": 50,
+          "successes": 47
+        }
+      ]
+    },
+    {
+      "provider": "TILION",
+      "attempts": 50,
+      "successes": 25,
+      "failures": 25,
+      "unsupported_markers": 4,
+      "known_cost_usd": 0.03058333,
+      "unknown_cost_attempts": 0,
+      "usage_errors": 0,
+      "cleanup_errors": 0,
+      "median_successful_get_ms": 292.6000000089407,
+      "countries": [
+        {
+          "country": "US",
+          "attempts": 50,
+          "successes": 25
+        },
+        {
+          "country": "FR",
+          "attempts": 0,
+          "successes": 0
+        },
+        {
+          "country": "BR",
+          "attempts": 0,
+          "successes": 0
+        },
+        {
+          "country": "IN",
+          "attempts": 0,
+          "successes": 0
+        },
+        {
+          "country": "JP",
+          "attempts": 0,
+          "successes": 0
+        }
+      ]
+    }
+  ],
+  "monitor": {
+    "probes": 1792,
+    "healthy": 1792,
+    "during_run": 1768,
+    "first_at": "2026-10-12T12:23:41.499Z",
+    "last_at": "2026-10-12T17:28:31.769Z",
+    "initial_gap_seconds": 287.499
+  },
+  "payload_failures": {
+    "count": 25,
+    "nonce_correlated_origin_completions": 23,
+    "origin_completion_ms_range": [
+      0,
+      2
+    ]
+  },
+  "failures": [
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T12:19:15.784Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 309,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "STEEL",
+      "country": "FR",
+      "created_at": "2026-10-12T12:29:52.279Z",
+      "session_id": "17d20de3-f307-496e-b811-6013d7576057",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 630676,
+      "first_byte_ms": 3306.2999999988824,
+      "observed_country": "FR",
+      "phase_ms": {
+        "session_create": 807,
+        "connect_over_cdp": 1967,
+        "page_setup": 2962,
+        "country_verification": 2114,
+        "get": 30182,
+        "cleanup": 550
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 36,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 630676,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "706941e3-78fa-4303-b640-814fae44b5aa": {
+          "created_at": "2026-10-12T12:30:03.085Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 2
+        }
+      }
+    },
+    {
+      "provider": "HYPERBROWSER",
+      "country": "US",
+      "created_at": "2026-10-12T12:33:54.234Z",
+      "session_id": "462e071f-b3cf-42bd-80b9-d9e85a5c6c82",
+      "error_stage": "country_verification",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 244,
+        "connect_over_cdp": 150,
+        "page_setup": 612,
+        "country_verification": 532,
+        "cleanup": 212
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": null,
+          "bytes_received": null,
+          "canceled": false,
+          "error_codes": [
+            "net::ERR_CERT_COMMON_NAME_INVALID"
+          ]
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T12:38:25.539Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 336,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "JP",
+      "created_at": "2026-10-12T12:55:10.544Z",
+      "session_id": "1c8c1a91-c5c0-4325-80da-1e61055ef5bb",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 246486,
+      "first_byte_ms": 2329.7000000029802,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 1101,
+        "connect_over_cdp": 134,
+        "page_setup": 4471,
+        "country_verification": 2029,
+        "get": 30040,
+        "cleanup": 961
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 38,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 246486,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "a1d70b9b-64b3-4263-a81c-7324c59f3c45": {
+          "created_at": "2026-10-12T12:55:19.894Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 0
+        }
+      }
+    },
+    {
+      "provider": "STEEL",
+      "country": "BR",
+      "created_at": "2026-10-12T12:56:13.263Z",
+      "session_id": "f0441587-fe10-4dd8-b01a-571196840e16",
+      "error_stage": "connect_over_cdp",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 580,
+        "connect_over_cdp": 20472,
+        "cleanup": 376
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "503"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "STEEL",
+      "country": "JP",
+      "created_at": "2026-10-12T12:58:39.419Z",
+      "session_id": "0e851dfa-fc36-461f-9e05-d42f72f5ced7",
+      "error_stage": "connect_over_cdp",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 822,
+        "connect_over_cdp": 20817,
+        "cleanup": 768
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "503"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T13:00:10.694Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 281,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T13:00:16.695Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 197,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T13:00:32.478Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 293,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "STEEL",
+      "country": "US",
+      "created_at": "2026-10-12T13:00:51.548Z",
+      "session_id": "624f33bb-1e15-4439-9dd5-c28f9e7a8bd6",
+      "error_stage": "connect_over_cdp",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 943,
+        "connect_over_cdp": 20620,
+        "cleanup": 341
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "503"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "NOTTE",
+      "country": "JP",
+      "created_at": "2026-10-12T13:03:24.908Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 90000,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "STEEL",
+      "country": "JP",
+      "created_at": "2026-10-12T13:07:03.309Z",
+      "session_id": "918647e5-580e-4845-85ad-c2635b5fe53d",
+      "error_stage": "connect_over_cdp",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 1057,
+        "connect_over_cdp": 20689,
+        "cleanup": 330
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "503"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "BROWSER_USE",
+      "country": "US",
+      "created_at": "2026-10-12T13:08:25.297Z",
+      "session_id": "5a426072-444b-4414-8e24-caaccc96b2ab",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 1023946,
+      "first_byte_ms": 518.0999999999985,
+      "observed_country": "US",
+      "phase_ms": {
+        "session_create": 221,
+        "connect_over_cdp": 193,
+        "page_setup": 848,
+        "country_verification": 796,
+        "get": 30030,
+        "cleanup": 106
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 62,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 1023946,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "08f2c5b9-4f61-4878-b4dd-f41c56212192": {
+          "created_at": "2026-10-12T13:08:27.645Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "NOTTE",
+      "country": "BR",
+      "created_at": "2026-10-12T13:13:59.161Z",
+      "session_id": "4237e1f4-8ccf-400f-9069-f928c69fbb9a",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 991214,
+      "first_byte_ms": 982.9000000059605,
+      "observed_country": "BR",
+      "phase_ms": {
+        "session_create": 1409,
+        "connect_over_cdp": 601,
+        "page_setup": 1993,
+        "country_verification": 1118,
+        "get": 30158,
+        "cleanup": 199
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 36,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 991214,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "3d438c74-ff0b-4f51-9e0b-925d67b4bcc3": {
+          "created_at": "2026-10-12T13:14:05.001Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "BROWSERBASE",
+      "country": "JP",
+      "created_at": "2026-10-12T13:16:12.425Z",
+      "session_id": "81760dc8-726d-46b9-8631-6459e1ef3df9",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 209534,
+      "first_byte_ms": 1914.3000000000466,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 280,
+        "connect_over_cdp": 2108,
+        "page_setup": 2243,
+        "country_verification": 1421,
+        "get": 30010,
+        "cleanup": 472
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 37,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 209534,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "8d8897da-d1cd-4c77-9b00-be47a9ad039e": {
+          "created_at": "2026-10-12T13:16:19.701Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "BROWSERBASE",
+      "country": "IN",
+      "created_at": "2026-10-12T13:17:36.183Z",
+      "session_id": "29011e66-fe3d-422c-a827-5368c93122d6",
+      "error_stage": "country_verification",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 280,
+        "connect_over_cdp": 2482,
+        "page_setup": 3079,
+        "country_verification": 3416,
+        "cleanup": 449
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": null,
+          "bytes_received": null,
+          "canceled": false,
+          "error_codes": [
+            "net::ERR_TUNNEL_CONNECTION_FAILED"
+          ]
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "KERNEL",
+      "country": "IN",
+      "created_at": "2026-10-12T13:17:45.892Z",
+      "session_id": "ixf0cmt9lhuvekc6vqdmgaxu",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 413142,
+      "first_byte_ms": 5853.100000000093,
+      "observed_country": "IN",
+      "phase_ms": {
+        "session_create": 3369,
+        "connect_over_cdp": 96,
+        "page_setup": 10327,
+        "country_verification": 2507,
+        "get": 30013,
+        "cleanup": 101
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 502,
+          "bytes_received": 9068,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 37,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 413142,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "c9790b09-fb31-4b52-8ce7-8c8a0d78df49": {
+          "created_at": "2026-10-12T13:18:05.464Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 2
+        }
+      }
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T13:22:20.769Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 233,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "BROWSER_USE",
+      "country": "BR",
+      "created_at": "2026-10-12T13:23:13.082Z",
+      "session_id": "19a2ac06-bf38-4768-b844-1369f588f177",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 729070,
+      "first_byte_ms": 2618.300000000003,
+      "observed_country": "BR",
+      "phase_ms": {
+        "session_create": 235,
+        "connect_over_cdp": 172,
+        "page_setup": 2683,
+        "country_verification": 977,
+        "get": 30037,
+        "cleanup": 99
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 38,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 729070,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "b16684e3-6c4b-463d-9657-65da9cc67ab2": {
+          "created_at": "2026-10-12T13:23:18.983Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T13:24:48.405Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 347,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T13:26:51.619Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 170,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T13:45:57.320Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 201,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T13:47:03.388Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 254,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "KERNEL",
+      "country": "JP",
+      "created_at": "2026-10-12T13:50:16.397Z",
+      "session_id": "tjfos7kowf0mw57k2j3y3v9t",
+      "error_stage": "country_verification",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": "BR",
+      "phase_ms": {
+        "session_create": 5314,
+        "connect_over_cdp": 74,
+        "page_setup": 3159,
+        "country_verification": 898,
+        "cleanup": 110
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 62,
+          "canceled": null,
+          "error_codes": []
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "HYPERBROWSER",
+      "country": "IN",
+      "created_at": "2026-10-12T14:05:31.490Z",
+      "session_id": "e77a33b0-01b8-44d9-b02e-ff59b83bf3aa",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 499658,
+      "first_byte_ms": 4790.7,
+      "observed_country": "IN",
+      "phase_ms": {
+        "session_create": 292,
+        "connect_over_cdp": 150,
+        "page_setup": 3399,
+        "country_verification": 1709,
+        "get": 30026,
+        "cleanup": 325
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 38,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 499658,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "e5a0a25c-6e52-479d-8c53-42eb9c592d52": {
+          "created_at": "2026-10-12T14:05:39.488Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "STEEL",
+      "country": "US",
+      "created_at": "2026-10-12T14:12:18.822Z",
+      "session_id": "e9eccb49-a98c-4f61-8541-f7b5517d98f7",
+      "error_stage": "connect_over_cdp",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 887,
+        "connect_over_cdp": 20261,
+        "cleanup": 439
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "503"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "KERNEL",
+      "country": "US",
+      "created_at": "2026-10-12T14:13:06.969Z",
+      "session_id": "uaoe6oroct1095s4zupnwwbq",
+      "error_stage": "page_setup",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 1536,
+        "connect_over_cdp": 187,
+        "page_setup": 30234,
+        "cleanup": 95
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": null,
+          "bytes_received": null,
+          "canceled": null,
+          "error_codes": []
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T14:14:20.662Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 184,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T14:16:29.555Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 204,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "STEEL",
+      "country": "BR",
+      "created_at": "2026-10-12T14:18:11.007Z",
+      "session_id": "700a6558-3a8a-450c-96dd-f134fdac4739",
+      "error_stage": "connect_over_cdp",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 1083,
+        "connect_over_cdp": 20589,
+        "cleanup": 445
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "503"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "STEEL",
+      "country": "FR",
+      "created_at": "2026-10-12T14:18:33.126Z",
+      "session_id": "633e1e50-66e0-4951-85f1-dc9e89fa150a",
+      "error_stage": "connect_over_cdp",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 733,
+        "connect_over_cdp": 20409,
+        "cleanup": 311
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "503"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T14:23:14.578Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 250,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "BROWSERBASE",
+      "country": "JP",
+      "created_at": "2026-10-12T14:23:32.416Z",
+      "session_id": "c2c78bb7-dd07-4cd7-a1bc-d6a2daf36f48",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 335800,
+      "first_byte_ms": 3619.7000000000116,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 293,
+        "connect_over_cdp": 1272,
+        "page_setup": 2312,
+        "country_verification": 1310,
+        "get": 30011,
+        "cleanup": 457
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 34,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 335800,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "dffcc8a5-96f1-4a96-9b94-d21e3561c93e": {
+          "created_at": "2026-10-12T14:23:39.727Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "BROWSERBASE",
+      "country": "IN",
+      "created_at": "2026-10-12T14:27:27.321Z",
+      "session_id": "23ffaa55-d752-465f-bc93-74b0338bc0ee",
+      "error_stage": "get",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": "IN",
+      "phase_ms": {
+        "session_create": 287,
+        "connect_over_cdp": 1347,
+        "page_setup": 2355,
+        "country_verification": 1927,
+        "get": 30011,
+        "cleanup": 515
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 36,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": null,
+          "bytes_received": null,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "BROWSERBASE",
+      "country": "JP",
+      "created_at": "2026-10-12T14:31:14.984Z",
+      "session_id": "533dde51-5761-474d-970c-ebbadea38d26",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 532480,
+      "first_byte_ms": 3195.7000000000116,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 264,
+        "connect_over_cdp": 3108,
+        "page_setup": 2266,
+        "country_verification": 4390,
+        "get": 30012,
+        "cleanup": 479
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 38,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 532480,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "e1a9b7e0-8f98-4cf3-a11f-7c715362a74b": {
+          "created_at": "2026-10-12T14:31:27.103Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 0
+        }
+      }
+    },
+    {
+      "provider": "NOTTE",
+      "country": "FR",
+      "created_at": "2026-10-12T14:33:28.258Z",
+      "session_id": "852fa3b7-5347-4b3e-9f34-6e3ae239d88d",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 168831,
+      "first_byte_ms": 2286.5,
+      "observed_country": "FR",
+      "phase_ms": {
+        "session_create": 2321,
+        "connect_over_cdp": 544,
+        "page_setup": 7293,
+        "country_verification": 5241,
+        "get": 30161,
+        "cleanup": 300
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 37,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 168831,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "6eca1fef-445d-4788-a5fb-d8caf515ee19": {
+          "created_at": "2026-10-12T14:33:45.322Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T14:39:22.527Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 278,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "STEEL",
+      "country": "IN",
+      "created_at": "2026-10-12T14:45:17.969Z",
+      "session_id": "b4bf372f-0d33-407f-9780-c479b8e00a54",
+      "error_stage": "page_setup",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 937,
+        "connect_over_cdp": 3062,
+        "page_setup": 2796,
+        "cleanup": 494
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": null,
+          "bytes_received": 184035,
+          "canceled": false,
+          "error_codes": [
+            "net::ERR_TUNNEL_CONNECTION_FAILED"
+          ]
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "HYPERBROWSER",
+      "country": "JP",
+      "created_at": "2026-10-12T14:47:13.639Z",
+      "session_id": "7ddac162-7e9c-4efc-9263-1c36d2678776",
+      "error_stage": "country_verification",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": "US",
+      "phase_ms": {
+        "session_create": 232,
+        "connect_over_cdp": 140,
+        "page_setup": 2530,
+        "country_verification": 1268,
+        "cleanup": 314
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 63,
+          "canceled": null,
+          "error_codes": []
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "KERNEL",
+      "country": "JP",
+      "created_at": "2026-10-12T14:47:28.057Z",
+      "session_id": "qhwcjwyrjc1k7chcf9gv8qdy",
+      "error_stage": "country_verification",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 3381,
+        "connect_over_cdp": 86,
+        "page_setup": 2164,
+        "country_verification": 736,
+        "cleanup": 87
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 500,
+          "bytes_received": null,
+          "canceled": false,
+          "error_codes": [
+            "net::ERR_FAILED"
+          ]
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "BROWSERBASE",
+      "country": "IN",
+      "created_at": "2026-10-12T14:50:33.719Z",
+      "session_id": "7079a7ec-e3bd-4d57-bebd-f7d8f3a97226",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 74233,
+      "first_byte_ms": 12681.800000000047,
+      "observed_country": "IN",
+      "phase_ms": {
+        "session_create": 269,
+        "connect_over_cdp": 2285,
+        "page_setup": 3807,
+        "country_verification": 4666,
+        "get": 30009,
+        "cleanup": 486
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 37,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 74233,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "9adb2f33-a950-4ffd-85eb-a12bece57903": {
+          "created_at": "2026-10-12T14:50:47.875Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "BROWSERBASE",
+      "country": "JP",
+      "created_at": "2026-10-12T14:59:14.450Z",
+      "session_id": "9455dc4b-0dad-4610-a77e-fb8a99d2a0b4",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 517952,
+      "first_byte_ms": 2272.7999999999884,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 131,
+        "connect_over_cdp": 2859,
+        "page_setup": 1834,
+        "country_verification": 4409,
+        "get": 30010,
+        "cleanup": 480
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 39,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 517952,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "c381aab3-fd22-4fa9-9be3-e14da094495a": {
+          "created_at": "2026-10-12T14:59:25.298Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 0
+        }
+      }
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "FR",
+      "created_at": "2026-10-12T15:00:35.083Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 90001,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "US",
+      "created_at": "2026-10-12T15:02:05.085Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 90001,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T15:04:41.315Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 162,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "FR",
+      "created_at": "2026-10-12T15:09:59.387Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 90000,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "IN",
+      "created_at": "2026-10-12T15:12:09.447Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 90000,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "KERNEL",
+      "country": "BR",
+      "created_at": "2026-10-12T15:25:27.226Z",
+      "session_id": "aul9lb3vpadahxlkwqdssgt9",
+      "error_stage": "get",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": "BR",
+      "phase_ms": {
+        "session_create": 2493,
+        "connect_over_cdp": 71,
+        "page_setup": 2520,
+        "country_verification": 1009,
+        "get": 30068,
+        "cleanup": 226
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 62,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": null,
+          "bytes_received": null,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "US",
+      "created_at": "2026-10-12T15:28:11.562Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 155,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "500"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T15:28:18.137Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 329,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "FR",
+      "created_at": "2026-10-12T15:28:18.467Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 3349,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "500"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "JP",
+      "created_at": "2026-10-12T15:29:22.421Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 134,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "500"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "BR",
+      "created_at": "2026-10-12T15:31:31.474Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 181,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "500"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "JP",
+      "created_at": "2026-10-12T15:32:50.929Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 53585,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "400"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "FR",
+      "created_at": "2026-10-12T15:34:46.679Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 53286,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "400"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "KERNEL",
+      "country": "US",
+      "created_at": "2026-10-12T15:35:39.966Z",
+      "session_id": "h67fujtm6loz0su3wajyotog",
+      "error_stage": "country_verification",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 1840,
+        "connect_over_cdp": 51,
+        "page_setup": 764,
+        "country_verification": 10574,
+        "cleanup": 105
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 500,
+          "bytes_received": null,
+          "canceled": false,
+          "error_codes": [
+            "net::ERR_FAILED"
+          ]
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "NOTTE",
+      "country": "IN",
+      "created_at": "2026-10-12T15:37:45.860Z",
+      "session_id": "53e1c1e7-e26b-4d98-855a-820b9dd94c6b",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 133376,
+      "first_byte_ms": 3837.7000000001863,
+      "observed_country": "IN",
+      "phase_ms": {
+        "session_create": 2970,
+        "connect_over_cdp": 570,
+        "page_setup": 3008,
+        "country_verification": 3745,
+        "get": 30186,
+        "cleanup": 292
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 37,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 133376,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "d3011146-8c85-44f9-858e-13c4c683a193": {
+          "created_at": "2026-10-12T15:37:59.138Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "US",
+      "created_at": "2026-10-12T15:38:29.824Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 94,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "500"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "JP",
+      "created_at": "2026-10-12T15:38:35.824Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 152,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "500"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "HYPERBROWSER",
+      "country": "US",
+      "created_at": "2026-10-12T15:39:50.155Z",
+      "session_id": "2c7fd088-22fe-42ac-a069-647a2dd04e3b",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 1007580,
+      "first_byte_ms": 1180.8999999999996,
+      "observed_country": "US",
+      "phase_ms": {
+        "session_create": 293,
+        "connect_over_cdp": 148,
+        "page_setup": 1839,
+        "country_verification": 2031,
+        "get": 30026,
+        "cleanup": 313
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 62,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 1007580,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "e77edc18-8356-4685-9f58-f304bcfc1c2a": {
+          "created_at": "2026-10-12T15:39:55.323Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "JP",
+      "created_at": "2026-10-12T15:41:05.835Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 53693,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "400"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T15:42:30.576Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 311,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "US",
+      "created_at": "2026-10-12T15:46:59.659Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 58384,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "400"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "IN",
+      "created_at": "2026-10-12T15:49:58.047Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 53996,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "400"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "FR",
+      "created_at": "2026-10-12T15:51:50.480Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 53977,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "400"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "NOTTE",
+      "country": "JP",
+      "created_at": "2026-10-12T15:53:30.927Z",
+      "session_id": "8a83099b-7886-463e-be15-08b68527d708",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 630676,
+      "first_byte_ms": 3645.300000011921,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 4753,
+        "connect_over_cdp": 571,
+        "page_setup": 4204,
+        "country_verification": 3333,
+        "get": 16117,
+        "cleanup": 385
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 39,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 630676,
+          "canceled": false,
+          "error_codes": [
+            "net::ERR_CONNECTION_CLOSED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "ddc8e688-083f-4e6b-8a46-de7ca6bdfbf4": {
+          "created_at": "2026-10-12T15:53:46.445Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "FR",
+      "created_at": "2026-10-12T15:55:04.778Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 53746,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "400"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "ANCHORBROWSER",
+      "country": "BR",
+      "created_at": "2026-10-12T15:58:54.985Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 54085,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "400"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "KERNEL",
+      "country": "JP",
+      "created_at": "2026-10-12T15:59:49.071Z",
+      "session_id": "kmfism847rja5q7762ro1d83",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 474582,
+      "first_byte_ms": 924.2999999999302,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 3822,
+        "connect_over_cdp": 78,
+        "page_setup": 2400,
+        "country_verification": 1336,
+        "get": 30019,
+        "cleanup": 146
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 37,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 474582,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "4f3edb1a-5e0b-476c-b177-2026bd7048fd": {
+          "created_at": "2026-10-12T15:59:57.009Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T16:00:33.438Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 254,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "STEEL",
+      "country": "US",
+      "created_at": "2026-10-12T16:02:54.684Z",
+      "session_id": "b322f3b0-b9a7-4b15-8b75-d786ec9787c2",
+      "error_stage": "country_verification",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 927,
+        "connect_over_cdp": 2062,
+        "page_setup": 2195,
+        "country_verification": 398,
+        "cleanup": 618
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": null,
+          "bytes_received": null,
+          "canceled": false,
+          "error_codes": [
+            "net::ERR_TUNNEL_CONNECTION_FAILED"
+          ]
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T16:08:18.359Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 239,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T16:16:08.617Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 274,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T16:24:11.663Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 387,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "NOTTE",
+      "country": "IN",
+      "created_at": "2026-10-12T16:25:19.180Z",
+      "session_id": "ff51a3f0-bae9-462c-9165-e1c075bf7268",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 23233,
+      "first_byte_ms": 28956,
+      "observed_country": "IN",
+      "phase_ms": {
+        "session_create": 1688,
+        "connect_over_cdp": 577,
+        "page_setup": 3621,
+        "country_verification": 1572,
+        "get": 30181,
+        "cleanup": 294
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 39,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 23233,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "6471ea03-d77e-4266-a5a8-102cb4f4391b": {
+          "created_at": "2026-10-12T16:25:27.749Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "BROWSERBASE",
+      "country": "JP",
+      "created_at": "2026-10-12T16:29:32.160Z",
+      "session_id": "e80b7969-125c-474e-a627-7b8141c3ca28",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 120920,
+      "first_byte_ms": 4281.899999999965,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 281,
+        "connect_over_cdp": 1350,
+        "page_setup": 1864,
+        "country_verification": 6490,
+        "get": 30009,
+        "cleanup": 479
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 37,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 120920,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "eab08ac7-8a4d-4a19-8abc-07ae56b36fef": {
+          "created_at": "2026-10-12T16:29:44.552Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T16:31:27.101Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 272,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "STEEL",
+      "country": "JP",
+      "created_at": "2026-10-12T16:32:56.346Z",
+      "session_id": "1de38d2d-c527-4697-94d7-f2140c9c2053",
+      "error_stage": "connect_over_cdp",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 1143,
+        "connect_over_cdp": 20787,
+        "cleanup": 324
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "503"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "HYPERBROWSER",
+      "country": "FR",
+      "created_at": "2026-10-12T16:35:37.465Z",
+      "session_id": "6acf223b-d568-411b-8473-35c419971f55",
+      "error_stage": "country_verification",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": "HU",
+      "phase_ms": {
+        "session_create": 272,
+        "connect_over_cdp": 232,
+        "page_setup": 1909,
+        "country_verification": 980,
+        "cleanup": 305
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 63,
+          "canceled": null,
+          "error_codes": []
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "HYPERBROWSER",
+      "country": "JP",
+      "created_at": "2026-10-12T16:36:23.326Z",
+      "session_id": "32c08e2d-f2d4-447d-8000-51d1c835a5a9",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 507778,
+      "first_byte_ms": 1923.9,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 259,
+        "connect_over_cdp": 145,
+        "page_setup": 2110,
+        "country_verification": 1502,
+        "get": 2652,
+        "cleanup": 321
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 63,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 507778,
+          "canceled": false,
+          "error_codes": [
+            "net::ERR_CONNECTION_CLOSED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "be1976f2-aca4-4ee6-89ce-b109e64f9047": {
+          "created_at": "2026-10-12T16:36:28.553Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "NOTTE",
+      "country": "JP",
+      "created_at": "2026-10-12T16:40:58.070Z",
+      "session_id": "0e5d7a10-175f-4c1c-95f4-b5e166623abf",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 392554,
+      "first_byte_ms": 5391.699999988079,
+      "observed_country": "JP",
+      "phase_ms": {
+        "session_create": 4240,
+        "connect_over_cdp": 674,
+        "page_setup": 5479,
+        "country_verification": 3995,
+        "get": 19670,
+        "cleanup": 220
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 38,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 392554,
+          "canceled": false,
+          "error_codes": [
+            "net::ERR_CONNECTION_CLOSED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "e55d5cf6-5dc5-477c-8d2c-53fd05c14787": {
+          "created_at": "2026-10-12T16:41:15.426Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "BROWSERBASE",
+      "country": "FR",
+      "created_at": "2026-10-12T16:53:57.768Z",
+      "session_id": "cd9fe74d-eb3b-441a-be2e-e33d786e2aa8",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 581596,
+      "first_byte_ms": 1148.7999999999884,
+      "observed_country": "FR",
+      "phase_ms": {
+        "session_create": 300,
+        "connect_over_cdp": 1006,
+        "page_setup": 975,
+        "country_verification": 889,
+        "get": 30007,
+        "cleanup": 474
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 35,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 581596,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "d13ca862-df90-4bfc-b832-2ee6efa93701": {
+          "created_at": "2026-10-12T16:54:01.716Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T17:01:46.269Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 355,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "HYPERBROWSER",
+      "country": "US",
+      "created_at": "2026-10-12T17:08:34.573Z",
+      "session_id": "fdf66efb-6ae9-403d-b227-cc93129a501b",
+      "error_stage": "get",
+      "http_status": 200,
+      "bytes_received": 827374,
+      "first_byte_ms": 1245.6000000000004,
+      "observed_country": "US",
+      "phase_ms": {
+        "session_create": 262,
+        "connect_over_cdp": 154,
+        "page_setup": 1322,
+        "country_verification": 1181,
+        "get": 30024,
+        "cleanup": 336
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": 200,
+          "bytes_received": 124,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "country_verification",
+          "http_status": 200,
+          "bytes_received": 37,
+          "canceled": null,
+          "error_codes": []
+        },
+        {
+          "phase": "get",
+          "http_status": 200,
+          "bytes_received": 827374,
+          "canceled": true,
+          "error_codes": [
+            "net::ERR_ABORTED"
+          ]
+        }
+      ],
+      "origin_matches": {
+        "bbf3c44b-131f-40d9-b898-7a53c74a939c": {
+          "created_at": "2026-10-12T17:08:38.520Z",
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      }
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T17:10:12.156Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 202,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    },
+    {
+      "provider": "NOTTE",
+      "country": "BR",
+      "created_at": "2026-10-12T17:12:16.611Z",
+      "session_id": "74d4f769-b396-4d95-bef0-b92945e1581e",
+      "error_stage": "page_setup",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 2810,
+        "connect_over_cdp": 530,
+        "page_setup": 30610,
+        "cleanup": 270
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [],
+      "network": [
+        {
+          "phase": "page_setup",
+          "http_status": null,
+          "bytes_received": null,
+          "canceled": null,
+          "error_codes": []
+        }
+      ],
+      "origin_matches": {}
+    },
+    {
+      "provider": "TILION",
+      "country": "US",
+      "created_at": "2026-10-12T17:13:37.990Z",
+      "session_id": null,
+      "error_stage": "session_create",
+      "http_status": null,
+      "bytes_received": 0,
+      "first_byte_ms": null,
+      "observed_country": null,
+      "phase_ms": {
+        "session_create": 335,
+        "cleanup": 0
+      },
+      "cleanup_error_present": false,
+      "http_error_codes": [
+        "502"
+      ],
+      "network": [],
+      "origin_matches": {}
+    }
+  ],
+  "limitations": [
+    "Temporary Cloudflare tunnel on the EC2 origin, not the permanent production target.",
+    "Healthy direct probes and origin completion do not prove delivery through each residential exit; root cause remains unconfirmed.",
+    "Initial monitor coverage gap of about 4m47s; origin request logs exist from the start.",
+    "Known marginal usage estimates exclude 22 unknown-cost attempts, subscriptions and hosting; browser-observed bytes are a billing lower bound.",
+    "Provider API/SDK internal behavior may include existing retries; no benchmark attempts or measured GETs were retried."
+  ],
+  "preservation": [
+    {
+      "path": "results/proxy-get/lightpanda/2026-10-12/results.jsonl",
+      "prior_bytes": 0,
+      "prior_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "appended_records": 5
+    },
+    {
+      "path": "results/proxy-get/notte/2026-10-12/results.jsonl",
+      "prior_bytes": 176467,
+      "prior_sha256": "84ef8d3c7a0b4001a8d1d3b1fefa830453c22567d61358cd9f04a9a9afa3b374",
+      "appended_records": 250
+    },
+    {
+      "path": "results/proxy-get/tilion/2026-10-12/results.jsonl",
+      "prior_bytes": 0,
+      "prior_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "appended_records": 54
+    },
+    {
+      "path": "results/proxy-get/steel/2026-10-12/results.jsonl",
+      "prior_bytes": 0,
+      "prior_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "appended_records": 250
+    },
+    {
+      "path": "results/proxy-get/browserbase/2026-10-12/results.jsonl",
+      "prior_bytes": 0,
+      "prior_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "appended_records": 250
+    },
+    {
+      "path": "results/proxy-get/anchorbrowser/2026-10-12/results.jsonl",
+      "prior_bytes": 0,
+      "prior_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "appended_records": 250
+    },
+    {
+      "path": "results/proxy-get/hyperbrowser/2026-10-12/results.jsonl",
+      "prior_bytes": 0,
+      "prior_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "appended_records": 250
+    },
+    {
+      "path": "results/proxy-get/browser-use/2026-10-12/results.jsonl",
+      "prior_bytes": 0,
+      "prior_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "appended_records": 250
+    },
+    {
+      "path": "results/proxy-get/kernel/2026-10-12/results.jsonl",
+      "prior_bytes": 0,
+      "prior_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "appended_records": 250
+    }
+  ]
+}
