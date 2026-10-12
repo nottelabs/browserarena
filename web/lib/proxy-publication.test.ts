@@ -44,9 +44,15 @@ test("published October 12 artifacts retain every attempt and prior Notte record
   assert.ok(control.every(row => row.status === "failed"));
 });
 
-test("published metadata covers the full suite and retains the final batch window", () => {
+test("archived suite metadata covers the full run independently of replaceable daily metadata", () => {
+  const archived = JSON.parse(fs.readFileSync(path.join(auditDir, "suite-metadata.json"), "utf8"));
+  assert.equal(archived.version, 1);
+  assert.equal(archived.run_id, suiteId);
+  assert.deepEqual(Object.keys(archived.providers).sort(), [...providers].sort());
   for (const provider of providers) {
-    const meta = JSON.parse(fs.readFileSync(path.join(results, "proxy-get", provider, "2026-10-12/_meta.json"), "utf8"));
+    // Dated _meta.json is replaced by same-day reruns and resumes. Historical
+    // validation uses this suite's immutable publication snapshot instead.
+    const meta = archived.providers[provider];
     assert.equal(meta.run_id, suiteId);
     assert.equal(meta.started_at, analysis.started_at);
     assert.equal(meta.finished_at, meta.suite_finished_at);

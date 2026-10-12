@@ -167,10 +167,13 @@ measurement. The old Notte metadata is archived alongside the new audit before
 writing metadata for the new suite. Each new metadata file uses `started_at`
 and `finished_at` for the full suite, retaining the runner's original final-batch
 window in `final_batch_started_at` and `final_batch_finished_at`. The results
-index includes all saved dates.
+index includes all saved dates. A suite-specific snapshot archives all nine
+corrected metadata files so historical validation survives a later run replacing
+a dated `_meta.json`.
 
 - [Analysis and failure correlations](../results/proxy-get/diagnostics/2026-10-12-premerge50/analysis.json)
 - [Selected session status audit](../results/proxy-get/diagnostics/2026-10-12-premerge50/session-audit.jsonl)
+- [Archived suite metadata](../results/proxy-get/diagnostics/2026-10-12-premerge50/suite-metadata.json)
 - [Independent target probes](../results/proxy-get/diagnostics/2026-10-12-premerge50/target-monitor.jsonl)
 - [Prior corrected Notte metadata](../results/proxy-get/diagnostics/2026-10-12-premerge50/notte-previous-meta.json)
 
@@ -193,5 +196,5 @@ Notte country counts, and the new suite ID. All existing tracked JSONL files wer
 checked byte-for-byte for preservation, including the earlier Notte control.
 The publication integration tests in `web/lib/proxy-publication.test.ts` load
 the actual saved artifacts, verify every provider/country count and retained
-failure, check metadata coverage, and exercise dashboard history and API exports
+failure, check archived metadata coverage, and exercise dashboard history and API exports
 for all five countries. Unsupported markers contribute no attempts or latency.
