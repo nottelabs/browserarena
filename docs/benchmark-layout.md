@@ -61,3 +61,17 @@ Rechecked both public routes in development at 320, 390, 1024, 1279, 1280, 1366,
 with no horizontal document overflow. At desktop widths the provider tables fit
 without horizontal scrolling. Repeated production checks at 390, 1280, 1440,
 1512, and 1920px with identical results. The production build passes.
+
+## Proxy value score — October 12
+
+Lifecycle and proxy GET now share the value-score preset controls, with a mobile
+preset dropdown. The proxy table's primary columns are provider, runs, reliability,
+latency, cost per success, and value score; its GET details toggle reveals first
+byte, throughput, and suite cost without moving the panel borders. The scoring
+formula and fixed normalization anchors are documented in `proxy-get-value-score.md`.
+
+Rechecked development layouts at 320, 390, 640, 1024, 1280, 1440, 1512, and 1920px,
+and production layouts at 390, 1280, 1440, and 1920px. All table/history/results
+frames still match exactly across routes with no document overflow. Exercised
+each preset, the details toggle, and the mobile preset dropdown. The production
+build and all 72 web tests pass, including seven proxy scoring/ranking tests.
