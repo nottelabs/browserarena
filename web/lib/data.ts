@@ -983,7 +983,7 @@ export async function loadLeaderboard(
 
   const metadata: LeaderboardMetadata = {
     availableDates: v0Dates,
-    availableConcurrencyLevels: availableConcurrencyLevels.length > 1 ? availableConcurrencyLevels : undefined,
+    availableConcurrencyLevels,
     vmMeta,
     vmMetas: uniqueVmMetas.length > 0 ? uniqueVmMetas : undefined,
   };

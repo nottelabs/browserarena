@@ -14,6 +14,7 @@ import { runProxyGetSuite } from "./benchmarks/proxy-get/run.js";
 import { parseCountries } from "./benchmarks/proxy-get/schema.js";
 import { loadProxyPricing } from "./benchmarks/proxy-get/pricing.js";
 import { PAYLOAD_BYTES, PAYLOAD_SHA256 } from "./benchmarks/proxy-get/payload.js";
+import { validateProxyGetUrls } from "./benchmarks/proxy-get/validate.js";
 
 type BenchmarkName = "hello-browser" | "v0" | "proxy-get";
 
@@ -96,10 +97,7 @@ Proxy GET: --countries=US,FR,BR,IN,JP (10 runs/country by default; sequential fr
     const target = new URL(url);
     const bootstrapUrl = getArg("bootstrap-url", process.env.PROXY_BOOTSTRAP_URL || `${target.origin}/api/proxy-get/bootstrap`)!;
     const countryUrl = getArg("country-url", process.env.PROXY_COUNTRY_URL || "https://api.country.is/")!;
-    for (const value of [url, bootstrapUrl, countryUrl]) {
-      if (!/^https?:$/.test(new URL(value).protocol)) throw new Error("Proxy GET URLs must use HTTP or HTTPS");
-    }
-    if (new URL(bootstrapUrl).origin !== target.origin) throw new Error("--bootstrap-url must share the payload's origin");
+    validateProxyGetUrls(url, bootstrapUrl, countryUrl);
     const customPayload = target.pathname !== "/api/proxy-get/payload";
     if (customPayload && (!getArg("expected-bytes") || !getArg("expected-sha256"))) {
       throw new Error("Custom payloads require --expected-bytes and --expected-sha256");

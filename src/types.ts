@@ -20,6 +20,15 @@ export type ProviderSession = {
 export type ProxyCountry = "US" | "FR" | "BR" | "IN" | "JP";
 export type SessionOptions = { recording?: boolean; proxyCountry?: ProxyCountry };
 
+/** A create response returned a real session which failed validation. */
+export class SessionCreationError extends Error {
+  constructor(message: string, readonly sessionId: string,
+    readonly cleanupError: string | null, readonly releaseMs: number | null) {
+    super(message);
+    this.name = "SessionCreationError";
+  }
+}
+
 export interface RecordingResult {
   data: Buffer;
   format: "mp4" | "json" | "m3u8";

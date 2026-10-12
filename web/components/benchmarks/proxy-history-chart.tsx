@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useBenchmarkNavigation } from "./benchmark-navigation";
 import { CartesianGrid, Line, LineChart, ReferenceLine, XAxis, YAxis } from "recharts";
 import { ChartContainer, ChartTooltip, type ChartConfig } from "@/components/ui/chart";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { HISTORY_RANGES, rangeStartDate, type HistoryRangeKey } from "@/lib/history-range";
 import { proxyProviderColor } from "@/lib/proxy-violin";
 import type { ProxyHistoryDay } from "@/lib/proxy-get-history";
@@ -62,7 +63,14 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
     <div data-panel-header className="flex flex-wrap items-start justify-between gap-4">
       <div>
         <Heading className={`${sectioned ? "text-[0.72rem] uppercase tracking-widest" : compact ? "text-sm tracking-tight" : "tracking-tight"} font-semibold`}>{rollingWindow ? `${rollingWindow}-day rolling average` : "Performance over time"}</Heading>
-        <p className={`mt-1 ${compact ? "text-[0.65rem]" : "text-xs"} text-muted-foreground`}>{sectioned ? `${metric === "costPerSuccessUsd" ? "Daily cost estimates" : "Daily medians"} · ${metric === "costPerSuccessUsd" ? "Lower is cheaper" : "Lower is faster"}` : `${countryName} · ${compact ? metric === "costPerSuccessUsd" ? "Lower is cheaper" : "Lower is faster" : metric === "costPerSuccessUsd" ? "Estimated cost per success. Lower is cheaper." : "Successful download times. Lower is faster."}`}</p>
+        <p className={`mt-1 ${compact ? "text-[0.65rem]" : "text-xs"} text-muted-foreground`}>{sectioned ? `${metric === "costPerSuccessUsd" ? "Daily cost estimates" : "Daily medians"} · ` : `${countryName} · `}
+          {incompatibleDates.length > 0 ? <Popover><PopoverTrigger asChild><button type="button" className="underline underline-offset-2 hover:text-foreground">Changed workloads</button></PopoverTrigger>
+            <PopoverContent className="max-w-[calc(100vw-32px)] text-xs">
+              <p>Some provider history is omitted because its target or workload differs from its latest selected run. Inspect those recorded dates:</p>
+              <div className="mt-3 flex flex-wrap gap-2">{incompatibleDates.map(date => <button key={date} type="button" disabled={pending} onClick={() => chooseDate(date)} className="underline underline-offset-2 hover:text-foreground disabled:opacity-50">{dayLabel(date)}</button>)}</div>
+            </PopoverContent>
+          </Popover> : metric === "costPerSuccessUsd" ? "Lower is cheaper" : "Lower is faster"}
+        </p>
       </div>
       <div className="flex flex-wrap gap-1.5" aria-label="History metric">
         {METRICS.map(m => <button key={m.key} type="button" aria-pressed={metric === m.key} onClick={() => setMetric(m.key)} className={buttonStyle(metric === m.key)}>{m.label}</button>)}
@@ -119,7 +127,6 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
     {!sectioned && (compact ? <p className="mt-2 border-t border-foreground/10 pt-2 text-[0.6rem] text-muted-foreground" aria-live="polite">{pending ? "Loading day…" : rollingWindow ? `Average of available daily ${metric === "costPerSuccessUsd" ? "cost estimates" : "medians"} over ${rollingWindow} calendar days; early windows are partial. Click a point to inspect that day.` : "Click a point to inspect that day."}</p> : <div className="mt-4 border-t border-foreground/10 pt-3 text-[0.65rem] leading-relaxed text-muted-foreground" aria-live="polite">
       <p>{pending ? "Loading run details…" : metricDays.length === 1 ? "One measured day so far. More published runs will form the time series." : "Click a point or choose a run day to inspect its violin plot and raw attempts below."}</p>
       <p className="mt-1">{simulated ? "Simulated daily samples for layout preview." : "Latest suite per provider per UTC day. Missing measurements stay as gaps."} {metric === "costPerSuccessUsd" ? "Cost includes failed attempts; unknown costs remain gaps." : "Failed attempts appear in the daily results, but have no successful latency."}</p>
-      {incompatibleDates.length > 0 && <p className="mt-1">Some provider results on {incompatibleDates.length} run {incompatibleDates.length === 1 ? "day are" : "days are"} omitted because their workload differs from that provider’s selected workload. Select {incompatibleDates.length === 1 ? "that day" : "one of those days"} to inspect them.</p>}
     </div>)}
     </div>
   </section>;

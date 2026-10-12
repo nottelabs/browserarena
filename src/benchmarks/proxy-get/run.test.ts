@@ -7,10 +7,43 @@ import test from "node:test";
 import type { AddressInfo } from "node:net";
 import { chromium, type BrowserContext } from "playwright-core";
 import type { ProviderClient, SessionOptions } from "../../types.js";
+import { SessionCreationError } from "../../types.js";
 import { runProxyGet, runProxyGetSuite, type ProxyGetOptions } from "./run.js";
 import { PROXY_COUNTRIES } from "./schema.js";
 import { PAYLOAD, PAYLOAD_SHA256 } from "./payload.js";
 import { DEFAULT_PROXY_PRICING } from "./pricing.js";
+import { validateProxyGetUrls } from "./validate.js";
+
+test("secure-context URL validation rejects non-loopback HTTP before creating sessions", async () => {
+  for (const origin of ["https://target.example", "http://localhost:3000", "http://127.0.0.1:3000", "http://[::1]:3000"]) {
+    assert.doesNotThrow(() => validateProxyGetUrls(`${origin}/payload`, `${origin}/bootstrap`, "https://api.country.is/"));
+  }
+  for (const origin of ["http://target.example", "http://192.168.0.10", "http://localhost.example"]) {
+    assert.throws(() => validateProxyGetUrls(`${origin}/payload`, `${origin}/bootstrap`, "https://api.country.is/"), /require HTTPS/);
+  }
+  assert.throws(() => validateProxyGetUrls("https://a.example/payload", "https://b.example/bootstrap", "https://api.country.is/"), /share.*origin/);
+  let creates = 0;
+  const provider: ProviderClient = { name: "TILION", proxyCountries: ["US"], computeCost: () => 0,
+    create: async () => { creates++; throw new Error("must not create"); }, release: async () => {} };
+  const options = { url: "http://target.example/payload", bootstrapUrl: "http://target.example/bootstrap", countryUrl: "https://api.country.is/" } as ProxyGetOptions;
+  await assert.rejects(() => runProxyGet(provider, "US", options, null), /require HTTPS/);
+  await assert.rejects(() => runProxyGetSuite([{ client: provider, out: "unused.jsonl" }], { ...options, runs: 10, countries: ["US"] }, {}), /require HTTPS/);
+  assert.equal(creates, 0);
+});
+
+test("known Tilion sessions with failed create cleanup retain IDs and unknown cost for audit", async () => {
+  const provider: ProviderClient = { name: "TILION", proxyCountries: ["US"], computeCost: () => 0,
+    create: async () => { throw new SessionCreationError("Wrong region", "known-session", "Release failed", null); },
+    release: async () => { throw new Error("adapter already attempted release"); } };
+  const options = { url: "https://target.example/payload", bootstrapUrl: "https://target.example/bootstrap", countryUrl: "https://api.country.is/" } as ProxyGetOptions;
+  const record = await runProxyGet(provider, "US", options, DEFAULT_PROXY_PRICING.TILION);
+  assert.equal(record.session_id, "known-session");
+  assert.equal(record.error_stage, "session_create");
+  assert.equal(record.error_message, "Wrong region");
+  assert.equal(record.cleanup_error, "Release failed");
+  assert.equal(record.session_wall_ms, null);
+  assert.equal(record.cost_usd, null);
+});
 
 test("unsupported proxies never create an unproxied session", async () => {
   let created = false;

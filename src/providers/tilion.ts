@@ -1,5 +1,7 @@
 import type { ProviderClient, ProviderSession, SessionOptions } from "../types.js";
+import { SessionCreationError } from "../types.js";
 import { requireEnv } from "../utils/env.js";
+import { msSince, nowNs } from "../utils/time.js";
 
 // Tilion cloud browser provider for The Browser Arena.
 // Lifecycle: create a session (the API returns an authenticated CDP url inline), connect
@@ -41,10 +43,17 @@ export class TilionProvider implements ProviderClient {
     // the API may return ws://; the public endpoint is TLS, so upgrade to wss://.
     if (this.base.startsWith("https") && cdpUrl.startsWith("ws://")) cdpUrl = "wss://" + cdpUrl.slice(5);
     if (!j.session_id || !cdpUrl || (country && j.region !== country.toLowerCase())) {
-      if (j.session_id) await this.release(j.session_id);
-      throw new Error(country && j.region !== country.toLowerCase()
+      const reason = country && j.region !== country.toLowerCase()
         ? `tilion: requested region ${country.toLowerCase()}, returned ${j.region ?? "unknown"}`
-        : "tilion: no session_id/connect_url");
+        : "tilion: no session_id/connect_url";
+      if (!j.session_id) throw new Error(reason);
+      const releaseStart = nowNs();
+      try { await this.release(j.session_id); }
+      catch (error) {
+        throw new SessionCreationError(reason, j.session_id,
+          error instanceof Error ? error.message : String(error), null);
+      }
+      throw new SessionCreationError(reason, j.session_id, null, msSince(releaseStart));
     }
     return { id: j.session_id, cdpUrl };
   }

@@ -28,8 +28,10 @@ npm run bench -- --benchmark=proxy-get --provider=steel \
   --countries=US,FR,BR,IN,JP --runs=10
 ```
 
-The host must be publicly reachable from the remote browser. For a local browser
-or a tunneled development deployment, the target may use HTTP. A custom target
+The host must be publicly reachable from the remote browser. Payload and bootstrap
+origins must use HTTPS so browser SHA-256 validation is available. HTTP is allowed
+only on localhost, 127.0.0.1, or ::1 for local browser tests; development tunnels
+must expose HTTPS. Unsupported origins are rejected before paid sessions. A custom target
 path requires `--expected-bytes` and `--expected-sha256`. `--bootstrap-url` must
 share the target's origin and serve a minimal document without subresources,
 with a CSP that permits the country check. Both endpoints are included in the

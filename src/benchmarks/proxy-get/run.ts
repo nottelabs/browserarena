@@ -3,12 +3,14 @@ import path from "node:path";
 import { randomInt, randomUUID } from "node:crypto";
 import { chromium, type Browser } from "playwright-core";
 import type { ProviderClient, ProviderSession, ProxyCountry } from "../../types.js";
+import { SessionCreationError } from "../../types.js";
 import { msSince, nowNs } from "../../utils/time.js";
 import { sanitizeErrorMessage } from "../../utils/sanitize.js";
 import type { ProxyGetRecord, ProxyPricing } from "./schema.js";
 import { estimateProxyAttemptCost } from "./pricing.js";
 import { countryExpression, getExpression } from "./browser-script.js";
 import { collectProxyDiagnostics } from "./diagnostics.js";
+import { validateProxyGetUrls } from "./validate.js";
 
 export interface ProxyGetOptions {
   url: string;
@@ -55,6 +57,7 @@ export async function runProxyGet(
     result.error_message = provider.proxyUnsupportedReason ?? "Country-targeted native residential proxy integration is not verified";
     return result;
   }
+  validateProxyGetUrls(options.url, options.bootstrapUrl, options.countryUrl);
   const wallStart = nowNs();
   let session: ProviderSession | null = null;
   let browser: Browser | null = null;
@@ -122,6 +125,12 @@ export async function runProxyGet(
   } catch (error) {
     result.error_stage = stage;
     result.error_message = message(error);
+    if (error instanceof SessionCreationError) {
+      result.session_id = error.sessionId;
+      result.cleanup_error = error.cleanupError === null ? null : message(error.cleanupError);
+      result.session_release_ms = error.releaseMs;
+      if (error.releaseMs !== null) result.session_wall_ms = msSince(wallStart);
+    }
   } finally {
     setStage("cleanup");
     result.transfer_bytes = Math.max(result.transfer_bytes, [...traffic.values()].reduce((sum, bytes) => sum + bytes, 0));
@@ -158,6 +167,7 @@ export async function runProxyGet(
 export async function runProxyGetSuite(providers: { client: ProviderClient; out: string }[],
   options: ProxyGetOptions & { runs: number; countries: ProxyCountry[]; rate?: number },
   pricing: Record<string, ProxyPricing>) {
+  validateProxyGetUrls(options.url, options.bootstrapUrl, options.countryUrl);
   const runId = randomUUID();
   const jobs = providers.flatMap(p => options.countries.flatMap(country =>
     Array.from({ length: p.client.proxyCountries?.includes(country) ? options.runs : 1 }, () => ({ ...p, country }))));

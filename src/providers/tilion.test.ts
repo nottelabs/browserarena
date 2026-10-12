@@ -3,6 +3,7 @@ import http from "node:http";
 import type { AddressInfo } from "node:net";
 import test from "node:test";
 import { TilionProvider } from "./tilion.js";
+import { SessionCreationError } from "../types.js";
 
 test("Tilion requests residential regions, rejects wrong placement, and reports release failures", async () => {
   const requests: { method: string; path: string; body: Record<string, unknown> }[] = [];
@@ -44,6 +45,14 @@ test("Tilion requests residential regions, rejects wrong placement, and reports 
     await assert.rejects(() => provider.create({ proxyCountry: "US" }), /requested region us, returned fr/);
     assert.deepEqual(requests.at(-1), { method: "DELETE", path: "/v1/session/fixture", body: {} });
     releaseFails = true;
+    await assert.rejects(() => provider.create({ proxyCountry: "US" }), (error: unknown) => {
+      assert.ok(error instanceof SessionCreationError);
+      assert.equal(error.sessionId, "fixture");
+      assert.match(error.message, /requested region us, returned fr/);
+      assert.match(error.cleanupError!, /tilion release 500/);
+      assert.equal(error.releaseMs, null);
+      return true;
+    });
     await assert.rejects(() => provider.release("fixture"), /tilion release 500/);
   } finally {
     for (const [key, value] of [["TILION_API_KEY", previous.key], ["TILION_BASE_URL", previous.base]]) {
