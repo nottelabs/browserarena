@@ -142,14 +142,12 @@ export function triple(values: number[]): Triple {
  */
 export function costPer1kActions(
   actionsPerSecond: number | null,
-  pricing: { ratePerHour: number; billing: "per_minute" | "per_second"; minimumSeconds: number; perSessionCreationFee: number } | null
+  pricing: { ratePerHour: number; billing: "per_minute" | "per_30_seconds" | "per_second"; minimumSeconds: number; perSessionCreationFee: number } | null
 ): number | null {
   if (!pricing || !actionsPerSecond || actionsPerSecond <= 0) return null;
   const seconds = 1000 / actionsPerSecond;
-  const billedSeconds =
-    pricing.billing === "per_minute"
-      ? Math.max(pricing.minimumSeconds, Math.ceil(seconds / 60) * 60)
-      : Math.max(pricing.minimumSeconds, seconds);
+  const unit = pricing.billing === "per_minute" ? 60 : pricing.billing === "per_30_seconds" ? 30 : 0;
+  const billedSeconds = Math.max(pricing.minimumSeconds, unit > 0 ? Math.ceil(seconds / unit) * unit : seconds);
   const usage = (billedSeconds / 3600) * pricing.ratePerHour;
   return Math.round((pricing.perSessionCreationFee + usage) * 1e6) / 1e6;
 }

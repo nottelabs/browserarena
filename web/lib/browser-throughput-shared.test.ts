@@ -130,6 +130,9 @@ test("cost per 1,000 actions bills one long session with the provider's granular
   const perSecond = { ratePerHour: 0.06, billing: "per_second" as const, minimumSeconds: 0, perSessionCreationFee: 0.01 };
   // 2 actions/s -> 500 s -> 500/3600 * 0.06 + fee
   assert.equal(costPer1kActions(2, perSecond), Math.round((500 / 3600 * 0.06 + 0.01) * 1e6) / 1e6);
+  const per30 = { ratePerHour: 0.15, billing: "per_30_seconds" as const, minimumSeconds: 30, perSessionCreationFee: 0 };
+  // 4 actions/s -> 250 s -> rounded up to 270 s -> 270/3600 * 0.15
+  assert.equal(costPer1kActions(4, per30), Math.round((270 / 3600) * 0.15 * 1e6) / 1e6);
   assert.equal(costPer1kActions(null, perSecond), null);
   assert.equal(costPer1kActions(0, perSecond), null);
   assert.equal(costPer1kActions(2, null), null);
