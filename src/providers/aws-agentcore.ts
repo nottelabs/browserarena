@@ -24,6 +24,7 @@ export type AgentCoreClient = Pick<BedrockAgentCoreClient, "send"> & {
 // ConnectBrowserAutomationStream.
 export class AwsAgentCoreProvider implements ProviderClient {
   readonly name = "AWS_AGENTCORE";
+  readonly proxyUnsupportedReason = "AgentCore Browser only accepts a customer-managed external proxy; AWS offers no residential proxy pool with country targeting";
   private _client: AgentCoreClient | null;
 
   constructor(client?: AgentCoreClient) {

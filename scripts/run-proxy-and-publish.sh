@@ -51,7 +51,7 @@ if [[ -f .env ]]; then
   . ./.env
   set +a
 fi
-PROVIDERS="steel,kernel,hyperbrowser,anchorbrowser,browser-use,browserbase,notte,tilion,lightpanda"
+PROVIDERS="steel,kernel,hyperbrowser,anchorbrowser,browser-use,browserbase,notte,tilion,lightpanda,browserless,cloudflare,aws-agentcore"
 TARGET="${PROXY_GET_PAYLOAD_URL:-https://www.browserarena.ai/api/proxy-get/payload}"
 BOOTSTRAP="${PROXY_BOOTSTRAP_URL:-${TARGET%/api/proxy-get/payload}/api/proxy-get/bootstrap}"
 # Explicit arguments isolate proxy scheduling from lifecycle defaults in .env.

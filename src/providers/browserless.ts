@@ -3,6 +3,7 @@ import { requireEnv } from "../utils/env.js";
 
 export class BrowserlessProvider implements ProviderClient {
   readonly name = "BROWSERLESS";
+  readonly proxyUnsupportedReason = "Browserless offers country-targeted residential proxies, but this integration has not been verified against a live account yet";
   readonly releasesOnDisconnect = true;
   private cdpUrl: string;
 

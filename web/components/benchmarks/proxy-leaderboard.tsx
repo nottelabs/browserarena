@@ -66,13 +66,20 @@ export function ProxyLeaderboard({ providers, countryName, dateLabel, simulated,
                 {PROVIDERS_BY_ID[p.provider]?.logo && <span className={`inline-flex size-6 items-center justify-center overflow-hidden rounded-[3px] border border-border ${p.provider === "NOTTE" ? "bg-black p-[1px]" : ""}`}><img src={PROVIDERS_BY_ID[p.provider].logo} className="size-full object-contain" alt="" /></span>}
                 <span className="flex flex-col gap-0.5"><span>{p.displayName}</span><time dateTime={p.runDate} className="text-[0.6rem] leading-3 font-normal text-muted-foreground">{formatDate(p.runDate)}</time></span>
               </a></th>
-              <td>{unsupported ? unavailable : p.attempts.toLocaleString("en-US")}</td>
-              <td title={unsupported ? undefined : `${p.successes}/${p.attempts} attempts succeeded`}>{p.attempts > 0 ? `${(p.successes / p.attempts * 100).toFixed(1)}%` : unavailable}</td>
+              {unsupported ? <td colSpan={headers.length - 2} className="text-left!">
+                <span className="inline-flex items-center gap-2 text-muted-foreground" title={missingReason}>
+                  <span className="rounded-[3px] border border-foreground/20 px-1.5 py-0.5 text-[0.6rem] font-semibold uppercase tracking-wider">Unsupported</span>
+                  <span className="truncate font-sans text-[0.7rem] max-w-[36rem]">{missingReason}</span>
+                </span>
+              </td> : <>
+              <td>{p.attempts.toLocaleString("en-US")}</td>
+              <td title={`${p.successes}/${p.attempts} attempts succeeded`}>{p.attempts > 0 ? `${(p.successes / p.attempts * 100).toFixed(1)}%` : unavailable}</td>
               <td>{p.medianGetMs === null ? unavailable : milliseconds(p.medianGetMs)}</td>
               {details && <><td>{p.medianFirstByteMs === null ? unavailable : milliseconds(p.medianFirstByteMs)}</td><td>{p.medianMbps?.toFixed(2) ?? unavailable}</td></>}
               <td title={p.costExplanation}>{p.successes ? cost(p.costPerSuccessUsd) : unavailable}</td>
-              {details && <td title={p.costExplanation}>{unsupported ? unavailable : cost(p.totalCostUsd)}</td>}
-              <td title={score == null ? unsupported || !p.successes ? missingReason : "A metric required by the selected weights is missing." : "Exploratory weighted score; dates and target hosts may differ."}>{score == null ? <span className="text-muted-foreground">N/A</span> : score.toFixed(3)}</td>
+              {details && <td title={p.costExplanation}>{cost(p.totalCostUsd)}</td>}
+              <td title={score == null ? !p.successes ? missingReason : "A metric required by the selected weights is missing." : "Exploratory weighted score; dates and target hosts may differ."}>{score == null ? <span className="text-muted-foreground">N/A</span> : score.toFixed(3)}</td>
+              </>}
             </tr>;
           })}</tbody>
         </table>

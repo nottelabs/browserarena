@@ -7,6 +7,7 @@ const API_BASE = "https://api.cloudflare.com/client/v4";
 // The API token needs the "Browser Rendering - Edit" permission.
 export class CloudflareProvider implements ProviderClient {
   readonly name = "CLOUDFLARE";
+  readonly proxyUnsupportedReason = "Cloudflare Browser Run has no proxy option: sessions run on Cloudflare's own network, so there is no country-targeted residential exit to measure";
 
   computeCost(seconds: number): number {
     // Workers Paid: $0.09 per browser hour past the 10 included each month,

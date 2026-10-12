@@ -27,7 +27,8 @@ export function rankProxyValues(providers: ProxyGetStats[], weights: ProxyValueW
   const scores = new Map(providers.map(p => [p.provider, proxyValueScore(p, weights)]));
   const sorted = sortRanked(providers, p => scores.get(p.provider) != null,
     (a, b) => scores.get(b.provider)! - scores.get(a.provider)! || a.displayName.localeCompare(b.displayName),
-    (a, b) => a.displayName.localeCompare(b.displayName));
+    // Unscored rows: measured-but-failed first, unsupported last.
+    (a, b) => Number(a.status === "unsupported") - Number(b.status === "unsupported") || a.displayName.localeCompare(b.displayName));
   const ranks = new Map<string, number>();
   let rank = 1;
   sorted.forEach((provider, index) => {

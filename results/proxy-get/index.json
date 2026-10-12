@@ -9,6 +9,12 @@
       ]
     },
     {
+      "name": "aws-agentcore",
+      "dates": [
+        "2026-10-12"
+      ]
+    },
+    {
       "name": "browser-use",
       "dates": [
         "2026-10-08",
@@ -19,6 +25,18 @@
       "name": "browserbase",
       "dates": [
         "2026-10-08",
+        "2026-10-12"
+      ]
+    },
+    {
+      "name": "browserless",
+      "dates": [
+        "2026-10-12"
+      ]
+    },
+    {
+      "name": "cloudflare",
+      "dates": [
         "2026-10-12"
       ]
     },
