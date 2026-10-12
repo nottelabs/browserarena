@@ -55,21 +55,24 @@ export function ProxyLeaderboard({ providers, countryName, dateLabel, simulated,
           <tbody>{sorted.map(p => {
             const score = scores.get(p.provider);
             const rank = ranks.get(p.provider);
+            const unsupported = p.status === "unsupported";
+            const missingReason = unsupported
+              ? p.samples[0]?.error_message ?? "Residential proxy integration is unavailable for this country."
+              : !p.successes ? "No successful GETs were recorded for this country." : "No measurement is available for this metric.";
+            const unavailable = <span className="text-muted-foreground" title={missingReason}>N/A</span>;
             return <tr key={p.provider} className={rank === 1 ? "bg-primary/6 hover:bg-primary/10" : undefined}>
               <td>{rank ?? "—"}</td>
               <th scope="row"><a href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 whitespace-nowrap hover:underline">
                 {PROVIDERS_BY_ID[p.provider]?.logo && <span className={`inline-flex size-6 items-center justify-center overflow-hidden rounded-[3px] border border-border ${p.provider === "NOTTE" ? "bg-black p-[1px]" : ""}`}><img src={PROVIDERS_BY_ID[p.provider].logo} className="size-full object-contain" alt="" /></span>}
                 <span className="flex flex-col gap-0.5"><span>{p.displayName}</span><time dateTime={p.runDate} className="text-[0.6rem] leading-3 font-normal text-muted-foreground">{formatDate(p.runDate)}</time></span>
               </a></th>
-              {p.status === "unsupported" ? <td colSpan={headers.length - 2} className="text-muted-foreground">Unavailable for this country</td> : <>
-                <td>{p.attempts.toLocaleString("en-US")}</td>
-                <td title={`${p.successes}/${p.attempts} attempts succeeded`}>{p.attempts > 0 ? `${(p.successes / p.attempts * 100).toFixed(1)}%` : "N/A"}</td>
-                <td>{milliseconds(p.medianGetMs)}</td>
-                {details && <><td>{milliseconds(p.medianFirstByteMs)}</td><td>{p.medianMbps?.toFixed(2) ?? "N/A"}</td></>}
-                <td title={p.costExplanation}>{p.successes ? cost(p.costPerSuccessUsd) : "N/A"}</td>
-                {details && <td title={p.costExplanation}>{cost(p.totalCostUsd)}</td>}
-                <td title={score == null ? "No successful GETs, or a metric required by the selected weights is missing." : "Exploratory weighted score; dates and target hosts may differ."}>{score == null ? <span className="text-muted-foreground">N/A</span> : score.toFixed(3)}</td>
-              </>}
+              <td>{unsupported ? unavailable : p.attempts.toLocaleString("en-US")}</td>
+              <td title={unsupported ? undefined : `${p.successes}/${p.attempts} attempts succeeded`}>{p.attempts > 0 ? `${(p.successes / p.attempts * 100).toFixed(1)}%` : unavailable}</td>
+              <td>{p.medianGetMs === null ? unavailable : milliseconds(p.medianGetMs)}</td>
+              {details && <><td>{p.medianFirstByteMs === null ? unavailable : milliseconds(p.medianFirstByteMs)}</td><td>{p.medianMbps?.toFixed(2) ?? unavailable}</td></>}
+              <td title={p.costExplanation}>{p.successes ? cost(p.costPerSuccessUsd) : unavailable}</td>
+              {details && <td title={p.costExplanation}>{unsupported ? unavailable : cost(p.totalCostUsd)}</td>}
+              <td title={score == null ? unsupported || !p.successes ? missingReason : "A metric required by the selected weights is missing." : "Exploratory weighted score; dates and target hosts may differ."}>{score == null ? <span className="text-muted-foreground">N/A</span> : score.toFixed(3)}</td>
             </tr>;
           })}</tbody>
         </table>
