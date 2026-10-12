@@ -41,5 +41,8 @@ jobs:
         working-directory: web
       - run: npm test
         working-directory: web
-      - run: npm audit --package-lock-only
+      # Production dependencies only: shadcn (dev, used for its tailwind.css
+      # entry) pulls in fast-glob -> micromatch -> braces, and the braces
+      # advisory (GHSA-vfj7-8cjw-p6xm) has no patched release yet.
+      - run: npm audit --package-lock-only --omit=dev
         working-directory: web
