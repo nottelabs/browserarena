@@ -77,13 +77,20 @@
 .backdrop {
   display: none;
 }
-@media (min-width: 1800px) {
+@media (min-width: 1280px) {
   .sidebar {
     /* Main padding + hero height/gap + centered benchmark heading. */
     top: calc(var(--spacing) * 16 + 79.75px);
   }
 }
-@media (max-width: 1799px) {
+@media (min-width: 1280px) and (max-width: 1799px) {
+  .sidebar {
+    left: -184px;
+    width: 184px;
+  }
+  .option { padding-inline: 12px; }
+}
+@media (max-width: 1279px) {
   .menuButton {
     display: inline-flex;
     align-items: center;

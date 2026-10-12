@@ -10,7 +10,8 @@ Costs retain their relevant precision and units (hourly rates versus per-run usa
 History and Results have equally sized headers. The lifecycle provider selector
 is a dropdown so changing the number of providers cannot wrap the controls and
 move the chart borders. Both chart panels reserve the same height, including
-when stacked on smaller screens. Narrow tables scroll horizontally inside their
+when stacked on smaller screens (460px on desktop, 480px on mobile, and 510px
+below 360px to accommodate wrapping controls and provider legends). Narrow tables scroll horizontally inside their
 frames, retaining all metrics on both benchmarks.
 
 ## Browser verification
@@ -21,13 +22,13 @@ the table frame and both chart frames had identical x, y, width, and height on
 both routes, with no horizontal document overflow. Sequential and concurrent
 lifecycle views, and US/France proxy results with cost sorting, were exercised.
 
-At 1440px, both routes measured:
+After the October 12 laptop-sidebar adjustment, at 1440px both routes measure:
 
 | Frame | Left | Top | Width | Height |
 | --- | ---: | ---: | ---: | ---: |
-| Provider table | 123.1953125 | 295.7421875 | 1193.609375 | 547 |
-| History chart | 123.1953125 | 991.8515625 | 635.21875 | 460 |
-| Results chart | 775.6875 | 991.8515625 | 541.1171875 | 460 |
+| Provider table | 251.1953125 | 295.7421875 | 1145.609375 | 547 |
+| History chart | 251.1953125 | 991.8515625 | 609.296875 | 460 |
+| Results chart | 877.765625 | 991.8515625 | 519.0390625 | 460 |
 
 Coordinates depend on viewport width and font scaling; equality between routes
 is the layout contract. Recheck both routes after changing header text, controls,
@@ -44,3 +45,19 @@ The overview export, raw details, and distribution match the table's provider
 suites. The distribution omits providers with no attempts and displays run
 dates; attempted but unsuccessful runs retain an empty-sample row. History
 retains its recorded-day and workload boundaries. TypeScript and all 57 web tests pass.
+
+## Laptop sidebar — October 12
+
+The permanent sidebar now appears from 1280 CSS pixels, including common Mac
+viewport widths of 1280, 1440, and 1512. Between 1280 and 1799px it is 184px wide
+and the main container shifts right, using available width up to its existing
+1280px maximum. From 1800px the original centered main container and 208px
+floating sidebar remain unchanged. Below 1280px the visible menu opens a drawer;
+resizing an open drawer into desktop mode restores scrolling and removes its
+focus trap. Sidebar and main Benchmark headings align vertically.
+
+Rechecked both public routes in development at 320, 390, 1024, 1279, 1280, 1366,
+1440, 1512, 1728, and 1920px. All three panel borders match exactly between routes,
+with no horizontal document overflow. At desktop widths the provider tables fit
+without horizontal scrolling. Repeated production checks at 390, 1280, 1440,
+1512, and 1920px with identical results. The production build passes.

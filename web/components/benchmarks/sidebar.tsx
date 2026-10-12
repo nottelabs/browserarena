@@ -25,7 +25,11 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
   const sidebarRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
-    if (!open || !window.matchMedia("(max-width: 1799px)").matches) return;
+    if (!open) return;
+    const drawer = window.matchMedia("(max-width: 1279px)");
+    if (!drawer.matches) return;
+    const closeOnDesktop = () => { if (!drawer.matches) setOpen(false); };
+    drawer.addEventListener("change", closeOnDesktop);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     const focusable = () => Array.from(sidebarRef.current?.querySelectorAll<HTMLElement>("a[href], button") ?? []);
@@ -43,6 +47,7 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
     return () => {
       document.body.style.overflow = previousOverflow;
       document.removeEventListener("keydown", handleKey);
+      drawer.removeEventListener("change", closeOnDesktop);
       menuRef.current?.focus();
     };
   }, [open]);

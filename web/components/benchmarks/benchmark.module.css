@@ -87,9 +87,18 @@
 .dashboard [data-benchmark-progress] span { display: block; width: 35%; height: 100%; background: var(--foreground); animation: progress 1.2s ease-in-out infinite; }
 @keyframes dashboard-enter { from { opacity: 0.85; } to { opacity: 1; } }
 @keyframes progress { from { transform: translateX(-100%); } to { transform: translateX(390%); } }
-@media (min-width: 1800px) { .heading { padding-right: 0; } }
+@media (min-width: 1280px) { .heading { padding-right: 0; } }
+@media (min-width: 1280px) and (max-width: 1799px) {
+  /* Keep navigation visible on laptops, outside the shared dashboard panels. */
+  .container {
+    width: calc(100% - 208px);
+    margin-left: max(208px, calc((100% - 80rem) / 2));
+    margin-right: auto;
+  }
+}
 @media (max-width: 1023px) { .charts { grid-template-columns: minmax(0, 1fr); gap: calc(var(--spacing) * 4); } }
 @media (max-width: 639px) {
+  .charts [data-benchmark-panel] { min-height: 480px; }
   .dashboard > button[aria-controls] { position: static; margin-bottom: 16px; }
   .heading { padding-right: 0; }
   .dashboard [data-section-header="benchmark"] { height: 130px; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 12px; }
