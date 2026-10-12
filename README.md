@@ -168,14 +168,14 @@ Daily results are produced by `scripts/run-and-publish.sh`, which runs one bench
 ```cron
 # us-east-1 box (Steel, Kernel, Hyperbrowser, Anchor Browser, Browser Use)
 0 3 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east
-0 5 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east --benchmark browser-throughput
+0 21 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east --benchmark browser-throughput --concurrency 1
 
 # us-west-1 box (Notte, Browserbase) — staggered 1h to avoid push races
 0 4 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west
-0 6 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west --benchmark browser-throughput
+0 6 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west --benchmark browser-throughput --concurrency 1
 ```
 
-`--concurrency 1,10,25,50` and `--loops 5` are accepted on either line; see the plan-cap note above before raising concurrency. The script holds a lock on the checkout, so if the first job overruns its slot the second waits instead of racing it.
+The east Browser Throughput run sits at 21:00 UTC, after the last Proxy Performance batch (01:00 to 17:00, see docs/proxy-get.md), so the two never share the box. `--concurrency 1,10,25,50` and `--loops 5` are accepted on either line; see the plan-cap note above before raising concurrency. The script holds a lock on the checkout, so if the first job overruns its slot the second waits instead of racing it.
 
 Per-EC2 setup: clone the repo, populate `.env` with that region's provider keys, and add an SSH key as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) with write access (one key per box). Cron logs go to `logs/` (gitignored).
 
