@@ -107,7 +107,12 @@ export async function loadProxyGetEntries(allDates = false): Promise<ProxyGetRec
     }
   } else {
     const repo = process.env.RESULTS_GITHUB_REPO || "nottelabs/browserarena";
-    const branch = process.env.RESULTS_GITHUB_BRANCH || "main";
+    // Preview data belongs to the deployed revision, which may not be on main.
+    // Production keeps following main as the runner publishes new daily samples.
+    const branch = process.env.RESULTS_GITHUB_BRANCH
+      || (process.env.VERCEL_ENV === "preview"
+        ? process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_REF : undefined)
+      || "main";
     const list = async (dir: string): Promise<{ name: string; type: string }[]> => {
       const response = await fetch(`https://api.github.com/repos/${repo}/contents/${dir}?ref=${encodeURIComponent(branch)}`, { next: { revalidate: 60 } });
       if (response.status === 404) return [];

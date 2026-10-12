@@ -266,3 +266,53 @@ test("Vercel reads fresh indexed results instead of immutable build files or the
     fs.rmSync(base, { recursive: true, force: true });
   }
 });
+
+test("preview pages and exports read the deployed revision while production follows main", async () => {
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), "proxy-preview-ref-"));
+  const keys = ["RESULTS_DIR", "RESULTS_GITHUB_REPO", "RESULTS_GITHUB_BRANCH", "VERCEL", "VERCEL_ENV",
+    "VERCEL_GIT_COMMIT_SHA", "VERCEL_GIT_COMMIT_REF"] as const;
+  const original = Object.fromEntries(keys.map(key => [key, process.env[key]]));
+  const originalFetch = globalThis.fetch;
+  const scenarios = [
+    { environment: "preview", sha: "a".repeat(40), ref: "t3/proxy-geo-latency-benchmark", expected: "a".repeat(40) },
+    { environment: "preview", ref: "t3/proxy-geo-latency-benchmark", expected: "t3/proxy-geo-latency-benchmark" },
+    { environment: "production", sha: "a".repeat(40), ref: "main", expected: "main" },
+    { environment: "preview", sha: "a".repeat(40), override: "published-results", expected: "published-results" },
+    { environment: "preview", expected: "main" },
+  ];
+  try {
+    for (const scenario of scenarios) {
+      for (const key of keys) delete process.env[key];
+      process.env.RESULTS_DIR = base;
+      process.env.RESULTS_GITHUB_REPO = "nottelabs/browserarena";
+      process.env.VERCEL = "1";
+      process.env.VERCEL_ENV = scenario.environment;
+      if (scenario.sha) process.env.VERCEL_GIT_COMMIT_SHA = scenario.sha;
+      if (scenario.ref) process.env.VERCEL_GIT_COMMIT_REF = scenario.ref;
+      if (scenario.override) process.env.RESULTS_GITHUB_BRANCH = scenario.override;
+      const requests: string[] = [];
+      globalThis.fetch = async input => {
+        const url = input instanceof Request ? input.url : String(input);
+        requests.push(url);
+        assert.ok(url.startsWith(`https://raw.githubusercontent.com/nottelabs/browserarena/${scenario.expected}/results/proxy-get/`));
+        if (url.endsWith("/index.json")) return Response.json({ version: 1, providers: [
+          { name: "steel", dates: ["2026-10-12"] }, { name: "notte", dates: ["2026-10-12"] },
+        ] });
+        return new Response(JSON.stringify(entry("2026-10-12", { provider: url.includes("/notte/") ? "NOTTE" : "STEEL" })) + "\n");
+      };
+      const history = await loadProxyGetHistory("US");
+      assert.equal(history.overview.providers.length, 2);
+      assert.deepEqual(history.dates, ["2026-10-12"]);
+      const exported = await GET(new Request("https://fixture.example/api/proxy-get?country=US&view=overview"));
+      assert.equal(exported.status, 200);
+      assert.equal((await exported.json()).providers.length, 2);
+      assert.ok(requests.length >= 6, "both the page history and API must load the index and both providers");
+    }
+  } finally {
+    globalThis.fetch = originalFetch;
+    for (const key of keys) {
+      if (original[key] === undefined) delete process.env[key]; else process.env[key] = original[key];
+    }
+    fs.rmSync(base, { recursive: true, force: true });
+  }
+});

@@ -280,7 +280,10 @@ against concurrent lifecycle publication. Unrelated artifacts are not staged;
 older interrupted results are published rather than referenced without files.
 Each CLI suite writes `results/proxy-get/index.json`; the publisher commits it
 with the samples. Deployed Vercel pages fetch the index and JSONL from raw GitHub
-with a 60-second cache, rather than relying on immutable build-time results or
+with a 60-second cache. Production follows `main`; Vercel previews use their
+deployed Git commit (or branch if the commit SHA is unavailable) so unmerged
+pilot results appear in the preview. `RESULTS_GITHUB_BRANCH` overrides either
+default. This avoids relying on immutable build-time results or
 the unauthenticated Contents API quota. Local development still reads files.
 It never resets the checkout. It requires `main` for publication; `--check` can
 verify a feature branch without sessions or publication. Logs and every failure's
