@@ -113,6 +113,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "BROWSERLESS",
     displayName: "Browserless",
     url: "https://www.browserless.io",
+    logo: "/logos/browserless.png",
     browserRegion: "us-west",
     marketed: false,
   },
@@ -121,6 +122,7 @@ export const PROVIDERS: ProviderInfo[] = [
     displayName: "Cloudflare",
     marketingName: "Cloudflare Browser Run",
     url: "https://developers.cloudflare.com/browser-run/",
+    logo: "/logos/cloudflare.png",
     marketed: false,
   },
   {
@@ -128,6 +130,7 @@ export const PROVIDERS: ProviderInfo[] = [
     displayName: "AWS AgentCore",
     marketingName: "Amazon Bedrock AgentCore Browser",
     url: "https://aws.amazon.com/bedrock/agentcore/",
+    logo: "/logos/aws-agentcore.png",
     marketed: false,
   },
 ];
