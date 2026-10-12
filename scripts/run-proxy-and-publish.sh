@@ -30,6 +30,12 @@ if [[ $CHECK -eq 0 ]]; then
   [[ -z "$(git diff --name-only -- . ':!results/proxy-get')" ]] || {
     echo "[ERROR] tracked code changes; refusing to run or publish"; exit 1;
   }
+  while IFS= read -r file; do
+    [[ -z "$file" || "$file" == results/proxy-get/index.json
+      || "$file" =~ ^results/proxy-get/[a-z0-9-]+/[0-9]{4}-[0-9]{2}-[0-9]{2}/(results\.jsonl|_meta\.json)$ ]] || {
+      echo "[ERROR] unrelated tracked proxy changes: $file"; exit 1;
+    }
+  done < <(git diff --name-only -- results/proxy-get)
   # Preserve partial results after an interrupted batch; never reset them away.
   if git diff --quiet; then
     git pull --rebase origin main
@@ -57,12 +63,20 @@ env -u OUTPUT node dist/cli.js "${ARGS[@]}" --preflight
 [[ $CHECK -eq 0 ]] || exit 0
 env -u OUTPUT node dist/cli.js "${ARGS[@]}"
 
-IFS=',' read -ra PROVIDER_LIST <<< "$PROVIDERS"
 PATHS=(results/proxy-get/index.json)
-for provider in "${PROVIDER_LIST[@]}"; do
-  dir="results/proxy-get/$provider/$DATE"
-  [[ ! -d "$dir" ]] || PATHS+=("$dir")
+# The index includes saved history: publish its files too, including old-day
+# partial batches. Stage only sample/metadata files, never arbitrary artifacts.
+for dir in results/proxy-get/*/????-??-??; do
+  [[ -d "$dir" ]] || continue
+  provider="$(basename "$(dirname "$dir")")"
+  [[ "$provider" =~ ^[a-z0-9-]+$ && "$(basename "$dir")" =~ ^[0-9]{4}-[0-9]{2}-[0-9]{2}$ ]] || continue
+  [[ ! -f "$dir/results.jsonl" ]] || PATHS+=("$dir/results.jsonl")
+  [[ ! -f "$dir/_meta.json" ]] || PATHS+=("$dir/_meta.json")
 done
+while IFS= read -r -d '' file; do
+  [[ "$file" =~ ^results/proxy-get/[a-z0-9-]+/[0-9]{4}-[0-9]{2}-[0-9]{2}/(results\.jsonl|_meta\.json)$ ]] || continue
+  PATHS+=("$file")
+done < <(git ls-files --deleted -z -- results/proxy-get)
 [[ ${#PATHS[@]} -gt 1 ]] || { echo "[ERROR] no results written"; exit 1; }
 git add -- "${PATHS[@]}"
 git diff --cached --quiet && { echo "[INFO] daily target already published"; exit 0; }

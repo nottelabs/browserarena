@@ -51,7 +51,10 @@ Other flags:
   availability without creating sessions or writing results.
 * `--run-id=ID`: resume that suite to the cumulative `--runs` target. Saved
   failures count toward the target; changing its workload or proxy support is
-  rejected before sessions. Omit it for a new independent suite.
+  rejected before sessions. Default output discovery searches all dated provider
+  folders, so overnight resumes append to the original file. If an existing ID
+  is already split across multiple files, recovery stops before sessions and
+  requires reconciliation. Omit the ID for a new independent suite.
 
 `--record` and concurrent runs are unsupported. `RUNS`, `PROVIDER`, and `URL`
 remain available as environment defaults; proxy-specific environment defaults
@@ -260,8 +263,10 @@ Tilion US only, and unpaid Lightpanda unsupported markers). Kernel headful remai
 available through the CLI but is not part of this default daily budget.
 
 The publisher uses a lock, checks every supported provider's required keys and
-the target before sessions, preserves partial results, stages only this day's
-proxy files, and rebases/retries pushes against concurrent lifecycle publication.
+the target before sessions, preserves partial results, stages proxy samples and
+metadata across all saved dates with their index, and rebases/retries pushes
+against concurrent lifecycle publication. Unrelated artifacts are not staged;
+older interrupted results are published rather than referenced without files.
 Each CLI suite writes `results/proxy-get/index.json`; the publisher commits it
 with the samples. Deployed Vercel pages fetch the index and JSONL from raw GitHub
 with a 60-second cache, rather than relying on immutable build-time results or
