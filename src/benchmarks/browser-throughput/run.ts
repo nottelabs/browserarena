@@ -48,6 +48,7 @@ export async function runSingleSession(
     session_release_ms: null,
     viewport_width: VIEWPORT.width,
     viewport_height: VIEWPORT.height,
+    click_mode: provider.domClicksOnly ? "dom" : "mouse",
     loops,
     actions_total: loops * ACTIONS_PER_LOOP,
     actions_completed: 0,
@@ -109,6 +110,7 @@ export async function runSingleSession(
     stage = "actions";
     const actions = await runActionLoops(page, opts.urlForLoop, loops, {
       timeoutMs: opts.actionTimeoutMs ?? DEFAULT_ACTION_TIMEOUT_MS,
+      clickMode: provider.domClicksOnly ? "dom" : "mouse",
       log: (line) => console.error(line),
     });
     const summary = summarizeActions(actions, loops);

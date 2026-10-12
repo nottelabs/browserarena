@@ -57,6 +57,8 @@ export type BrowserThroughputRecord = {
 
   viewport_width: number;
   viewport_height: number;
+  /** "dom" for browsers without layout, where a mouse click cannot target anything. */
+  click_mode: "mouse" | "dom";
 
   loops: number;
   actions_total: number;

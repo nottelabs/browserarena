@@ -47,6 +47,12 @@ export interface ProviderClient {
    * session, and the runners end it with browser.close() instead of release().
    */
   readonly releasesOnDisconnect?: boolean;
+  /**
+   * True when the browser has no layout engine, so elements have no real box
+   * and Playwright's mouse click can never find a visible target. Runners then
+   * click with the DOM's element.click() and wait for the navigation it starts.
+   */
+  readonly domClicksOnly?: boolean;
   /** Returns estimated cost in USD for given session duration. Note: some providers charge for startup/creation; others have tier-dependent rates. This is a simplified estimate. */
   computeCost(seconds: number): number;
   /** Country targeting is opt-in; absent means this integration is not verified. */

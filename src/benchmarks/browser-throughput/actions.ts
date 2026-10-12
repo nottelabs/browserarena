@@ -45,7 +45,9 @@ interface Step {
  * the back-forward cache never fires `load`; the following `waitForSelector`
  * confirms arrival.
  */
-export function loopSteps(url: string, sel: LoopSelectors, timeout: number): Step[] {
+export type ClickMode = "mouse" | "dom";
+
+export function loopSteps(url: string, sel: LoopSelectors, timeout: number, clickMode: ClickMode = "mouse"): Step[] {
   const wait: Step = {
     type: "waitForSelector",
     run: (p) => p.waitForSelector(sel.heading, { timeout }),
@@ -63,9 +65,19 @@ export function loopSteps(url: string, sel: LoopSelectors, timeout: number): Ste
     wait,
     screenshot,
     read,
-    // The first *visible* match: Playwright would otherwise wait out the
-    // timeout on a link that is in the DOM but collapsed.
-    { type: "click", run: (p) => p.locator(sel.link).filter({ visible: true }).first().click({ timeout }) },
+    clickMode === "mouse"
+      // The first *visible* match: Playwright would otherwise wait out the
+      // timeout on a link that is in the DOM but collapsed.
+      ? { type: "click", run: (p) => p.locator(sel.link).filter({ visible: true }).first().click({ timeout }) }
+      // No layout means no visibility: click the first match through the DOM
+      // and wait for the navigation to commit, as a mouse click would.
+      : { type: "click", run: async (p) => {
+          const before = p.url();
+          await Promise.all([
+            p.waitForURL((u) => u.toString() !== before, { waitUntil: "commit", timeout }),
+            p.locator(sel.link).first().evaluate((a) => (a as HTMLElement).click(), undefined, { timeout }),
+          ]);
+        } },
     wait,
     screenshot,
     read,
@@ -91,7 +103,7 @@ export async function runActionLoops(
   page: Page,
   urlForLoop: (loop: number) => string,
   loops: number,
-  options: { selectors?: LoopSelectors; timeoutMs?: number; log?: (line: string) => void } = {}
+  options: { selectors?: LoopSelectors; timeoutMs?: number; clickMode?: ClickMode; log?: (line: string) => void } = {}
 ): Promise<AgentActionRecord[]> {
   const sel = options.selectors ?? WIKIPEDIA_SELECTORS;
   const timeout = options.timeoutMs ?? DEFAULT_ACTION_TIMEOUT_MS;
@@ -100,7 +112,7 @@ export async function runActionLoops(
   let index = 0;
 
   for (let loop = 1; loop <= loops; loop++) {
-    const steps = loopSteps(urlForLoop(loop), sel, timeout);
+    const steps = loopSteps(urlForLoop(loop), sel, timeout, options.clickMode);
     let consecutiveFailures = 0;
 
     for (const step of steps) {

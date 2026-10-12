@@ -138,6 +138,13 @@ export async function runProxyGet(
     if (session) {
       const releaseStart = nowNs();
       try {
+        // For these providers closing the connection is the release, so it
+        // belongs inside the timed step rather than after it.
+        if (provider.releasesOnDisconnect && browser) {
+          const closing = browser;
+          browser = null;
+          await closing.close();
+        }
         await provider.release(session.id);
         result.session_release_ms = msSince(releaseStart);
         result.session_wall_ms = msSince(wallStart);

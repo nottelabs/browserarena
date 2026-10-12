@@ -44,8 +44,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$REGION" in
-  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion" ;;
-  us-west) PROVIDERS="notte,lightpanda" ;;
+  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion,cloudflare,aws-agentcore" ;;
+  us-west) PROVIDERS="notte,lightpanda,browserless" ;;
   "")      echo "[ERROR] --region us-east|us-west required" >&2; exit 2 ;;
   *)       echo "[ERROR] invalid --region: $REGION (want us-east or us-west)" >&2; exit 2 ;;
 esac
@@ -107,6 +107,9 @@ for p in "${PROV_LIST[@]}"; do
     browserbase)     v="${BROWSERBASE_API_KEY:-}" ;;
     tilion)          v="${TILION_API_KEY:-}" ;;
     lightpanda)      v="${LIGHTPANDA_API_KEY:-}" ;;
+    browserless)     v="${BROWSERLESS_API_KEY:-}" ;;
+    cloudflare)      v="${CLOUDFLARE_API_TOKEN:-}" ;;
+    aws-agentcore)   v="${AWS_REGION:-}" ;;
     *) echo "[ERROR] unknown provider in region map: $p" >&2; exit 2 ;;
   esac
   [[ -n "$v" ]] && have_any=1

@@ -49,6 +49,12 @@ selector matches `/wiki/` anywhere in the href and excludes namespaced pages
 infobox and hatnote links are often collapsed, and a collapsed link makes
 Playwright wait out the whole timeout.
 
+Lightpanda has no layout engine: every element reports a placeholder box, so a
+mouse click can never target it. For providers flagged `domClicksOnly` the
+click step calls the link's `element.click()` and waits for the navigation to
+commit instead. Each session records this as `click_mode: "dom"`; everyone else
+is `"mouse"`.
+
 ### Start pages
 
 A fixed pool of 100 broad, link-rich articles (`src/benchmarks/browser-throughput/articles.ts`),

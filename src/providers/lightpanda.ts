@@ -5,6 +5,8 @@ export class LightpandaProvider implements ProviderClient {
   readonly name = "LIGHTPANDA";
   readonly proxyUnsupportedReason = "Lightpanda's built-in proxies are datacenter proxies; country-targeted residential proxies require a separately configured account proxy";
   readonly releasesOnDisconnect = true;
+  // No layout: every element reports a placeholder box far off-screen.
+  readonly domClicksOnly = true;
   private apiKey: string | null = null;
   private cdpUrl: string;
 

@@ -152,9 +152,11 @@ test("runActionLoops: a failing action is recorded and the loop carries on, unti
   const site = await startSite();
   try {
     const page = await browser.newPage();
+    // Long enough that the actions which should succeed (navigate, screenshot)
+    // never time out on a loaded CI machine; the missing selectors fail at it.
     const actions = await runActionLoops(page, () => `${site.base}/bare`, 1, {
       selectors: SELECTORS,
-      timeoutMs: 300,
+      timeoutMs: 2_000,
     });
 
     // navigate ok, waitForSelector fails, screenshot ok, textContent fails,
@@ -171,6 +173,35 @@ test("runActionLoops: a failing action is recorded and the loop carries on, unti
     const summary = summarizeActions(actions, 1);
     assert.equal(summary.actions_completed, 2);
     assert.equal(summary.actions_total, ACTIONS_PER_LOOP);
+  } finally {
+    await site.close();
+    await browser.close();
+  }
+});
+
+test("runActionLoops: DOM click mode navigates without a visible target", async (t) => {
+  const browser = await launch();
+  if (!browser) {
+    t.skip("no Chromium available");
+    return;
+  }
+  const site = await startSite();
+  try {
+    const page = await browser.newPage();
+    // Hide the link: a mouse click could never target it, a DOM click still can.
+    await page.addInitScript(() => {
+      document.addEventListener("DOMContentLoaded", () => {
+        for (const a of document.querySelectorAll("a.next")) (a as HTMLElement).style.display = "none";
+      });
+    });
+    const actions = await runActionLoops(page, () => `${site.base}/a`, 1, {
+      selectors: SELECTORS,
+      timeoutMs: 3_000,
+      clickMode: "dom",
+    });
+    const click = actions.find((a) => a.type === "click")!;
+    assert.ok(click.success, click.error_message ?? "click failed");
+    assert.ok(actions.every((a) => a.success), JSON.stringify(actions.filter((a) => !a.success)));
   } finally {
     await site.close();
     await browser.close();
