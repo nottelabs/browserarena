@@ -5,6 +5,10 @@ import { PostHog } from "posthog-node";
  * Server-side events for the public JSON endpoints and llms.txt, which are
  * read by uptime monitors, scripts and AI agents that never run the site's
  * JavaScript. Events are personless: no profile per caller, no IP stored.
+ *
+ * Counts are a lower bound: responses served from Vercel's CDN cache never
+ * reach this code. Read `api_requested` as requests that hit the server, per
+ * route and caller kind, not as total traffic.
  */
 let client: PostHog | null = null;
 
@@ -51,6 +55,8 @@ export function captureApiRequest(
       event: "api_requested",
       properties: {
         $process_person_profile: false,
+        // Lets the project's internal-traffic filter drop localhost and previews.
+        $host: url.host,
         route,
         query: url.search.slice(0, 200),
         caller_kind: callerKind(userAgent),
