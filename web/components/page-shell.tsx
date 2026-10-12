@@ -7,7 +7,9 @@ import type { VmMeta } from "@/lib/data";
 
 export function PageShell({
   children,
+  benchmark = "hello-browser",
 }: {
+  benchmark?: "hello-browser" | "proxy-get";
   tagline?: string;
   caption?: React.ReactNode;
   children: React.ReactNode;
@@ -29,8 +31,8 @@ export function PageShell({
           </NavBarBrand>
           <NavBarActions>
             <nav className="hidden sm:flex items-center gap-8 text-sm font-medium">
-              <a href="#leaderboard" className="text-muted-foreground hover:text-foreground transition-colors">Leaderboard</a>
-              <a href="#history" className="text-muted-foreground hover:text-foreground transition-colors">History</a>
+              <Link href="/#leaderboard" className="text-muted-foreground hover:text-foreground transition-colors">Leaderboard</Link>
+              <Link href="/#history" className="text-muted-foreground hover:text-foreground transition-colors">History</Link>
               <a href="https://github.com/nottelabs/browserarena" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">Methodology</a>
               <a href="https://railway.com/deploy/UNedGj" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-foreground transition-colors">Reproduce</a>
             </nav>
@@ -52,11 +54,11 @@ export function PageShell({
 
       <main className="flex-1 mx-auto max-w-7xl w-full px-4 sm:px-10 pt-6 sm:pt-5 pb-5 sm:pb-10">
         <section className="mb-4 sm:mb-5">
-          <div className="sm:hidden flex justify-center mb-3">
+          {benchmark === "hello-browser" && <div className="sm:hidden flex justify-center mb-3">
             <span className="rounded-[3px] bg-purple-500/15 px-3 py-1 text-[0.68rem] font-semibold text-purple-600 tracking-wide">
               Open site on desktop to see full evaluations
             </span>
-          </div>
+          </div>}
           <h1 className="hidden sm:block text-2xl sm:text-3xl font-semibold text-foreground tracking-tight">
             The Browser Arena
           </h1>
@@ -66,6 +68,12 @@ export function PageShell({
             on speed, reliability, and cost.
           </p>
         </section>
+        <nav aria-label="Benchmarks" className="mb-6 flex gap-5 text-sm font-medium">
+          <Link href="/" aria-current={benchmark === "hello-browser" ? "page" : undefined}
+            className={benchmark === "hello-browser" ? "text-foreground underline underline-offset-4" : "text-muted-foreground hover:text-foreground"}>Browser lifecycle</Link>
+          <Link href="/proxy-get" aria-current={benchmark === "proxy-get" ? "page" : undefined}
+            className={benchmark === "proxy-get" ? "text-foreground underline underline-offset-4" : "text-muted-foreground hover:text-foreground"}>Proxy GET</Link>
+        </nav>
         {children}
       </main>
 

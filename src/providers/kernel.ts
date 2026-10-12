@@ -1,5 +1,7 @@
-import type { ProviderClient, ProviderSession, RecordingResult } from "../types.js";
+import type { ProviderClient, ProviderSession, RecordingResult, SessionOptions, ProxyCountry } from "../types.js";
+import { PROXY_COUNTRIES } from "../benchmarks/proxy-get/schema.js";
 import { requireEnv } from "../utils/env.js";
+import { randomUUID } from "node:crypto";
 import Kernel from "@onkernel/sdk";
 
 function createKernelClient(): () => Promise<Kernel> {
@@ -15,8 +17,49 @@ function createKernelClient(): () => Promise<Kernel> {
 
 const getClient = createKernelClient();
 
+// Proxy configurations are separate resources. Each measured session owns one,
+// and tracks it for cleanup, including browser creation failures.
+class KernelProxySessions {
+  private proxies = new Map<string, string>();
+
+  async create(headless: boolean, country?: ProxyCountry): Promise<ProviderSession> {
+    const client = await getClient();
+    let proxyId: string | undefined;
+    if (country) {
+      const proxy = await client.proxies.create({ name: `browserarena-${country}-${randomUUID()}`, type: "residential", config: { country } }, { maxRetries: 0, timeout: 30_000 });
+      if (!proxy.id) throw new Error("Kernel proxy response missing id");
+      proxyId = proxy.id;
+    }
+    try {
+      const created = await client.browsers.create({ headless,
+        ...(proxyId ? { proxy: { id: proxyId } } : {}),
+      }, { maxRetries: 0, timeout: 90_000 });
+      if (proxyId) this.proxies.set(created.session_id, proxyId);
+      return { id: created.session_id, cdpUrl: created.cdp_ws_url };
+    } catch (error) {
+      if (proxyId) await client.proxies.delete(proxyId, { maxRetries: 0, timeout: 30_000 });
+      throw error;
+    }
+  }
+
+  async release(id: string): Promise<void> {
+    const client = await getClient();
+    const proxyId = this.proxies.get(id);
+    try {
+      await client.browsers.deleteByID(id, proxyId ? { maxRetries: 0, timeout: 30_000 } : undefined);
+    } finally {
+      if (proxyId) {
+        await client.proxies.delete(proxyId, { maxRetries: 0, timeout: 30_000 });
+        this.proxies.delete(id);
+      }
+    }
+  }
+}
+
 export class KernelProvider implements ProviderClient {
   readonly name = "KERNEL";
+  readonly proxyCountries = PROXY_COUNTRIES;
+  private proxySessions = new KernelProxySessions();
   private _replayId: string | null = null;
 
   computeCost(seconds: number): number {
@@ -24,7 +67,8 @@ export class KernelProvider implements ProviderClient {
     return Math.round((seconds / 3600) * perHour * 1e8) / 1e8;
   }
 
-  async create(): Promise<ProviderSession> {
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
+    if (opts?.proxyCountry) return this.proxySessions.create(true, opts.proxyCountry);
     const created = await (await getClient()).browsers.create({ headless: true });
     const id = created.session_id;
     const cdpUrl = created.cdp_ws_url;
@@ -33,7 +77,7 @@ export class KernelProvider implements ProviderClient {
   }
 
   async release(id: string): Promise<void> {
-    await (await getClient()).browsers.deleteByID(id);
+    await this.proxySessions.release(id);
   }
 
   async startRecording(sessionId: string): Promise<string> {
@@ -76,6 +120,8 @@ export class KernelProvider implements ProviderClient {
 
 export class KernelHeadfulProvider implements ProviderClient {
   readonly name = "KERNEL_HEADFUL";
+  readonly proxyCountries = PROXY_COUNTRIES;
+  private proxySessions = new KernelProxySessions();
   private _replayId: string | null = null;
 
   computeCost(seconds: number): number {
@@ -83,7 +129,8 @@ export class KernelHeadfulProvider implements ProviderClient {
     return Math.round((seconds / 3600) * perHour * 1e8) / 1e8;
   }
 
-  async create(): Promise<ProviderSession> {
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
+    if (opts?.proxyCountry) return this.proxySessions.create(false, opts.proxyCountry);
     const created = await (await getClient()).browsers.create({ headless: false });
     const id = created.session_id;
     const cdpUrl = created.cdp_ws_url;
@@ -92,7 +139,7 @@ export class KernelHeadfulProvider implements ProviderClient {
   }
 
   async release(id: string): Promise<void> {
-    await (await getClient()).browsers.deleteByID(id);
+    await this.proxySessions.release(id);
   }
 
   async startRecording(sessionId: string): Promise<string> {

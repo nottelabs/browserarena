@@ -4,6 +4,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://browserarena.ai";
 
   return [
+    { url: `${baseUrl}/benchmark`, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/proxy-get`, changeFrequency: "daily", priority: 0.9 },
     {
       url: baseUrl,
       lastModified: new Date(),

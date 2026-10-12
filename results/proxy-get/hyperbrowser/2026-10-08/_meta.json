@@ -1,0 +1,26 @@
+{
+  "region": "us-east-1",
+  "instance_type": "t3.medium",
+  "cloud": "aws",
+  "os": "linux x64",
+  "node_version": "v22.23.2",
+  "started_at": "2026-10-08T16:17:30.735Z",
+  "finished_at": "2026-10-08T17:32:55.917Z",
+  "benchmark": "proxy-get",
+  "url": "https://refers-pottery-plasma-board.trycloudflare.com/api/proxy-get/payload",
+  "bootstrapUrl": "https://refers-pottery-plasma-board.trycloudflare.com/api/proxy-get/bootstrap",
+  "countryUrl": "https://api.country.is/",
+  "expectedBytes": 1048576,
+  "expectedSha256": "7317cbc61ea73cc173a87aacd2f86645ba3932a5f7fb3f04b1c7169a633b7776",
+  "timeoutMs": 30000,
+  "countries": [
+    "US",
+    "FR",
+    "BR",
+    "IN",
+    "JP"
+  ],
+  "runs": 10,
+  "resumed_at": "2026-10-08T17:08:39.756Z",
+  "interruption_note": "SSH connection ended after 240 recorded attempts; resumed only the 110 missing trials with the same workload, pricing snapshots, and run_id."
+}

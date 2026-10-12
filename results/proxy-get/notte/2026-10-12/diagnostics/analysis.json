@@ -1,0 +1,159 @@
+{
+  "baseline": {
+    "run_id": "4758e325-044e-448d-bbf6-6c7c07129560",
+    "attempts": 50,
+    "successes": 0,
+    "failure_stage_counts": {
+      "country_verification": 50
+    },
+    "country_check_network_errors": {
+      "net::ERR_BLOCKED_BY_CLIENT": 50
+    }
+  },
+  "corrected": {
+    "run_id": "2031e9ca-fe52-4ac3-a2a7-eaba03aadcc5",
+    "attempts": 50,
+    "successes": 48,
+    "countries": [
+      {
+        "country": "US",
+        "attempts": 10,
+        "successes": 10,
+        "median_get_ms": 2339.949999988079,
+        "estimated_cost_usd": 0.10493321
+      },
+      {
+        "country": "FR",
+        "attempts": 10,
+        "successes": 9,
+        "median_get_ms": 1637,
+        "estimated_cost_usd": 0.09993303
+      },
+      {
+        "country": "BR",
+        "attempts": 10,
+        "successes": 10,
+        "median_get_ms": 2844.1000000089407,
+        "estimated_cost_usd": 0.10493326
+      },
+      {
+        "country": "IN",
+        "attempts": 10,
+        "successes": 9,
+        "median_get_ms": 3675,
+        "estimated_cost_usd": 0.10157150000000001
+      },
+      {
+        "country": "JP",
+        "attempts": 10,
+        "successes": 10,
+        "median_get_ms": 2526.550000006333,
+        "estimated_cost_usd": 0.10494706
+      }
+    ]
+  },
+  "monitor": {
+    "probes": 90,
+    "failures": 0,
+    "first_at": "2026-10-12T09:04:24.891Z",
+    "last_at": "2026-10-12T09:19:30.243Z"
+  },
+  "cleanup": {
+    "sessions": 100,
+    "closed": 100
+  },
+  "failed_attempts": [
+    {
+      "session_id": "50168960-32a6-4c69-b8ec-cb4e6e1c949f",
+      "country": "FR",
+      "created_at": "2026-10-12T09:11:17.118Z",
+      "error_stage": "get",
+      "error_message": "GET timed out",
+      "bytes_received": 548864,
+      "first_byte_ms": 1618.5999999940395,
+      "network": {
+        "phase": "get",
+        "endpoint": "https://tba-eternal-holdem-answer.trycloudflare.com/api/proxy-get/payload",
+        "elapsed_ms": 3355.888355999996,
+        "http_status": 200,
+        "headers": {
+          "x-request-id": "0923891d-5fa3-46d4-a36c-8b300afed960",
+          "cf-ray": "a494fa168b135b2c-GVA",
+          "access-control-allow-origin": "*",
+          "content-length": "1048576",
+          "content-type": "application/octet-stream",
+          "server": "cloudflare"
+        },
+        "protocol": "h2",
+        "bytes_received": 548864,
+        "error": "net::ERR_ABORTED",
+        "canceled": true,
+        "finished_ms": 33357.80565000001
+      },
+      "origin_requests": [
+        {
+          "created_at": "2026-10-12T09:11:23.996Z",
+          "path": "/api/proxy-get/payload",
+          "nonce": "0923891d-5fa3-46d4-a36c-8b300afed960",
+          "probe": null,
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      ],
+      "provider_evidence": {
+        "api_matching_lines": 114,
+        "api_error_lines": 0,
+        "browser_matching_lines": 6,
+        "browser_error_lines": 0,
+        "api_closure_evidence": 5
+      }
+    },
+    {
+      "session_id": "96440d41-1693-4d97-8ba7-978845d0dac3",
+      "country": "IN",
+      "created_at": "2026-10-12T09:12:35.679Z",
+      "error_stage": "get",
+      "error_message": "GET timed out",
+      "bytes_received": 712704,
+      "first_byte_ms": 1616.0999999940395,
+      "network": {
+        "phase": "get",
+        "endpoint": "https://tba-eternal-holdem-answer.trycloudflare.com/api/proxy-get/payload",
+        "elapsed_ms": 12405.770630000014,
+        "http_status": 200,
+        "headers": {
+          "x-request-id": "aeb59f13-d320-45b7-9434-97742f7ca2c3",
+          "cf-ray": "a494fc405a837ef7-MAA",
+          "access-control-allow-origin": "*",
+          "content-length": "1048576",
+          "content-type": "application/octet-stream",
+          "server": "cloudflare"
+        },
+        "protocol": "h2",
+        "bytes_received": 712704,
+        "error": "net::ERR_ABORTED",
+        "canceled": true,
+        "finished_ms": 42433.462950000016
+      },
+      "origin_requests": [
+        {
+          "created_at": "2026-10-12T09:12:52.755Z",
+          "path": "/api/proxy-get/payload",
+          "nonce": "aeb59f13-d320-45b7-9434-97742f7ca2c3",
+          "probe": null,
+          "completed": true,
+          "http_status": 200,
+          "elapsed_ms": 1
+        }
+      ],
+      "provider_evidence": {
+        "api_matching_lines": 123,
+        "api_error_lines": 0,
+        "browser_matching_lines": 6,
+        "browser_error_lines": 0,
+        "api_closure_evidence": 4
+      }
+    }
+  ]
+}

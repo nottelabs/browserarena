@@ -1,4 +1,3 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import {
   loadHistoricalLeaderboard,
@@ -7,9 +6,9 @@ import {
   type SortByType,
 } from "@/lib/data";
 import { LeaderboardTable } from "@/components/leaderboard-table";
-import { HelloBrowserControls } from "@/components/benchmark-controls";
-import { PageShell } from "@/components/page-shell";
+import { BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
 import { HistoryCharts } from "@/components/history-charts";
+import styles from "@/components/benchmarks/benchmark.module.css";
 
 const VALID_PERCENTILES: PercentileType[] = ["median", "p90", "p95"];
 const VALID_SORT: SortByType[] = ["latency", "reliability", "price"];
@@ -31,42 +30,50 @@ export default async function Home({
   }>;
 }) {
   const params = await searchParams;
-  const concurrency = params.concurrency ? Number(params.concurrency) : undefined;
-  const effectiveConcurrency = concurrency ?? 1;
-  let percentile = (VALID_PERCENTILES.includes(params.percentile as PercentileType)
+  const requestedConcurrency = Number(params.concurrency ?? 1);
+  let effectiveConcurrency = Number.isInteger(requestedConcurrency) && requestedConcurrency > 0 ? requestedConcurrency : 1;
+  const requestedPercentile = (VALID_PERCENTILES.includes(params.percentile as PercentileType)
     ? params.percentile
     : "median") as PercentileType;
+  let percentile = requestedPercentile;
   if (effectiveConcurrency > 1) percentile = "median";
   const sortBy = (VALID_SORT.includes(params.sort as SortByType)
     ? params.sort
     : "latency") as SortByType;
 
-  const { providers, metadata } = await loadLeaderboard(
+  let leaderboard = await loadLeaderboard(
     "hello-browser",
     undefined,
     percentile,
     sortBy,
-    concurrency
+    effectiveConcurrency
   );
+  const concurrencyLevels = leaderboard.metadata.availableConcurrencyLevels?.length ? leaderboard.metadata.availableConcurrencyLevels : [1];
+  if (!concurrencyLevels.includes(effectiveConcurrency)) {
+    effectiveConcurrency = concurrencyLevels[0];
+    percentile = effectiveConcurrency > 1 ? "median" : requestedPercentile;
+    leaderboard = await loadLeaderboard("hello-browser", undefined, percentile, sortBy, effectiveConcurrency);
+  }
+  const { providers } = leaderboard;
   const history = await loadHistoricalLeaderboard("hello-browser", effectiveConcurrency);
+  const lifecycleQuery = new URLSearchParams({ percentile: requestedPercentile, sort: sortBy }).toString();
 
 
   return (
-    <PageShell>
+    <BenchmarkShell benchmark="hello-browser" concurrency={effectiveConcurrency} concurrencyLevels={concurrencyLevels} lifecycleQuery={lifecycleQuery}>
 
       {/* Leaderboard */}
-      <div id="leaderboard" className="mb-5 sm:mb-12 scroll-mt-20">
+      <div id="leaderboard" className={`${styles.tableStage} scroll-mt-20`}>
         {providers.length > 0 ? (
           <div className="reveal-up">
             <LeaderboardTable
               data={providers}
               percentile={percentile}
               hideTitle
-              controls={
-                <Suspense fallback={<div className="h-9" />}>
-                  <HelloBrowserControls concurrencyLevels={metadata.availableConcurrencyLevels} />
-                </Suspense>
-              }
+              controls={<div>
+                <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Benchmark</h2>
+                <p className="mt-1 text-[0.72rem] text-muted-foreground">Browser lifecycle · {effectiveConcurrency === 1 ? "Sequential runs" : `Concurrent runs · c = ${effectiveConcurrency}`} · {percentile === "median" ? "Median" : percentile.toUpperCase()} latency</p>
+              </div>}
             />
           </div>
         ) : (
@@ -80,6 +87,7 @@ export default async function Home({
         history={history}
         percentile={percentile}
         initialProvider={providers[0]?.provider}
+        animate={false}
       />
 
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -116,6 +124,6 @@ export default async function Home({
         </div>
       </div>
 
-    </PageShell>
+    </BenchmarkShell>
   );
 }

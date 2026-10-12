@@ -58,6 +58,22 @@ Two modes:
 
 ## Methodology
 
+### Proxy GET benchmark
+
+The separate **Proxy GET** page compares complete 1 MiB downloads through native
+residential proxies in the US, France, Brazil, India, and Japan. It defaults to
+10 fresh sessions per provider/country, with country verification, browser-side
+timing, response validation, and estimated browser-plus-proxy costs.
+
+```bash
+npm run bench -- --benchmark=proxy-get --provider=steel,kernel,notte --runs=10
+```
+
+Deploy the included controlled target before a live run. See
+[setup, pricing, and measurement details](docs/proxy-get.md). The benchmark's
+latency excludes create/connect/release; estimated cost includes billable setup
+and failed attempts. Unknown prices remain unknown.
+
 ### Fairness
 
 - 10 warm-up runs before measurement to reduce cold-start effects

@@ -26,6 +26,8 @@ import {
 } from "@/components/ui/tooltip";
 import { ProviderFailuresPopover } from "@/components/provider-failures-popover";
 import { HardDrive, SquarePlus, SquareMinus, SquareArrowOutUpRight } from "lucide-react";
+import { BenchmarkSectionHeader } from "./benchmarks/section-header";
+import { BenchmarkTablePanel } from "./benchmarks/table-panel";
 
 const SEGMENT_KEYS: Record<
   PercentileType,
@@ -486,15 +488,12 @@ export function LeaderboardTable({
           Leaderboard
         </h2>
       )}
-      <div className="mb-3 sm:mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
-        {controls && <div className="shrink-0">{controls}</div>}
-        <div className={`flex items-center gap-3 ${controls ? "" : "ml-auto"}`}>
-          <WeightBar weights={rawWeights} onChange={(w) => { setRawWeights(w); setSort({ key: "value", dir: "desc" }); }} />
-        </div>
-      </div>
+      <BenchmarkSectionHeader controls={<WeightBar weights={rawWeights} onChange={(w) => { setRawWeights(w); setSort({ key: "value", dir: "desc" }); }} />}>
+        {controls}
+      </BenchmarkSectionHeader>
 
-      <div className="border-[1.5px] border-foreground rounded-[3px] overflow-hidden">
-      <Table>
+      <BenchmarkTablePanel label="Browser lifecycle provider results">
+      <Table style={showBreakdown ? { minWidth: 1280 } : undefined}>
         <TableHeader className="[&_tr]:border-b-[1.5px]">
           <TableRow className="border-b-[1.5px] border-foreground hover:bg-transparent">
             {visibleHeaders.map((h) => {
@@ -610,7 +609,7 @@ export function LeaderboardTable({
                   )}
                 </TableCell>
                 <TableCell className={`hidden sm:table-cell py-2 text-right ${sc("reliability")}`}>
-                  <div className="flex flex-col items-end h-[2.25rem] justify-center">
+                  <div className="flex flex-col items-end justify-center">
                     <span className="font-mono text-[0.82rem] tabular-nums leading-tight text-foreground">
                       {p.successRate.toFixed(1)}%
                     </span>
@@ -654,7 +653,7 @@ export function LeaderboardTable({
           })}
         </TableBody>
       </Table>
-      </div>
+      </BenchmarkTablePanel>
     </div>
   );
 }

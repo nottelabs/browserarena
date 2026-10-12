@@ -1,0 +1,30 @@
+{
+  "region": "us-east-1",
+  "instance_type": "t3.medium",
+  "cloud": "aws",
+  "os": "linux x64",
+  "node_version": "v22.23.2",
+  "started_at": "2026-10-12T09:04:26.691Z",
+  "finished_at": "2026-10-12T09:09:39.278Z",
+  "benchmark": "proxy-get",
+  "url": "https://tba-eternal-holdem-answer.trycloudflare.com/api/proxy-get/payload",
+  "bootstrapUrl": "https://tba-eternal-holdem-answer.trycloudflare.com/api/proxy-get/bootstrap",
+  "countryUrl": "https://api.country.is/",
+  "expectedBytes": 1048576,
+  "expectedSha256": "7317cbc61ea73cc173a87aacd2f86645ba3932a5f7fb3f04b1c7169a633b7776",
+  "timeoutMs": 30000,
+  "countries": [
+    "US",
+    "FR",
+    "BR",
+    "IN",
+    "JP"
+  ],
+  "runs": 10,
+  "rate": 10,
+  "run_id": "4758e325-044e-448d-bbf6-6c7c07129560",
+  "session_settings": {
+    "block_ads": "provider-default (documented true)",
+    "proxy_country": "per-attempt"
+  }
+}

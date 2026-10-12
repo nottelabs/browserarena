@@ -43,6 +43,13 @@ const nextConfig: NextConfig = {
           },
         ],
       },
+      {
+        // Only the empty benchmark document needs cross-origin country checks.
+        // Keep the application-wide policy unchanged.
+        source: "/api/proxy-get/bootstrap",
+        headers: [{ key: "Content-Security-Policy", value:
+          "default-src 'none'; base-uri 'none'; frame-ancestors 'none'; img-src data:; connect-src 'self' https: http:" }],
+      },
     ];
   },
 };

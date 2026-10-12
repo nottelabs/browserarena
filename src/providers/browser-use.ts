@@ -1,10 +1,12 @@
-import type { ProviderClient, ProviderSession, RecordingResult } from "../types.js";
+import type { ProviderClient, ProviderSession, RecordingResult, SessionOptions } from "../types.js";
+import { PROXY_COUNTRIES } from "../benchmarks/proxy-get/schema.js";
 import { requireEnv } from "../utils/env.js";
 
 const API_BASE = "https://api.browser-use.com/api/v4";
 
 export class BrowserUseProvider implements ProviderClient {
   readonly name = "BROWSER_USE";
+  readonly proxyCountries = PROXY_COUNTRIES;
 
   computeCost(seconds: number): number {
     const perHour = 0.02;
@@ -12,7 +14,7 @@ export class BrowserUseProvider implements ProviderClient {
     return Math.round((billedSeconds / 3600) * perHour * 1e8) / 1e8;
   }
 
-  async create(opts?: { recording?: boolean }): Promise<ProviderSession> {
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
     const apiKey = requireEnv("BROWSER_USE_API_KEY");
     const res = await fetch(`${API_BASE}/browsers`, {
       method: "POST",
@@ -21,7 +23,7 @@ export class BrowserUseProvider implements ProviderClient {
         "X-Browser-Use-API-Key": apiKey,
       },
       body: JSON.stringify({
-        proxyCountryCode: null,
+        proxyCountryCode: opts?.proxyCountry?.toLowerCase() ?? null,
         enableRecording: opts?.recording ?? false,
       }),
       signal: AbortSignal.timeout(90_000),

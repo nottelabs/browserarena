@@ -1,9 +1,11 @@
-import type { ProviderClient, ProviderSession, RecordingResult } from "../types.js";
+import type { ProviderClient, ProviderSession, RecordingResult, SessionOptions } from "../types.js";
+import { PROXY_COUNTRIES } from "../benchmarks/proxy-get/schema.js";
 import Anchorbrowser from "anchorbrowser";
 import { requireEnv } from "../utils/env.js";
 
 export class AnchorBrowserProvider implements ProviderClient {
   readonly name = "ANCHORBROWSER";
+  readonly proxyCountries = PROXY_COUNTRIES;
   private _client: Anchorbrowser | null = null;
 
   computeCost(seconds: number): number {
@@ -22,11 +24,16 @@ export class AnchorBrowserProvider implements ProviderClient {
     return this._client;
   }
 
-  async create(opts?: { recording?: boolean }): Promise<ProviderSession> {
-    const createOpts = opts?.recording
-      ? { session: { recording: { active: true } } }
-      : {};
-    const session = await (await this.client()).sessions.create(createOpts);
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
+    const createOpts: Anchorbrowser.SessionCreateParams = {
+      ...(opts?.proxyCountry ? { browser: { adblock: { active: false }, popup_blocker: { active: false } } } : {}),
+      session: {
+      ...(opts?.recording ? { recording: { active: true } } : {}),
+      ...(opts?.proxyCountry ? { proxy: { active: true, type: "anchor_proxy" as const,
+        country_code: opts.proxyCountry.toLowerCase() as "us" | "fr" | "br" | "in" | "jp" } } : {}),
+    } };
+    const session = await (await this.client()).sessions.create(createOpts,
+      opts?.proxyCountry ? { maxRetries: 0, timeout: 90_000 } : undefined);
     const id = session.data?.id;
     const cdpUrl = session.data?.cdp_url;
     if (!id || !cdpUrl)

@@ -1,4 +1,5 @@
-import type { ProviderClient, ProviderSession, RecordingResult } from "../types.js";
+import type { ProviderClient, ProviderSession, RecordingResult, SessionOptions } from "../types.js";
+import { PROXY_COUNTRIES } from "../benchmarks/proxy-get/schema.js";
 import { requireEnv } from "../utils/env.js";
 
 interface SessionResponse {
@@ -19,6 +20,7 @@ interface ReplayResponse {
 
 export class NotteProvider implements ProviderClient {
   readonly name = "NOTTE";
+  readonly proxyCountries = PROXY_COUNTRIES;
   private apiKey: string | null = null;
   private baseUrl: string;
 
@@ -39,14 +41,19 @@ export class NotteProvider implements ProviderClient {
     return this.apiKey;
   }
 
-  async create(): Promise<ProviderSession> {
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
     const startResponse = await fetch(`${this.baseUrl}/sessions/start`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${this.getApiKey()}`,
       },
-      body: JSON.stringify({ proxies: false }),
+      body: JSON.stringify({ proxies: opts?.proxyCountry
+        ? [{ type: "notte", country: opts.proxyCountry.toLowerCase() }] : false,
+        // The default tracker filter blocks the benchmark's third-party geo check.
+        // Proxy measurements require network requests without content filtering.
+        ...(opts?.proxyCountry ? { block_ads: false } : {}) }),
+      signal: AbortSignal.timeout(90_000),
     });
 
     if (!startResponse.ok) {
@@ -68,13 +75,16 @@ export class NotteProvider implements ProviderClient {
       throw new Error("Invalid Notte session response: missing cdp_url");
     }
 
-    return { id: sessionId, cdpUrl };
+    return { id: sessionId, cdpUrl, ...(opts?.proxyCountry ? {
+      configuration: { proxy_country: opts.proxyCountry, block_ads: false },
+    } : {}) };
   }
 
   async release(id: string): Promise<void> {
     const response = await fetch(`${this.baseUrl}/sessions/${id}/stop`, {
       method: "DELETE",
       headers: { "Authorization": `Bearer ${this.getApiKey()}` },
+      signal: AbortSignal.timeout(30_000),
     });
 
     if (!response.ok) {

@@ -1,9 +1,11 @@
-import type { ProviderClient, ProviderSession, RecordingResult } from "../types.js";
+import type { ProviderClient, ProviderSession, RecordingResult, SessionOptions } from "../types.js";
+import { PROXY_COUNTRIES } from "../benchmarks/proxy-get/schema.js";
 import { requireEnv } from "../utils/env.js";
 import { Hyperbrowser } from "@hyperbrowser/sdk";
 
 export class HyperbrowserProvider implements ProviderClient {
   readonly name = "HYPERBROWSER";
+  readonly proxyCountries = PROXY_COUNTRIES;
   private _client: Hyperbrowser | null = null;
 
   computeCost(seconds: number): number {
@@ -19,8 +21,12 @@ export class HyperbrowserProvider implements ProviderClient {
     return this._client;
   }
 
-  async create(opts?: { recording?: boolean }): Promise<ProviderSession> {
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
     const createOpts: Record<string, unknown> = { region: "us-east" };
+    if (opts?.proxyCountry) {
+      createOpts.useProxy = true;
+      createOpts.proxyCountry = opts.proxyCountry;
+    }
     if (opts?.recording) {
       createOpts.enableVideoWebRecording = true;
     }

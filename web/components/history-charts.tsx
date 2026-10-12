@@ -29,6 +29,8 @@ import {
   type HistoryRangeKey,
 } from "@/lib/history-range";
 import { hasSuccessfulRuns } from "@/lib/ranking";
+import { BenchmarkSectionHeader } from "./benchmarks/section-header";
+import styles from "./benchmarks/benchmark.module.css";
 
 const HISTORY_START_DATE = "2026-05-15";
 // Above this many points, per-point dots turn the lines into noise.
@@ -289,10 +291,12 @@ export function HistoryCharts({
   history,
   percentile = "median",
   initialProvider,
+  animate = true,
 }: {
   history: HistoricalLeaderboardResult;
   percentile?: PercentileType;
   initialProvider?: string;
+  animate?: boolean;
 }) {
   const [range, setRange] = useState<HistoryRangeKey>("1w");
   const activeRange =
@@ -528,16 +532,9 @@ export function HistoryCharts({
 
   return (
     <section id="history" className="reveal-up reveal-up-delay-1 mb-8 sm:mb-12 scroll-mt-20">
-      <div className="mb-3 sm:mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-        <div>
-          <h2 className="text-xs uppercase tracking-widest text-muted-foreground font-semibold">
-            History
-          </h2>
-          <p className="mt-1 text-[0.72rem] sm:text-[0.78rem] text-muted-foreground">
-            Showing {visibleDates.length} run {visibleDates.length === 1 ? "date" : "dates"} from
-            the {activeRange.label.toLowerCase()}.
-          </p>
-          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+      <div className={styles.charts}>
+        <section className="flex min-w-0 flex-col">
+          <BenchmarkSectionHeader chart title="History" description={`Showing ${visibleDates.length} run ${visibleDates.length === 1 ? "date" : "dates"} from the ${activeRange.label.toLowerCase()}.`} controls={<div className="flex flex-wrap gap-1.5" aria-label="History range">
             {HISTORY_RANGES.map((option) => {
               const active = option.key === range;
               return (
@@ -556,38 +553,12 @@ export function HistoryCharts({
                 </button>
               );
             })}
-          </div>
-        </div>
-        <div className="flex min-w-0 flex-wrap items-center justify-start gap-1.5 sm:justify-end">
-          {providerOptions.map((provider) => {
-            const active = provider.provider === selectedProvider;
-            return (
-              <button
-                key={provider.provider}
-                type="button"
-                onClick={() => setSelectedProvider(provider.provider)}
-                className={`shrink-0 rounded-[3px] border px-3 py-1.5 text-[0.68rem] font-medium transition-colors ${
-                  active
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground"
-                }`}
-              >
-                {provider.displayName}
-              </button>
-            );
-          })}
-        </div>
-      </div>
 
-      <div className="grid gap-4 lg:grid-cols-[minmax(0,1.08fr)_minmax(0,0.92fr)]">
-        <div className="border-[1.5px] border-foreground rounded-[3px] bg-background p-3 sm:p-4">
-          <div className="mb-3">
-            <h3 className="text-[0.72rem] font-semibold uppercase tracking-widest text-foreground">
-              Provider Value Score
-            </h3>
-            <p className="mt-1 text-[0.68rem] text-muted-foreground">
-              Composite score by run date. Higher is better.
-            </p>
+          </div>} />
+        <div data-benchmark-panel="history" className="flex flex-1 flex-col rounded-[3px] border-[1.5px] border-foreground bg-background p-3 sm:p-4">
+          <div data-panel-header>
+            <h3 className="text-[0.72rem] font-semibold uppercase tracking-widest text-foreground">Provider Value Score</h3>
+            <p className="text-muted-foreground">Composite score by run date. Higher is better.</p>
           </div>
           <ChartContainer
             config={providerConfig}
@@ -649,7 +620,7 @@ export function HistoryCharts({
                   }
                   activeDot={{ r: 4 }}
                   connectNulls={false}
-                  isAnimationActive
+                  isAnimationActive={animate}
                   animationDuration={700}
                   animationEasing="ease-out"
                 />
@@ -658,16 +629,19 @@ export function HistoryCharts({
           </ChartContainer>
         </div>
 
-        <div className="border-[1.5px] border-foreground rounded-[3px] bg-background p-3 sm:p-4">
-          <div className="mb-3 flex items-start justify-between gap-3">
-            <div>
-              <h3 className="text-[0.72rem] font-semibold uppercase tracking-widest text-foreground">
-                {selectedSeries?.displayName ?? "Provider"} Breakdown
-              </h3>
-              <p className="mt-1 text-[0.68rem] text-muted-foreground">
-                Stacked daily phase latency. Lower is better.
-              </p>
-            </div>
+        </section>
+        <section className="flex min-w-0 flex-col">
+          <BenchmarkSectionHeader chart title="Results" description="Stacked daily phase latency. Lower is better." controls={
+            <label className="flex items-center gap-2 text-xs text-muted-foreground">Provider
+              <select aria-label="Breakdown provider" value={selectedProvider ?? ""} onChange={e => setSelectedProvider(e.target.value)} className="border border-foreground/25 bg-background text-foreground">
+                {providerOptions.map(provider => <option key={provider.provider} value={provider.provider}>{provider.displayName}</option>)}
+              </select>
+            </label>
+          } />
+        <div data-benchmark-panel="breakdown" className="flex flex-1 flex-col rounded-[3px] border-[1.5px] border-foreground bg-background p-3 sm:p-4">
+          <div data-panel-header>
+            <h3 className="text-[0.72rem] font-semibold uppercase tracking-widest text-foreground">{selectedSeries?.displayName ?? "Provider"} Breakdown</h3>
+            <p className="text-muted-foreground">Stacked daily phase latency. Lower is better.</p>
           </div>
           <ChartContainer
             config={PHASE_CONFIG}
@@ -701,7 +675,7 @@ export function HistoryCharts({
                   stackId="latency"
                   fill={`var(--color-${key})`}
                   radius={index === arr.length - 1 ? [3, 3, 0, 0] : [0, 0, 0, 0]}
-                  isAnimationActive
+                  isAnimationActive={animate}
                   animationDuration={650}
                   animationBegin={index * 70}
                   animationEasing="ease-out"
@@ -710,6 +684,7 @@ export function HistoryCharts({
             </BarChart>
           </ChartContainer>
         </div>
+        </section>
       </div>
     </section>
   );

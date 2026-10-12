@@ -1,9 +1,11 @@
-import type { ProviderClient, ProviderSession, RecordingResult } from "../types.js";
+import type { ProviderClient, ProviderSession, RecordingResult, SessionOptions } from "../types.js";
+import { PROXY_COUNTRIES } from "../benchmarks/proxy-get/schema.js";
 import { requireEnv } from "../utils/env.js";
 import { Browserbase } from "@browserbasehq/sdk";
 
 export class BrowserbaseProvider implements ProviderClient {
   readonly name = "BROWSERBASE";
+  readonly proxyCountries = PROXY_COUNTRIES;
   private _client: Browserbase | null = null;
 
   computeCost(seconds: number): number {
@@ -20,9 +22,11 @@ export class BrowserbaseProvider implements ProviderClient {
     return this._client;
   }
 
-  async create(): Promise<ProviderSession> {
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
     const projectId = requireEnv("BROWSERBASE_PROJECT_ID");
-    const session = await (await this.client()).sessions.create({ projectId, region: "us-east-1" });
+    const session = await (await this.client()).sessions.create({ projectId, region: "us-east-1",
+      ...(opts?.proxyCountry ? { proxies: [{ type: "browserbase" as const, geolocation: { country: opts.proxyCountry } }] } : {}),
+    }, opts?.proxyCountry ? { maxRetries: 0, timeout: 90_000 } : undefined);
     const id = session?.id;
     const cdpUrl = session?.connectUrl;
     if (!id || !cdpUrl) throw new Error("Invalid Browserbase session response");
@@ -32,6 +36,10 @@ export class BrowserbaseProvider implements ProviderClient {
   async release(id: string): Promise<void> {
     const projectId = requireEnv("BROWSERBASE_PROJECT_ID");
     await (await this.client()).sessions.update(id, { status: "REQUEST_RELEASE", projectId });
+  }
+
+  async getProxyBytes(id: string): Promise<number | null> {
+    return (await (await this.client()).sessions.retrieve(id, { maxRetries: 0, timeout: 30_000 })).proxyBytes ?? null;
   }
 
   async downloadRecording(sessionId: string): Promise<RecordingResult> {

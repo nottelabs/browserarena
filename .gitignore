@@ -10,6 +10,7 @@ recordings/
 *.db
 *.css
 !web-app/**/*.css
+!web/**/*.css
 .vercel
 .next/
 TODO.md

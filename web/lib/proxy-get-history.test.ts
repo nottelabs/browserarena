@@ -1,0 +1,200 @@
+import assert from "node:assert/strict";
+import test from "node:test";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { loadProxyGet, type ProxyGetRecord } from "./proxy-get";
+import { loadProxyGetHistory, summarizeProxyGetHistory } from "./proxy-get-history";
+import { proxyRollingAverage } from "./proxy-rolling-average";
+import { GET } from "../app/api/proxy-get/route";
+
+function entry(date: string, overrides: Partial<ProxyGetRecord> = {}): ProxyGetRecord {
+  return { benchmark: "proxy-get", version: 1, provider: "STEEL", country: "US", run_id: `suite-${date}`,
+    created_at: `${date}T10:00:00Z`, url: "https://target.example/payload", bootstrap_url: "https://target.example/bootstrap",
+    country_verification_url: "https://api.country.is", expected_bytes: 1_048_576, expected_sha256: "a".repeat(64), timeout_ms: 30000,
+    connection_mode: "warm-origin-fresh-session", proxy_type: "residential", browser_region: "us-east-1",
+    status: "success", get_ms: 100, first_byte_ms: 25, cost_usd: 0.01, transfer_bytes_source: "provider",
+    bytes_received: 1_048_576, ...overrides } as ProxyGetRecord;
+}
+
+test("daily history and selected violin summaries use exactly the same attempts", () => {
+  const rows = [entry("2026-10-07", { get_ms: 200 }), entry("2026-10-07", { get_ms: 600 }), entry("2026-10-08", { get_ms: 900 })];
+  const history = summarizeProxyGetHistory(rows, "US", "2026-10-07");
+  assert.deepEqual(history.dates, ["2026-10-07", "2026-10-08"]);
+  assert.equal(history.selectedDate, "2026-10-07");
+  assert.equal(history.selected.providers[0].medianGetMs, 400);
+  assert.equal(history.selected.providers[0].samples.length, 2);
+  assert.equal(history.days[0].providers[0].medianGetMs, 400);
+  assert.equal(history.days[1].providers[0].medianGetMs, 900);
+  assert.equal(summarizeProxyGetHistory(rows, "US").selectedDate, "2026-10-08");
+  assert.equal(summarizeProxyGetHistory(rows, "US", "not-a-date").selectedDate, "2026-10-08");
+});
+
+test("latest same-day suite replaces earlier success and preserves failed costs", () => {
+  const rows = [entry("2026-10-08"), entry("2026-10-08", { run_id: "rerun", created_at: "2026-10-08T11:00:00Z", status: "failed", get_ms: null })];
+  const result = summarizeProxyGetHistory(rows, "US");
+  assert.equal(result.days[0].providers[0].medianGetMs, null);
+  assert.equal(result.days[0].providers[0].attempts, 1);
+  assert.equal(result.selected.providers[0].successes, 0);
+  assert.equal(result.selected.providers[0].totalCostUsd, 0.01);
+  assert.equal(result.selected.providers[0].costPerSuccessUsd, null);
+});
+
+test("missing calendar days and absent providers do not carry previous measurements forward", () => {
+  const result = summarizeProxyGetHistory([entry("2026-10-06"), entry("2026-10-08", { provider: "KERNEL" })], "US");
+  assert.deepEqual(result.days.map(d => d.date), ["2026-10-06", "2026-10-07", "2026-10-08"]);
+  assert.deepEqual(result.days[1].providers, []);
+  assert.deepEqual(result.selected.providers.map(p => p.provider), ["KERNEL"]);
+  assert.deepEqual(result.overview.providers.map(p => p.provider).sort(), ["KERNEL", "STEEL"]);
+  assert.equal(result.overview.providers.find(p => p.provider === "STEEL")?.runDate, "2026-10-06");
+});
+
+test("overview and history retain each provider across targets while selected-day exports stay strict", () => {
+  const rows = [entry("2026-10-07", { get_ms: 800 }), entry("2026-10-08", { get_ms: 200 }),
+    entry("2026-10-11", { provider: "TILION", url: "https://new-target.example/payload", get_ms: 1800 }),
+    entry("2026-10-11", { provider: "LIGHTPANDA", url: "https://new-target.example/payload", status: "unsupported", get_ms: null, cost_usd: null })];
+  const latest = summarizeProxyGetHistory(rows, "US");
+  assert.equal(latest.overview.providers.length, 3);
+  const steel = latest.overview.providers.find(p => p.provider === "STEEL")!;
+  assert.equal(steel.runDate, "2026-10-08");
+  assert.equal(steel.medianGetMs, 200);
+  assert.equal(steel.attempts, 1, "older suites are never pooled");
+  assert.equal(latest.overview.workload, null, "different targets have no shared workload");
+  assert.deepEqual(latest.selected.providers.map(p => p.provider).sort(), ["LIGHTPANDA", "TILION"]);
+  assert.equal(latest.days.find(d => d.date === "2026-10-08")!.providers[0].medianGetMs, 200);
+  assert.deepEqual(latest.incompatibleDates, []);
+  const older = summarizeProxyGetHistory(rows, "US", "2026-10-08");
+  assert.deepEqual(older.overview.providers.map(p => p.provider), ["STEEL"], "historical overview never leaks future runs");
+  assert.deepEqual(older.days.find(d => d.date === "2026-10-11")!.providers, []);
+});
+
+test("rolling history includes all eight recorded providers despite different run dates and target hosts", () => {
+  const providers = ["BROWSERBASE", "STEEL", "KERNEL", "NOTTE", "HYPERBROWSER", "ANCHORBROWSER", "BROWSER_USE"] as const;
+  const rows = providers.map((provider, i) => entry("2026-10-08", { provider, get_ms: 100 + i * 100 }));
+  rows.push(entry("2026-10-11", { provider: "TILION", url: "https://new-target.example/payload", get_ms: 1800 }));
+  const history = summarizeProxyGetHistory(rows, "US");
+  assert.deepEqual(history.days[0].providers.map(p => p.provider).sort(), [...providers].sort());
+  assert.deepEqual(history.days.slice(1, 3).map(d => d.providers), [[], []], "missing days remain gaps");
+  assert.deepEqual(history.days[3].providers.map(p => p.provider), ["TILION"]);
+  assert.deepEqual(history.incompatibleDates, []);
+  const rolling = proxyRollingAverage(history.days, "medianGetMs", 7);
+  assert.equal(rolling[0].providers.length, 7);
+  assert.equal(rolling[3].providers[0].value, 1800);
+});
+
+test("a provider's changed workload excludes only its own incompatible results", () => {
+  const rows = [entry("2026-10-07", { get_ms: 900 }),
+    entry("2026-10-07", { provider: "KERNEL", url: "https://other-target.example/payload", get_ms: 400 }),
+    entry("2026-10-08", { url: "https://new-target.example/payload", get_ms: 200 }),
+    entry("2026-10-08", { provider: "KERNEL", url: "https://other-target.example/payload", get_ms: 600 })];
+  const history = summarizeProxyGetHistory(rows, "US");
+  assert.deepEqual(history.incompatibleDates, ["2026-10-07"]);
+  assert.deepEqual(history.days[0].providers.map(p => p.provider), ["KERNEL"]);
+  assert.equal(history.days[0].compatible, true, "a partially excluded day still contains usable results");
+  assert.deepEqual(history.days[1].providers.map(p => p.provider).sort(), ["KERNEL", "STEEL"]);
+  const rolling = proxyRollingAverage(history.days, "medianGetMs", 7);
+  assert.equal(rolling[1].providers.find(p => p.provider === "STEEL")?.value, 200);
+  assert.equal(rolling[1].providers.find(p => p.provider === "KERNEL")?.value, 500);
+});
+
+test("latest suite without the selected country does not resurrect an earlier country-only run", () => {
+  const result = summarizeProxyGetHistory([entry("2026-10-08"), entry("2026-10-08", { run_id: "rerun", country: "FR", created_at: "2026-10-08T11:00:00Z" })], "US");
+  assert.deepEqual(result.selected.providers, []);
+  assert.deepEqual(result.days[0].providers, []);
+  assert.deepEqual(result.overview.providers, []);
+});
+
+test("incompatible workloads are gaps and can be inspected without mixing their history", () => {
+  const rows = [entry("2026-10-07", { timeout_ms: 20000 }), entry("2026-10-08")];
+  const latest = summarizeProxyGetHistory(rows, "US");
+  assert.deepEqual(latest.incompatibleDates, ["2026-10-07"]);
+  assert.deepEqual(latest.days[0].providers, []);
+  const older = summarizeProxyGetHistory(rows, "US", "2026-10-07");
+  assert.equal(older.selected.workload?.timeoutMs, 20000);
+  assert.deepEqual(older.incompatibleDates, ["2026-10-08"]);
+  assert.deepEqual(older.days[1].providers, []);
+});
+
+test("a suite crossing midnight keeps all its samples in one final UTC day", () => {
+  const result = summarizeProxyGetHistory([entry("2026-10-07", { run_id: "crossing", created_at: "2026-10-07T23:59:00Z" }),
+    entry("2026-10-08", { run_id: "crossing", created_at: "2026-10-08T00:01:00Z", get_ms: 300 })], "US");
+  assert.deepEqual(result.dates, ["2026-10-08"]);
+  assert.equal(result.selected.providers[0].attempts, 2);
+  assert.equal(result.days[0].providers[0].medianGetMs, 200);
+});
+
+test("unknown costs stay null and empty history has no synthetic days", () => {
+  const result = summarizeProxyGetHistory([entry("2026-10-08", { cost_usd: null })], "US");
+  assert.equal(result.days[0].providers[0].costPerSuccessUsd, null);
+  const empty = summarizeProxyGetHistory([], "US");
+  assert.deepEqual(empty.days, []);
+  assert.deepEqual(empty.dates, []);
+  assert.equal(empty.selectedDate, null);
+});
+
+test("filesystem history reads every dated folder while existing latest loading stays unchanged", async () => {
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), "proxy-history-"));
+  const original = process.env.RESULTS_DIR;
+  try {
+    for (const date of ["2026-10-07", "2026-10-08"]) {
+      const dir = path.join(base, "proxy-get", "steel", date);
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, "results.jsonl"), JSON.stringify(entry(date)) + "\n");
+    }
+    process.env.RESULTS_DIR = base;
+    const history = await loadProxyGetHistory("US", "2026-10-07");
+    assert.deepEqual(history.dates, ["2026-10-07", "2026-10-08"]);
+    assert.equal(history.selected.providers[0].runDate, "2026-10-07");
+    assert.equal((await loadProxyGet("US")).providers[0].runDate, "2026-10-08");
+    const exported = await GET(new Request("http://localhost/api/proxy-get?country=US&date=2026-10-07"));
+    assert.equal(exported.status, 200);
+    assert.equal((await exported.json()).providers[0].runDate, "2026-10-07");
+    const newDir = path.join(base, "proxy-get", "tilion", "2026-10-11");
+    fs.mkdirSync(newDir, { recursive: true });
+    fs.writeFileSync(path.join(newDir, "results.jsonl"), JSON.stringify(entry("2026-10-11", { provider: "TILION", url: "https://new-target.example/payload" })) + "\n");
+    const overview = await GET(new Request("http://localhost/api/proxy-get?country=US&date=2026-10-11&view=overview"));
+    assert.equal(overview.status, 200);
+    assert.deepEqual((await overview.json()).providers.map((p: { provider: string }) => p.provider).sort(), ["STEEL", "TILION"]);
+    const daily = await GET(new Request("http://localhost/api/proxy-get?country=US&date=2026-10-11"));
+    assert.deepEqual((await daily.json()).providers.map((p: { provider: string }) => p.provider), ["TILION"]);
+    assert.equal((await GET(new Request("http://localhost/api/proxy-get?country=US&date=2026-10-06"))).status, 404);
+    assert.equal((await GET(new Request("http://localhost/api/proxy-get?date=invalid"))).status, 400);
+  } finally {
+    if (original === undefined) delete process.env.RESULTS_DIR;
+    else process.env.RESULTS_DIR = original;
+    fs.rmSync(base, { recursive: true, force: true });
+  }
+});
+
+test("GitHub fallback loads historical folders and keeps default exports on the latest folder", async () => {
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), "proxy-history-remote-"));
+  const originalDirectory = process.env.RESULTS_DIR;
+  const originalFetch = globalThis.fetch;
+  const requests: string[] = [];
+  try {
+    process.env.RESULTS_DIR = base;
+    globalThis.fetch = async input => {
+      const url = input instanceof Request ? input.url : String(input);
+      requests.push(url);
+      if (url.includes("api.github.com") && url.includes("contents/results/proxy-get/steel")) return Response.json([
+        { name: "2026-10-07", type: "dir" }, { name: "2026-10-08", type: "dir" }, { name: "README.md", type: "file" },
+      ]);
+      if (url.includes("api.github.com")) return Response.json([{ name: "steel", type: "dir" }]);
+      const date = url.includes("2026-10-07") ? "2026-10-07" : "2026-10-08";
+      return new Response(JSON.stringify(entry(date)) + "\n");
+    };
+    const history = await loadProxyGetHistory("US", "2026-10-07");
+    assert.deepEqual(history.dates, ["2026-10-07", "2026-10-08"]);
+    assert.equal(history.selected.providers[0].runDate, "2026-10-07");
+    requests.length = 0;
+    const latest = await loadProxyGet("US");
+    assert.equal(latest.providers[0].runDate, "2026-10-08");
+    assert.equal(requests.filter(url => url.includes("raw.githubusercontent.com")).length, 1);
+    assert.ok(requests.some(url => url.includes("2026-10-08/results.jsonl")));
+  } finally {
+    globalThis.fetch = originalFetch;
+    if (originalDirectory === undefined) delete process.env.RESULTS_DIR;
+    else process.env.RESULTS_DIR = originalDirectory;
+    fs.rmSync(base, { recursive: true, force: true });
+  }
+});

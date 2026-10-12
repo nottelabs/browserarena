@@ -1,9 +1,11 @@
-import type { ProviderClient, ProviderSession, RecordingResult } from "../types.js";
+import type { ProviderClient, ProviderSession, RecordingResult, SessionOptions } from "../types.js";
+import { PROXY_COUNTRIES } from "../benchmarks/proxy-get/schema.js";
 import { requireEnv } from "../utils/env.js";
 import Steel from "steel-sdk";
 
 export class SteelProvider implements ProviderClient {
   readonly name = "STEEL";
+  readonly proxyCountries = PROXY_COUNTRIES;
   private _client: Steel | null = null;
 
   computeCost(seconds: number): number {
@@ -20,9 +22,11 @@ export class SteelProvider implements ProviderClient {
     return this._client;
   }
 
-  async create(): Promise<ProviderSession> {
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
     const apiKey = requireEnv("STEEL_API_KEY");
-    const session = await (await this.client()).sessions.create();
+    const session = await (await this.client()).sessions.create(opts?.proxyCountry
+      ? { useProxy: { geolocation: { country: opts.proxyCountry } } } : {},
+      opts?.proxyCountry ? { maxRetries: 0, timeout: 90_000 } : undefined);
     const id = session?.id;
     const websocketUrl = session?.websocketUrl;
     const cdpUrl = `${websocketUrl}&apiKey=${apiKey}`;
@@ -32,6 +36,10 @@ export class SteelProvider implements ProviderClient {
 
   async release(id: string): Promise<void> {
     await (await this.client()).sessions.release(id);
+  }
+
+  async getProxyBytes(id: string): Promise<number | null> {
+    return (await (await this.client()).sessions.retrieve(id, { maxRetries: 0, timeout: 30_000 })).proxyBytesUsed ?? null;
   }
 
   async downloadRecording(sessionId: string): Promise<RecordingResult> {
