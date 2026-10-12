@@ -27,7 +27,7 @@ The Browser Arena (browserarena.ai) is an open-source benchmarking platform by N
 
 ## What it measures
 
-The benchmark tests the full lifecycle of a cloud browser session:
+**Session Performance** tests the full lifecycle of a cloud browser session:
 
 - **Session creation**: Time to spin up a new remote browser instance
 - **CDP connection**: Time to establish a Chrome DevTools Protocol connection
@@ -35,6 +35,8 @@ The benchmark tests the full lifecycle of a cloud browser session:
 - **Session release**: Time to close and clean up the browser session
 
 Results are reported at median (P50), P90, and P95 percentiles. Benchmarks also measure success/failure rates and support concurrent session testing.
+
+**Proxy Performance** compares complete downloads through residential proxies in the US, France, Brazil, India, and Japan. It reports download latency, reliability, throughput, and estimated cost, with daily distributions and a seven-day rolling history. Download timing excludes session creation, connection, and release.
 
 ## Providers benchmarked
 

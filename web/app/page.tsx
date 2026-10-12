@@ -14,6 +14,8 @@ const VALID_PERCENTILES: PercentileType[] = ["median", "p90", "p95"];
 const VALID_SORT: SortByType[] = ["latency", "reliability", "price"];
 
 export const metadata: Metadata = {
+  title: "Session Performance",
+  description: "Compare browser session creation, connection, navigation, and release speed, reliability, and cost.",
   alternates: {
     canonical: "https://browserarena.ai",
   },
@@ -72,7 +74,7 @@ export default async function Home({
               hideTitle
               controls={<div>
                 <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Benchmark</h2>
-                <p className="mt-1 text-[0.72rem] text-muted-foreground">Browser lifecycle · {effectiveConcurrency === 1 ? "Sequential runs" : `Concurrent runs · c = ${effectiveConcurrency}`} · {percentile === "median" ? "Median" : percentile.toUpperCase()} latency</p>
+                <p className="mt-1 text-[0.72rem] text-muted-foreground">Session Performance · {effectiveConcurrency === 1 ? "Sequential runs" : `Concurrent runs · c = ${effectiveConcurrency}`} · {percentile === "median" ? "Median" : percentile.toUpperCase()} latency</p>
               </div>}
             />
           </div>

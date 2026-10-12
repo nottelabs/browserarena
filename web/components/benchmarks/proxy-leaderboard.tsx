@@ -37,8 +37,8 @@ export function ProxyLeaderboard({ providers, countryName, dateLabel, simulated,
   const attempts = providers.reduce((a, p) => a + p.attempts, 0);
   const successes = providers.reduce((a, p) => a + p.successes, 0);
   return <div className={styles.tableStage}>
-    <BenchmarkSectionHeader title="Benchmark" description={`Proxy GET · Latest runs (dates and targets vary) · ${successes}/${attempts} successful`} controls={<WeightBar weights={weights} onChange={setWeights} methodologyHref="https://github.com/nottelabs/browserarena/blob/main/docs/proxy-get-value-score.md" />} />
-    <BenchmarkTablePanel label="Proxy GET provider results">
+    <BenchmarkSectionHeader title="Benchmark" description={`Proxy Performance · Latest runs (dates and targets vary) · ${successes}/${attempts} successful`} controls={<WeightBar weights={weights} onChange={setWeights} methodologyHref="https://github.com/nottelabs/browserarena/blob/main/docs/proxy-get-value-score.md" />} />
+    <BenchmarkTablePanel label="Proxy Performance provider results">
       <div className={styles.tableScroll}>
         <table className="w-full text-left text-[0.78rem] tabular-nums" style={{ minWidth: details ? 1320 : 960 }}>
           <caption className="sr-only">{simulated ? "Simulated " : ""}Latest provider results for {countryName} as of {dateLabel}; each row shows its recorded run date. Ranked by value score.</caption>

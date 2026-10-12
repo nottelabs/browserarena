@@ -75,8 +75,8 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
       <section>
         <h2 className={styles.label}>Benchmark</h2>
         <nav className={styles.options} aria-label="Choose benchmark">
-          <Link href={lifecycleHref()} className={linkClass(benchmark === "hello-browser")} aria-current={benchmark === "hello-browser" ? "page" : undefined} onClick={() => setOpen(false)}>Browser lifecycle</Link>
-          <Link href={publicRoutes ? "/proxy-get" : `${proxyBasePath}?benchmark=proxy-get&demo=${simulated ? "1" : "0"}`} className={linkClass(benchmark === "proxy-get")} aria-current={benchmark === "proxy-get" ? "page" : undefined} onClick={() => setOpen(false)}>Proxy GET</Link>
+          <Link href={lifecycleHref()} className={linkClass(benchmark === "hello-browser")} aria-current={benchmark === "hello-browser" ? "page" : undefined} onClick={() => setOpen(false)}>Session Performance</Link>
+          <Link href={publicRoutes ? "/proxy-get" : `${proxyBasePath}?benchmark=proxy-get&demo=${simulated ? "1" : "0"}`} className={linkClass(benchmark === "proxy-get")} aria-current={benchmark === "proxy-get" ? "page" : undefined} onClick={() => setOpen(false)}>Proxy Performance</Link>
         </nav>
       </section>
       {benchmark !== "all" && <section className={styles.config}>

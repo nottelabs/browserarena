@@ -9,8 +9,8 @@ import { BenchmarkSidebar } from "./sidebar";
 import styles from "./benchmark.module.css";
 
 const DESCRIPTIONS = {
-  "hello-browser": "Compare how quickly cloud browser providers create a session, connect to it, and release it.",
-  "proxy-get": "Compare residential proxy GET speed and cost, with daily detail and a rolling trend.",
+  "hello-browser": "Compare session creation, connection, navigation, and release speed, reliability, and cost.",
+  "proxy-get": "Compare download speed, reliability, and cost through residential proxies across five countries.",
   all: "Choose a benchmark to compare cloud browser providers on speed, reliability, and cost.",
 };
 

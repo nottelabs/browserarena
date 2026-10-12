@@ -19,8 +19,8 @@ export const metadata: Metadata = {
 };
 
 const DESCRIPTIONS = {
-  "hello-browser": "Compare how quickly cloud browser providers create a session, connect to it, and release it.",
-  "proxy-get": "Compare the time and cost to download the same 1 MiB response through residential proxies across five countries.",
+  "hello-browser": "Compare session creation, connection, navigation, and release speed, reliability, and cost.",
+  "proxy-get": "Compare download speed, reliability, and cost through residential proxies across five countries.",
   all: "Choose a benchmark to compare cloud browser providers on speed, reliability, and cost.",
 };
 
@@ -59,8 +59,8 @@ export default async function TestPage({ searchParams }: {
       </header>
       {benchmark === "all" ? <section className="grid gap-5 sm:grid-cols-2" aria-label="Available benchmarks">
         {([
-          { id: "hello-browser", title: "Browser lifecycle", Icon: RefreshCcw, detail: "Sequential and concurrent runs", metrics: "Create · Connect · Release" },
-          { id: "proxy-get", title: "Proxy GET", Icon: ArrowDownToLine, detail: "5 countries · 50 attempts per provider", metrics: "Download time · First byte · Estimated cost" },
+          { id: "hello-browser", title: "Session Performance", Icon: RefreshCcw, detail: "Sequential and concurrent runs", metrics: "Create · Connect · Navigate · Release" },
+          { id: "proxy-get", title: "Proxy Performance", Icon: ArrowDownToLine, detail: "5 countries · 50 attempts per provider", metrics: "Download time · First byte · Estimated cost" },
         ] as const).map(b => <Link key={b.id} href={`/test?benchmark=${b.id}`} className="rounded-[3px] border-[1.5px] border-foreground/25 bg-card p-6 transition-colors hover:border-foreground">
           <b.Icon className="mb-6 size-8 rounded-[3px] bg-primary/20 p-1.5" aria-hidden="true" />
           <h2 className="text-xl font-semibold tracking-tight">{b.title}</h2>
@@ -69,7 +69,7 @@ export default async function TestPage({ searchParams }: {
           <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium">View benchmark<ArrowUpRight className="size-4" aria-hidden="true" /></span>
         </Link>)}
       </section> : benchmark === "proxy-get" ? <TestProxyResults country={country} sort={params.sort} date={params.date} simulated={params.demo !== "0"} /> : <>
-        {providers.length ? <LeaderboardTable data={providers} percentile="median" hideTitle /> : <p className="py-12 text-center text-sm text-muted-foreground">No lifecycle results for this configuration yet.</p>}
+        {providers.length ? <LeaderboardTable data={providers} percentile="median" hideTitle /> : <p className="py-12 text-center text-sm text-muted-foreground">No Session Performance results for this configuration yet.</p>}
         {history && <div className="mt-12"><HistoryCharts history={history} percentile="median" initialProvider={providers[0]?.provider} /></div>}
       </>}
     </main>

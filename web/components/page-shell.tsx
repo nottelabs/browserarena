@@ -70,9 +70,9 @@ export function PageShell({
         </section>
         <nav aria-label="Benchmarks" className="mb-6 flex gap-5 text-sm font-medium">
           <Link href="/" aria-current={benchmark === "hello-browser" ? "page" : undefined}
-            className={benchmark === "hello-browser" ? "text-foreground underline underline-offset-4" : "text-muted-foreground hover:text-foreground"}>Browser lifecycle</Link>
+            className={benchmark === "hello-browser" ? "text-foreground underline underline-offset-4" : "text-muted-foreground hover:text-foreground"}>Session Performance</Link>
           <Link href="/proxy-get" aria-current={benchmark === "proxy-get" ? "page" : undefined}
-            className={benchmark === "proxy-get" ? "text-foreground underline underline-offset-4" : "text-muted-foreground hover:text-foreground"}>Proxy GET</Link>
+            className={benchmark === "proxy-get" ? "text-foreground underline underline-offset-4" : "text-muted-foreground hover:text-foreground"}>Proxy Performance</Link>
         </nav>
         {children}
       </main>

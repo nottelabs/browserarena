@@ -1,4 +1,4 @@
-# Proxy GET benchmark
+# Proxy Performance benchmark
 
 Compare the time to download a complete, identical response through providers'
 native residential proxies in the US, France, Brazil, India, and Japan. The

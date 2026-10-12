@@ -55,7 +55,7 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
   };
 
   const Heading = sectioned ? "h3" : "h2";
-  return <section aria-label="Proxy GET history" className={sectioned ? "flex min-w-0 flex-col" : `rounded-[3px] border-[1.5px] border-foreground bg-card ${compact ? "p-3" : "px-4 py-5 sm:px-6"}`}>
+  return <section aria-label="Proxy Performance history" className={sectioned ? "flex min-w-0 flex-col" : `rounded-[3px] border-[1.5px] border-foreground bg-card ${compact ? "p-3" : "px-4 py-5 sm:px-6"}`}>
     {sectioned && <BenchmarkSectionHeader chart title="History" description={`Showing ${dates.filter(date => date >= start && date <= end).length} run ${dates.filter(date => date >= start && date <= end).length === 1 ? "date" : "dates"} from the ${HISTORY_RANGES.find(r => r.key === range)!.label.toLowerCase()}.`} controls={<div className="flex flex-wrap gap-1.5" aria-label="History range">
           {HISTORY_RANGES.map(r => <button key={r.key} type="button" aria-pressed={range === r.key} onClick={() => setRange(r.key)} className={buttonStyle(range === r.key)}>{r.label}</button>)}
       </div>} />}

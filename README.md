@@ -42,7 +42,7 @@ Create session → Connect via CDP → Navigate page → Release session
 
 Missing a provider? [Open a PR](https://github.com/nottelabs/browserarena/pulls).
 
-## Benchmark
+## Session Performance benchmark
 
 The core benchmark measures the minimal end-to-end lifecycle for a remote Chrome session:
 
@@ -58,11 +58,11 @@ Two modes:
 
 ## Methodology
 
-### Proxy GET benchmark
+### Proxy Performance benchmark
 
-The separate **Proxy GET** page compares complete 1 MiB downloads through native
+The separate **Proxy Performance** page compares complete 1 MiB downloads through native
 residential proxies in the US, France, Brazil, India, and Japan. It defaults to
-10 fresh sessions per provider/country, with country verification, browser-side
+50 fresh sessions per provider/country, with country verification, browser-side
 timing, response validation, and estimated browser-plus-proxy costs.
 
 ```bash
@@ -151,7 +151,7 @@ Daily results are produced by `scripts/run-and-publish.sh`, which runs the bench
 
 Per-EC2 setup: clone the repo, populate `.env` with that region's provider keys, and add an SSH key as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) with write access (one key per box). Cron logs go to `logs/` (gitignored).
 
-Proxy GET has a separate publisher, `scripts/run-proxy-and-publish.sh`, for a
+Proxy Performance has a separate publisher, `scripts/run-proxy-and-publish.sh`, for a
 dedicated checkout on the east runner. Five daily batches accumulate to **50
 attempts per provider/country** under one daily suite ID; the frontend reads all
 batches together. Run `--check` before enabling it. See the

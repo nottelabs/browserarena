@@ -52,7 +52,7 @@ export async function TestProxyResults({ country, sort, date, simulated }: { cou
         </div>
       </div>}
       {providers.length === 0 ? <div className="rounded-[3px] border border-border p-6 space-y-3">
-        <h3 className="font-medium">No proxy GET results for {COUNTRY_NAMES[country]}{dateLabel ? ` on ${dateLabel}` : " yet"}</h3>
+        <h3 className="font-medium">No Proxy Performance results for {COUNTRY_NAMES[country]}{dateLabel ? ` on ${dateLabel}` : " yet"}</h3>
         <p className="text-sm text-muted-foreground">{selectedDate ? "No measurements were recorded for this country in the selected suites. Choose another run day or country." : "Results will appear once a run is published."}</p>
       </div> : <>
         <ProxyViolinChart providers={providers} countryName={COUNTRY_NAMES[country]} timeoutMs={result.workload?.timeoutMs ?? 30000} />
@@ -69,7 +69,7 @@ export async function TestProxyResults({ country, sort, date, simulated }: { cou
           </div>
           <div className="overflow-x-auto rounded-[3px] border-[1.5px] border-foreground bg-card">
             <table className="w-full text-[0.72rem] text-left tabular-nums">
-              <caption className="sr-only">Proxy GET performance and estimated cost in {COUNTRY_NAMES[country]}</caption>
+              <caption className="sr-only">Proxy Performance results and estimated cost in {COUNTRY_NAMES[country]}</caption>
               <thead className="border-b-[1.5px] border-foreground text-[0.6rem] text-muted-foreground"><tr>
                 {["Provider", "Successful", "Median GET", "First byte", "Mbps", "Est. cost / success", "Est. run cost"].map(h => <th key={h} scope="col" className="px-4 py-3 font-medium whitespace-nowrap">{h}</th>)}
               </tr></thead>

@@ -405,7 +405,7 @@ export function LeaderboardTable({
         {controls}
       </BenchmarkSectionHeader>
 
-      <BenchmarkTablePanel label="Browser lifecycle provider results">
+      <BenchmarkTablePanel label="Session Performance provider results">
       <Table style={showBreakdown ? { minWidth: 1280 } : undefined}>
         <TableHeader className="[&_tr]:border-b-[1.5px]">
           <TableRow className="border-b-[1.5px] border-foreground hover:bg-transparent">

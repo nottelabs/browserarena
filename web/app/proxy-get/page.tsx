@@ -5,7 +5,7 @@ import { BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
 import { ProxyDashboard } from "@/components/benchmarks/proxy-dashboard";
 
 export const metadata: Metadata = {
-  title: "Proxy GET benchmark",
+  title: "Proxy Performance",
   description: "Compare full-response GET latency, reliability, and estimated cost through residential proxies in five countries.",
   alternates: { canonical: "https://browserarena.ai/proxy-get" },
 };

@@ -1,6 +1,6 @@
-# Proxy GET value score
+# Proxy Performance value score
 
-The proxy leaderboard uses the same preset controls as browser lifecycle, with
+The proxy leaderboard uses the same preset controls as Session Performance, with
 a score from 0 to 1; higher scores rank first. Fastest is the default. Scores
 use the selected country's latest available provider suites, not rolling averages.
 

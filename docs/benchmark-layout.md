@@ -1,6 +1,6 @@
 # Shared benchmark layout
 
-Browser lifecycle (`/`) and proxy GET (`/proxy-get`) use the same section header,
+Session Performance (`/`) and Proxy Performance (`/proxy-get`) use the same section header,
 table panel, column sizing, and chart grid. The table frame reserves nine provider
 slots; missing providers leave empty space rather than fabricated result rows.
 Headers are 40px and provider rows are 56px. Both tables use the same monospace,
