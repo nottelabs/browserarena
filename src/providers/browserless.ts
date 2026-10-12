@@ -1,9 +1,12 @@
-import type { ProviderClient, ProviderSession } from "../types.js";
+import type { ProviderClient, ProviderSession, SessionOptions } from "../types.js";
+import { PROXY_COUNTRIES } from "../benchmarks/proxy-get/schema.js";
 import { requireEnv } from "../utils/env.js";
 
 export class BrowserlessProvider implements ProviderClient {
   readonly name = "BROWSERLESS";
-  readonly proxyUnsupportedReason = "Browserless offers country-targeted residential proxies, but this integration has not been verified against a live account yet";
+  // Built-in residential proxy, targeted by ISO country code on the connect URL
+  // (docs.browserless.io/baas/features/proxies).
+  readonly proxyCountries = PROXY_COUNTRIES;
   readonly releasesOnDisconnect = true;
   private cdpUrl: string;
 
@@ -24,9 +27,13 @@ export class BrowserlessProvider implements ProviderClient {
   // No session API call: connecting to the CDP URL starts a browser. Browserless
   // does have a session API, but it only reserves persistent state and still
   // launches the browser on connect.
-  async create(): Promise<ProviderSession> {
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
     const url = new URL(this.cdpUrl);
     url.searchParams.set("token", requireEnv("BROWSERLESS_API_KEY"));
+    if (opts?.proxyCountry) {
+      url.searchParams.set("proxy", "residential");
+      url.searchParams.set("proxyCountry", opts.proxyCountry.toLowerCase());
+    }
     return { id: "", cdpUrl: url.toString() };
   }
 

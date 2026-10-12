@@ -67,3 +67,19 @@ test("releasing is a no-op and cost is billed in 30-second units", async () => {
   assert.equal(provider.computeCost(31), 0.0025);
   assert.equal(provider.computeCost(3600), 0.15);
 });
+
+test("a proxied session asks for a residential exit in the requested country", async () => {
+  process.env.BROWSERLESS_API_KEY = "test-key";
+  const session = await new BrowserlessProvider().create({ proxyCountry: "FR" });
+  const url = new URL(session.cdpUrl);
+  assert.equal(url.searchParams.get("proxy"), "residential");
+  assert.equal(url.searchParams.get("proxyCountry"), "fr");
+  assert.equal(url.searchParams.get("token"), "test-key");
+});
+
+test("an unproxied session adds no proxy parameters", async () => {
+  process.env.BROWSERLESS_API_KEY = "test-key";
+  const url = new URL((await new BrowserlessProvider().create()).cdpUrl);
+  assert.equal(url.searchParams.get("proxy"), null);
+  assert.equal(url.searchParams.get("proxyCountry"), null);
+});
