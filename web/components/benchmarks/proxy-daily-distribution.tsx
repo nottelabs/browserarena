@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/lib/analytics";
 
 import { useState } from "react";
 import type { ProxyGetStats } from "@/lib/proxy-get";
@@ -20,7 +21,7 @@ export function ProxyDailyDistribution({ providers, dateLabel, timeoutMs }: { pr
     <div data-panel-header className="flex flex-wrap items-start justify-between gap-2">
       <div><h3 className="text-[0.72rem] font-semibold uppercase tracking-widest">Daily distribution</h3><p className="mt-1 text-[0.65rem] text-muted-foreground">Latest provider runs · Successful downloads</p><span className="sr-only">Latest runs through {dateLabel}; run dates are shown per provider</span></div>
       <div className="flex gap-1.5" aria-label="Distribution metric">
-        {(["get_ms", "first_byte_ms"] as const).map(m => <button key={m} type="button" aria-pressed={m === metric} onClick={() => setMetric(m)} className={`rounded-[3px] border px-2.5 py-1.5 text-[0.65rem] ${m === metric ? "border-foreground bg-foreground text-background" : "border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground"}`}>{m === "get_ms" ? "Complete GET" : "First byte"}</button>)}
+        {(["get_ms", "first_byte_ms"] as const).map(m => <button key={m} type="button" aria-pressed={m === metric} onClick={() => { setMetric(m); track("history_metric_selected", { benchmark: "proxy-performance", metric: m }); }} className={`rounded-[3px] border px-2.5 py-1.5 text-[0.65rem] ${m === metric ? "border-foreground bg-foreground text-background" : "border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground"}`}>{m === "get_ms" ? "Complete GET" : "First byte"}</button>)}
       </div>
     </div>
     <div data-violin-grid className="mt-3 grid grid-cols-[130px_minmax(0,1fr)_64px] items-end gap-3 border-b border-foreground/10 pb-2 text-[0.68rem] text-muted-foreground">

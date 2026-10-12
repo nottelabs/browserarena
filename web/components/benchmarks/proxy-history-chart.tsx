@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/lib/analytics";
 import { BenchmarkSectionHeader } from "./section-header";
 
 import { useState } from "react";
@@ -57,7 +58,7 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
   const Heading = sectioned ? "h3" : "h2";
   return <section aria-label="Proxy Performance history" className={sectioned ? "flex min-w-0 flex-col" : `rounded-[3px] border-[1.5px] border-foreground bg-card ${compact ? "p-3" : "px-4 py-5 sm:px-6"}`}>
     {sectioned && <BenchmarkSectionHeader chart title="History" description={`Showing ${dates.filter(date => date >= start && date <= end).length} run ${dates.filter(date => date >= start && date <= end).length === 1 ? "date" : "dates"} from the ${HISTORY_RANGES.find(r => r.key === range)!.label.toLowerCase()}.`} controls={<div className="flex flex-wrap gap-1.5" aria-label="History range">
-          {HISTORY_RANGES.map(r => <button key={r.key} type="button" aria-pressed={range === r.key} onClick={() => setRange(r.key)} className={buttonStyle(range === r.key)}>{r.label}</button>)}
+          {HISTORY_RANGES.map(r => <button key={r.key} type="button" aria-pressed={range === r.key} onClick={() => { setRange(r.key); track("history_range_selected", { benchmark: "proxy-performance", range: r.key }); }} className={buttonStyle(range === r.key)}>{r.label}</button>)}
       </div>} />}
     <div data-benchmark-panel={sectioned ? "history" : undefined} className={sectioned ? "flex flex-1 flex-col" : undefined}>
     <div data-panel-header className="flex flex-wrap items-start justify-between gap-4">
@@ -73,15 +74,15 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
         </p>
       </div>
       <div className="flex flex-wrap gap-1.5" aria-label="History metric">
-        {METRICS.map(m => <button key={m.key} type="button" aria-pressed={metric === m.key} onClick={() => setMetric(m.key)} className={buttonStyle(metric === m.key)}>{m.label}</button>)}
+        {METRICS.map(m => <button key={m.key} type="button" aria-pressed={metric === m.key} onClick={() => { setMetric(m.key); track("history_metric_selected", { benchmark: "proxy-performance", metric: m.key }); }} className={buttonStyle(metric === m.key)}>{m.label}</button>)}
       </div>
     </div>
     {!sectioned && <div className={`${compact ? "mt-2" : "mt-4"} flex flex-wrap items-center justify-between gap-3`}>
       <div className="flex flex-wrap gap-1.5" aria-label="History range">
-        {HISTORY_RANGES.map(r => <button key={r.key} type="button" aria-pressed={range === r.key} onClick={() => setRange(r.key)} className={buttonStyle(range === r.key)}>{r.label}</button>)}
+        {HISTORY_RANGES.map(r => <button key={r.key} type="button" aria-pressed={range === r.key} onClick={() => { setRange(r.key); track("history_range_selected", { benchmark: "proxy-performance", range: r.key }); }} className={buttonStyle(range === r.key)}>{r.label}</button>)}
       </div>
       {!compact && <label className="flex items-center gap-2 text-xs text-muted-foreground">Run day
-        <select aria-label="Run day" value={selectedDate} disabled={pending} onChange={e => chooseDate(e.target.value)} className="rounded-[3px] border border-foreground/25 bg-background px-2 py-1.5 text-foreground">
+        <select aria-label="Run day" value={selectedDate} disabled={pending} onChange={e => { chooseDate(e.target.value); track("run_day_selected", { benchmark: "proxy-performance", date: e.target.value }); }} className="rounded-[3px] border border-foreground/25 bg-background px-2 py-1.5 text-foreground">
           {[...dates].reverse().map(date => <option key={date} value={date}>{dayLabel(date)}{date === latest ? " (latest)" : ""}</option>)}
         </select>
       </label>}

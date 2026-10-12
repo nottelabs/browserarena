@@ -1,4 +1,5 @@
 import { loadBrowserThroughputLeaderboard } from "@/lib/browser-throughput-data";
+import { captureApiRequest } from "@/lib/posthog-server";
 
 /**
  * GET /api/browser-throughput?concurrency=1
@@ -8,6 +9,7 @@ import { loadBrowserThroughputLeaderboard } from "@/lib/browser-throughput-data"
  * 1,000 actions. Same shape the /browser-throughput page renders.
  */
 export async function GET(request: Request) {
+  captureApiRequest(request, "/api/browser-throughput");
   const params = new URL(request.url).searchParams;
   const raw = params.get("concurrency") ?? "1";
   const concurrency = Number(raw);

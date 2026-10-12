@@ -1,3 +1,4 @@
+import { withNotteUtm } from "@/lib/utm";
 import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
 import { PROVIDER_COUNT_WORD, PROVIDER_LIST } from "@/lib/providers";
@@ -21,7 +22,7 @@ export default function FaqPage() {
           </h2>
           <p>
             The answer depends on your workload. The Browser Arena — built by{" "}
-            <a href="https://notte.cc" target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:no-underline">Notte</a>
+            <a href={withNotteUtm("https://notte.cc", "faq")} target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:no-underline">Notte</a>
             {" "}— benchmarks {PROVIDER_COUNT_WORD} leading cloud browser providers across real-world latency, reliability, and cost metrics. {PROVIDER_LIST} are all tested under identical conditions. Use the{" "}
             <a href="/" className="text-foreground underline hover:no-underline">leaderboard</a>
             {" "}to compare by median, P90, or P95 session times, success rates, and pricing. All data comes from standardized AWS EC2 environments and is fully open-source.
@@ -34,7 +35,7 @@ export default function FaqPage() {
           </h2>
           <p>
             The cloud browser infrastructure market is growing rapidly as AI agents and web automation demand managed browser instances. Key factors when comparing providers include session creation latency, CDP connection speed, page navigation time, concurrent session support, reliability, and cost. The Browser Arena is the first open-source benchmark — created by the team at{" "}
-            <a href="https://notte.cc" target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:no-underline">Notte</a>
+            <a href={withNotteUtm("https://notte.cc", "faq")} target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:no-underline">Notte</a>
             {" "}— to test all of these dimensions side-by-side with fully reproducible methodology.
           </p>
         </div>
@@ -85,7 +86,7 @@ export default function FaqPage() {
           </h2>
           <p>
             The Browser Arena runs on standardized AWS EC2 instances (us-east-1 and us-west-2). Each provider is tested using the same Node.js workload that creates a browser session, connects via CDP, navigates to a target page, and releases the session. Tests run with configurable concurrency levels (1, 5, 10, or more simultaneous sessions). Built by{" "}
-            <a href="https://notte.cc" target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:no-underline">Notte Labs</a>
+            <a href={withNotteUtm("https://notte.cc", "faq")} target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:no-underline">Notte Labs</a>
             , all source code is available on{" "}
             <a href="https://github.com/nottelabs/browserarena" target="_blank" rel="noopener noreferrer" className="text-foreground underline hover:no-underline">GitHub</a>
             {" "}and results can be reproduced by deploying to Railway with your own API keys.

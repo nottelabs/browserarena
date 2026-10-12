@@ -1,3 +1,4 @@
+import { withNotteUtm } from "@/lib/utm";
 import type { Metadata } from "next";
 import {
   loadHistoricalLeaderboard,
@@ -96,7 +97,7 @@ export default async function Home({
         <span className="text-sm text-muted-foreground">
           We&apos;re open-source and reproducible!<span className="hidden sm:inline"> Contribute.</span>{' '}
           Built by{' '}
-          <a href="https://notte.cc" target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline">Notte</a>.
+          <a href={withNotteUtm("https://notte.cc", "footer")} target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline">Notte</a>.
         </span>
         <div className="flex items-center gap-3 flex-wrap">
           <a

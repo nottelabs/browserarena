@@ -1,3 +1,4 @@
+import { captureApiRequest } from "@/lib/posthog-server";
 import {
   loadLeaderboard,
   type PercentileType,
@@ -10,10 +11,11 @@ const CACHE_HEADERS = {
 };
 
 export async function GET(
-  _request: Request,
+  request: Request,
   { params }: { params: Promise<{ percentile: string }> }
 ) {
   const { percentile } = await params;
+  captureApiRequest(request, "/api/leaderboard/[percentile]", { percentile });
 
   if (!VALID_PERCENTILES.includes(percentile as PercentileType)) {
     return Response.json(

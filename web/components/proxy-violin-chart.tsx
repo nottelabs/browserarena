@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/lib/analytics";
 
 import { useState } from "react";
 import { Check, Circle, Download, Timer } from "lucide-react";
@@ -47,7 +48,7 @@ export function ProxyViolinChart({ providers, countryName, timeoutMs }: {
           <span className="inline-flex items-center gap-1.5"><span className="h-2.5 w-5 rounded-[50%] border border-foreground/40 bg-primary/40" />Estimated density</span>
           <span className="inline-flex items-center gap-1.5"><span className="h-3 w-0.5 bg-foreground" />Median</span>
         </div>
-        <button type="button" aria-pressed={showSamples} onClick={() => setShowSamples(v => !v)} className="inline-flex items-center gap-1.5 rounded-[3px] border border-foreground/20 px-2 py-1 hover:border-foreground/50">
+        <button type="button" aria-pressed={showSamples} onClick={() => { track("raw_samples_toggled", { benchmark: "proxy-performance", shown: !showSamples }); setShowSamples(v => !v); }} className="inline-flex items-center gap-1.5 rounded-[3px] border border-foreground/20 px-2 py-1 hover:border-foreground/50">
           {showSamples ? <Check className="size-3" /> : <Circle className="size-3" />}Raw samples
         </button>
       </div>

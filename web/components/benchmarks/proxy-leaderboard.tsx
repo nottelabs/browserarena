@@ -1,4 +1,6 @@
 "use client";
+import { track } from "@/lib/analytics";
+import { withNotteUtm } from "@/lib/utm";
 
 import { useState } from "react";
 import { Info, SquareMinus, SquarePlus } from "lucide-react";
@@ -37,14 +39,14 @@ export function ProxyLeaderboard({ providers, countryName, dateLabel, simulated,
   const attempts = providers.reduce((a, p) => a + p.attempts, 0);
   const successes = providers.reduce((a, p) => a + p.successes, 0);
   return <div className={styles.tableStage}>
-    <BenchmarkSectionHeader title="Benchmark" description={`Proxy Performance · Latest runs (dates and targets vary) · ${successes}/${attempts} successful`} controls={<WeightBar weights={weights} onChange={setWeights} methodologyHref="https://github.com/nottelabs/browserarena/blob/main/docs/proxy-get-value-score.md" />} />
+    <BenchmarkSectionHeader title="Benchmark" description={`Proxy Performance · Latest runs (dates and targets vary) · ${successes}/${attempts} successful`} controls={<WeightBar weights={weights} onChange={w => { setWeights(w); track("value_score_preset_selected", { benchmark: "proxy-performance", preset: WEIGHT_PRESETS.find(p => p.weights === w)?.label ?? "custom" }); }} methodologyHref="https://github.com/nottelabs/browserarena/blob/main/docs/proxy-get-value-score.md" />} />
     <BenchmarkTablePanel label="Proxy Performance provider results">
       <div className={styles.tableScroll}>
         <table className="w-full text-left text-[0.78rem] tabular-nums" style={{ minWidth: details ? 1320 : 960 }}>
           <caption className="sr-only">{simulated ? "Simulated " : ""}Latest provider results for {countryName} as of {dateLabel}; each row shows its recorded run date. Ranked by value score.</caption>
           <thead><tr>{headers.map(h => <th key={h.label} scope="col" aria-sort={h.label === "Value Score" ? "descending" : undefined} className="whitespace-nowrap">
             <span className="inline-flex items-center gap-0.5">
-              {h.label === "Latency (ms)" && <button type="button" aria-label={details ? "Hide GET details" : "Show GET details"} aria-expanded={details} onClick={() => setDetails(!details)} className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground">
+              {h.label === "Latency (ms)" && <button type="button" aria-label={details ? "Hide GET details" : "Show GET details"} aria-expanded={details} onClick={() => { setDetails(!details); track("breakdown_toggled", { benchmark: "proxy-performance", expanded: !details }); }} className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground">
                 {details ? <SquareMinus className="size-3.5" /> : <SquarePlus className="size-3.5" />}
               </button>}
               {h.label}
@@ -62,7 +64,7 @@ export function ProxyLeaderboard({ providers, countryName, dateLabel, simulated,
             const unavailable = <span className="text-muted-foreground" title={missingReason}>N/A</span>;
             return <tr key={p.provider} className={rank === 1 ? "bg-primary/6 hover:bg-primary/10" : undefined}>
               <td>{rank ?? "—"}</td>
-              <th scope="row"><a href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 whitespace-nowrap hover:underline">
+              <th scope="row"><a href={withNotteUtm(p.url, "proxy-performance")} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 whitespace-nowrap hover:underline">
                 {PROVIDERS_BY_ID[p.provider]?.logo && <span className={`inline-flex size-6 items-center justify-center overflow-hidden rounded-[3px] border border-border ${p.provider === "NOTTE" ? "bg-black p-[1px]" : ""}`}><img src={PROVIDERS_BY_ID[p.provider].logo} className="size-full object-contain" alt="" /></span>}
                 <span className="flex flex-col gap-0.5"><span>{p.displayName}</span><time dateTime={p.runDate} className="text-[0.6rem] leading-3 font-normal text-muted-foreground">{formatDate(p.runDate)}</time></span>
               </a></th>

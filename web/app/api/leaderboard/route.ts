@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { captureApiRequest } from "@/lib/posthog-server";
 
 const VALID_PERCENTILES = ["median", "p90", "p95", "p99"];
 
@@ -10,6 +11,7 @@ const VALID_PERCENTILES = ["median", "p90", "p95", "p99"];
  * eliminating cache-key collisions on CDNs that strip query strings.
  */
 export async function GET(request: NextRequest) {
+  captureApiRequest(request, "/api/leaderboard");
   const { searchParams } = new URL(request.url);
   const raw = searchParams.get("percentile") || "median";
 

@@ -1,7 +1,9 @@
 import { loadProxyGet, PROXY_COUNTRIES } from "@/lib/proxy-get";
 import { loadProxyGetHistory } from "@/lib/proxy-get-history";
+import { captureApiRequest } from "@/lib/posthog-server";
 
 export async function GET(request: Request) {
+  captureApiRequest(request, "/api/proxy-get");
   const params = new URL(request.url).searchParams;
   const country = params.get("country")?.toUpperCase() || "US";
   if (!PROXY_COUNTRIES.some(c => c === country)) return Response.json({ error: "Country must be US, FR, BR, IN, JP" }, { status: 400 });

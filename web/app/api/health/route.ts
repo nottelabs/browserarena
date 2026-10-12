@@ -11,6 +11,7 @@
  */
 
 import { loadHealthReport, type HealthStatus } from "@/lib/regression";
+import { captureApiRequest } from "@/lib/posthog-server";
 
 /**
  * Request-time evaluation. `results/` is traced into the lambda bundle, so the
@@ -36,6 +37,7 @@ function fail(message: string, status: number) {
 }
 
 export async function GET(request: Request) {
+  captureApiRequest(request, "/api/health");
   const params = new URL(request.url).searchParams;
 
   const benchmark = params.get("benchmark") ?? "hello-browser";

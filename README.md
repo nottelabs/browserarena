@@ -201,6 +201,12 @@ A metric only counts as regressed when **2 of the last 3 run-days** exceed the b
 
 See [docs/regression-detection.md](docs/regression-detection.md) for the thresholds, the calibration against real history, and why there is deliberately no fast path below 24 hours.
 
+## Analytics
+
+The site reports to a PostHog project (US cloud) through a first-party `/ingest` proxy, so the strict CSP and ad blockers do not drop events. Visitors are anonymous: no person profiles, form inputs masked in replays, and PostHog's own bot filter drops automated browsers. Besides pageviews, autocaptured clicks, web vitals and exceptions, the site records named events for the controls people use (`leaderboard_sorted`, `percentile_selected`, `value_score_preset_selected`, `breakdown_toggled`, `history_range_selected`, `history_metric_selected`, `history_provider_selected`, `run_day_selected`, `raw_samples_toggled`; see `web/lib/analytics.ts`). The public JSON endpoints and `llms.txt` record `api_requested` server-side with a coarse caller kind (browser, script, uptime monitor, AI agent, search crawler), without storing IPs. Links to notte.cc carry `utm_source=browserarena`.
+
+Set `NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN` to enable it; without it the site runs normally and sends nothing.
+
 ## License
 
 MIT

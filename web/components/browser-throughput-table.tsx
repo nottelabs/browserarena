@@ -1,4 +1,6 @@
 "use client";
+import { track } from "@/lib/analytics";
+import { withNotteUtm } from "@/lib/utm";
 
 import { useMemo, useState } from "react";
 import {
@@ -164,9 +166,9 @@ export function BrowserThroughputTable({
   );
 
   function handleSort(key: SortKey) {
-    setSort((prev) =>
-      prev.key === key ? { key, dir: prev.dir === "asc" ? "desc" : "asc" } : { key, dir: DEFAULT_DIRECTION[key] }
-    );
+    const dir: SortDirection = sort.key === key ? (sort.dir === "asc" ? "desc" : "asc") : DEFAULT_DIRECTION[key];
+    setSort({ key, dir });
+    track("leaderboard_sorted", { benchmark: "browser-throughput", column: key, direction: dir });
   }
 
   const sc = (key: SortKey) => (sort.key === key ? "text-foreground font-medium" : "");
@@ -182,7 +184,7 @@ export function BrowserThroughputTable({
               <button
                 key={v}
                 type="button"
-                onClick={() => setView(v)}
+                onClick={() => { setView(v); track("percentile_selected", { benchmark: "browser-throughput", percentile: v }); }}
                 className={`rounded-[3px] border px-3 py-1 text-[0.65rem] font-medium transition-colors ${
                   view === v
                     ? "border-foreground bg-foreground text-background"
@@ -261,7 +263,7 @@ export function BrowserThroughputTable({
                         </span>
                       )}
                       <a
-                        href={p.url}
+                        href={withNotteUtm(p.url, "browser-throughput")}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="font-semibold text-[0.82rem] text-foreground hover:text-primary whitespace-nowrap"

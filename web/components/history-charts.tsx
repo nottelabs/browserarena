@@ -1,4 +1,5 @@
 "use client";
+import { track } from "@/lib/analytics";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
@@ -549,7 +550,7 @@ export function HistoryCharts({
                   key={option.key}
                   type="button"
                   aria-pressed={active}
-                  onClick={() => setRange(option.key)}
+                  onClick={() => { setRange(option.key); track("history_range_selected", { benchmark: "session-performance", range: option.key }); }}
                   className={`shrink-0 rounded-[3px] border px-3 py-1.5 text-[0.68rem] font-medium transition-colors ${
                     active
                       ? "border-foreground bg-foreground text-background"
@@ -640,7 +641,7 @@ export function HistoryCharts({
         <section className="flex min-w-0 flex-col">
           <BenchmarkSectionHeader chart title="Results" description="Stacked daily phase latency. Lower is better." controls={
             <label className="flex items-center gap-2 text-xs text-muted-foreground">Provider
-              <select aria-label="Breakdown provider" value={selectedProvider ?? ""} onChange={e => setSelectedProvider(e.target.value)} className="border border-foreground/25 bg-background text-foreground">
+              <select aria-label="Breakdown provider" value={selectedProvider ?? ""} onChange={e => { setSelectedProvider(e.target.value); track("history_provider_selected", { benchmark: "session-performance", provider: e.target.value }); }} className="border border-foreground/25 bg-background text-foreground">
                 {providerOptions.map(provider => <option key={provider.provider} value={provider.provider}>{provider.displayName}</option>)}
               </select>
             </label>

@@ -11,12 +11,25 @@ const contentSecurityPolicy = [
   "img-src 'self' data: blob: https://railway.com",
   "font-src 'self' data:",
   "connect-src 'self'",
+  // PostHog session replay compresses in a blob worker.
+  "worker-src 'self' blob:",
   "manifest-src 'self'",
   "upgrade-insecure-requests",
 ].join('; ');
 
 const nextConfig: NextConfig = {
   reactCompiler: true,
+  // PostHog's API paths end in a slash; do not redirect them.
+  skipTrailingSlashRedirect: true,
+  async rewrites() {
+    // First-party PostHog proxy: the CSP only allows this origin, and ad
+    // blockers ignore same-origin requests.
+    return [
+      { source: "/ingest/static/:path*", destination: "https://us-assets.i.posthog.com/static/:path*" },
+      { source: "/ingest/array/:path*", destination: "https://us-assets.i.posthog.com/array/:path*" },
+      { source: "/ingest/:path*", destination: "https://us.i.posthog.com/:path*" },
+    ];
+  },
   async headers() {
     return [
       {

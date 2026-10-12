@@ -1,4 +1,6 @@
 "use client";
+import { track } from "@/lib/analytics";
+import { withNotteUtm } from "@/lib/utm";
 
 import { useState, useMemo } from "react";
 import {
@@ -288,6 +290,7 @@ export function LeaderboardTable({
 
   function handleSort(key: SortKey) {
     setSort({ key, dir: DEFAULT_DIRECTION[key] });
+    track("leaderboard_sorted", { benchmark: "session-performance", column: key, direction: DEFAULT_DIRECTION[key] });
   }
 
   function accessor(p: ProviderStats, key: SortKey): number {
@@ -350,7 +353,7 @@ export function LeaderboardTable({
           Leaderboard
         </h2>
       )}
-      <BenchmarkSectionHeader controls={<WeightBar weights={rawWeights} onChange={(w) => { setRawWeights(w); setSort({ key: "value", dir: "desc" }); }} />}>
+      <BenchmarkSectionHeader controls={<WeightBar weights={rawWeights} onChange={(w) => { setRawWeights(w); setSort({ key: "value", dir: "desc" }); track("value_score_preset_selected", { benchmark: "session-performance", preset: WEIGHT_PRESETS.find((p) => p.weights === w)?.label ?? "custom" }); }} />}>
         {controls}
       </BenchmarkSectionHeader>
 
@@ -373,7 +376,7 @@ export function LeaderboardTable({
                     <>
                       <button
                         type="button"
-                        onClick={(e) => { e.stopPropagation(); setShowBreakdown((v) => !v); }}
+                        onClick={(e) => { e.stopPropagation(); track("breakdown_toggled", { benchmark: "session-performance", expanded: !showBreakdown }); setShowBreakdown((v) => !v); }}
                         className="inline-flex items-center justify-center text-muted-foreground hover:text-foreground transition-colors"
                         aria-label={showBreakdown ? "Hide latency breakdown" : "Show latency breakdown"}
                       >
@@ -441,7 +444,7 @@ export function LeaderboardTable({
                         </span>
                       )}
                       <a
-                        href={p.url}
+                        href={withNotteUtm(p.url, "leaderboard")}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="font-semibold text-[0.82rem] text-foreground hover:text-primary"
