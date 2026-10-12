@@ -20,7 +20,7 @@ Same shape as our `hello-browser`: create a session, connect over CDP, load
 | | ComputeSDK | Browser Arena |
 |---|---|---|
 | Cadence | Weekly, Friday 10:00 UTC (daily reruns are a paid tier) | Daily, 03:00 / 04:00 UTC |
-| Runner | GitHub Actions on Namespace runners, region not published | Two AWS `t3.micro` boxes, us-east-1 and us-west-1, RTT table published |
+| Runner | GitHub Actions on Namespace runners, region not published | Two AWS boxes, `t3.medium` in us-east-1 and `t3.small` in us-west-1, RTT table published |
 | Sessions per provider | 100 | 100 at c1 and 100 at c10 |
 | Warm-up | None found in the runner | 10 discarded warm-up sessions |
 | Navigation wait | `load` | `domcontentloaded` |
@@ -57,7 +57,7 @@ Design points worth copying:
 - **`textContent` is the cheapest action** and isolates raw CDP round-trip cost.
   `screenshot` at a fixed 1920x1080 viewport isolates the cost vision agents
   pay on every turn.
-- **Actions per second** (`actionsCompleted / taskMs`) is the headline number.
+- **Actions per second** (`actionsCompleted * 1000 / taskMs`) is the headline number.
 - **A failing action does not abort the session.** The loop records the failure
   and continues, so partial completion is measurable. But a session only
   counts as successful if every action succeeded.
@@ -119,11 +119,13 @@ Worth keeping and, where the site does not already say so, worth saying:
 2. **Make screenshot latency a first-class metric** at a fixed 1920x1080
    viewport. Vision agents pay it on every turn, and the spread between
    providers is large (175 ms to 812 ms in their last run).
-3. **Publish p99 and score the tail.** We stop at p95 and the Value Score only
-   uses the median. Their lifecycle score puts 30% of the weight on p95 + p99.
-   Cheapest change on this list: add p99 to the aggregation and either a
-   "Consistency" dimension (p95 / median) to the Value Score or a p95 term in
-   the latency dimension.
+3. **Publish p99 and score the tail.** We stop at p95. The Value Score already
+   uses whichever percentile is selected on the leaderboard, but it is one
+   number at a time, never median and tail together. Their lifecycle score
+   mixes p50, p95 and p99, with 30% of the weight on the tail. Cheapest change
+   on this list: add p99 to the aggregation and either a "Consistency"
+   dimension (p95 / median) to the Value Score or a fixed p95 term in the
+   latency dimension.
 4. **Cost per action, not just cost per session.** We are the only one of the
    two with a pricing model, so once per-action timings exist we can publish
    "cost per 1,000 agent actions" per provider. Nobody else has that number.
@@ -134,9 +136,12 @@ Worth keeping and, where the site does not already say so, worth saying:
 6. **Within-session drift.** Record the action index and compare the last loop
    against the first in longer sessions (50+ actions). This is the only cheap
    signal for resource exhaustion in multi-hour agent sessions.
-7. **Report cold starts separately.** We already run 10 warm-ups and discard
-   them. Keep them as a "cold" series instead: cold vs warm session creation is
-   on their roadmap and we have the data already.
+7. **Report cold starts separately.** We already run 10 warm-ups but discard
+   their records. Save those timings first, then define what counts as a cold
+   start (for example the first session after an idle gap) before comparing
+   cold vs warm creation. The warm-up loop alone does not make every one of
+   those sessions cold. Cold vs warm is on their roadmap and we would have the
+   data already.
 8. **Higher concurrency levels** (c25, c50) for the lifecycle benchmark. Their
    concurrent workflow targets c50; our runner already loops over
    `--concurrency` levels.
