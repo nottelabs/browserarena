@@ -26,11 +26,14 @@ const CONCURRENCY = 1;
 // assertions were calibrated on, so tomorrow's run cannot change the backtest.
 const SNAPSHOT_DATE = "2026-09-09";
 
-async function pointsFor(provider: string): Promise<HistoricalProviderPoint[]> {
+async function pointsFor(
+  provider: string,
+  snapshotDate = SNAPSHOT_DATE
+): Promise<HistoricalProviderPoint[]> {
   const history = await loadHistoricalLeaderboard("hello-browser", CONCURRENCY);
   const series = history.providers.find((p) => p.provider === provider);
   assert.ok(series, `no history for ${provider}`);
-  return series.points.filter((p) => p.date <= SNAPSHOT_DATE);
+  return series.points.filter((p) => p.date <= snapshotDate);
 }
 
 /** Replays the edge-triggered dedup and returns "<date>/<metrics>" per open event. */
@@ -190,6 +193,28 @@ test("cold start reports unknown and never pages", async () => {
   assert.deepEqual(series.breaches, []);
 
   assert.equal(breachingMetricsAt(short, short.length - 1), null);
+});
+
+test("Browser Use: a breach whose latest day dipped under the threshold still has an onset", async () => {
+  // 2026-10-10 and 10-11 breached `connect`; 10-12 recovered to just under the
+  // threshold. K-of-N still calls it breached, so the onset must point at the
+  // last breaching run, not come back null because today happened to be clean.
+  const points = await pointsFor("BROWSER_USE", "2026-10-12");
+
+  const series = evaluateSeries(
+    points,
+    { provider: "BROWSER_USE", displayName: "Browser Use", concurrency: CONCURRENCY },
+    new Date("2026-10-12T12:00:00Z")
+  );
+  const connect = series.breaches.find((b) => b.metric === "connect");
+  assert.ok(connect, "expected connect to be breached");
+  assert.deepEqual(
+    connect.recent.map((r) => r.breached),
+    [true, true, false]
+  );
+  assert.equal(connect.onsetDate, "2026-10-10");
+  assert.equal(connect.breachAgeDays, 2);
+  assert.match(series.summary, /since 2026-10-/);
 });
 
 test("no-data series is unknown, not a false alarm", () => {
