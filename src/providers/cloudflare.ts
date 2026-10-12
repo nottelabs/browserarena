@@ -37,10 +37,10 @@ export class CloudflareProvider implements ProviderClient {
       const body = await res.text();
       throw new Error(`Cloudflare create failed: HTTP ${res.status} - ${body}`);
     }
-    const { sessionId, webSocketDebuggerUrl } = (await res.json()) as {
-      sessionId?: string;
-      webSocketDebuggerUrl?: string;
-    };
+    // Accept both the bare object and Cloudflare's v4 `{ result: ... }` envelope.
+    type SessionResponse = { sessionId?: string; webSocketDebuggerUrl?: string };
+    const body = (await res.json()) as SessionResponse & { result?: SessionResponse };
+    const { sessionId, webSocketDebuggerUrl } = body.result ?? body;
     if (!sessionId) throw new Error("Invalid Cloudflare response: missing sessionId");
     // The URL is optional in the API schema; a session is always reachable at
     // its own endpoint over wss.

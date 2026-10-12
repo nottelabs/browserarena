@@ -55,6 +55,13 @@ test("creates a session and hands the bearer token to the CDP connect", async ()
   assert.deepEqual(session.headers, { Authorization: "Bearer test-token" });
 });
 
+test("a session wrapped in the v4 result envelope is accepted", async () => {
+  stubFetch(200, { success: true, result: { sessionId: "sess-1", webSocketDebuggerUrl: WS_URL } });
+  const session = await new CloudflareProvider().create();
+  assert.equal(session.id, "sess-1");
+  assert.equal(session.cdpUrl, WS_URL);
+});
+
 test("a response without a websocket URL connects to the session endpoint", async () => {
   stubFetch(200, { sessionId: "sess-1" });
 

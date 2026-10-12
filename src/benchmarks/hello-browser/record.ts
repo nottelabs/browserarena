@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { chromium } from "playwright-core";
+import { type Browser, chromium } from "playwright-core";
 import type { Page } from "playwright-core";
 import type { ProviderClient } from "../../types.js";
 
@@ -23,6 +23,7 @@ export async function runRecordedSession(
   console.error(`[RECORD] Session created: id=${id}`);
 
   let recordingId: string | undefined;
+  let browser: Browser | null = null;
 
   try {
     // 2. Start recording for providers that require explicit start (Kernel)
@@ -35,7 +36,7 @@ export async function runRecordedSession(
 
     // 3. Connect via CDP and run actions
     console.error(`[RECORD] Connecting over CDP...`);
-    const browser = await chromium.connectOverCDP(cdpUrl, headers ? { headers } : undefined);
+    browser = await chromium.connectOverCDP(cdpUrl, headers ? { headers } : undefined);
     console.error(`[RECORD] Connected`);
 
     const context = browser.contexts()[0] || (await browser.newContext());
@@ -52,6 +53,7 @@ export async function runRecordedSession(
 
     await page.close();
     await browser.close();
+    browser = null;
     console.error(`[RECORD] Browser closed`);
 
     // 4. Stop recording for providers that require explicit stop (Kernel)
@@ -61,6 +63,13 @@ export async function runRecordedSession(
       console.error(`[RECORD] Recording stopped`);
     }
   } finally {
+    // A provider that ends the session on disconnect has a no-op release, so a
+    // failed run must still close the browser here or it keeps billing.
+    if (browser && provider.releasesOnDisconnect) {
+      await browser.close().catch((e: unknown) =>
+        console.error(`[RECORD] Close after failure failed: ${(e as Error)?.message || e}`)
+      );
+    }
     // 5. Release the session
     try {
       console.error(`[RECORD] Releasing session...`);
