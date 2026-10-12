@@ -258,6 +258,8 @@ function buildVerdict(
   // `index`: K-of-N means a metric can be breached while today itself is
   // clean (two bad days then a dip under the threshold). Walking from `index`
   // would then stop immediately and report a breach with no onset.
+  // A metric with no breaching day in the window has no episode at all, so
+  // the walk must not continue into older history and surface a stale onset.
   let breachAgeDays = 0;
   let onsetDate: string | null = null;
   const recentStart = index - recent.length + 1;
@@ -265,12 +267,22 @@ function buildVerdict(
   while (start >= recentStart && !recentDetail[start - recentStart].breached) {
     start--;
   }
-  for (let i = start; i >= 0; i--) {
+  for (let i = start; i >= recentStart; i--) {
     if (!isBreachingDay(metricValue(points[i], spec.key), baselineValue, spec, config)) {
       break;
     }
     breachAgeDays++;
     onsetDate = points[i].date;
+  }
+  if (breachAgeDays === recent.length) {
+    // The whole window breaches; keep walking into the baseline-era history.
+    for (let i = recentStart - 1; i >= 0; i--) {
+      if (!isBreachingDay(metricValue(points[i], spec.key), baselineValue, spec, config)) {
+        break;
+      }
+      breachAgeDays++;
+      onsetDate = points[i].date;
+    }
   }
 
   const sparkline = points

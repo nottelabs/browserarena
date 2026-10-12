@@ -215,6 +215,14 @@ test("Browser Use: a breach whose latest day dipped under the threshold still ha
   assert.equal(connect.onsetDate, "2026-10-10");
   assert.equal(connect.breachAgeDays, 2);
   assert.match(series.summary, /since 2026-10-/);
+
+  // A metric with no breaching day in the recent window must not report an
+  // onset from older history.
+  for (const m of series.metrics) {
+    if (m.recent.some((r) => r.breached)) continue;
+    assert.equal(m.onsetDate, null, `${m.metric} is clean but has an onset`);
+    assert.equal(m.breachAgeDays, 0);
+  }
 });
 
 test("no-data series is unknown, not a false alarm", () => {
