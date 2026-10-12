@@ -91,7 +91,7 @@ export class KernelProvider implements ProviderClient {
     const client = await getClient();
     const rid = recordingId || this._replayId;
     if (!rid) throw new Error("No Kernel replay_id to stop");
-    await client.browsers.replays.stop(rid, { id: sessionId });
+    await client.browsers.replays.stop(rid, { id_or_name: sessionId });
   }
 
   async downloadRecording(sessionId: string, recordingId?: string): Promise<RecordingResult> {
@@ -104,7 +104,7 @@ export class KernelProvider implements ProviderClient {
 
     for (let i = 0; i < maxAttempts; i++) {
       try {
-        const response = await client.browsers.replays.download(rid, { id: sessionId });
+        const response = await client.browsers.replays.download(rid, { id_or_name: sessionId });
         const blob = await response.blob();
         const buf = Buffer.from(await blob.arrayBuffer());
         if (buf.length > 0) return { data: buf, format: "mp4", extension: ".mp4" };
@@ -153,7 +153,7 @@ export class KernelHeadfulProvider implements ProviderClient {
     const client = await getClient();
     const rid = recordingId || this._replayId;
     if (!rid) throw new Error("No Kernel replay_id to stop");
-    await client.browsers.replays.stop(rid, { id: sessionId });
+    await client.browsers.replays.stop(rid, { id_or_name: sessionId });
   }
 
   async downloadRecording(sessionId: string, recordingId?: string): Promise<RecordingResult> {
@@ -166,7 +166,7 @@ export class KernelHeadfulProvider implements ProviderClient {
 
     for (let i = 0; i < maxAttempts; i++) {
       try {
-        const response = await client.browsers.replays.download(rid, { id: sessionId });
+        const response = await client.browsers.replays.download(rid, { id_or_name: sessionId });
         const blob = await response.blob();
         const buf = Buffer.from(await blob.arrayBuffer());
         if (buf.length > 0) return { data: buf, format: "mp4", extension: ".mp4" };
