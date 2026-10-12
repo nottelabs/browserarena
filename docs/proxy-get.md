@@ -56,6 +56,17 @@ Other flags:
   is already split across multiple files, recovery stops before sessions and
   requires reconciliation. Omit the ID for a new independent suite.
 
+Damaged historical JSONL rows produce a warning with the file and line number;
+unrelated new suites can still start on a new date. A suite identified in valid
+rows, a truncated row's surviving ID, or its metadata cannot resume from a
+damaged file. The destination file is also checked before replacing metadata or
+opening any sessions, including with `--out`. Files are never silently repaired
+or truncated. Restore the original data or reconcile incomplete attempts against
+provider session/usage logs before resuming; simply discarding a partial row can
+repeat a paid attempt. If no suite ID survives, use the warning to investigate
+the file before reusing any of its old IDs. Preflight checks credentials and
+endpoints independently of saved history and does not modify it.
+
 `--record` and concurrent runs are unsupported. `RUNS`, `PROVIDER`, and `URL`
 remain available as environment defaults; proxy-specific environment defaults
 are documented in `.env.example`.

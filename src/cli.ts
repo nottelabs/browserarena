@@ -16,7 +16,7 @@ import { loadProxyPricing } from "./benchmarks/proxy-get/pricing.js";
 import { PAYLOAD_BYTES, PAYLOAD_SHA256 } from "./benchmarks/proxy-get/payload.js";
 import { validateProxyGetUrls } from "./benchmarks/proxy-get/validate.js";
 import { writeProxyResultsIndex } from "./benchmarks/proxy-get/manifest.js";
-import { proxySuiteOutput } from "./benchmarks/proxy-get/output.js";
+import { proxySuiteOutput, readProxyResults } from "./benchmarks/proxy-get/output.js";
 
 type BenchmarkName = "hello-browser" | "v0" | "proxy-get";
 
@@ -124,7 +124,9 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
         console.error(`[SKIP] ${name}: missing ${missing.join(", ")}`);
         return [];
       }
-      return [{ client, out: outArg || proxySuiteOutput(name, runId, date) }];
+      return [{ client, out: outArg || (hasFlag("preflight")
+        ? path.join("results", "proxy-get", name, date, "results.jsonl")
+        : proxySuiteOutput(name, runId, date)) }];
     });
     if (!providers.length) throw new Error("No configured providers available for proxy-get");
     // Fail before creating paid sessions if the controlled target isn't deployed.
@@ -141,6 +143,8 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
       }
     }
     if (hasFlag("preflight")) { console.log(`[PREFLIGHT] ${providers.length} providers checked; no sessions created`); return; }
+    // Validate every destination before replacing metadata or creating sessions.
+    for (const provider of providers) readProxyResults(provider.out);
     const options = { url, bootstrapUrl, countryUrl, expectedBytes, expectedSha256, timeoutMs, countries, runs, rate, runId };
     const vmMeta = await collectVmMeta();
     const startedAt = new Date().toISOString();

@@ -11,6 +11,7 @@ import { estimateProxyAttemptCost } from "./pricing.js";
 import { countryExpression, getExpression } from "./browser-script.js";
 import { collectProxyDiagnostics } from "./diagnostics.js";
 import { validateProxyGetUrls } from "./validate.js";
+import { readProxyResults } from "./output.js";
 
 export interface ProxyGetOptions {
   url: string;
@@ -172,8 +173,7 @@ export async function runProxyGetSuite(providers: { client: ProviderClient; out:
   // Scheduled batches share a daily ID and increase a cumulative attempt target.
   // Count failures too: resuming a batch never retries failed measured requests.
   const jobs = providers.flatMap(p => {
-    const previous: ProxyGetRecord[] = options.runId && fs.existsSync(p.out)
-      ? fs.readFileSync(p.out, "utf-8").split("\n").filter(line => line.trim()).map(line => JSON.parse(line)) : [];
+    const previous = readProxyResults(p.out);
     const existing = previous.filter(row => row.run_id === runId);
     if (existing.some(row => row.provider !== p.client.name || row.version !== 1
       || row.url !== options.url || row.bootstrap_url !== options.bootstrapUrl
