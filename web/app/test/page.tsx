@@ -60,7 +60,7 @@ export default async function TestPage({ searchParams }: {
       {benchmark === "all" ? <section className="grid gap-5 sm:grid-cols-2" aria-label="Available benchmarks">
         {([
           { id: "hello-browser", title: "Browser lifecycle", Icon: RefreshCcw, detail: "Sequential and concurrent runs", metrics: "Create · Connect · Release" },
-          { id: "proxy-get", title: "Proxy GET", Icon: ArrowDownToLine, detail: "5 countries · 10 attempts per provider", metrics: "Download time · First byte · Estimated cost" },
+          { id: "proxy-get", title: "Proxy GET", Icon: ArrowDownToLine, detail: "5 countries · 50 attempts per provider", metrics: "Download time · First byte · Estimated cost" },
         ] as const).map(b => <Link key={b.id} href={`/test?benchmark=${b.id}`} className="rounded-[3px] border-[1.5px] border-foreground/25 bg-card p-6 transition-colors hover:border-foreground">
           <b.Icon className="mb-6 size-8 rounded-[3px] bg-primary/20 p-1.5" aria-hidden="true" />
           <h2 className="text-xl font-semibold tracking-tight">{b.title}</h2>

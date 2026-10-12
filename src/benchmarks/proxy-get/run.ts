@@ -34,7 +34,7 @@ function message(error: unknown) {
 
 export async function runProxyGet(
   provider: ProviderClient, country: ProxyCountry, options: ProxyGetOptions,
-  pricing: ProxyPricing | null, runId = randomUUID()
+  pricing: ProxyPricing | null, runId: string = randomUUID()
 ): Promise<ProxyGetRecord> {
   const result: ProxyGetRecord = {
     benchmark: "proxy-get", version: 1, run_id: runId, created_at: new Date().toISOString(),
@@ -165,12 +165,33 @@ export async function runProxyGet(
 }
 
 export async function runProxyGetSuite(providers: { client: ProviderClient; out: string }[],
-  options: ProxyGetOptions & { runs: number; countries: ProxyCountry[]; rate?: number },
+  options: ProxyGetOptions & { runs: number; countries: ProxyCountry[]; rate?: number; runId?: string },
   pricing: Record<string, ProxyPricing>) {
   validateProxyGetUrls(options.url, options.bootstrapUrl, options.countryUrl);
-  const runId = randomUUID();
-  const jobs = providers.flatMap(p => options.countries.flatMap(country =>
-    Array.from({ length: p.client.proxyCountries?.includes(country) ? options.runs : 1 }, () => ({ ...p, country }))));
+  const runId = options.runId ?? randomUUID();
+  // Scheduled batches share a daily ID and increase a cumulative attempt target.
+  // Count failures too: resuming a batch never retries failed measured requests.
+  const jobs = providers.flatMap(p => {
+    const previous: ProxyGetRecord[] = options.runId && fs.existsSync(p.out)
+      ? fs.readFileSync(p.out, "utf-8").split("\n").filter(line => line.trim()).map(line => JSON.parse(line)) : [];
+    const existing = previous.filter(row => row.run_id === runId);
+    if (existing.some(row => row.provider !== p.client.name || row.version !== 1
+      || row.url !== options.url || row.bootstrap_url !== options.bootstrapUrl
+      || row.country_verification_url !== options.countryUrl || row.expected_bytes !== options.expectedBytes
+      || row.expected_sha256 !== options.expectedSha256 || row.timeout_ms !== options.timeoutMs
+      || row.connection_mode !== "warm-origin-fresh-session" || row.proxy_type !== "residential")) {
+      throw new Error(`Cannot resume ${p.client.name}: daily suite workload changed; use a new run ID`);
+    }
+    return options.countries.flatMap(country => {
+      const supported = p.client.proxyCountries?.includes(country);
+      const rows = existing.filter(row => row.country === country);
+      if (rows.some(row => (row.status !== "unsupported") !== Boolean(supported))) {
+        throw new Error(`Cannot resume ${p.client.name} ${country}: proxy support changed; use a new run ID`);
+      }
+      const remaining = Math.max(0, (supported ? options.runs : 1) - rows.length);
+      return Array.from({ length: remaining }, () => ({ ...p, country }));
+    });
+  });
   for (let i = jobs.length - 1; i > 0; i--) {
     const j = randomInt(i + 1);
     [jobs[i], jobs[j]] = [jobs[j]!, jobs[i]!];

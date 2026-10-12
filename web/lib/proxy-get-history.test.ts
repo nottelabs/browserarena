@@ -40,6 +40,39 @@ test("latest same-day suite replaces earlier success and preserves failed costs"
   assert.equal(result.selected.providers[0].costPerSuccessUsd, null);
 });
 
+test("five stored daily batches feed all fifty attempts into the API, distribution, and history", async () => {
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), "proxy-daily-storage-"));
+  const previous = process.env.RESULTS_DIR;
+  process.env.RESULTS_DIR = base;
+  try {
+    const dir = path.join(base, "proxy-get", "steel", "2026-10-12");
+    fs.mkdirSync(dir, { recursive: true });
+    for (let batch = 0; batch < 5; batch++) {
+      const rows = Array.from({ length: 10 }, (_, i) => entry("2026-10-12", {
+        run_id: "daily-proxy-2026-10-12", created_at: `2026-10-12T${String(1 + batch * 4).padStart(2, "0")}:00:${String(i).padStart(2, "0")}Z`,
+        status: i === 0 ? "failed" : "success", get_ms: i === 0 ? null : 100 + batch * 100,
+      }));
+      fs.appendFileSync(path.join(dir, "results.jsonl"), rows.map(row => JSON.stringify(row)).join("\n") + "\n");
+    }
+    const history = await loadProxyGetHistory("US", "2026-10-12");
+    assert.equal(history.days.length, 1);
+    assert.equal(history.days[0].providers[0].attempts, 50);
+    assert.equal(history.days[0].providers[0].successes, 45);
+    assert.equal(history.overview.providers[0].samples.length, 50);
+    assert.equal(history.overview.providers[0].medianGetMs, 300);
+    const response = await GET(new Request("https://example.test/api/proxy-get?country=US&date=2026-10-12&view=overview"));
+    const overview = await response.json();
+    assert.equal(response.status, 200);
+    assert.equal(overview.providers[0].attempts, 50);
+    assert.equal(overview.providers[0].successes, 45);
+    assert.ok(Math.abs(overview.providers[0].totalCostUsd - 0.5) < 1e-9);
+  } finally {
+    if (previous === undefined) delete process.env.RESULTS_DIR;
+    else process.env.RESULTS_DIR = previous;
+    fs.rmSync(base, { recursive: true, force: true });
+  }
+});
+
 test("missing calendar days and absent providers do not carry previous measurements forward", () => {
   const result = summarizeProxyGetHistory([entry("2026-10-06"), entry("2026-10-08", { provider: "KERNEL" })], "US");
   assert.deepEqual(result.days.map(d => d.date), ["2026-10-06", "2026-10-07", "2026-10-08"]);

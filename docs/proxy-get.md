@@ -2,7 +2,7 @@
 
 Compare the time to download a complete, identical response through providers'
 native residential proxies in the US, France, Brazil, India, and Japan. The
-default is **10 attempts per provider per country**, sequentially, each in a
+default is **50 attempts per provider per country**, sequentially, each in a
 fresh browser session. Country/provider jobs are shuffled to reduce time-of-day
 and run-order bias. There are no automatic measured-GET retries or discarded
 warm-up samples. Creation retries are disabled for SDK adapters where supported.
@@ -12,7 +12,7 @@ warm-up samples. Creation retries are disabled for SDK adapters where supported.
 ```bash
 npm ci
 cp .env.example .env # fill only the provider keys you use
-npm run bench -- --benchmark=proxy-get --provider=steel,kernel,notte --runs=10
+npm run bench -- --benchmark=proxy-get --provider=steel,kernel,notte --runs=50
 ```
 
 The default target is `https://www.browserarena.ai/api/proxy-get/payload`.
@@ -25,7 +25,7 @@ To use your own deployment of the same endpoint:
 ```bash
 npm run bench -- --benchmark=proxy-get --provider=steel \
   --url=https://your-benchmark-host.example/api/proxy-get/payload \
-  --countries=US,FR,BR,IN,JP --runs=10
+  --countries=US,FR,BR,IN,JP --runs=50
 ```
 
 The host must be publicly reachable from the remote browser. Payload and bootstrap
@@ -47,6 +47,11 @@ Other flags:
   sessions per minute. Kernel defaults to 10; other providers use no extra pacing.
 * `--pricing=path/to/config.json`: overrides marginal list-price assumptions.
 * `--out=path/to/results.jsonl`: custom output with exactly one provider.
+* `--preflight`: verify configured provider credentials and payload/bootstrap
+  availability without creating sessions or writing results.
+* `--run-id=ID`: resume that suite to the cumulative `--runs` target. Saved
+  failures count toward the target; changing its workload or proxy support is
+  rejected before sessions. Omit it for a new independent suite.
 
 `--record` and concurrent runs are unsupported. `RUNS`, `PROVIDER`, and `URL`
 remain available as environment defaults; proxy-specific environment defaults
@@ -91,7 +96,7 @@ in isolation. Browser region, provider routing, load, target location, and CDN
 edge selection affect it. The default web deployment may use distributed origin
 infrastructure; it is not a fixed-region networking laboratory. Record hosting
 and browser-region changes when interpreting results. `provider-default` means
-the adapter does not pin or obtain a region. Ten samples are exploratory; show
+the adapter does not pin or obtain a region. Fifty samples improve daily median and reliability estimates, but remain limited for tail latency; show
 the individual samples, median, range, and success fraction, not p95/p99 claims.
 
 ## Provider support
@@ -157,7 +162,7 @@ Shapes use a Gaussian kernel density estimate, one shared bandwidth across
 providers in the selected view, and reflection at zero to avoid suggesting
 negative durations. Each shape is normalized to the same maximum width. With
 fewer than three successful samples, only points and the median are shown.
-These shapes are exploratory summaries of ten attempts, not population or tail
+These shapes are exploratory summaries of the recorded successful attempts, not population or tail
 latency estimates. Failures remain in the success counts and raw results.
 
 ## Cost estimates
@@ -248,9 +253,59 @@ session IDs, including cleanup failures. These diagnostics do not retry requests
 or alter the measured GET interval. A failed country check is an end-to-end
 protocol failure, not evidence that a measured payload GET failed.
 
-Publish those files through the existing results repository workflow; the daily
-cron script continues running the original lifecycle benchmark until deliberately
-configured to run this new one.
+`scripts/run-proxy-and-publish.sh` publishes the proxy results to `main`,
+separately from the lifecycle script. Use a dedicated checkout on the east EC2
+runner, with the nine configured integrations (seven five-country providers,
+Tilion US only, and unpaid Lightpanda unsupported markers). Kernel headful remains
+available through the CLI but is not part of this default daily budget.
+
+The publisher uses a lock, checks every supported provider's required keys and
+the target before sessions, preserves partial results, stages only this day's
+proxy files, and rebases/retries pushes against concurrent lifecycle publication.
+It never resets the checkout. It requires `main` for publication; `--check` can
+verify a feature branch without sessions or publication. Logs and every failure's
+diagnostics remain on EC2; per-attempt diagnostics are also in the published JSONL.
+
+After merging/deploying this PR, prepare the dedicated checkout on EC2:
+
+```bash
+git clone git@github.com:nottelabs/browserarena.git /home/ubuntu/browserarena-proxy-daily
+chmod 700 /home/ubuntu/browserarena-proxy-daily
+cp /home/ubuntu/browserarena/.env /home/ubuntu/browserarena-proxy-daily/.env
+chmod 600 /home/ubuntu/browserarena-proxy-daily/.env
+cd /home/ubuntu/browserarena-proxy-daily
+npm ci
+scripts/run-proxy-and-publish.sh --check
+```
+
+On a UTC-configured host, add these lines alongside the existing lifecycle cron:
+
+```cron
+0 1 * * * /home/ubuntu/browserarena-proxy-daily/scripts/run-proxy-and-publish.sh --batch 1
+0 5 * * * /home/ubuntu/browserarena-proxy-daily/scripts/run-proxy-and-publish.sh --batch 2
+0 9 * * * /home/ubuntu/browserarena-proxy-daily/scripts/run-proxy-and-publish.sh --batch 3
+0 13 * * * /home/ubuntu/browserarena-proxy-daily/scripts/run-proxy-and-publish.sh --batch 4
+0 17 * * * /home/ubuntu/browserarena-proxy-daily/scripts/run-proxy-and-publish.sh --batch 5
+```
+
+Each batch increases the same UTC day's attempt target to 10, 20, 30, 40, then
+50 per supported provider/country. An interrupted batch resumes saved progress;
+a missed earlier batch is caught up by the next cumulative target. Repeating a
+completed batch does not create more sessions. A killed in-flight session may
+still incur usage without a saved attempt; audit retained session IDs/logs when
+recovering a process interruption. Keep one publishing runner for this proxy
+slice; using a second machine with the same daily ID is not supported.
+
+The frontend aggregates this daily ID, so its table, daily distribution, cost,
+and history contain all five batches rather than just the latest ten attempts.
+Results during the day are partial, with the actual attempt count shown. The
+seven-day chart still averages daily medians equally. Based on the pilots, budget
+roughly $20.50/day ($615/30 days) for the daily usage, excluding subscriptions and
+EC2/hosting; unknown charges and browser-observed traffic prevent an exact invoice.
+
+Operational activation requires the deployed HTTPS endpoints to pass preflight,
+the existing write-enabled Git deploy key, and successful EC2 `--check`. This
+commit prepares the scripts and schedule; it does not merge the PR or install cron.
 
 `/proxy-get` reads local results in development and falls back to the configured
 GitHub results repository in a web-only deployment. `RESULTS_DIR` optionally
@@ -290,8 +345,8 @@ generated values; no result files are changed. Choose **Show recorded data** or
 append `demo=0` to inspect only published runs. Demo exports use `/test/export`
 and explicitly include `simulated: true`; the real API never serves demo data.
 
-Recorded history is populated by published result files. This UI does not enable a daily
-proxy schedule; the existing cron script still runs lifecycle only.
+Recorded history is populated by published result files. The UI does not enable
+cron; install the separate proxy schedule described above to collect daily data.
 
 The accepted `/test-compressed` layout now powers `/proxy-get`: the daily provider table spans
 the main container, followed by two charts side by side: the trailing 7-day rolling

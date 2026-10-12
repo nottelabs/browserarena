@@ -9,7 +9,7 @@ import { phaseExtract, phaseCrawl, phaseForm } from "./benchmarks/v0/phases.js";
 import { getArg } from "./utils/arg.js";
 import { collectVmMeta } from "./utils/vm-meta.js";
 import { sanitizeErrorMessage } from "./utils/sanitize.js";
-import { createHash } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { runProxyGetSuite } from "./benchmarks/proxy-get/run.js";
 import { parseCountries } from "./benchmarks/proxy-get/schema.js";
 import { loadProxyPricing } from "./benchmarks/proxy-get/pricing.js";
@@ -48,7 +48,9 @@ async function main() {
   if (hasFlag("help")) {
     console.log(`Usage: npm run bench -- --benchmark=hello-browser|v0|proxy-get --provider=steel,kernel,...
 Common: --runs=N --out=PATH --rate=SESSIONS_PER_MINUTE --url=URL --concurrency=1,10 --record
-Proxy GET: --countries=US,FR,BR,IN,JP (10 runs/country by default; sequential fresh sessions)
+Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fresh sessions)
+  --preflight (check credentials and endpoints without sessions)
+  --run-id=ID (resume a suite up to the cumulative --runs target)
   --bootstrap-url=URL --country-url=URL --timeout-ms=30000 --pricing=CONFIG.json
   Custom payloads require --expected-bytes=N --expected-sha256=HEX
   Defaults to the controlled /api/proxy-get/payload endpoint on www.browserarena.ai.`);
@@ -64,7 +66,7 @@ Proxy GET: --countries=US,FR,BR,IN,JP (10 runs/country by default; sequential fr
     "provider",
     process.env.PROVIDER || (benchmarkArg === "proxy-get" ? `${DEFAULT_PROVIDERS},tilion` : DEFAULT_PROVIDERS)
   )!;
-  const runs = Number(getArg("runs", process.env.RUNS || (benchmarkArg === "proxy-get" ? "10" : "100")));
+  const runs = Number(getArg("runs", process.env.RUNS || (benchmarkArg === "proxy-get" ? "50" : "100")));
   if (!Number.isInteger(runs) || runs <= 0) throw new Error("--runs must be a positive integer");
   const defaultUrl =
     benchmarkArg === "v0"
@@ -94,6 +96,8 @@ Proxy GET: --countries=US,FR,BR,IN,JP (10 runs/country by default; sequential fr
     if (hasFlag("concurrency") && concurrencyArg !== "1") throw new Error("proxy-get runs sequentially; --concurrency must be 1");
     if (outArg && providerNames.length !== 1) throw new Error("--out requires exactly one provider for proxy-get");
     const countries = parseCountries(getArg("countries", process.env.PROXY_COUNTRIES || "US,FR,BR,IN,JP")!);
+    const runId = getArg("run-id") || randomUUID();
+    if (runId && !/^[a-zA-Z0-9_-]{1,100}$/.test(runId)) throw new Error("--run-id must contain 1–100 letters, digits, underscores or hyphens");
     const target = new URL(url);
     const bootstrapUrl = getArg("bootstrap-url", process.env.PROXY_BOOTSTRAP_URL || `${target.origin}/api/proxy-get/bootstrap`)!;
     const countryUrl = getArg("country-url", process.env.PROXY_COUNTRY_URL || "https://api.country.is/")!;
@@ -114,6 +118,7 @@ Proxy GET: --countries=US,FR,BR,IN,JP (10 runs/country by default; sequential fr
       const missing = getMissingEnvVarsForProvider(name);
       // Unsupported markers require no credentials and never open a session.
       if (missing.length && client.proxyCountries?.some(c => countries.includes(c))) {
+        if (hasFlag("preflight")) throw new Error(`${name}: missing ${missing.join(", ")}`);
         console.error(`[SKIP] ${name}: missing ${missing.join(", ")}`);
         return [];
       }
@@ -128,15 +133,20 @@ Proxy GET: --countries=US,FR,BR,IN,JP (10 runs/country by default; sequential fr
       if (body.length !== expectedBytes || createHash("sha256").update(body).digest("hex") !== expectedSha256) {
         throw new Error("Payload preflight size or SHA-256 mismatch");
       }
+      const bootstrap = await fetch(bootstrapUrl, { signal: AbortSignal.timeout(timeoutMs), redirect: "error" });
+      if (!bootstrap.ok || !bootstrap.headers.get("content-type")?.includes("text/html")) {
+        throw new Error(`Bootstrap preflight HTTP ${bootstrap.status}; expected an HTML document`);
+      }
     }
-    const options = { url, bootstrapUrl, countryUrl, expectedBytes, expectedSha256, timeoutMs, countries, runs, rate };
+    if (hasFlag("preflight")) { console.log(`[PREFLIGHT] ${providers.length} providers checked; no sessions created`); return; }
+    const options = { url, bootstrapUrl, countryUrl, expectedBytes, expectedSha256, timeoutMs, countries, runs, rate, runId };
     const vmMeta = await collectVmMeta();
     const startedAt = new Date().toISOString();
     const writeMeta = (finishedAt: string) => {
       for (const provider of providers) {
         fs.mkdirSync(path.dirname(provider.out), { recursive: true });
         fs.writeFileSync(path.join(path.dirname(provider.out), "_meta.json"), JSON.stringify({ ...vmMeta,
-          started_at: startedAt, finished_at: finishedAt, benchmark: "proxy-get", ...options }, null, 2) + "\n");
+          started_at: startedAt, finished_at: finishedAt, benchmark: "proxy-get", run_id: runId, ...options }, null, 2) + "\n");
       }
     };
     writeMeta("");

@@ -73,6 +73,34 @@ test("the suite records exactly ten attempts per supported country and one unsup
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });
 
+test("daily batches accumulate to fifty, retain failures, and resume without duplicate attempts", async () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "proxy-daily-"));
+  const out = path.join(dir, "results.jsonl");
+  let creates = 0;
+  const provider: ProviderClient = { name: "STEEL", proxyCountries: ["FR"], computeCost: () => 0,
+    create: async () => { creates++; throw new Error("Creation failed"); }, release: async () => {} };
+  const options = { url: "https://fixture.example/payload", bootstrapUrl: "https://fixture.example/bootstrap",
+    countryUrl: "https://fixture.example/country", timeoutMs: 30000, expectedBytes: PAYLOAD.length,
+    expectedSha256: PAYLOAD_SHA256, countries: ["FR", "US"] as const, runId: "daily-proxy-2026-10-12" };
+  try {
+    for (const runs of [10, 20, 20, 30, 40, 50, 50]) {
+      await runProxyGetSuite([{ client: provider, out }], { ...options, countries: [...options.countries], runs }, DEFAULT_PROXY_PRICING);
+    }
+    const rows = fs.readFileSync(out, "utf-8").trim().split("\n").map(line => JSON.parse(line));
+    assert.equal(creates, 50);
+    assert.equal(rows.filter(r => r.country === "FR" && r.status === "failed").length, 50);
+    assert.equal(rows.filter(r => r.status === "unsupported").length, 1);
+    assert.equal(new Set(rows.map(r => r.run_id)).size, 1);
+    await assert.rejects(() => runProxyGetSuite([{ client: provider, out }], {
+      ...options, countries: [...options.countries], runs: 60, timeoutMs: 20000,
+    }, DEFAULT_PROXY_PRICING), /workload changed/);
+    await assert.rejects(() => runProxyGetSuite([{ client: { ...provider, proxyCountries: ["FR", "US"] }, out }], {
+      ...options, countries: [...options.countries], runs: 50,
+    }, DEFAULT_PROXY_PRICING), /proxy support changed/);
+    assert.equal(creates, 50);
+  } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+
 test("proxy GET browser integration", async t => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), "proxy-get-test-"));
   let context: BrowserContext | undefined;

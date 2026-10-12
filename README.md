@@ -66,7 +66,7 @@ residential proxies in the US, France, Brazil, India, and Japan. It defaults to
 timing, response validation, and estimated browser-plus-proxy costs.
 
 ```bash
-npm run bench -- --benchmark=proxy-get --provider=steel,kernel,notte --runs=10
+npm run bench -- --benchmark=proxy-get --provider=steel,kernel,notte --runs=50
 ```
 
 Deploy the included controlled target before a live run. See
@@ -150,6 +150,13 @@ Daily results are produced by `scripts/run-and-publish.sh`, which runs the bench
 ```
 
 Per-EC2 setup: clone the repo, populate `.env` with that region's provider keys, and add an SSH key as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) with write access (one key per box). Cron logs go to `logs/` (gitignored).
+
+Proxy GET has a separate publisher, `scripts/run-proxy-and-publish.sh`, for a
+dedicated checkout on the east runner. Five daily batches accumulate to **50
+attempts per provider/country** under one daily suite ID; the frontend reads all
+batches together. Run `--check` before enabling it. See the
+[proxy scheduling and deployment instructions](docs/proxy-get.md#results-and-website)
+for the UTC cron lines, prerequisites, and estimated $20.50/day usage budget.
 
 ### Regression alerts
 
