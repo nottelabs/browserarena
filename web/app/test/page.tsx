@@ -10,7 +10,7 @@ import { loadLeaderboard, loadHistoricalLeaderboard } from "@/lib/data";
 import { PROXY_COUNTRIES } from "@/lib/proxy-get";
 import { TestNavigation } from "./navigation";
 import { TestProxyResults } from "./proxy-results";
-import styles from "./test.module.css";
+import styles from "@/components/benchmarks/benchmark.module.css";
 
 export const metadata: Metadata = {
   title: "Benchmark layout preview",
