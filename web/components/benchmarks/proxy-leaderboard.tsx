@@ -5,6 +5,7 @@ import { withNotteUtm } from "@/lib/utm";
 import { useState } from "react";
 import { Info, SquareMinus, SquarePlus } from "lucide-react";
 import type { ProxyGetStats } from "@/lib/proxy-get";
+import { proxyRunCountLabel } from "@/lib/proxy-daily-progress";
 import { PROVIDERS_BY_ID } from "@/lib/providers";
 import { rankProxyValues } from "@/lib/proxy-value-score";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -19,7 +20,7 @@ const formatDate = (date: string) => new Date(`${date}T00:00:00Z`).toLocaleDateS
 const HEADERS = [
   { label: "#" },
   { label: "Provider" },
-  { label: "Runs", description: "Number of attempts, including failures." },
+  { label: "Runs", description: "Published attempts, including failures. Daily runs show progress toward 50 attempts per provider/country, published in cumulative batches of 10, 20, 30, 40, and 50." },
   { label: "Reliability (%)", description: "Percentage of attempts that passed country verification and completed a valid GET." },
   { label: "Latency (ms)", description: "Median complete GET time for successful attempts. Creation, connection, country verification, and release are excluded." },
   { label: "First byte (ms)", detail: true, description: "Median time to the first response byte for successful GETs." },
@@ -74,7 +75,7 @@ export function ProxyLeaderboard({ providers, countryName, dateLabel, simulated,
                   <span className="truncate font-sans text-[0.7rem] max-w-[36rem]">{missingReason}</span>
                 </span>
               </td> : <>
-              <td>{p.attempts.toLocaleString("en-US")}</td>
+              <td>{proxyRunCountLabel(p)}</td>
               <td title={`${p.successes}/${p.attempts} attempts succeeded`}>{p.attempts > 0 ? `${(p.successes / p.attempts * 100).toFixed(1)}%` : unavailable}</td>
               <td>{p.medianGetMs === null ? unavailable : milliseconds(p.medianGetMs)}</td>
               {details && <><td>{p.medianFirstByteMs === null ? unavailable : milliseconds(p.medianFirstByteMs)}</td><td>{p.medianMbps?.toFixed(2) ?? unavailable}</td></>}

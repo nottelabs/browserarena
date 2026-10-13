@@ -1,7 +1,7 @@
 import { loadProxyGetEntries, proxyGetWorkloadKey, summarizeProxyGet, type ProxyGetRecord, type ProxyGetStats } from "./proxy-get";
 
 export type ProxyHistoryProvider = Pick<ProxyGetStats,
-  "provider" | "displayName" | "attempts" | "successes" | "medianGetMs" | "medianFirstByteMs" | "costPerSuccessUsd">;
+  "provider" | "displayName" | "attempts" | "successes" | "medianGetMs" | "medianFirstByteMs" | "costPerSuccessUsd"> & { workloadKey: string };
 
 export interface ProxyHistoryDay {
   date: string;
@@ -47,12 +47,11 @@ export function summarizeProxyGetHistory(entries: ProxyGetRecord[], country: str
   const overviewSample = overviewProviders[0]?.samples[0];
   const overview = { providers: overviewProviders, latestAt: selected.latestAt,
     workload: overviewWorkloads.size === 1 && overviewSample ? summarizeProxyGet([overviewSample], country).workload : null };
-  // Compare each provider with its own latest workload as of the inspected day.
-  // Another provider running against a new target must not erase its history.
-  const providerWorkloads = new Map([...overviewEntries].map(([provider, records]) =>
-    [provider, proxyGetWorkloadKey(latestRecord(records))]));
+  // Retain each day's latest suite, including older workloads. The chart
+  // separates workload segments instead of erasing their recorded history.
   const days: ProxyHistoryDay[] = [];
-  const incompatibleDates: string[] = [];
+  const workloadChangeDates: string[] = [];
+  const previousWorkloads = new Map<string, string>();
   // Calendar gaps become null points, so a missed daily run is not bridged.
   if (dates.length) {
     const end = Date.parse(`${dates.at(-1)}T00:00:00Z`);
@@ -66,23 +65,22 @@ export function summarizeProxyGetHistory(entries: ProxyGetRecord[], country: str
         byProvider.set(record.provider, group);
       }
       const providers = [...byProvider].flatMap(([provider, group]) => {
-        const workload = providerWorkloads.get(provider);
         // Providers first recorded after the selected day have no baseline yet.
-        if (workload === undefined) return [];
-        if (proxyGetWorkloadKey(latestRecord(group)) !== workload) {
-          if (!incompatibleDates.includes(date)) incompatibleDates.push(date);
-          return [];
-        }
+        if (!overviewEntries.has(provider)) return [];
         return summarizeProxyGet(group, country).providers;
       });
-      days.push({ date, compatible: providers.length > 0, providers: providers.map(p => ({
-        provider: p.provider, displayName: p.displayName, attempts: p.attempts, successes: p.successes,
-        medianGetMs: p.medianGetMs, medianFirstByteMs: p.medianFirstByteMs, costPerSuccessUsd: p.costPerSuccessUsd,
-      })) });
+      days.push({ date, compatible: providers.length > 0, providers: providers.map(p => {
+        const workloadKey = proxyGetWorkloadKey(p.samples[0]);
+        const previous = previousWorkloads.get(p.provider);
+        if (previous !== undefined && previous !== workloadKey && !workloadChangeDates.includes(date)) workloadChangeDates.push(date);
+        previousWorkloads.set(p.provider, workloadKey);
+        return { provider: p.provider, displayName: p.displayName, attempts: p.attempts, successes: p.successes,
+          medianGetMs: p.medianGetMs, medianFirstByteMs: p.medianFirstByteMs, costPerSuccessUsd: p.costPerSuccessUsd, workloadKey };
+      }) });
     }
   }
   return { dates, days, selectedDate, selected, overview,
-    incompatibleDates };
+    workloadChangeDates };
 }
 
 export async function loadProxyGetHistory(country = "US", date?: string) {

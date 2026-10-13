@@ -10,7 +10,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { HISTORY_RANGES, rangeStartDate, type HistoryRangeKey } from "@/lib/history-range";
 import { proxyProviderColor } from "@/lib/proxy-violin";
 import type { ProxyHistoryDay } from "@/lib/proxy-get-history";
-import { proxyRollingAverage } from "@/lib/proxy-rolling-average";
+import { proxyHistoryChartData, proxyRollingAverage } from "@/lib/proxy-rolling-average";
 
 const METRICS = [
   { key: "medianGetMs", label: "Complete GET" },
@@ -24,9 +24,9 @@ const buttonStyle = (active: boolean) => `rounded-[3px] border px-3 py-1.5 text-
 const dayLabel = (date: string) => new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 const formatValue = (value: number, metric: Metric) => metric === "costPerSuccessUsd" ? `$${value.toFixed(5)}` : `${(value / 1000).toFixed(2)} s`;
 
-export function ProxyHistoryChart({ days, dates, selectedDate, country, countryName, sort, incompatibleDates, simulated, compact = false, rollingWindow = 0, basePath = "/test", sectioned = false }: {
+export function ProxyHistoryChart({ days, dates, selectedDate, country, countryName, sort, workloadChangeDates, simulated, compact = false, rollingWindow = 0, basePath = "/test", sectioned = false }: {
   days: ProxyHistoryDay[]; dates: string[]; selectedDate: string; country: string; countryName: string;
-  sort?: string; incompatibleDates: string[];
+  sort?: string; workloadChangeDates: string[];
   simulated: boolean;
   compact?: boolean; rollingWindow?: number; basePath?: string; sectioned?: boolean;
 }) {
@@ -44,9 +44,8 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
     .sort((a, b) => a.displayName.localeCompare(b.displayName));
   const config = Object.fromEntries(providers.map(p => [p.provider, { label: p.displayName, color: proxyProviderColor(p.provider) }])) satisfies ChartConfig;
   const rolling = rollingWindow ? proxyRollingAverage(days, metric, rollingWindow) : [];
-  const chartData = visibleDays.map(d => ({ date: d.date, ...Object.fromEntries(providers.map(p => [p.provider, rollingWindow
-    ? rolling.find(r => r.date === d.date)?.providers.find(s => s.provider === p.provider)?.value ?? null
-    : d.providers.find(s => s.provider === p.provider)?.[metric] ?? null])) }));
+  const chart = proxyHistoryChartData(days, metric, rollingWindow || 1);
+  const chartData = chart.data.filter(d => String(d.date) >= start && String(d.date) <= end);
   const metricDays = visibleDays.filter(d => d.providers.some(p => p[metric] !== null));
   const chooseDate = (date: string) => {
     const query = new URLSearchParams({ country, date });
@@ -65,10 +64,10 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
       <div>
         <Heading className={`${sectioned ? "text-[0.72rem] uppercase tracking-widest" : compact ? "text-sm tracking-tight" : "tracking-tight"} font-semibold`}>{rollingWindow ? `${rollingWindow}-day rolling average` : "Performance over time"}</Heading>
         <p className={`mt-1 ${compact ? "text-[0.65rem]" : "text-xs"} text-muted-foreground`}>{sectioned ? `${metric === "costPerSuccessUsd" ? "Daily cost estimates" : "Daily medians"} · ` : `${countryName} · `}
-          {incompatibleDates.length > 0 ? <Popover><PopoverTrigger asChild><button type="button" className="underline underline-offset-2 hover:text-foreground">Changed workloads</button></PopoverTrigger>
+          {workloadChangeDates.length > 0 ? <Popover><PopoverTrigger asChild><button type="button" className="underline underline-offset-2 hover:text-foreground">Changed workloads</button></PopoverTrigger>
             <PopoverContent className="max-w-[calc(100vw-32px)] text-xs">
-              <p>Some provider history is omitted because its target or workload differs from its latest selected run. Inspect those recorded dates:</p>
-              <div className="mt-3 flex flex-wrap gap-2">{incompatibleDates.map(date => <button key={date} type="button" disabled={pending} onClick={() => chooseDate(date)} className="underline underline-offset-2 hover:text-foreground disabled:opacity-50">{dayLabel(date)}</button>)}</div>
+              <p>All recorded days remain visible. Lines break and rolling averages restart when a provider’s target or workload changes. Inspect the first day of each new workload:</p>
+              <div className="mt-3 flex flex-wrap gap-2">{workloadChangeDates.map(date => <button key={date} type="button" disabled={pending} onClick={() => chooseDate(date)} className="underline underline-offset-2 hover:text-foreground disabled:opacity-50">{dayLabel(date)}</button>)}</div>
             </PopoverContent>
           </Popover> : metric === "costPerSuccessUsd" ? "Lower is cheaper" : "Lower is faster"}
         </p>
@@ -110,7 +109,10 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
             <p className="mt-2 text-[0.65rem] text-muted-foreground">Click a point to view this day&apos;s distributions.</p>
           </div>;
         }} />
-        {providers.map(p => <Line key={p.provider} dataKey={p.provider} name={p.displayName} stroke={proxyProviderColor(p.provider)} strokeWidth={2} type="linear" connectNulls={false} isAnimationActive={false}
+        {chart.series.map(line => {
+          const p = providers.find(provider => provider.provider === line.provider);
+          if (!p) return null;
+          return <Line key={line.dataKey} dataKey={line.dataKey} name={p.displayName} stroke={proxyProviderColor(p.provider)} strokeWidth={2} type="linear" connectNulls={false} isAnimationActive={false}
           dot={({ cx, cy, payload, value }) => {
             if (typeof cx !== "number" || typeof cy !== "number" || value == null) return <g />;
             const date = String(payload.date);
@@ -119,7 +121,8 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
               <circle cx={cx} cy={cy} r={10} fill="transparent" />
               <circle cx={cx} cy={cy} r={date === selectedDate ? 4 : 3} fill="var(--background)" stroke={proxyProviderColor(p.provider)} strokeWidth={2} />
             </g>;
-          }} activeDot={false} />)}
+          }} activeDot={false} />;
+        })}
       </LineChart>
     </ChartContainer> : <p className="flex min-h-40 items-center justify-center text-sm text-muted-foreground">{metric === "costPerSuccessUsd" ? "No known cost estimates in this period." : "No successful measurements in this period."}</p>}
     <div className="mt-3 flex flex-wrap justify-center gap-x-4 gap-y-2 text-[0.68rem] text-muted-foreground">

@@ -5,7 +5,8 @@ import os from "node:os";
 import path from "node:path";
 import { loadProxyGet, type ProxyGetRecord } from "./proxy-get";
 import { loadProxyGetHistory, summarizeProxyGetHistory } from "./proxy-get-history";
-import { proxyRollingAverage } from "./proxy-rolling-average";
+import { proxyHistoryChartData, proxyRollingAverage } from "./proxy-rolling-average";
+import { proxyRunCountLabel } from "./proxy-daily-progress";
 import { GET } from "../app/api/proxy-get/route";
 
 function entry(date: string, overrides: Partial<ProxyGetRecord> = {}): ProxyGetRecord {
@@ -28,6 +29,32 @@ test("daily history and selected violin summaries use exactly the same attempts"
   assert.equal(history.days[1].providers[0].medianGetMs, 900);
   assert.equal(summarizeProxyGetHistory(rows, "US").selectedDate, "2026-10-08");
   assert.equal(summarizeProxyGetHistory(rows, "US", "not-a-date").selectedDate, "2026-10-08");
+});
+
+test("temporary and permanent target days both reach the chart without pooling attempts or medians", () => {
+  const rows = [
+    ...Array.from({ length: 50 }, () => entry("2026-10-12", { run_id: "premerge-50-2026-10-12",
+      url: "https://temporary.trycloudflare.com/api/proxy-get/payload", bootstrap_url: "https://temporary.trycloudflare.com/api/proxy-get/bootstrap", get_ms: 1000 })),
+    ...Array.from({ length: 20 }, () => entry("2026-10-13", { run_id: "daily-proxy-2026-10-13",
+      url: "https://www.browserarena.ai/api/proxy-get/payload", bootstrap_url: "https://www.browserarena.ai/api/proxy-get/bootstrap", get_ms: 2000 })),
+  ];
+  const history = summarizeProxyGetHistory(rows, "US");
+  assert.deepEqual(history.days.map(d => d.providers[0].attempts), [50, 20]);
+  assert.deepEqual(history.workloadChangeDates, ["2026-10-13"]);
+  assert.equal(history.overview.providers[0].attempts, 20);
+  const chart = proxyHistoryChartData(history.days, "medianGetMs", 7);
+  assert.equal(chart.series.length, 2);
+  assert.deepEqual(chart.series.map(line => chart.data.map(d => d[line.dataKey])), [[1000, null], [null, 2000]]);
+});
+
+test("daily run counts expose the unchanged fifty-attempt target as batches accumulate", () => {
+  for (const count of [10, 20, 30, 40, 50]) {
+    const rows = Array.from({ length: count }, () => entry("2026-10-13", { run_id: "daily-proxy-2026-10-13" }));
+    const daily = summarizeProxyGetHistory(rows, "US").overview.providers[0];
+    assert.equal(proxyRunCountLabel(daily), `${count}/50`);
+  }
+  const manual = summarizeProxyGetHistory([entry("2026-10-12")], "US").overview.providers[0];
+  assert.equal(proxyRunCountLabel(manual), "1", "manual suites do not claim a daily target");
 });
 
 test("latest same-day suite replaces earlier success and preserves failed costs", () => {
@@ -95,7 +122,7 @@ test("overview and history retain each provider across targets while selected-da
   assert.equal(latest.overview.workload, null, "different targets have no shared workload");
   assert.deepEqual(latest.selected.providers.map(p => p.provider).sort(), ["LIGHTPANDA", "TILION"]);
   assert.equal(latest.days.find(d => d.date === "2026-10-08")!.providers[0].medianGetMs, 200);
-  assert.deepEqual(latest.incompatibleDates, []);
+  assert.deepEqual(latest.workloadChangeDates, []);
   const older = summarizeProxyGetHistory(rows, "US", "2026-10-08");
   assert.deepEqual(older.overview.providers.map(p => p.provider), ["STEEL"], "historical overview never leaks future runs");
   assert.deepEqual(older.days.find(d => d.date === "2026-10-11")!.providers, []);
@@ -109,21 +136,21 @@ test("rolling history includes all eight recorded providers despite different ru
   assert.deepEqual(history.days[0].providers.map(p => p.provider).sort(), [...providers].sort());
   assert.deepEqual(history.days.slice(1, 3).map(d => d.providers), [[], []], "missing days remain gaps");
   assert.deepEqual(history.days[3].providers.map(p => p.provider), ["TILION"]);
-  assert.deepEqual(history.incompatibleDates, []);
+  assert.deepEqual(history.workloadChangeDates, []);
   const rolling = proxyRollingAverage(history.days, "medianGetMs", 7);
   assert.equal(rolling[0].providers.length, 7);
   assert.equal(rolling[3].providers[0].value, 1800);
 });
 
-test("a provider's changed workload excludes only its own incompatible results", () => {
+test("a provider's changed workload retains history and resets only its own average", () => {
   const rows = [entry("2026-10-07", { get_ms: 900 }),
     entry("2026-10-07", { provider: "KERNEL", url: "https://other-target.example/payload", get_ms: 400 }),
     entry("2026-10-08", { url: "https://new-target.example/payload", get_ms: 200 }),
     entry("2026-10-08", { provider: "KERNEL", url: "https://other-target.example/payload", get_ms: 600 })];
   const history = summarizeProxyGetHistory(rows, "US");
-  assert.deepEqual(history.incompatibleDates, ["2026-10-07"]);
-  assert.deepEqual(history.days[0].providers.map(p => p.provider), ["KERNEL"]);
-  assert.equal(history.days[0].compatible, true, "a partially excluded day still contains usable results");
+  assert.deepEqual(history.workloadChangeDates, ["2026-10-08"]);
+  assert.deepEqual(history.days[0].providers.map(p => p.provider).sort(), ["KERNEL", "STEEL"]);
+  assert.equal(history.days[0].compatible, true, "changed workloads retain usable results");
   assert.deepEqual(history.days[1].providers.map(p => p.provider).sort(), ["KERNEL", "STEEL"]);
   const rolling = proxyRollingAverage(history.days, "medianGetMs", 7);
   assert.equal(rolling[1].providers.find(p => p.provider === "STEEL")?.value, 200);
@@ -137,15 +164,15 @@ test("latest suite without the selected country does not resurrect an earlier co
   assert.deepEqual(result.overview.providers, []);
 });
 
-test("incompatible workloads are gaps and can be inspected without mixing their history", () => {
+test("changed timeout history stays visible whichever date is selected", () => {
   const rows = [entry("2026-10-07", { timeout_ms: 20000 }), entry("2026-10-08")];
   const latest = summarizeProxyGetHistory(rows, "US");
-  assert.deepEqual(latest.incompatibleDates, ["2026-10-07"]);
-  assert.deepEqual(latest.days[0].providers, []);
+  assert.deepEqual(latest.workloadChangeDates, ["2026-10-08"]);
+  assert.equal(latest.days[0].providers[0].medianGetMs, 100);
   const older = summarizeProxyGetHistory(rows, "US", "2026-10-07");
   assert.equal(older.selected.workload?.timeoutMs, 20000);
-  assert.deepEqual(older.incompatibleDates, ["2026-10-08"]);
-  assert.deepEqual(older.days[1].providers, []);
+  assert.deepEqual(older.workloadChangeDates, ["2026-10-08"]);
+  assert.equal(older.days[1].providers[0].medianGetMs, 100);
 });
 
 test("a suite crossing midnight keeps all its samples in one final UTC day", () => {

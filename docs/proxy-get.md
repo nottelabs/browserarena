@@ -360,10 +360,11 @@ cover those same suites. Distributions omit providers with no recorded attempts
 successful samples. Unsupported providers are also omitted from history legends.
 `date=YYYY-MM-DD` selects the latest provider suite assigned to that UTC day;
 suites crossing midnight are assigned whole to their final day. Missing runs,
-failed latency measurements, and unknown costs remain gaps. History compares workloads within each provider, using that provider’s latest
-workload as of the selected day. A different target used by another provider does
-not hide its recorded history. A provider’s incompatible days remain gaps without
-hiding other providers on those days; rolling averages never mix its workloads.
+failed latency measurements, and unknown costs remain gaps. History retains each
+day's latest provider suite, including days with different target hosts or
+workloads. Lines break and rolling averages restart at each provider's workload
+transition, even when a previously used workload returns. Older days remain
+visible without mixing their measurements into the new workload's average.
 Providers first recorded after the selected day are excluded until that day is
 selected. Other workloads remain selectable for inspection. `/api/proxy-get?country=FR&date=YYYY-MM-DD` exports that day's results
 and returns 404 if no run is recorded for that date. Without `date`, the latest
@@ -394,6 +395,10 @@ daily cost-per-success estimates) with equal weight per day; early windows are
 partial, and missing current measurements remain gaps. Clicking a rolling point
 selects the latest unsmoothed provider suites available through that day. Raw attempts, pricing
 sources, failure notes, and methodology remain available below the charts.
+The Runs column labels scheduled daily suites as published attempts out of the
+50-attempt target (for example, `20/50`). The cumulative batches publish 10, 20,
+30, 40, then 50 attempts per supported provider/country; a partial count does not
+change the daily target or imply that a runner is currently active.
 The `/test-compressed` preview still defaults to the labeled simulation and
 supports `demo=0` for recorded results.
 

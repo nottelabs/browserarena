@@ -36,7 +36,7 @@ export function ProxyDashboard({ history, country, preview = false, simulated = 
   return <>
       <ProxyLeaderboard providers={providers} countryName={COUNTRY_NAMES[country]} dateLabel={dateLabel} simulated={simulated} initialSort={sort} />
       {date && <div className={styles.charts}>
-        <ProxyHistoryChart days={history.days} dates={history.dates} selectedDate={date} country={country} countryName={COUNTRY_NAMES[country]} incompatibleDates={history.incompatibleDates} simulated={simulated} compact rollingWindow={7} basePath={basePath} sort={sort} sectioned />
+        <ProxyHistoryChart days={history.days} dates={history.dates} selectedDate={date} country={country} countryName={COUNTRY_NAMES[country]} workloadChangeDates={history.workloadChangeDates} simulated={simulated} compact rollingWindow={7} basePath={basePath} sort={sort} sectioned />
         <section className="flex min-w-0 flex-col" aria-label="Results">
           <BenchmarkSectionHeader chart title="Results" description="Dots = samples · line = median · shape = estimated density." controls={
               <ProxyDayPicker basePath={basePath} sort={sort} dates={history.dates} selectedDate={date} country={country} simulated={simulated} />
@@ -49,7 +49,7 @@ export function ProxyDashboard({ history, country, preview = false, simulated = 
         {preview && <BenchmarkLink data-control href={`${basePath}?${toggleQuery}`} className="rounded-[3px] border border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground">{simulated ? "Show recorded data" : "Simulate history"}</BenchmarkLink>}
         <a data-control href={`${preview && simulated ? "/test/export" : "/api/proxy-get"}?${exportQuery}`} className="rounded-[3px] border border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground">Export {simulated ? "simulation" : "results"}</a>
       </div>
-      <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{simulated ? "Simulated values. " : ""}Table and distributions: latest provider runs up to {dateLabel}; run dates and target hosts may differ. History: recorded days with matching workloads within each provider. Click a history point to inspect runs available by that day. GET excludes creation and release. Estimated costs include failed attempts. Value scores are exploratory comparisons using the selected weights; dates and target hosts may differ. {preview && <Link href={`/test?benchmark=proxy-get&${query}`} className="underline underline-offset-2">Raw attempts & methodology</Link>}</p>
+      <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{simulated ? "Simulated values. " : ""}Table and distributions: latest provider runs up to {dateLabel}; run dates and target hosts may differ. History: all recorded days; lines break and rolling averages restart when a provider’s target or workload changes. Click a history point to inspect runs available by that day. GET excludes creation and release. Estimated costs include failed attempts. Value scores are exploratory comparisons using the selected weights; dates and target hosts may differ. {preview && <Link href={`/test?benchmark=proxy-get&${query}`} className="underline underline-offset-2">Raw attempts & methodology</Link>}</p>
       {!preview && <ProxyGetDetails result={history.overview} overview />}
   </>;
 }
