@@ -57,6 +57,19 @@ test("daily run counts expose the unchanged fifty-attempt target as batches accu
   assert.equal(proxyRunCountLabel(manual), "1", "manual suites do not claim a daily target");
 });
 
+test("scheduled progress survives a suite crossing UTC midnight", () => {
+  const rows = Array.from({ length: 30 }, (_, i) => entry(i < 20 ? "2026-10-13" : "2026-10-14", {
+    run_id: "daily-proxy-2026-10-13",
+    created_at: i < 20 ? "2026-10-13T23:59:00Z" : "2026-10-14T00:01:00Z",
+  }));
+  const history = summarizeProxyGetHistory(rows, "US");
+  assert.deepEqual(history.dates, ["2026-10-14"]);
+  const provider = history.overview.providers[0];
+  assert.equal(provider.runDate, "2026-10-14");
+  assert.equal(provider.attempts, 30);
+  assert.equal(proxyRunCountLabel(provider), "30/50");
+});
+
 test("latest same-day suite replaces earlier success and preserves failed costs", () => {
   const rows = [entry("2026-10-08"), entry("2026-10-08", { run_id: "rerun", created_at: "2026-10-08T11:00:00Z", status: "failed", get_ms: null })];
   const result = summarizeProxyGetHistory(rows, "US");
