@@ -41,15 +41,19 @@ async function ThroughputView({ date, concurrency: requestedConcurrency }: { dat
   const requested = Number(requestedConcurrency || 1);
   let concurrency = Number.isInteger(requested) && requested > 0 ? requested : 1;
   let leaderboard = await loadBrowserThroughputLeaderboard(concurrency, requestedDate);
-  if (requestedDate && !leaderboard.metadata.availableDates?.includes(requestedDate)) {
-    leaderboard = await loadBrowserThroughputLeaderboard(concurrency);
+  // The picker labels one calendar day. Load that day, not each provider's
+  // newest file, so the rows match the date on screen.
+  const knownDates = leaderboard.metadata.availableDates ?? [];
+  const pinnedDate = requestedDate && knownDates.includes(requestedDate) ? requestedDate : knownDates.at(-1);
+  if (pinnedDate && leaderboard.metadata.date !== pinnedDate) {
+    leaderboard = await loadBrowserThroughputLeaderboard(concurrency, pinnedDate);
   }
   const concurrencyLevels = leaderboard.metadata.availableConcurrencyLevels?.length
     ? leaderboard.metadata.availableConcurrencyLevels
     : [1];
   if (!concurrencyLevels.includes(concurrency)) {
     concurrency = concurrencyLevels[0];
-    leaderboard = await loadBrowserThroughputLeaderboard(concurrency, leaderboard.metadata.date);
+    leaderboard = await loadBrowserThroughputLeaderboard(concurrency, leaderboard.metadata.date ?? pinnedDate);
   }
   const { providers } = leaderboard;
   const availableDates = leaderboard.metadata.availableDates ?? [];

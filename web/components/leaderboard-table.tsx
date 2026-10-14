@@ -189,14 +189,22 @@ export function LeaderboardTable({
 
   function handleSort(key: SortKey) {
     setSort({ key, dir: DEFAULT_DIRECTION[key] });
-    if (key === "latency") setRawWeights(WEIGHT_PRESETS.find((preset) => preset.label === "Fastest")!.weights);
-    else if (key === "cost") setRawWeights(WEIGHT_PRESETS.find((preset) => preset.label === "Cheapest")!.weights);
-    setPreset((current) => {
-      if (key === "latency") return "Fastest";
-      if (key === "cost") return "Cheapest";
-      if (key === "value") return current === "Most reliable" ? current : "Balanced";
-      return "";
-    });
+    if (key === "latency") {
+      setRawWeights(WEIGHT_PRESETS.find((item) => item.label === "Fastest")!.weights);
+      setPreset("Fastest");
+    } else if (key === "cost") {
+      setRawWeights(WEIGHT_PRESETS.find((item) => item.label === "Cheapest")!.weights);
+      setPreset("Cheapest");
+    } else if (key === "value") {
+      // Most reliable is already a value ranking. Every other column sort was
+      // using a different preset, so Value Score has to restore Balanced.
+      if (preset !== "Most reliable") {
+        setRawWeights(DEFAULT_PRESET_WEIGHTS);
+        setPreset("Balanced");
+      }
+    } else {
+      setPreset("");
+    }
     track("leaderboard_sorted", { benchmark: "session-performance", column: key, direction: DEFAULT_DIRECTION[key] });
   }
 
@@ -330,7 +338,9 @@ export function LeaderboardTable({
                 key={p.provider}
                 data-leader={isWinner ? "" : undefined}
                 className="transition-none"
-                onClick={() => {
+                onClick={(event) => {
+                  const target = event.target;
+                  if (target instanceof Element && target.closest("a, button, input, select, textarea, [data-slot=popover-content]")) return;
                   const href = providerPath(p.provider);
                   if (href) router.push(href);
                 }}

@@ -7,6 +7,7 @@
 import fs from "fs";
 import path from "path";
 import { fetchFromGitHub, getResultsDir, listFromGitHub } from "./data";
+import { calendarDates } from "./history-range";
 import { PROVIDERS_BY_ID } from "./providers";
 import { getPricePerHour, getUnitPricing } from "./pricing";
 import {
@@ -188,7 +189,7 @@ function historyFromDays(days: { provider: string; date: string; entries: Browse
     byProvider.set(day.provider, series);
   }
   return {
-    dates: [...dates].sort(),
+    dates: calendarDates([...dates]),
     providers: [...byProvider.entries()]
       .map(([provider, series]) => ({
         provider,

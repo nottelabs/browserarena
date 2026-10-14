@@ -9,6 +9,7 @@ import assert from "node:assert/strict";
 
 import {
   HISTORY_RANGES,
+  calendarDates,
   filterDatesToRange,
   isIsolatedPoint,
   rangeStartDate,
@@ -84,4 +85,14 @@ test("isIsolatedPoint flags values with no neighbour on either side", () => {
 
 test("a lone point is isolated", () => {
   assert.equal(isIsolatedPoint([0.4], 0), true);
+});
+
+test("calendarDates keeps missed days between the first and last run", () => {
+  assert.deepEqual(calendarDates(["2026-10-14", "2026-10-12"]), [
+    "2026-10-12",
+    "2026-10-13",
+    "2026-10-14",
+  ]);
+  assert.deepEqual(calendarDates(["2026-10-14"]), ["2026-10-14"]);
+  assert.deepEqual(calendarDates([]), []);
 });

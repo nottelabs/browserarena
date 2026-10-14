@@ -11,6 +11,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 type Metric = "get_ms" | "first_byte_ms";
 const JITTER = [-10, 5, -2, 11, -6, 8, 0, -12, 3, 13];
 function duration(ms: number) { return `${(ms / 1000).toFixed(2)} s`; }
+function formatRunDate(ymd: string): string {
+  const [year, month, day] = ymd.split("-").map(Number);
+  if (!year || !month || !day) return ymd;
+  return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString("en-US", {
+    month: "short", day: "numeric", year: "numeric", timeZone: "UTC",
+  });
+}
 function median(values: number[]) {
   const sorted = [...values].sort((a, b) => a - b), mid = Math.floor(sorted.length / 2);
   return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
@@ -35,7 +42,7 @@ export function ProxyViolinChart({ providers, countryName, timeoutMs }: {
     <div className="flex flex-col gap-4 border-b border-foreground/15 px-4 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-6">
       <div>
         <h3 className="font-semibold tracking-tight">Download time distribution</h3>
-        <p className="mt-1 text-xs text-muted-foreground">{countryName} <span className="mx-1.5 text-foreground/25">/</span> {providers.length === 1 ? "Successful downloads on the latest run." : "Lower is faster. Every provider uses the same axis."}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{countryName} <span className="mx-1.5 text-foreground/25">/</span> {providers.length === 1 ? `Successful downloads on the ${formatRunDate(providers[0]!.runDate)} run.` : "Lower is faster. Every provider uses the same axis."}</p>
       </div>
       <div className="flex gap-1 rounded-[3px] border border-foreground/20 p-1 text-[0.7rem] font-medium" aria-label="Latency metric">
         {([{ key: "get_ms", label: "Complete GET", icon: Download }, { key: "first_byte_ms", label: "First byte", icon: Timer }] as const).map(({ key, label, icon: Icon }) => <button key={key} type="button" aria-pressed={metric === key} onClick={() => setMetric(key)}

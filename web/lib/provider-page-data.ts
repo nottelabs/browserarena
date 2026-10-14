@@ -58,6 +58,7 @@ export interface ProviderProxyDay {
   medianGetMs: number | null;
   medianFirstByteMs: number | null;
   costPerSuccessUsd: number | null;
+  workloadKey: string | null;
 }
 
 export interface ProviderProxy {
@@ -174,10 +175,11 @@ function throughputFromFile(content: string | null, providerId: string, date: st
     entry._runDate = date;
   }
   if (!entries.length) return empty;
-  const measured = entries.filter((entry) => entry.actions.length > 0 && entry.task_ms != null);
+  const successful = entries.filter((entry) => entry.success);
+  const measured = successful.filter((entry) => entry.actions.length > 0 && entry.task_ms != null);
   const row = summarizeBrowserThroughput(
     providerId,
-    entries,
+    successful,
     { displayName: info?.displayName ?? providerId, url: info?.url ?? "#", browserRegion: info?.browserRegion },
     getUnitPricing(providerId),
     getPricePerHour(providerId)
@@ -217,16 +219,21 @@ export async function loadProviderPage(providerId: string, options: { date?: str
   const throughputFile = throughputDay ? await readDayFile("browser-throughput", providerId, throughputDay, "c1/results.jsonl") : null;
   const throughputCounts = throughputFromFile(throughputFile, providerId, throughputDay ?? "");
 
-  const proxyStats = proxyHistory.selected.providers.find((provider) => provider.provider === providerId) ?? null;
-  const proxyDays = proxyHistory.days.flatMap((day) => {
+  // The selected day drops a provider whose latest suite is older, or whose
+  // target differs. The overview keeps that suite, which is what the chart shows.
+  const proxyStats = proxyHistory.overview.providers.find((provider) => provider.provider === providerId) ?? null;
+  const proxyDays = proxyHistory.days.map((day) => {
     const provider = day.providers.find((item) => item.provider === providerId);
-    return provider ? [{
+    return {
       date: day.date,
-      medianGetMs: provider.medianGetMs,
-      medianFirstByteMs: provider.medianFirstByteMs,
-      costPerSuccessUsd: provider.costPerSuccessUsd,
-    }] : [];
+      medianGetMs: provider?.medianGetMs ?? null,
+      medianFirstByteMs: provider?.medianFirstByteMs ?? null,
+      costPerSuccessUsd: provider?.costPerSuccessUsd ?? null,
+      workloadKey: provider?.workloadKey ?? null,
+    };
   });
+  const firstMeasured = proxyDays.findIndex((day) => day.workloadKey != null);
+  const providerDays = firstMeasured === -1 ? [] : proxyDays.slice(firstMeasured);
 
   return {
     lifecycle: lifecycleSeries ? {
@@ -241,12 +248,12 @@ export async function loadProviderPage(providerId: string, options: { date?: str
     } : null,
     proxy: {
       country,
-      status: proxyStats?.status ?? (proxyDays.some((day) => day.medianGetMs != null || day.medianFirstByteMs != null) ? "measured" : "absent"),
+      status: proxyStats?.status ?? (providerDays.some((day) => day.medianGetMs != null || day.medianFirstByteMs != null) ? "measured" : "absent"),
       note: proxyStats?.status === "unsupported"
         ? proxyStats.samples[0]?.error_message ?? "Residential proxy integration is unavailable for this country."
         : null,
       stats: proxyStats?.status === "measured" ? proxyStats : null,
-      history: proxyDays,
+      history: providerDays,
     },
   };
 }

@@ -6,6 +6,19 @@ export const HISTORY_RANGES = [
 
 export type HistoryRangeKey = (typeof HISTORY_RANGES)[number]["key"];
 
+// Every calendar day from the earliest date through the latest, so a missed run
+// stays a gap instead of a line drawn straight across it.
+export function calendarDates(dates: readonly string[]): string[] {
+  const sorted = [...new Set(dates)].sort();
+  if (sorted.length < 2) return sorted;
+  const filled: string[] = [];
+  const end = Date.parse(`${sorted[sorted.length - 1]}T00:00:00Z`);
+  for (let at = Date.parse(`${sorted[0]}T00:00:00Z`); at <= end; at += 86_400_000) {
+    filled.push(new Date(at).toISOString().slice(0, 10));
+  }
+  return filled;
+}
+
 // Earliest YYYY-MM-DD included in a window of `days` calendar days ending at `latest`.
 export function rangeStartDate(latest: string, days: number): string {
   const start = new Date(`${latest}T00:00:00Z`);

@@ -9,7 +9,8 @@ import { BenchmarkSectionHeader } from "@/components/benchmarks/section-header";
 import styles from "@/components/benchmarks/benchmark.module.css";
 import { ProxyViolinChart } from "@/components/proxy-violin-chart";
 import { track, withNotteUtm } from "@/lib/analytics";
-import { filterDatesToRange, HISTORY_RANGES, isIsolatedPoint, type HistoryRangeKey } from "@/lib/history-range";
+import { calendarDates, filterDatesToRange, HISTORY_RANGES, isIsolatedPoint, type HistoryRangeKey } from "@/lib/history-range";
+import { hasSuccessfulRuns } from "@/lib/ranking";
 import { proxyProviderColor } from "@/lib/proxy-violin";
 import { AGENT_ACTION_LABELS, AGENT_ACTION_TYPES } from "@/lib/browser-throughput-shared";
 import type { HistoricalProviderPoint } from "@/lib/data-shared";
@@ -118,18 +119,20 @@ function MetricButtons<T extends string>({ label, value, options, onChange }: {
 }
 
 function SeriesLine({ rows, color, metricLabel, format }: {
-  rows: { label: string; value: number | null }[];
+  rows: { label: string; value: number | null; gap?: boolean }[];
   color: string;
   metricLabel: string;
   format: (value: number) => string;
 }) {
+  // A workload change is a null point, so the line stops instead of joining the two targets.
+  const plotted = rows.flatMap((row, index) => row.gap ? [{ label: `\u200b${index}`, value: null }, row] : [row]);
   const config = { value: { label: metricLabel, color } } satisfies ChartConfig;
-  const values = rows.map((row) => row.value);
+  const values = plotted.map((row) => row.value);
   const [low, high] = domain(values.filter((value): value is number => typeof value === "number"), (max) => max >= 1000 ? 100 : max >= 100 ? 10 : max >= 1 ? 0.1 : 0.01);
   return <ChartContainer config={config} className="aspect-auto! h-[260px] w-full">
-    <LineChart data={rows} margin={{ left: 0, right: 16, top: 8 }}>
+    <LineChart data={plotted} margin={{ left: 0, right: 16, top: 8 }}>
       <CartesianGrid vertical={false} strokeDasharray="2 2" />
-      <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} minTickGap={16} />
+      <XAxis dataKey="label" tickLine={false} axisLine={false} tickMargin={8} minTickGap={16} tickFormatter={(value) => String(value).startsWith("\u200b") ? "" : String(value)} />
       <YAxis tickLine={false} axisLine={false} tickMargin={8} width={56} domain={[low, high]} tickFormatter={(value) => format(Number(value))} />
       <ChartTooltip content={<ChartTooltipContent formatter={(value) => format(Number(value))} />} />
       <Line
@@ -138,7 +141,7 @@ function SeriesLine({ rows, color, metricLabel, format }: {
         stroke="var(--color-value)"
         strokeWidth={2}
         isAnimationActive={false}
-        dot={({ key, cx, cy, index }) => typeof cx === "number" && typeof cy === "number" && (rows.length <= 14 || isIsolatedPoint(values, index ?? 0))
+        dot={({ key, cx, cy, index }) => typeof cx === "number" && typeof cy === "number" && (plotted.length <= 14 || isIsolatedPoint(values, index ?? 0))
           ? <circle key={key} cx={cx} cy={cy} r={2} fill="var(--color-value)" />
           : <g key={key} />}
         connectNulls={false}
@@ -178,15 +181,15 @@ function LifecycleSection({ data, color }: { data: ProviderLifecycle | null; col
   const [range, setRange] = useState<HistoryRangeKey>("1w");
   const [metric, setMetric] = useState<LifecycleMetric>("total");
   const [view, setView] = useState<LatencyView>("median");
-  const dates = data?.points.map((point) => point.date) ?? [];
+  const dates = useMemo(() => calendarDates(data?.points.map((point) => point.date) ?? []), [data]);
   const activeRange = HISTORY_RANGES.find((option) => option.key === range) ?? HISTORY_RANGES[0];
   const visible = useMemo(() => filterDatesToRange(dates, activeRange.days, dates[0] ?? "1970-01-01"), [activeRange.days, dates]);
   const samples = data?.samples[metric] ?? [];
   const stats = summary(samples);
   const rows = visible.map((date) => {
     const point = data?.points.find((item) => item.date === date);
-    const value = point ? point[PHASE_KEY[view][metric]] : null;
-    return { label: formatDay(date), value: typeof value === "number" ? value : null };
+    const raw = point && hasSuccessfulRuns(point) ? point[PHASE_KEY[view][metric]] : null;
+    return { label: formatDay(date), value: typeof raw === "number" ? raw : null };
   });
   return <section id="lifecycle" className="mb-12 scroll-mt-24">
     <BenchmarkSectionHeader chart title="Browser Lifecycle" description={data ? `Showing ${visible.length} run ${visible.length === 1 ? "date" : "dates"} from the ${activeRange.label.toLowerCase()}.` : "No lifecycle runs for this provider."} controls={data ? <RangeButtons range={range} setRange={setRange} benchmark="session-performance" /> : undefined} />
@@ -219,7 +222,7 @@ function ThroughputSection({ data, color }: { data: ProviderThroughput | null; c
   const [range, setRange] = useState<HistoryRangeKey>("1w");
   const [metric, setMetric] = useState<ThroughputMetric>("aps");
   const [view, setView] = useState<LatencyView>("median");
-  const dates = data?.points.map((point) => point.date) ?? [];
+  const dates = useMemo(() => calendarDates(data?.points.map((point) => point.date) ?? []), [data]);
   const activeRange = HISTORY_RANGES.find((option) => option.key === range) ?? HISTORY_RANGES[0];
   const visible = useMemo(() => filterDatesToRange(dates, activeRange.days, dates[0] ?? "1970-01-01"), [activeRange.days, dates]);
   const samples = metric === "aps" ? data?.actionsPerSecond ?? [] : metric === "task" ? data?.taskMs ?? [] : data?.screenshotMs ?? [];
@@ -285,11 +288,18 @@ function ProxySection({ data, color, slug }: { data: ProviderProxy; color: strin
   const activeRange = HISTORY_RANGES.find((option) => option.key === range) ?? HISTORY_RANGES[0];
   const visible = useMemo(() => filterDatesToRange(dates, activeRange.days, dates[0] ?? "1970-01-01"), [activeRange.days, dates]);
   const format = metric === "cost" ? formatCost : (value: number) => `${(value / 1000).toFixed(2)}s`;
-  const rows = visible.map((date) => {
-    const day = data.history.find((item) => item.date === date);
-    const value = !day ? null : metric === "get" ? day.medianGetMs : metric === "byte" ? day.medianFirstByteMs : day.costPerSuccessUsd;
-    return { label: formatDay(date), value };
-  });
+  const rows = (() => {
+    const plotted: { label: string; value: number | null; gap?: boolean }[] = [];
+    let previousKey: string | null = null;
+    for (const date of visible) {
+      const day = data.history.find((item) => item.date === date);
+      const value = !day ? null : metric === "get" ? day.medianGetMs : metric === "byte" ? day.medianFirstByteMs : day.costPerSuccessUsd;
+      const gap = Boolean(day?.workloadKey && previousKey && day.workloadKey !== previousKey);
+      if (day?.workloadKey) previousKey = day.workloadKey;
+      plotted.push({ label: formatDay(date), value, gap });
+    }
+    return plotted;
+  })();
   return <section id="proxy" className="scroll-mt-24">
     <BenchmarkSectionHeader chart title="Proxy Performance" description={data.status === "absent" ? "No proxy runs for this provider." : `${COUNTRY_NAMES[data.country]}. ${data.history.length ? `Showing ${visible.length} run ${visible.length === 1 ? "date" : "dates"} from the ${activeRange.label.toLowerCase()}.` : ""}`} controls={<div className="flex flex-wrap items-center gap-1.5">
       {PROXY_COUNTRIES.map((country) => <Link key={country} href={`/provider/${slug}?country=${country}#proxy`} prefetch={true} aria-current={country === data.country ? "page" : undefined} className={buttonClass(country === data.country)}>{country}</Link>)}

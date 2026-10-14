@@ -87,14 +87,18 @@ async function LifecycleView({
     sortBy,
     effectiveConcurrency
   );
-  if (requestedDate && !leaderboard.metadata.availableDates?.includes(requestedDate)) {
-    leaderboard = await loadLeaderboard("hello-browser", undefined, percentile, sortBy, effectiveConcurrency);
+  // The picker labels one calendar day. Load that day, not each provider's
+  // newest file, so the rows match the date on screen.
+  const knownDates = leaderboard.metadata.availableDates ?? [];
+  const pinnedDate = requestedDate && knownDates.includes(requestedDate) ? requestedDate : knownDates.at(-1);
+  if (pinnedDate && leaderboard.metadata.date !== pinnedDate) {
+    leaderboard = await loadLeaderboard("hello-browser", pinnedDate, percentile, sortBy, effectiveConcurrency);
   }
   const concurrencyLevels = leaderboard.metadata.availableConcurrencyLevels?.length ? leaderboard.metadata.availableConcurrencyLevels : [1];
   if (!concurrencyLevels.includes(effectiveConcurrency)) {
     effectiveConcurrency = concurrencyLevels[0];
     percentile = effectiveConcurrency > 1 ? "median" : requestedPercentile;
-    leaderboard = await loadLeaderboard("hello-browser", requestedDate, percentile, sortBy, effectiveConcurrency);
+    leaderboard = await loadLeaderboard("hello-browser", leaderboard.metadata.date ?? pinnedDate, percentile, sortBy, effectiveConcurrency);
   }
   const { providers } = leaderboard;
   const history = await loadHistoricalLeaderboard("hello-browser", effectiveConcurrency);
