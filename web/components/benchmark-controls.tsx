@@ -72,7 +72,7 @@ export function GitHubLink() {
       href={REPO_URL}
       target="_blank"
       rel="noopener noreferrer"
-      className="text-muted-foreground hover:text-foreground"
+      className="inline-flex size-9 items-center justify-center rounded-[3px] border-[1.5px] border-foreground bg-background text-foreground transition-colors hover:bg-foreground hover:text-background"
       aria-label="View source on GitHub"
     >
       <svg viewBox="0 0 16 16" fill="currentColor" className="size-5">

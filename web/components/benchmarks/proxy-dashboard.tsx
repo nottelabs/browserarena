@@ -12,7 +12,7 @@ import styles from "./benchmark.module.css";
 
 const formatDate = (date: string) => new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
 
-export function ProxyDashboard({ history, country, preview = false, simulated = false, basePath = "/proxy-get", sort }: {
+export function ProxyDashboard({ history, country, preview = false, simulated = false, basePath = "/proxies", sort }: {
   history: Awaited<ReturnType<typeof loadProxyGetHistory>>;
   country: (typeof PROXY_COUNTRIES)[number];
   preview?: boolean;
@@ -34,13 +34,11 @@ export function ProxyDashboard({ history, country, preview = false, simulated = 
   const distributionTimeout = Math.max(0, ...providers.filter(p => p.attempts > 0).flatMap(p => p.samples.map(s => s.timeout_ms))) || 30000;
 
   return <>
-      <ProxyLeaderboard providers={providers} countryName={COUNTRY_NAMES[country]} dateLabel={dateLabel} simulated={simulated} initialSort={sort} />
+      <ProxyLeaderboard providers={providers} countryName={COUNTRY_NAMES[country]} dateLabel={dateLabel} simulated={simulated} initialSort={sort} dateControl={date ? <ProxyDayPicker basePath={basePath} sort={sort} dates={history.dates} selectedDate={date} country={country} simulated={simulated} /> : undefined} />
       {date && <div className={styles.charts}>
         <ProxyHistoryChart days={history.days} dates={history.dates} selectedDate={date} country={country} countryName={COUNTRY_NAMES[country]} workloadChangeDates={history.workloadChangeDates} simulated={simulated} compact rollingWindow={7} basePath={basePath} sort={sort} sectioned />
         <section className="flex min-w-0 flex-col" aria-label="Results">
-          <BenchmarkSectionHeader chart title="Results" description="Dots = samples · line = median · shape = estimated density." controls={
-              <ProxyDayPicker basePath={basePath} sort={sort} dates={history.dates} selectedDate={date} country={country} simulated={simulated} />
-          } />
+          <BenchmarkSectionHeader chart title="Results" description="Dots = samples · line = median · shape = estimated density." />
           <ProxyDailyDistribution providers={providers} dateLabel={dateLabel} timeoutMs={distributionTimeout} />
         </section>
       </div>}

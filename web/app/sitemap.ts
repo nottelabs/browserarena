@@ -1,14 +1,17 @@
+import { cacheLife } from "next/cache";
 import type { MetadataRoute } from "next";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  "use cache";
+  cacheLife("days");
+  const lastModified = new Date();
   const baseUrl = "https://browserarena.ai";
 
   return [
-    { url: `${baseUrl}/benchmark`, changeFrequency: "weekly", priority: 0.9 },
-    { url: `${baseUrl}/proxy-get`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${baseUrl}/proxies`, changeFrequency: "daily", priority: 0.9 },
     {
       url: baseUrl,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "daily",
       priority: 1.0,
     },
@@ -16,37 +19,37 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // understand that these are meaningful distinct views of the data)
     {
       url: `${baseUrl}/faq`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "weekly",
       priority: 0.9,
     },
     {
       url: `${baseUrl}?percentile=median`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "daily",
       priority: 0.9,
     },
     {
       url: `${baseUrl}?percentile=p90`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
       url: `${baseUrl}?percentile=p95`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "daily",
       priority: 0.8,
     },
     {
       url: `${baseUrl}?percentile=p99`,
-      lastModified: new Date(),
+      lastModified,
       changeFrequency: "daily",
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/browser-throughput`,
-      lastModified: new Date(),
+      url: `${baseUrl}/throughput`,
+      lastModified,
       changeFrequency: "daily",
       priority: 0.9,
     },

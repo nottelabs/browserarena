@@ -6,6 +6,7 @@ import {
   Bar,
   BarChart,
   CartesianGrid,
+  Cell,
   Line,
   LineChart,
   XAxis,
@@ -30,6 +31,7 @@ import {
   type HistoryRangeKey,
 } from "@/lib/history-range";
 import { hasSuccessfulRuns } from "@/lib/ranking";
+import { LifecycleDistribution } from "./benchmarks/lifecycle-distribution";
 import { BenchmarkSectionHeader } from "./benchmarks/section-header";
 import styles from "./benchmarks/benchmark.module.css";
 
@@ -97,6 +99,47 @@ const PHASE_CONFIG = {
 } satisfies ChartConfig;
 
 const PHASE_ORDER_TOP_DOWN = ["release", "goto", "connect", "create"];
+
+type HistoryMetric = "score" | "total" | "create" | "connect" | "goto" | "release";
+
+const HISTORY_METRICS: { key: HistoryMetric; label: string }[] = [
+  { key: "score", label: "Value score" },
+  { key: "total", label: "Total" },
+  { key: "create", label: "Create" },
+  { key: "connect", label: "Connect" },
+  { key: "goto", label: "Goto" },
+  { key: "release", label: "Release" },
+];
+
+const metricButtonClass = (active: boolean) =>
+  `shrink-0 rounded-[3px] border px-3 py-1.5 text-[0.68rem] font-medium transition-colors ${
+    active
+      ? "border-foreground bg-foreground text-background"
+      : "border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground"
+  }`;
+
+function historyMetricValue(
+  metric: HistoryMetric,
+  point: HistoricalProviderPoint,
+  keys: PhaseMetricKeys,
+  pricePerHour: number | null,
+): number | null {
+  if (!hasSuccessfulRuns(point)) return null;
+  if (metric === "score") {
+    return computeValueScore({
+      latencyMs: point[keys.total] as number,
+      successRate: point.successRate,
+      pricePerHour,
+    });
+  }
+  const key = metric === "total" ? keys.total
+    : metric === "create" ? keys.create
+    : metric === "connect" ? keys.connect
+    : metric === "goto" ? keys.goto
+    : keys.release;
+  const value = point[key];
+  return typeof value === "number" ? value : null;
+}
 
 const PROVIDER_COLORS = [
   "#4E79A7",
@@ -200,10 +243,12 @@ function ValueScoreTooltip({
   active,
   payload,
   config,
+  formatValue = formatScore,
 }: {
   active?: boolean;
   payload?: ValueScoreTooltipItem[];
   config: ChartConfig;
+  formatValue?: (value: unknown) => string;
 }) {
   if (!active || !payload?.length) return null;
 
@@ -230,7 +275,7 @@ function ValueScoreTooltip({
                 {config[key]?.label ?? key}
               </span>
               <span className="font-mono font-medium text-foreground tabular-nums">
-                {formatScore(item.value)}
+                {formatValue(item.value)}
               </span>
             </div>
           );
@@ -299,14 +344,19 @@ export function HistoryCharts({
   history,
   percentile = "median",
   initialProvider,
+  selectedDate,
   animate = true,
+  distributions = [],
 }: {
   history: HistoricalLeaderboardResult;
   percentile?: PercentileType;
   initialProvider?: string;
+  selectedDate?: string;
   animate?: boolean;
+  distributions?: { provider: string; displayName: string; sessionMs: number[] }[];
 }) {
   const [range, setRange] = useState<HistoryRangeKey>("1w");
+  const [metric, setMetric] = useState<HistoryMetric>("score");
   const activeRange =
     HISTORY_RANGES.find((option) => option.key === range) ?? HISTORY_RANGES[0];
   const visibleDates = useMemo(
@@ -493,19 +543,13 @@ export function HistoryCharts({
         label: formatDateLabel(date),
       };
       for (const provider of providerOptions) {
-        const point = provider.points.find((p) => p.date === date);
         // A day with no successful runs has no latency to score: leave a gap.
-        row[provider.provider] = point && hasSuccessfulRuns(point)
-          ? computeValueScore({
-              latencyMs: point[keys.total] as number,
-              successRate: point.successRate,
-              pricePerHour: provider.pricePerHour,
-            })
-          : null;
+        const point = provider.points.find((item) => item.date === date);
+        row[provider.provider] = point ? historyMetricValue(metric, point, keys, provider.pricePerHour) : null;
       }
       return row;
     });
-  }, [keys.total, providerOptions, visibleDates]);
+  }, [keys, metric, providerOptions, visibleDates]);
 
   const scoresByProvider = useMemo(() => {
     const scores: Record<string, Array<number | null>> = {};
@@ -524,9 +568,13 @@ export function HistoryCharts({
         .filter((value): value is number => typeof value === "number")
     );
     if (values.length === 0) return [0, 1];
+    const max = Math.max(...values);
+    if (metric !== "score") {
+      if (max <= 0) return [0, 1000];
+      return [0, Math.ceil((max * 1.08) / 100) * 100];
+    }
 
     const min = Math.min(...values);
-    const max = Math.max(...values);
     if (min === max) {
       const pad = 0.02;
       return [Math.max(0, min - pad), Math.min(1, max + pad)];
@@ -534,7 +582,21 @@ export function HistoryCharts({
 
     const pad = (max - min) * 0.08;
     return [Math.max(0, min - pad), Math.min(1, max + pad)];
-  }, [lineData, providerOptions]);
+  }, [lineData, metric, providerOptions]);
+
+  const snapshotDate = selectedDate && history.providers.some((provider) => provider.points.some((point) => point.date === selectedDate && hasSuccessfulRuns(point)))
+    ? selectedDate
+    : [...visibleDates].reverse().find((date) => providerOptions.some((provider) => {
+        const point = provider.points.find((item) => item.date === date);
+        return point ? hasSuccessfulRuns(point) : false;
+      }));
+  const snapshotRows = history.providers.flatMap((provider) => {
+    const point = provider.points.find((item) => item.date === snapshotDate);
+    const value = point ? historyMetricValue(metric, point, keys, provider.pricePerHour) : null;
+    return value == null ? [] : [{ provider: provider.provider, name: provider.displayName, value }];
+  }).sort((a, b) => metric === "score" ? b.value - a.value : a.value - b.value);
+  const metricLabel = HISTORY_METRICS.find((item) => item.key === metric)?.label ?? "Value score";
+  const percentileLabel = percentile === "median" ? "Median" : percentile.toUpperCase();
 
   if (providerOptions.length === 0) return null;
 
@@ -565,8 +627,11 @@ export function HistoryCharts({
           </div>} />
         <div data-benchmark-panel="history" className="flex flex-1 flex-col rounded-[3px] border-[1.5px] border-foreground bg-background p-3 sm:p-4">
           <div data-panel-header>
-            <h3 className="text-[0.72rem] font-semibold uppercase tracking-widest text-foreground">Provider Value Score</h3>
-            <p className="text-muted-foreground">Composite score by run date. Higher is better.</p>
+            <h3 className="text-[0.72rem] font-semibold uppercase tracking-widest text-foreground">{metric === "score" ? "Provider Value Score" : metricLabel}</h3>
+            <p className="text-muted-foreground">{metric === "score" ? "Composite score by run date. Higher is better." : `${percentileLabel} latency by run date. Lower is better.`}</p>
+            <div className="mt-3 flex flex-wrap gap-1.5" aria-label="History metric">
+              {HISTORY_METRICS.map((item) => <button key={item.key} type="button" aria-pressed={item.key === metric} onClick={() => { setMetric(item.key); track("history_metric_selected", { benchmark: "session-performance", metric: item.key }); }} className={metricButtonClass(item.key === metric)}>{item.label}</button>)}
+            </div>
           </div>
           <ChartContainer
             config={providerConfig}
@@ -587,11 +652,11 @@ export function HistoryCharts({
                 tickMargin={8}
                 width={48}
                 domain={scoreDomain}
-                tickFormatter={(value) => Number(value).toFixed(2)}
+                tickFormatter={(value) => metric === "score" ? Number(value).toFixed(2) : `${(Number(value) / 1000).toFixed(1)}s`}
               />
               <ChartTooltip
                 trigger="hover"
-                content={<ValueScoreTooltip config={providerConfig} />}
+                content={<ValueScoreTooltip config={providerConfig} formatValue={metric === "score" ? formatScore : formatMs} />}
               />
               <ChartLegend content={<ChartLegendContent />} />
               {providerOptions.map((provider) => (
@@ -692,6 +757,41 @@ export function HistoryCharts({
             </BarChart>
           </ChartContainer>
         </div>
+        </section>
+        {distributions.length > 0 && <section data-chart-span="row" className="flex min-w-0 flex-col">
+          <BenchmarkSectionHeader chart title="Distribution" description={`${formatDateLabel(selectedDate || snapshotDate || "")} · Successful session totals. A fast median can still have a long tail.`} />
+          <div className="flex flex-1 flex-col rounded-[3px] border-[1.5px] border-foreground bg-background p-3 sm:p-4">
+            <LifecycleDistribution providers={distributions} dateLabel={formatDateLabel(selectedDate || snapshotDate || "")} />
+          </div>
+        </section>}
+        <section data-chart-span="row" className="flex min-w-0 flex-col">
+          <BenchmarkSectionHeader chart title="Comparison" description={snapshotDate ? `${formatDateLabel(snapshotDate)} · ${metric === "score" ? "Higher is better." : `${percentileLabel} latency. Lower is better.`}` : "No run day in this range."} />
+          <div data-benchmark-panel="ranking" className="flex flex-1 flex-col rounded-[3px] border-[1.5px] border-foreground bg-background p-3 sm:p-4">
+            <div data-panel-header>
+              <h3 className="text-[0.72rem] font-semibold uppercase tracking-widest text-foreground">{metricLabel}</h3>
+              <p className="text-muted-foreground">Every provider on the selected run day.</p>
+            </div>
+            {snapshotRows.length > 0 ? <ChartContainer config={providerConfig} className="aspect-auto! w-full">
+              <BarChart layout="vertical" data={snapshotRows} margin={{ left: 8, right: 16, top: 8, bottom: 8 }}>
+                <CartesianGrid horizontal={false} strokeDasharray="2 2" />
+                <XAxis type="number" domain={scoreDomain} tickLine={false} axisLine={false} tickFormatter={(value) => metric === "score" ? Number(value).toFixed(2) : `${(Number(value) / 1000).toFixed(1)}s`} />
+                <YAxis type="category" dataKey="name" width={120} tickLine={false} axisLine={false} />
+                <ChartTooltip
+                  content={({ active, payload }) => {
+                    const row = payload?.[0];
+                    if (!active || !row || typeof row.value !== "number") return null;
+                    return <div className="grid min-w-[8rem] gap-1 rounded-none border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl">
+                      <div className="font-medium">{String(row.payload?.name ?? "")}</div>
+                      <div className="font-mono font-medium tabular-nums">{metric === "score" ? formatScore(row.value) : formatMs(row.value)}</div>
+                    </div>;
+                  }}
+                />
+                <Bar dataKey="value" radius={[0, 3, 3, 0]} isAnimationActive={animate}>
+                  {snapshotRows.map((row) => <Cell key={row.provider} fill={providerConfig[row.provider]?.color ?? "#4E79A7"} />)}
+                </Bar>
+              </BarChart>
+            </ChartContainer> : <p className="flex min-h-24 items-center justify-center text-sm text-muted-foreground">No successful runs on this day.</p>}
+          </div>
         </section>
       </div>
     </section>

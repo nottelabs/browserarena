@@ -35,7 +35,7 @@ export function ProxyViolinChart({ providers, countryName, timeoutMs }: {
     <div className="flex flex-col gap-4 border-b border-foreground/15 px-4 py-5 sm:flex-row sm:items-start sm:justify-between sm:px-6">
       <div>
         <h3 className="font-semibold tracking-tight">Download time distribution</h3>
-        <p className="mt-1 text-xs text-muted-foreground">{countryName} <span className="mx-1.5 text-foreground/25">/</span> Lower is faster. Every provider uses the same axis.</p>
+        <p className="mt-1 text-xs text-muted-foreground">{countryName} <span className="mx-1.5 text-foreground/25">/</span> {providers.length === 1 ? "Successful downloads on the latest run." : "Lower is faster. Every provider uses the same axis."}</p>
       </div>
       <div className="flex gap-1 rounded-[3px] border border-foreground/20 p-1 text-[0.7rem] font-medium" aria-label="Latency metric">
         {([{ key: "get_ms", label: "Complete GET", icon: Download }, { key: "first_byte_ms", label: "First byte", icon: Timer }] as const).map(({ key, label, icon: Icon }) => <button key={key} type="button" aria-pressed={metric === key} onClick={() => setMetric(key)}
@@ -66,7 +66,7 @@ export function ProxyViolinChart({ providers, countryName, timeoutMs }: {
           <div className="col-start-1 row-start-1 flex items-center gap-2.5 min-w-0">
             <span className="hidden w-3 text-[0.6rem] font-mono text-muted-foreground/60 sm:block">{String(index + 1).padStart(2, "0")}</span>
             <span className="inline-flex size-7 shrink-0 items-center justify-center overflow-hidden rounded-[3px] border border-foreground/10 bg-background">
-              {PROVIDERS_BY_ID[p.provider]?.logo ? <img src={PROVIDERS_BY_ID[p.provider].logo} alt="" className="size-6 object-contain" /> : <span className="size-2 rounded-full" style={{ background: color }} />}
+              {PROVIDERS_BY_ID[p.provider]?.logo ? <img src={PROVIDERS_BY_ID[p.provider].logo} alt="" decoding="sync" className="size-6 object-contain" /> : <span className="size-2 rounded-full" style={{ background: color }} />}
             </span>
             <div className="min-w-0"><span className="block truncate text-xs font-semibold">{p.displayName}</span><span className="block text-[0.6rem] text-muted-foreground">{p.successes}/{p.attempts} successful</span></div>
           </div>

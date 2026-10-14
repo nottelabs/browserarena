@@ -36,6 +36,7 @@ export function ProviderFailuresPopover({
     <Popover>
       <PopoverTrigger
         type="button"
+        onClick={(event) => event.stopPropagation()}
         className={cn(
           "inline-flex items-center gap-1 rounded-[3px] border-[1.5px] border-foreground/30 bg-background px-1.5 py-0.5 font-mono text-[0.6rem] text-foreground tabular-nums",
           "outline-none transition-colors hover:border-foreground/60 focus-visible:ring-2 focus-visible:ring-foreground/30",

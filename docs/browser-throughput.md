@@ -133,7 +133,7 @@ scripts/run-and-publish.sh --region us-east --benchmark browser-throughput --con
 ```
 
 Results go to `results/browser-throughput/<provider>/<date>/c<N>/results.jsonl` and
-show up at `/browser-throughput` and `GET /api/browser-throughput?concurrency=1`.
+show up at `/throughput` and `GET /api/browser-throughput?concurrency=1`.
 
 ## Limitations
 

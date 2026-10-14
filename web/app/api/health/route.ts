@@ -10,16 +10,16 @@
  * Checkly, Cronitor, UptimeRobot and friends alert on it with zero config.
  */
 
+import { connection } from "next/server";
 import { loadHealthReport, type HealthStatus } from "@/lib/regression";
 import { captureApiRequest } from "@/lib/posthog-server";
 
 /**
  * Request-time evaluation. `results/` is traced into the lambda bundle, so the
- * `fs` read works here; what we specifically need from a dynamic route is the
- * *clock*. A dead cron produces no commit, so no rebuild — a build-time clock
- * could never notice its own data going stale.
+ * `fs` read works here; what we specifically need is the *clock*. A dead cron
+ * produces no commit, so no rebuild — a build-time clock could never notice
+ * its own data going stale.
  */
-export const dynamic = "force-dynamic";
 
 const VALID_CONCURRENCY = [1, 10, 25, 50];
 const DEFAULT_PROVIDER = "NOTTE";
@@ -37,6 +37,7 @@ function fail(message: string, status: number) {
 }
 
 export async function GET(request: Request) {
+  await connection();
   captureApiRequest(request, "/api/health");
   const params = new URL(request.url).searchParams;
 

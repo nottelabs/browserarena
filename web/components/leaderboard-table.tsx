@@ -3,14 +3,14 @@ import { track } from "@/lib/analytics";
 import { withNotteUtm } from "@/lib/utm";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
-  PROVIDER_CDP_ENDPOINT,
-  vmMetaRegionLabel,
   type ProviderStats,
   type PercentileType,
-  type VmMeta,
 } from "@/lib/data-shared";
-import { PROVIDERS } from "@/lib/providers";
+import { SquarePlus, SquareMinus } from "lucide-react";
+import Link from "next/link";
+import { PROVIDERS, providerPath } from "@/lib/providers";
 import { hasSuccessfulRuns, sortRanked } from "@/lib/ranking";
 import { computeValueScores, DEFAULT_WEIGHTS, TAIL_SHARE } from "@/lib/value-score";
 import {
@@ -28,10 +28,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { ProviderFailuresPopover } from "@/components/provider-failures-popover";
-import { HardDrive, SquarePlus, SquareMinus } from "lucide-react";
 import { BenchmarkSectionHeader } from "./benchmarks/section-header";
 import { BenchmarkTablePanel } from "./benchmarks/table-panel";
-import { WeightBar, WEIGHT_PRESETS } from "./benchmarks/value-score-controls";
+import { WeightBar, DEFAULT_PRESET_WEIGHTS, WEIGHT_PRESETS } from "./benchmarks/value-score-controls";
+import { RunInfoIcon } from "./run-info-icon";
 
 const SEGMENT_KEYS: Record<
   PercentileType,
@@ -95,128 +95,6 @@ function NotAvailable() {
   );
 }
 
-
-function SortArrow({ active }: { active: boolean }) {
-  if (!active) return null;
-  return (
-    <svg
-      viewBox="0 0 8 10"
-      fill="currentColor"
-      className="inline-block size-2 ml-0.5 shrink-0 text-foreground"
-    >
-      <path d="M4 9.5L0.5 5H7.5L4 9.5Z" />
-    </svg>
-  );
-}
-
-function formatDate(iso: string): string {
-  const d = new Date(iso);
-  return `${d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" })} ${d.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" })} UTC`;
-}
-
-function formatRunDate(ymd: string): string {
-  const [y, m, d] = ymd.split("-").map(Number);
-  if (!y || !m || !d) return ymd;
-  const date = new Date(Date.UTC(y, m - 1, d));
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    timeZone: "UTC",
-  });
-}
-
-function VmMetaTooltipBody({
-  meta,
-  runDate,
-  provider,
-}: {
-  meta?: VmMeta;
-  runDate?: string;
-  provider?: string;
-}) {
-  const regionFromMeta = vmMetaRegionLabel(meta);
-  const machineLine =
-    meta?.instance_type && regionFromMeta
-      ? `${meta.instance_type} · ${regionFromMeta}`
-      : meta?.instance_type
-        ? meta.instance_type
-        : regionFromMeta
-          ? regionFromMeta
-          : null;
-  const durationMs = meta?.started_at && meta?.finished_at
-    ? new Date(meta.finished_at).getTime() - new Date(meta.started_at).getTime()
-    : null;
-  const durationLabel = durationMs != null
-    ? durationMs >= 3_600_000
-      ? `${Math.floor(durationMs / 3_600_000)}h ${Math.round((durationMs % 3_600_000) / 60_000)}m`
-      : `${Math.round(durationMs / 60_000)}m`
-    : null;
-  const cdpInfo = provider ? PROVIDER_CDP_ENDPOINT[provider] : undefined;
-
-  return (
-    <div className="grid grid-cols-[auto_1fr] text-[0.6rem] font-mono text-foreground">
-      {runDate && (
-        <>
-          <span className="px-2 py-1 text-muted-foreground border-b border-border">Run date</span>
-          <span className="px-2 py-1 border-b border-border">{formatRunDate(runDate)}</span>
-        </>
-      )}
-      {machineLine && (
-        <>
-          <span className="px-2 py-1 text-muted-foreground border-b border-border">Machine</span>
-          <span className="px-2 py-1 border-b border-border">{machineLine}</span>
-        </>
-      )}
-      {meta?.started_at && (
-        <>
-          <span className="px-2 py-1 text-muted-foreground border-b border-border">Started</span>
-          <span className="px-2 py-1 border-b border-border">{formatDate(meta.started_at)}</span>
-        </>
-      )}
-      {durationLabel != null && (
-        <>
-          <span className="px-2 py-1 text-muted-foreground border-b border-border">Duration</span>
-          <span className="px-2 py-1 border-b border-border">{durationLabel}</span>
-        </>
-      )}
-      {cdpInfo && (
-        <>
-          <span className="px-2 py-1 text-muted-foreground border-b border-border">CDP RTT</span>
-          <span className="px-2 py-1 border-b border-border">
-            {cdpInfo.rttMs}ms{cdpInfo.proxied ? " (proxied)" : ""}
-          </span>
-          <span className="px-2 py-1 text-muted-foreground">CDP host</span>
-          <span className="px-2 py-1">{cdpInfo.cdpHost}</span>
-        </>
-      )}
-    </div>
-  );
-}
-
-function MachineIcon({
-  meta,
-  runDate,
-  provider,
-}: {
-  meta: VmMeta;
-  runDate?: string;
-  provider?: string;
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <span className="text-muted-foreground/40 hover:text-muted-foreground transition-colors">
-          <HardDrive className="size-3 inline-block" />
-        </span>
-      </TooltipTrigger>
-      <TooltipContent side="right" sideOffset={8} className="p-0 overflow-hidden rounded-[3px] border-[1.5px] border-foreground bg-background shadow-none">
-        <VmMetaTooltipBody meta={meta} runDate={runDate} provider={provider} />
-      </TooltipContent>
-    </Tooltip>
-  );
-}
-
 interface HeaderDef {
   label: string;
   sortKey?: SortKey;
@@ -237,6 +115,7 @@ export function LeaderboardTable({
   hideTitle?: boolean;
   controls?: React.ReactNode;
 }) {
+  const router = useRouter();
   const segmentKeys = SEGMENT_KEYS[percentile];
   const totalKey = TOTAL_KEYS[percentile];
 
@@ -268,10 +147,10 @@ export function LeaderboardTable({
     key: "value",
     dir: "desc",
   });
+  const [preset, setPreset] = useState("Balanced");
 
-  // Defaults to the first preset ("Fastest") so the highlighted button and the
-  // initial weights cannot drift apart.
-  const [rawWeights, setRawWeights] = useState(WEIGHT_PRESETS[0].weights);
+  // Starts on Balanced so the highlighted preset and the initial weights match.
+  const [rawWeights, setRawWeights] = useState(DEFAULT_PRESET_WEIGHTS);
 
   const normalizedWeights = useMemo(() => {
     const total = rawWeights.latency + rawWeights.reliability + rawWeights.cost;
@@ -288,8 +167,36 @@ export function LeaderboardTable({
     [data, totalKey, normalizedWeights]
   );
 
+  function presetLabel(weights: { latency: number; reliability: number; cost: number }) {
+    return WEIGHT_PRESETS.find((preset) => preset.weights.latency === weights.latency && preset.weights.reliability === weights.reliability && preset.weights.cost === weights.cost)?.label;
+  }
+
+  function applyPreset(weights: { latency: number; reliability: number; cost: number }) {
+    const label = presetLabel(weights) ?? "custom";
+    setRawWeights(weights);
+    if (label === "Fastest") {
+      setPreset("Fastest");
+      setSort({ key: "latency", dir: "asc" });
+    } else if (label === "Cheapest") {
+      setPreset("Cheapest");
+      setSort({ key: "cost", dir: "asc" });
+    } else {
+      setPreset(label);
+      setSort({ key: "value", dir: "desc" });
+    }
+    track("value_score_preset_selected", { benchmark: "session-performance", preset: label });
+  }
+
   function handleSort(key: SortKey) {
     setSort({ key, dir: DEFAULT_DIRECTION[key] });
+    if (key === "latency") setRawWeights(WEIGHT_PRESETS.find((preset) => preset.label === "Fastest")!.weights);
+    else if (key === "cost") setRawWeights(WEIGHT_PRESETS.find((preset) => preset.label === "Cheapest")!.weights);
+    setPreset((current) => {
+      if (key === "latency") return "Fastest";
+      if (key === "cost") return "Cheapest";
+      if (key === "value") return current === "Most reliable" ? current : "Balanced";
+      return "";
+    });
     track("leaderboard_sorted", { benchmark: "session-performance", column: key, direction: DEFAULT_DIRECTION[key] });
   }
 
@@ -353,11 +260,11 @@ export function LeaderboardTable({
           Leaderboard
         </h2>
       )}
-      <BenchmarkSectionHeader controls={<WeightBar weights={rawWeights} onChange={(w) => { setRawWeights(w); setSort({ key: "value", dir: "desc" }); track("value_score_preset_selected", { benchmark: "session-performance", preset: WEIGHT_PRESETS.find((p) => p.weights === w)?.label ?? "custom" }); }} />}>
+      <BenchmarkSectionHeader controls={<WeightBar weights={rawWeights} selected={preset} onChange={applyPreset} />}>
         {controls}
       </BenchmarkSectionHeader>
 
-      <BenchmarkTablePanel label="Session Performance provider results">
+      <BenchmarkTablePanel label="Browser Lifecycle provider results">
       <Table style={showBreakdown ? { minWidth: 1280 } : undefined}>
         <TableHeader className="[&_tr]:border-b-[1.5px]">
           <TableRow className="border-b-[1.5px] border-foreground hover:bg-transparent">
@@ -366,6 +273,7 @@ export function LeaderboardTable({
               return (
               <TableHead
                 key={h.label}
+                data-sorted={isSortedCol ? "" : undefined}
                 className={`text-[0.6rem] font-semibold uppercase tracking-wider text-muted-foreground ${
                   h.align === "left" ? "text-left" : h.align === "center" ? "text-center" : "text-right"
                 } ${h.className ?? ""} ${h.sortKey ? "cursor-pointer select-none hover:text-foreground transition-colors" : ""} ${isSortedCol ? "text-foreground" : ""} ${h.mobileHidden ? "hidden sm:table-cell" : ""}`}
@@ -386,9 +294,6 @@ export function LeaderboardTable({
                     </>
                   ) : (
                     h.label
-                  )}
-                  {h.sortKey && (
-                    <SortArrow active={sort.key === h.sortKey} />
                   )}
                   {h.tooltip && (
                     <Tooltip>
@@ -419,11 +324,16 @@ export function LeaderboardTable({
             const rank = ranks.get(p.provider) ?? (idx + 1);
             const isWinner = ranked && rank === 1;
             const totalMs = p[totalKey] as number;
-            const sc = (key: SortKey) => sort.key === key ? "text-foreground font-medium" : "";
+            const sorted = (key: SortKey) => sort.key === key ? "" : undefined;
             return (
               <TableRow
                 key={p.provider}
-                className={`transition-none h-10 sm:h-12 ${isWinner ? "bg-primary/6 hover:bg-primary/10" : ""}`}
+                data-leader={isWinner ? "" : undefined}
+                className="transition-none"
+                onClick={() => {
+                  const href = providerPath(p.provider);
+                  if (href) router.push(href);
+                }}
               >
                 <TableCell className="text-center py-2">
                   <span className="text-[0.65rem] text-muted-foreground">
@@ -434,25 +344,26 @@ export function LeaderboardTable({
                   <div className="flex flex-col gap-1 items-start">
                     <div className="flex items-center gap-x-2 gap-y-0.5 flex-nowrap">
                       {PROVIDER_LOGOS[p.provider] && (
-                        <span className={`inline-flex items-center justify-center size-6 rounded-[3px] overflow-hidden border border-border shrink-0 ${p.provider === "NOTTE" ? "bg-black p-[1px]" : ""}`}>
+                        <span className={`inline-flex items-center justify-center size-6 rounded-[3px] overflow-hidden shrink-0 ${p.provider === "NOTTE" ? "bg-black p-[1px]" : ""}`}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={PROVIDER_LOGOS[p.provider]}
                             alt={`${p.displayName} logo`}
+                            decoding="sync"
                             className={p.provider === "NOTTE" ? "size-full object-contain" : "size-6 object-cover"}
                           />
                         </span>
                       )}
-                      <a
-                        href={withNotteUtm(p.url, "leaderboard")}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        href={providerPath(p.provider) ?? withNotteUtm(p.url, "leaderboard")}
+                        prefetch={providerPath(p.provider) ? true : undefined}
+                        onClick={(event) => event.stopPropagation()}
                         className="font-semibold text-[0.82rem] text-foreground hover:text-primary"
                       >
                         {p.displayName}
-                      </a>
+                      </Link>
                       {p.vmMeta && (
-                        <MachineIcon meta={p.vmMeta} runDate={p.runDate} provider={p.provider} />
+                        <RunInfoIcon meta={p.vmMeta} runDate={p.runDate} provider={p.provider} />
                       )}
                     </div>
                     {p.disclaimer ? (
@@ -473,9 +384,9 @@ export function LeaderboardTable({
                     </span>
                   )}
                 </TableCell>
-                <TableCell className={`hidden sm:table-cell py-2 text-right ${sc("reliability")}`}>
-                  <div className="flex flex-col items-end justify-center">
-                    <span className="font-mono text-[0.82rem] tabular-nums leading-tight text-foreground">
+                <TableCell data-sorted={sorted("reliability")} className="hidden sm:table-cell py-0 text-right">
+                  <div className="flex items-center justify-end gap-1.5">
+                    <span className="font-mono text-[0.82rem] tabular-nums leading-none text-foreground">
                       {p.successRate.toFixed(1)}%
                     </span>
                     {p.failureInsights ? (
@@ -484,9 +395,7 @@ export function LeaderboardTable({
                         insights={p.failureInsights}
                         successRate={p.successRate}
                       />
-                    ) : (
-                      <span className="text-[0.6rem] leading-tight invisible">placeholder</span>
-                    )}
+                    ) : null}
                   </div>
                 </TableCell>
                 {showBreakdown && segmentKeys.map((key, i) => {
@@ -494,7 +403,8 @@ export function LeaderboardTable({
                   return (
                   <TableCell
                     key={i}
-                    className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] text-foreground tabular-nums ${sc(segSortKeys[i])}`}
+                    data-sorted={sorted(segSortKeys[i])}
+                    className="hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] text-foreground tabular-nums"
                   >
                     {ranked ? Math.round((p[key] as number)).toLocaleString("en-US") : <NotAvailable />}
                   </TableCell>
@@ -506,16 +416,17 @@ export function LeaderboardTable({
                   </TableCell>
                 )}
                 <TableCell
-                  className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("latency")}`}
+                  data-sorted={sorted("latency")}
+                  className="hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground"
                 >
                   {ranked ? Math.round(totalMs).toLocaleString("en-US") : <NotAvailable />}
                 </TableCell>
-                <TableCell className={`hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("cost")}`}>
+                <TableCell data-sorted={sorted("cost")} className="hidden sm:table-cell py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground">
                   {p.pricePerHour != null ? (
                     <>${p.pricePerHour.toFixed(2)}/hr</>
                   ) : "—"}
                 </TableCell>
-                <TableCell className={`py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground ${sc("value")}`}>
+                <TableCell data-sorted={sorted("value")} className="py-2 text-right font-mono text-[0.82rem] tabular-nums text-foreground">
                   {ranked ? (valueScores.get(p.provider) ?? 0).toFixed(3) : <NotAvailable />}
                 </TableCell>
               </TableRow>

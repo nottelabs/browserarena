@@ -105,9 +105,30 @@ export interface BrowserThroughputProviderStats {
 export interface BrowserThroughputLeaderboardResult {
   providers: BrowserThroughputProviderStats[];
   metadata: {
+    date?: string;
     dateRange?: { min: string; max: string };
+    availableDates?: string[];
     availableConcurrencyLevels?: number[];
   };
+}
+
+/** One provider on one run day, for the throughput history line. */
+export interface ThroughputHistoryPoint {
+  date: string;
+  actionsPerSecond: Triple | null;
+  taskMs: Triple | null;
+  screenshotMs: Triple | null;
+}
+
+export interface ThroughputHistorySeries {
+  provider: string;
+  displayName: string;
+  points: ThroughputHistoryPoint[];
+}
+
+export interface ThroughputHistory {
+  dates: string[];
+  providers: ThroughputHistorySeries[];
 }
 
 export function median(values: number[]): number {

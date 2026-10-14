@@ -1,0 +1,27 @@
+.band {
+  margin-top: 64px;
+  border-top: 1px solid var(--foreground);
+  padding: 28px 1.5vw 36px;
+}
+
+.word {
+  margin: 0;
+  color: var(--primary);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: clamp(52px, 12.15vw, 186px);
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 0.8;
+  text-align: center;
+  white-space: nowrap;
+  -webkit-text-stroke: 0.03em var(--foreground);
+  paint-order: stroke fill;
+  text-shadow: 0.05em 0.05em 0 var(--foreground);
+  user-select: none;
+}
+
+@media (min-width: 640px) {
+  .band {
+    padding: 40px 1.25vw 48px;
+  }
+}

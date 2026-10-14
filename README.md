@@ -42,7 +42,7 @@ Create session → Connect via CDP → Navigate page → Release session
 
 Missing a provider? [Open a PR](https://github.com/nottelabs/browserarena/pulls).
 
-## Session Performance benchmark
+## Browser Lifecycle benchmark
 
 The core benchmark measures the minimal end-to-end lifecycle for a remote Chrome session:
 
@@ -67,7 +67,7 @@ navigate → waitForSelector → screenshot → textContent → click
         → waitForSelector → screenshot → textContent → goBack → waitForSelector
 ```
 
-Per provider it reports actions per second, task time, per-action median / p95 / p99 for the six action types, within-session drift (last loop over first loop, with `--loops` above 1), and cost per 1,000 actions on the provider's billing. A session is a success only when every action succeeded; the partial completion rate is shown alongside. Start pages come from a fixed pool rotated by date, so every provider walks the same pages on a given day. Live at [browserarena.ai/browser-throughput](https://browserarena.ai/browser-throughput) and `GET /api/browser-throughput`. See [docs/browser-throughput.md](docs/browser-throughput.md).
+Per provider it reports actions per second, task time, per-action median / p95 / p99 for the six action types, within-session drift (last loop over first loop, with `--loops` above 1), and cost per 1,000 actions on the provider's billing. A session is a success only when every action succeeded; the partial completion rate is shown alongside. Start pages come from a fixed pool rotated by date, so every provider walks the same pages on a given day. Live at [browserarena.ai/throughput](https://browserarena.ai/throughput) and `GET /api/browser-throughput`. See [docs/browser-throughput.md](docs/browser-throughput.md).
 
 ```bash
 npm run bench -- --benchmark=browser-throughput --provider=notte --runs=100
@@ -106,7 +106,7 @@ All providers tested from the same EC2 instances. TCP+TLS round-trip times measu
 
 | Provider | CDP endpoint | RTT | Runner |
 |---|---|---|---|
-| Notte | `[redacted host]` | 12 ms | us-west-1 |
+| Notte | `api.notte.cc` | 12 ms | us-west-1 |
 | Hyperbrowser | `connect-us-east-1.hyperbrowser.ai` | 9 ms | us-east-1 |
 | Steel | `connect.steel.dev` | 14 ms | us-east-1 |
 | Kernel | `api.onkernel.com` | 14 ms | us-east-1 |

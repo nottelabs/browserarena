@@ -6,7 +6,7 @@ function NavBar({ className, ...props }: React.ComponentProps<"nav">) {
     <nav
       data-slot="navbar"
       className={cn(
-        "sticky top-0 z-50 border-b-[1.5px] border-foreground bg-[color-mix(in_oklch,var(--primary)_6%,var(--background))]",
+        "sticky top-0 z-50 border-b-[1.5px] border-foreground bg-[color-mix(in_oklab,var(--primary)_46%,var(--background))]",
         className
       )}
       {...props}
@@ -43,7 +43,7 @@ function NavBarActions({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
       data-slot="navbar-actions"
-      className={cn("flex items-center gap-4", className)}
+      className={cn("flex items-center gap-2", className)}
       {...props}
     />
   );

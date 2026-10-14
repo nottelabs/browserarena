@@ -4,6 +4,15 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState, useTransition, type ComponentProps, type ReactNode } from "react";
 
+// Fixed at the viewport origin so the prefetches run even when the real links
+// sit in the off-screen sidebar. `prefetch={true}` loads the cached page, not only the shell.
+export function PrefetchLinks({ hrefs }: { hrefs: string[] }) {
+  if (hrefs.length === 0) return null;
+  return <div aria-hidden="true" style={{ position: "fixed", top: 0, left: 0, width: 1, height: 1, overflow: "hidden", opacity: 0, pointerEvents: "none" }}>
+    {hrefs.map((href) => <Link key={href} href={href} prefetch={true}>{href}</Link>)}
+  </div>;
+}
+
 type Navigation = { pending: boolean; navigate: (href: string) => void };
 const NavigationContext = createContext<Navigation | null>(null);
 
@@ -35,9 +44,9 @@ export function useBenchmarkNavigation() {
   return shared ?? { pending, navigate: (href: string) => startTransition(() => router.push(href, { scroll: false })) };
 }
 
-export function BenchmarkLink({ onNavigate, ...props }: ComponentProps<typeof Link>) {
+export function BenchmarkLink({ onNavigate, prefetch = true, ...props }: ComponentProps<typeof Link>) {
   const shared = useContext(NavigationContext);
-  return <Link {...props} onNavigate={event => {
+  return <Link prefetch={prefetch} {...props} onNavigate={event => {
     onNavigate?.(event);
     if (shared && typeof props.href === "string") {
       event.preventDefault();

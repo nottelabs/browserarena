@@ -6,7 +6,7 @@ import { captureApiRequest } from "@/lib/posthog-server";
  *
  * The browser-throughput leaderboard: per provider, strict success rate, action
  * completion, actions per second, per-action percentiles, drift and cost per
- * 1,000 actions. Same shape the /browser-throughput page renders.
+ * 1,000 actions. Same shape the /throughput page renders.
  */
 export async function GET(request: Request) {
   captureApiRequest(request, "/api/browser-throughput");

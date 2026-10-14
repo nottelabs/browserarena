@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { PROXY_COUNTRIES } from "@/lib/proxy-get";
 import { BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
@@ -6,7 +7,11 @@ import { loadTestProxyHistory } from "../test/proxy-demo";
 
 export const metadata: Metadata = { title: "Compressed benchmark preview", robots: { index: false, follow: false } };
 
-export default async function CompressedTestPage({ searchParams }: { searchParams: Promise<{ country?: string; date?: string; demo?: string; sort?: string }> }) {
+export default function CompressedTestPage({ searchParams }: { searchParams: Promise<{ country?: string; date?: string; demo?: string; sort?: string }> }) {
+  return <Suspense fallback={null}><CompressedTestContent searchParams={searchParams} /></Suspense>;
+}
+
+async function CompressedTestContent({ searchParams }: { searchParams: Promise<{ country?: string; date?: string; demo?: string; sort?: string }> }) {
   const params = await searchParams;
   const country = PROXY_COUNTRIES.find(c => c === params.country?.toUpperCase()) ?? "US";
   const simulated = params.demo !== "0";

@@ -3,7 +3,7 @@
 This exploratory suite completed **350 attempts: 325 successful downloads and 25
 failures**, with exactly ten attempts for each of seven providers in each of the
 US, France, Brazil, India, and Japan. Failures were retained and not retried.
-The colored violin plots at `/proxy-get` show successful samples on a shared
+The colored violin plots at `/proxies` show successful samples on a shared
 0–30 second axis. The [methodology](proxy-get.md) describes measurement and pricing.
 
 ## Environment and workload

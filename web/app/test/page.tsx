@@ -1,8 +1,10 @@
 import Link from "next/link";
+import { Suspense } from "react";
 import type { Metadata } from "next";
 import { ArrowDownToLine, ArrowUpRight, RefreshCcw } from "lucide-react";
 import { Logo } from "@/components/logo";
 import { GitHubLink } from "@/components/benchmark-controls";
+import { ResourcesMenu } from "@/components/resources-menu";
 import { NavBar, NavBarContent, NavBarBrand, NavBarActions } from "@/components/ui/navbar";
 import { LeaderboardTable } from "@/components/leaderboard-table";
 import { HistoryCharts } from "@/components/history-charts";
@@ -24,7 +26,13 @@ const DESCRIPTIONS = {
   all: "Choose a benchmark to compare cloud browser providers on speed, reliability, and cost.",
 };
 
-export default async function TestPage({ searchParams }: {
+export default function TestPage({ searchParams }: {
+  searchParams: Promise<{ benchmark?: string; country?: string; concurrency?: string; sort?: string; date?: string; demo?: string }>;
+}) {
+  return <Suspense fallback={null}><TestContent searchParams={searchParams} /></Suspense>;
+}
+
+async function TestContent({ searchParams }: {
   searchParams: Promise<{ benchmark?: string; country?: string; concurrency?: string; sort?: string; date?: string; demo?: string }>;
 }) {
   const params = await searchParams;
@@ -43,10 +51,7 @@ export default async function TestPage({ searchParams }: {
       <NavBarContent>
         <NavBarBrand><Link href="/test?benchmark=all"><Logo size="lg" /></Link></NavBarBrand>
         <NavBarActions>
-          <nav className="hidden sm:flex items-center gap-8 text-sm font-medium" aria-label="Site navigation">
-            <Link href="/test?benchmark=all" className="hover:opacity-70">Benchmarks</Link>
-            <a href="https://github.com/nottelabs/browserarena" className="text-muted-foreground hover:text-foreground" target="_blank" rel="noopener noreferrer">Methodology</a>
-          </nav>
+          <ResourcesMenu />
           <GitHubLink />
         </NavBarActions>
       </NavBarContent>
@@ -59,7 +64,7 @@ export default async function TestPage({ searchParams }: {
       </header>
       {benchmark === "all" ? <section className="grid gap-5 sm:grid-cols-2" aria-label="Available benchmarks">
         {([
-          { id: "hello-browser", title: "Session Performance", Icon: RefreshCcw, detail: "Sequential and concurrent runs", metrics: "Create · Connect · Navigate · Release" },
+          { id: "hello-browser", title: "Browser Lifecycle", Icon: RefreshCcw, detail: "Sequential and concurrent runs", metrics: "Create · Connect · Navigate · Release" },
           { id: "proxy-get", title: "Proxy Performance", Icon: ArrowDownToLine, detail: "5 countries · 50 attempts per provider", metrics: "Download time · First byte · Estimated cost" },
         ] as const).map(b => <Link key={b.id} href={`/test?benchmark=${b.id}`} className="rounded-[3px] border-[1.5px] border-foreground/25 bg-card p-6 transition-colors hover:border-foreground">
           <b.Icon className="mb-6 size-8 rounded-[3px] bg-primary/20 p-1.5" aria-hidden="true" />
@@ -69,7 +74,7 @@ export default async function TestPage({ searchParams }: {
           <span className="mt-6 inline-flex items-center gap-2 text-sm font-medium">View benchmark<ArrowUpRight className="size-4" aria-hidden="true" /></span>
         </Link>)}
       </section> : benchmark === "proxy-get" ? <TestProxyResults country={country} sort={params.sort} date={params.date} simulated={params.demo !== "0"} /> : <>
-        {providers.length ? <LeaderboardTable data={providers} percentile="median" hideTitle /> : <p className="py-12 text-center text-sm text-muted-foreground">No Session Performance results for this configuration yet.</p>}
+        {providers.length ? <LeaderboardTable data={providers} percentile="median" hideTitle /> : <p className="py-12 text-center text-sm text-muted-foreground">No Browser Lifecycle results for this setup yet.</p>}
         {history && <div className="mt-12"><HistoryCharts history={history} percentile="median" initialProvider={providers[0]?.provider} /></div>}
       </>}
     </main>

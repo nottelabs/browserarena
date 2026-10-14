@@ -11,7 +11,7 @@ export async function GET(request: Request) {
       helloBrowser: {
         dateRange: result.metadata.dateRange,
       },
-      proxyGet: { countries: PROXY_COUNTRIES, page: "/proxy-get" },
+      proxyGet: { countries: PROXY_COUNTRIES, page: "/proxies" },
     },
     {
       headers: {

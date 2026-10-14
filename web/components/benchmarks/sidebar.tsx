@@ -6,10 +6,17 @@ import { ArrowLeft, Menu, X } from "lucide-react";
 import { COUNTRY_NAMES, PROXY_COUNTRIES } from "../../../src/benchmarks/proxy-get/schema";
 import styles from "./sidebar.module.css";
 import { BenchmarkLink } from "./benchmark-navigation";
+import { BENCHMARK_TITLES } from "./benchmark-title";
 
 const FLAGS = { US: "🇺🇸", FR: "🇫🇷", BR: "🇧🇷", IN: "🇮🇳", JP: "🇯🇵" };
 
-export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyLevels, date, simulated, proxyBasePath = "/test", publicRoutes = false, lifecycleQuery = "", sort }: {
+const PAGE_SECTIONS = [
+  { id: "lifecycle", label: BENCHMARK_TITLES["hello-browser"] },
+  { id: "proxy", label: BENCHMARK_TITLES["proxy-get"] },
+  { id: "throughput", label: BENCHMARK_TITLES["browser-throughput"] },
+] as const;
+
+export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyLevels, date, simulated, proxyBasePath = "/test", publicRoutes = false, lifecycleQuery = "", sort, inPage = false }: {
   benchmark: "hello-browser" | "proxy-get" | "browser-throughput" | "all";
   country: (typeof PROXY_COUNTRIES)[number];
   concurrency: number;
@@ -20,10 +27,32 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
   publicRoutes?: boolean;
   lifecycleQuery?: string;
   sort?: string;
+  inPage?: boolean;
 }) {
   const [open, setOpen] = useState(false);
+  const [sectionId, setSectionId] = useState<(typeof PAGE_SECTIONS)[number]["id"]>("lifecycle");
   const sidebarRef = useRef<HTMLElement>(null);
   const menuRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!inPage) return;
+    const update = () => {
+      let current: (typeof PAGE_SECTIONS)[number]["id"] = "lifecycle";
+      let nearest = -Infinity;
+      for (const section of PAGE_SECTIONS) {
+        const node = document.getElementById(section.id);
+        if (!node) continue;
+        const top = node.getBoundingClientRect().top;
+        if (top <= 140 && top > nearest) {
+          nearest = top;
+          current = section.id;
+        }
+      }
+      setSectionId(current);
+    };
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    return () => window.removeEventListener("scroll", update);
+  }, [inPage]);
   useEffect(() => {
     if (!open) return;
     const drawer = window.matchMedia("(max-width: 1279px)");
@@ -59,7 +88,13 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
     if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) query.set("date", date);
     return `${proxyBasePath}?${query}`;
   };
-  const throughputHref = (level?: number) => `/browser-throughput${level !== undefined && level !== 1 ? `?concurrency=${level}` : ""}`;
+  const throughputHref = (level?: number) => {
+    const query = new URLSearchParams();
+    if (level !== undefined && level !== 1) query.set("concurrency", String(level));
+    if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) query.set("date", date);
+    const qs = query.toString();
+    return `/throughput${qs ? `?${qs}` : ""}`;
+  };
   const runModeHref = (level: number) => (benchmark === "browser-throughput" ? throughputHref(level) : lifecycleHref(level));
   const lifecycleHref = (level?: number) => {
     const query = new URLSearchParams(lifecycleQuery);
@@ -68,32 +103,33 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
     return `${publicRoutes ? "/" : "/test"}${query.size ? `?${query}` : ""}`;
   };
   return <>
-    <button ref={menuRef} className={styles.menuButton} type="button" aria-expanded={open} aria-controls="test-benchmark-sidebar" onClick={() => setOpen(!open)}>
-      <Menu className="size-4" aria-hidden="true" />Benchmark & config
+    <button ref={menuRef} className={styles.menuButton} type="button" aria-expanded={open} aria-controls="test-benchmark-sidebar" data-in-page={inPage ? "true" : undefined} onClick={() => setOpen(!open)}>
+      <Menu className="size-4" aria-hidden="true" />{inPage ? "On this page" : "Benchmark & setup"}
     </button>
     {open && <button type="button" className={styles.backdrop} aria-label="Close benchmark sidebar" onClick={() => setOpen(false)} />}
-    <aside ref={sidebarRef} id="test-benchmark-sidebar" className={styles.sidebar} data-open={open} aria-label="Benchmark and config">
+    <aside ref={sidebarRef} id="test-benchmark-sidebar" className={styles.sidebar} data-open={open} data-in-page={inPage ? "true" : undefined} aria-label={inPage ? "On this page" : "Benchmark and setup"}>
       <button className={styles.closeButton} type="button" aria-label="Close benchmark sidebar" onClick={() => setOpen(false)}><X className="size-4" /></button>
       <section>
-        <h2 className={styles.label}>Benchmark</h2>
-        <nav className={styles.options} aria-label="Choose benchmark">
-          <Link href={lifecycleHref()} className={linkClass(benchmark === "hello-browser")} aria-current={benchmark === "hello-browser" ? "page" : undefined} onClick={() => setOpen(false)}>Session Performance</Link>
-          <Link href={publicRoutes ? "/proxy-get" : `${proxyBasePath}?benchmark=proxy-get&demo=${simulated ? "1" : "0"}`} className={linkClass(benchmark === "proxy-get")} aria-current={benchmark === "proxy-get" ? "page" : undefined} onClick={() => setOpen(false)}>Proxy Performance</Link>
-          <Link href="/browser-throughput" className={linkClass(benchmark === "browser-throughput")} aria-current={benchmark === "browser-throughput" ? "page" : undefined} onClick={() => setOpen(false)}>Browser Throughput</Link>
+        <h2 className={styles.label}>{inPage ? "On this page" : "Benchmark"}</h2>
+        <nav className={styles.options} aria-label={inPage ? "Jump to a section" : "Choose benchmark"}>
+          {inPage ? PAGE_SECTIONS.map((section) => <a key={section.id} href={`#${section.id}`} className={linkClass(sectionId === section.id)} aria-current={sectionId === section.id ? "location" : undefined} onClick={() => setOpen(false)}>{section.label}</a>) : <>
+          <Link href={lifecycleHref()} prefetch={true} className={linkClass(benchmark === "hello-browser")} aria-current={benchmark === "hello-browser" ? "page" : undefined} onClick={() => setOpen(false)}>{BENCHMARK_TITLES["hello-browser"]}</Link>
+          <Link href={publicRoutes ? "/proxies" : `${proxyBasePath}?benchmark=proxy-get&demo=${simulated ? "1" : "0"}`} prefetch={true} className={linkClass(benchmark === "proxy-get")} aria-current={benchmark === "proxy-get" ? "page" : undefined} onClick={() => setOpen(false)}>{BENCHMARK_TITLES["proxy-get"]}</Link>
+          <Link href="/throughput" prefetch={true} className={linkClass(benchmark === "browser-throughput")} aria-current={benchmark === "browser-throughput" ? "page" : undefined} onClick={() => setOpen(false)}>{BENCHMARK_TITLES["browser-throughput"]}</Link>
+          </>}
         </nav>
       </section>
       {benchmark !== "all" && <section className={styles.config}>
-        <h2 className={styles.label}>Config</h2>
-        <p className={styles.configLabel}>{benchmark === "proxy-get" ? "Proxy country" : "Run mode"}</p>
+        <h2 className={styles.label}>Setup</h2>
         <nav className={styles.options} aria-label={benchmark === "proxy-get" ? "Proxy country" : "Run mode"}>
           {benchmark === "proxy-get" ? PROXY_COUNTRIES.map(c => <BenchmarkLink key={c} href={countryHref(c)} className={linkClass(c === country)} aria-current={c === country ? "page" : undefined} onClick={() => setOpen(false)}>
             <span className={styles.flag} aria-hidden="true">{FLAGS[c]}</span>{COUNTRY_NAMES[c]}
           </BenchmarkLink>) : concurrencyLevels.map(c => <BenchmarkLink key={c} href={runModeHref(c)} className={linkClass(c === concurrency)} aria-current={c === concurrency ? "page" : undefined} onClick={() => setOpen(false)}>
-            <span>{c === 1 ? "Sequential runs" : <>Concurrent runs<span className={styles.optionDetail}>c = {c}</span></>}</span>
+            <span className={styles.optionLine}>{c === 1 ? "Sequential runs" : `Concurrent runs c=${c}`}</span>
           </BenchmarkLink>)}
         </nav>
       </section>}
-      <Link href={publicRoutes ? "/benchmark" : "/test?benchmark=all"} className={styles.allLink} onClick={() => setOpen(false)}><ArrowLeft className="size-3.5" aria-hidden="true" />All benchmarks</Link>
+      {!publicRoutes && <Link href="/test?benchmark=all" className={styles.allLink} onClick={() => setOpen(false)}><ArrowLeft className="size-3.5" aria-hidden="true" />All benchmarks</Link>}
     </aside>
   </>;
 }

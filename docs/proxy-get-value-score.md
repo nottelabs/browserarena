@@ -1,7 +1,7 @@
 # Proxy Performance value score
 
-The proxy leaderboard uses the same preset controls as Session Performance, with
-a score from 0 to 1; higher scores rank first. Fastest is the default. Scores
+The proxy leaderboard uses the same preset controls as Browser Lifecycle, with
+a score from 0 to 1; higher scores rank first. Balanced is the default. Scores
 use the selected country's latest available provider suites, not rolling averages.
 
 | Preset | Latency | Reliability | Cost |

@@ -338,7 +338,7 @@ branch with private environment permissions. Its build passes; production
 preflight stops on the undeployed payload's HTTP 404 before any sessions. After
 merge, switch that checkout to `main`, pull, pass `--check`, then install cron.
 
-`/proxy-get` reads local results in development and falls back to the configured
+`/proxies` reads local results in development and falls back to the configured
 GitHub results repository in a web-only deployment. `RESULTS_DIR` optionally
 points to the directory containing the benchmark folders. The overview table keeps each provider
 visible using its latest suite up to the selected UTC day, with the run date
@@ -350,7 +350,7 @@ from older runs. The export button uses `GET /api/proxy-get?country=FR&view=over
 Without `view=overview`, the API continues returning the selected-day or latest
 compatible-workload summary for that day.
 
-The public `/proxy-get` dashboard includes daily history for each
+The public `/proxies` dashboard includes daily history for each
 country, with complete GET, first-byte, and estimated cost-per-success series.
 Click a point or choose a run day to inspect provider runs available up to
 that day. The overview table and distribution use the same latest provider
@@ -380,7 +380,7 @@ and explicitly include `simulated: true`; the real API never serves demo data.
 Recorded history is populated by published result files. The UI does not enable
 cron; install the separate proxy schedule described above to collect daily data.
 
-The accepted `/test-compressed` layout now powers `/proxy-get`: the daily provider table spans
+The accepted `/test-compressed` layout now powers `/proxies`: the daily provider table spans
 the main container, followed by two charts side by side: the trailing 7-day rolling
 average on the left and the latest provider runs' violin plot on the right. Benchmark,
 History, and Results headings follow the lifecycle page's hierarchy, with the
@@ -402,10 +402,9 @@ change the daily target or imply that a runner is currently active.
 The `/test-compressed` preview still defaults to the labeled simulation and
 supports `demo=0` for recorded results.
 
-Both public benchmarks share the floating Benchmark and Config sidebar, without
+Both public benchmarks share the floating Benchmark and Setup sidebar, without
 reducing the main container's width. Country choices include flags. On narrower
-screens a visible menu button opens a slide-out sidebar. `/benchmark` provides
-two cards linking to browser lifecycle (`/`) and proxy GET (`/proxy-get`).
+screens a visible menu button opens a slide-out sidebar. `/` is Browser Lifecycle.
 
 The first [live pilot report](proxy-get-live-run-2026-10-08.md) records the complete
 350-attempt suite and its temporary-target limitations.

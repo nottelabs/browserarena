@@ -1,4 +1,4 @@
-import { loadProxyGetEntries, proxyGetWorkloadKey, summarizeProxyGet, type ProxyGetRecord, type ProxyGetStats } from "./proxy-get";
+import { loadProxyGetEntries, loadProxyRunMeta, proxyGetWorkloadKey, summarizeProxyGet, type ProxyGetRecord, type ProxyGetStats } from "./proxy-get";
 
 export type ProxyHistoryProvider = Pick<ProxyGetStats,
   "provider" | "displayName" | "attempts" | "successes" | "medianGetMs" | "medianFirstByteMs" | "costPerSuccessUsd"> & { workloadKey: string };
@@ -84,5 +84,9 @@ export function summarizeProxyGetHistory(entries: ProxyGetRecord[], country: str
 }
 
 export async function loadProxyGetHistory(country = "US", date?: string) {
-  return summarizeProxyGetHistory(await loadProxyGetEntries(true), country, date);
+  const history = summarizeProxyGetHistory(await loadProxyGetEntries(true), country, date);
+  await Promise.all(history.overview.providers.map(async (provider) => {
+    provider.vmMeta = await loadProxyRunMeta(provider.provider, provider.runDate);
+  }));
+  return history;
 }

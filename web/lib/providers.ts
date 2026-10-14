@@ -7,6 +7,8 @@
  * used by the edge OG image route and client components.
  */
 
+import { PROVIDER_LOGO_SRC } from "./provider-logos";
+
 export interface ProviderInfo {
   /** Provider identifier as written in results (`entry.provider`). */
   id: string;
@@ -30,7 +32,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "NOTTE",
     displayName: "Notte",
     url: "https://www.notte.cc",
-    logo: "/logos/notte.jpg",
+    logo: PROVIDER_LOGO_SRC.NOTTE,
     browserRegion: "us-west-2",
     description: "Cloud browser infrastructure built for AI agents. Creator of The Browser Arena",
     marketed: true,
@@ -39,7 +41,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "BROWSERBASE",
     displayName: "Browserbase",
     url: "https://www.browserbase.com",
-    logo: "/logos/browserbase.png",
+    logo: PROVIDER_LOGO_SRC.BROWSERBASE,
     browserRegion: "us-west-2",
     description: "Browser infrastructure for AI agents",
     marketed: true,
@@ -48,7 +50,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "STEEL",
     displayName: "Steel",
     url: "https://www.steel.dev",
-    logo: "/logos/steel.png",
+    logo: PROVIDER_LOGO_SRC.STEEL,
     browserRegion: "us-east-1",
     description: "Browser API for AI applications",
     marketed: true,
@@ -57,7 +59,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "HYPERBROWSER",
     displayName: "Hyperbrowser",
     url: "https://www.hyperbrowser.ai",
-    logo: "/logos/hyperbrowser.png",
+    logo: PROVIDER_LOGO_SRC.HYPERBROWSER,
     browserRegion: "us-east-1",
     description: "Headless browser platform",
     marketed: true,
@@ -67,7 +69,7 @@ export const PROVIDERS: ProviderInfo[] = [
     displayName: "KERNEL",
     marketingName: "Kernel",
     url: "https://www.kernel.sh",
-    logo: "/logos/kernel.png",
+    logo: PROVIDER_LOGO_SRC.KERNEL,
     browserRegion: "us-east-1",
     description: "Browser runtime for agents",
     marketed: true,
@@ -76,7 +78,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "ANCHORBROWSER",
     displayName: "Anchor Browser",
     url: "https://www.anchorbrowser.io",
-    logo: "/logos/anchorbrowser.png",
+    logo: PROVIDER_LOGO_SRC.ANCHORBROWSER,
     browserRegion: "us-east-1",
     description: "Cloud browser service",
     marketed: true,
@@ -85,7 +87,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "BROWSER_USE",
     displayName: "Browser Use",
     url: "https://www.browser-use.com",
-    logo: "/logos/browseruse.png",
+    logo: PROVIDER_LOGO_SRC.BROWSER_USE,
     browserRegion: "us-east-1",
     description: "Browser automation platform",
     marketed: true,
@@ -94,7 +96,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "LIGHTPANDA",
     displayName: "Lightpanda",
     url: "https://lightpanda.io",
-    logo: "/logos/lightpanda.png",
+    logo: PROVIDER_LOGO_SRC.LIGHTPANDA,
     browserRegion: "us-west-1",
     description: "Headless browser for machines",
     marketed: true,
@@ -104,7 +106,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "TILION",
     displayName: "Tilion",
     url: "https://tilion.dev",
-    logo: "/logos/tilion.png",
+    logo: PROVIDER_LOGO_SRC.TILION,
     browserRegion: "us-east-1",
     marketed: false,
   },
@@ -113,7 +115,7 @@ export const PROVIDERS: ProviderInfo[] = [
     id: "BROWSERLESS",
     displayName: "Browserless",
     url: "https://www.browserless.io",
-    logo: "/logos/browserless.png",
+    logo: PROVIDER_LOGO_SRC.BROWSERLESS,
     browserRegion: "us-west",
     marketed: false,
   },
@@ -122,7 +124,7 @@ export const PROVIDERS: ProviderInfo[] = [
     displayName: "Cloudflare",
     marketingName: "Cloudflare Browser Run",
     url: "https://developers.cloudflare.com/browser-run/",
-    logo: "/logos/cloudflare.png",
+    logo: PROVIDER_LOGO_SRC.CLOUDFLARE,
     browserRegion: "global",
     marketed: false,
   },
@@ -131,7 +133,7 @@ export const PROVIDERS: ProviderInfo[] = [
     displayName: "AWS AgentCore",
     marketingName: "Amazon Bedrock AgentCore Browser",
     url: "https://aws.amazon.com/bedrock/agentcore/",
-    logo: "/logos/aws-agentcore.png",
+    logo: PROVIDER_LOGO_SRC.AWS_AGENTCORE,
     browserRegion: "us-east-1",
     marketed: false,
   },
@@ -145,6 +147,20 @@ export const MARKETED_PROVIDERS = PROVIDERS.filter((p) => p.marketed);
 
 export function providerName(p: ProviderInfo): string {
   return p.marketingName ?? p.displayName;
+}
+
+/** URL segment for `/provider/tilion`. Derived from the leaderboard name. */
+export function providerSlug(provider: Pick<ProviderInfo, "displayName">): string {
+  return provider.displayName.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+export function providerFromSlug(slug: string): ProviderInfo | undefined {
+  return PROVIDERS.find((provider) => providerSlug(provider) === slug);
+}
+
+export function providerPath(id: string): string | null {
+  const provider = PROVIDERS_BY_ID[id];
+  return provider ? `/provider/${providerSlug(provider)}` : null;
 }
 
 /** "notte.cc" for "https://www.notte.cc". */

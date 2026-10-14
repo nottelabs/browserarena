@@ -3,14 +3,19 @@ import { track } from "@/lib/analytics";
 import { withNotteUtm } from "@/lib/utm";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Info } from "lucide-react";
+import Link from "next/link";
 import {
   AGENT_ACTION_LABELS,
   AGENT_ACTION_TYPES,
   type AgentActionType,
   type BrowserThroughputProviderStats,
+  type ThroughputHistory,
   type Triple,
 } from "@/lib/browser-throughput-shared";
-import { PROVIDERS } from "@/lib/providers";
+import { BrowserThroughputCharts } from "@/components/browser-throughput-charts";
+import { PROVIDERS, providerPath } from "@/lib/providers";
 import { sortRanked } from "@/lib/ranking";
 import {
   Table,
@@ -21,6 +26,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { BenchmarkSectionHeader } from "@/components/benchmarks/section-header";
+import { BenchmarkTablePanel } from "@/components/benchmarks/table-panel";
+import styles from "@/components/benchmarks/benchmark.module.css";
 
 const PROVIDER_LOGOS: Record<string, string> = Object.fromEntries(
   PROVIDERS.flatMap((p) => (p.logo ? [[p.id, p.logo]] : []))
@@ -77,15 +85,6 @@ function NotAvailable() {
   );
 }
 
-function SortArrow({ active }: { active: boolean }) {
-  if (!active) return null;
-  return (
-    <svg viewBox="0 0 8 10" fill="currentColor" className="inline-block size-2 ml-0.5 shrink-0 text-foreground">
-      <path d="M4 9.5L0.5 5H7.5L4 9.5Z" />
-    </svg>
-  );
-}
-
 interface HeaderDef {
   label: string;
   sortKey?: SortKey;
@@ -96,18 +95,21 @@ interface HeaderDef {
 
 export function BrowserThroughputTable({
   data,
+  history,
   controls,
 }: {
   data: BrowserThroughputProviderStats[];
+  history?: ThroughputHistory;
   controls?: React.ReactNode;
 }) {
+  const router = useRouter();
   const [view, setView] = useState<View>("median");
   const [sort, setSort] = useState<{ key: SortKey; dir: SortDirection }>({ key: "aps", dir: "desc" });
 
   const headers: HeaderDef[] = [
     { label: "#", align: "center", className: "w-10" },
     { label: "Provider", align: "left" },
-    { label: "Runs", align: "right", tooltip: "Measured sessions. Warm-ups are recorded but not counted." },
+    { label: "Runs", align: "right", tooltip: "Measured sessions. Warm-ups are recorded but not counted. Each session runs the same action loop." },
     { label: "Success (%)", sortKey: "success", align: "right", tooltip: "Sessions where every action succeeded. One failed action fails the session." },
     { label: "Actions (%)", sortKey: "completion", align: "right", tooltip: "Actions that succeeded across all sessions, the partial completion rate." },
     { label: "Actions/s", sortKey: "aps", align: "right", tooltip: "Completed actions per second of action time, per session." },
@@ -171,62 +173,70 @@ export function BrowserThroughputTable({
     track("leaderboard_sorted", { benchmark: "browser-throughput", column: key, direction: dir });
   }
 
-  const sc = (key: SortKey) => (sort.key === key ? "text-foreground font-medium" : "");
+  const sortedAttr = (key: SortKey) => (sort.key === key ? "" : undefined);
 
   return (
-    <div className="flex flex-col gap-3">
-      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-        {controls ?? <div />}
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[0.65rem] font-semibold uppercase tracking-widest text-foreground">Percentile</span>
-          <div className="flex items-center gap-1.5">
-            {(["median", "p95", "p99"] as View[]).map((v) => (
-              <button
-                key={v}
-                type="button"
-                onClick={() => { setView(v); track("percentile_selected", { benchmark: "browser-throughput", percentile: v }); }}
-                className={`rounded-[3px] border px-3 py-1 text-[0.65rem] font-medium transition-colors ${
-                  view === v
-                    ? "border-foreground bg-foreground text-background"
-                    : "border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground"
-                }`}
-              >
-                {v === "median" ? "Median" : v.toUpperCase()}
-              </button>
-            ))}
+    <div>
+      <BenchmarkSectionHeader
+        controls={
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[0.65rem] font-semibold uppercase tracking-widest text-foreground">Percentile</span>
+            <div className="flex items-center gap-1.5">
+              {(["median", "p95", "p99"] as View[]).map((v) => (
+                <button
+                  key={v}
+                  type="button"
+                  aria-pressed={view === v}
+                  onClick={() => { setView(v); track("percentile_selected", { benchmark: "browser-throughput", percentile: v }); }}
+                  className={`rounded-[3px] border px-3 py-1 text-[0.65rem] font-medium transition-colors ${
+                    view === v
+                      ? "border-foreground bg-foreground text-background"
+                      : "border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground"
+                  }`}
+                >
+                  {v === "median" ? "Median" : v.toUpperCase()}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
+        }
+      >
+        {controls}
+      </BenchmarkSectionHeader>
 
-      <div className="overflow-x-auto rounded-[3px] border-[1.5px] border-border bg-background">
+      <BenchmarkTablePanel label="Browser Throughput provider results" className={styles.tablePanelWide}>
         <Table>
           <TableHeader className="[&_tr]:border-b-[1.5px]">
-            <TableRow className="hover:bg-transparent">
+            <TableRow className="border-b-[1.5px] border-foreground hover:bg-transparent">
               {headers.map((h) => {
                 const sortable = Boolean(h.sortKey);
                 const active = sortable && sort.key === h.sortKey;
                 return (
                   <TableHead
                     key={h.label}
-                    className={`${h.className ?? ""} text-[0.62rem] font-semibold uppercase tracking-wider whitespace-nowrap ${
+                    data-sorted={active ? "" : undefined}
+                    className={`${h.className ?? ""} ${
                       h.align === "right" ? "text-right" : h.align === "center" ? "text-center" : "text-left"
                     } ${sortable ? "cursor-pointer select-none hover:text-foreground" : ""} ${active ? "text-foreground" : ""}`}
                     onClick={sortable ? () => handleSort(h.sortKey!) : undefined}
                   >
                     <span className="inline-flex items-center gap-0.5">
-                      {h.tooltip ? (
+                      {h.label}
+                      {h.tooltip && (
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <span className="cursor-help">{h.label}</span>
+                            <span
+                              className="inline-flex items-center justify-center text-muted-foreground/40 hover:text-muted-foreground transition-colors cursor-help"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <Info className="size-3" />
+                            </span>
                           </TooltipTrigger>
                           <TooltipContent side="bottom" className="max-w-[16rem] text-xs font-sans normal-case tracking-normal">
                             {h.tooltip}
                           </TooltipContent>
                         </Tooltip>
-                      ) : (
-                        h.label
                       )}
-                      <SortArrow active={active} />
                     </span>
                   </TableHead>
                 );
@@ -236,21 +246,24 @@ export function BrowserThroughputTable({
           <TableBody>
             {sorted.map((p, idx) => {
               const ranked = isMeasured(p);
-              const isWinner = ranked && idx === 0 && sort.key === "aps" && sort.dir === "desc";
-              const num = "py-2 text-right font-mono text-[0.82rem] tabular-nums";
+              const isLeader = ranked && idx === 0;
               return (
                 <TableRow
                   key={p.provider}
-                  className={`transition-none h-10 sm:h-12 ${isWinner ? "bg-primary/6 hover:bg-primary/10" : ""}`}
+                  data-leader={isLeader ? "" : undefined}
+                  onClick={() => {
+                    const href = providerPath(p.provider);
+                    if (href) router.push(href);
+                  }}
                 >
-                  <TableCell className="text-center py-2">
+                  <TableCell className="text-center">
                     <span className="text-[0.65rem] text-muted-foreground">{ranked ? idx + 1 : "—"}</span>
                   </TableCell>
-                  <TableCell className="py-2">
+                  <TableCell>
                     <div className="flex items-center gap-x-2 flex-nowrap">
                       {PROVIDER_LOGOS[p.provider] && (
                         <span
-                          className={`inline-flex items-center justify-center size-6 rounded-[3px] overflow-hidden border border-border shrink-0 ${
+                          className={`inline-flex items-center justify-center size-6 rounded-[3px] overflow-hidden shrink-0 ${
                             p.provider === "NOTTE" ? "bg-black p-[1px]" : ""
                           }`}
                         >
@@ -258,43 +271,41 @@ export function BrowserThroughputTable({
                           <img
                             src={PROVIDER_LOGOS[p.provider]}
                             alt={`${p.displayName} logo`}
+                            decoding="sync"
                             className={p.provider === "NOTTE" ? "size-full object-contain" : "size-6 object-cover"}
                           />
                         </span>
                       )}
-                      <a
-                        href={withNotteUtm(p.url, "browser-throughput")}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <Link
+                        href={providerPath(p.provider) ?? withNotteUtm(p.url, "browser-throughput")}
+                        prefetch={providerPath(p.provider) ? true : undefined}
+                        onClick={(event) => event.stopPropagation()}
                         className="font-semibold text-[0.82rem] text-foreground hover:text-primary whitespace-nowrap"
                       >
                         {p.displayName}
-                      </a>
+                      </Link>
                     </div>
                   </TableCell>
-                  <TableCell className={num}>
+                  <TableCell>
                     <span>{p.totalRuns.toLocaleString("en-US")}</span>
-                    <span className="block text-[0.6rem] text-muted-foreground">
-                      {p.actionsPerSession} actions{p.concurrency > 1 ? ` · c=${p.concurrency}` : ""}
-                    </span>
                   </TableCell>
-                  <TableCell className={`${num} ${sc("success")}`}>{p.successRate.toFixed(1)}%</TableCell>
-                  <TableCell className={`${num} ${sc("completion")}`}>{p.actionCompletionRate.toFixed(1)}%</TableCell>
-                  <TableCell className={`${num} ${sc("aps")}`}>
+                  <TableCell data-sorted={sortedAttr("success")}>{p.successRate.toFixed(1)}%</TableCell>
+                  <TableCell data-sorted={sortedAttr("completion")}>{p.actionCompletionRate.toFixed(1)}%</TableCell>
+                  <TableCell data-sorted={sortedAttr("aps")}>
                     <TripleCell t={p.actionsPerSecond} view={view} fmt={(v) => v.toFixed(2)} />
                   </TableCell>
-                  <TableCell className={`${num} ${sc("task")}`}>
+                  <TableCell data-sorted={sortedAttr("task")}>
                     <TripleCell t={p.taskMs} view={view} fmt={fmtMs} />
                   </TableCell>
                   {AGENT_ACTION_TYPES.map((type) => (
-                    <TableCell key={type} className={`${num} ${sc(type)}`}>
+                    <TableCell key={type} data-sorted={sortedAttr(type)}>
                       <TripleCell t={p.perAction[type]} view={view} fmt={fmtMs} />
                     </TableCell>
                   ))}
-                  <TableCell className={`${num} ${sc("drift")}`}>
+                  <TableCell data-sorted={sortedAttr("drift")}>
                     {p.driftRatio != null ? `${p.driftRatio.toFixed(2)}x` : <span className="text-muted-foreground">—</span>}
                   </TableCell>
-                  <TableCell className={`${num} ${sc("cost")}`}>
+                  <TableCell data-sorted={sortedAttr("cost")}>
                     {p.costPer1kActionsUsd != null ? `$${p.costPer1kActionsUsd.toFixed(4)}` : <span className="text-muted-foreground">—</span>}
                   </TableCell>
                 </TableRow>
@@ -302,11 +313,12 @@ export function BrowserThroughputTable({
             })}
           </TableBody>
         </Table>
-      </div>
-      <p className="text-[0.65rem] text-muted-foreground">
+      </BenchmarkTablePanel>
+      <p className="mt-2 text-[0.65rem] text-muted-foreground">
         Per-action columns are in milliseconds at the selected percentile, over successful actions. Row numbers
         follow the current sort and percentile; the default order is actions per second, highest first.
       </p>
+      {history && <BrowserThroughputCharts providers={data} history={history} view={view} />}
     </div>
   );
 }

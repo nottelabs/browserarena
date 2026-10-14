@@ -14,6 +14,9 @@ import {
   summarizeBrowserThroughput,
   type BrowserThroughputEntry,
   type BrowserThroughputLeaderboardResult,
+  type ThroughputHistory,
+  type ThroughputHistoryPoint,
+  type Triple,
 } from "./browser-throughput-shared";
 
 const BENCHMARK = "browser-throughput";
@@ -37,10 +40,11 @@ function parseLines(content: string, runDate: string): BrowserThroughputEntry[] 
   return entries;
 }
 
-function loadFromFs(): BrowserThroughputEntry[] {
+function loadFromFs(date?: string): { entries: BrowserThroughputEntry[]; dates: string[] } {
   const benchDir = path.join(getResultsDir(), BENCHMARK);
-  if (!fs.existsSync(benchDir)) return [];
+  if (!fs.existsSync(benchDir)) return { entries: [], dates: [] };
   const entries: BrowserThroughputEntry[] = [];
+  const availableDates = new Set<string>();
 
   const providerDirs = fs
     .readdirSync(benchDir, { withFileTypes: true })
@@ -48,12 +52,14 @@ function loadFromFs(): BrowserThroughputEntry[] {
 
   for (const dir of providerDirs) {
     const providerPath = path.join(benchDir, dir.name);
-    const latestDate = fs
+    const dateDirs = fs
       .readdirSync(providerPath, { withFileTypes: true })
       .filter((e) => e.isDirectory() && DATE_RE.test(e.name))
       .map((e) => e.name)
       .sort()
-      .reverse()[0];
+      .reverse();
+    for (const name of dateDirs) availableDates.add(name);
+    const latestDate = date && dateDirs.includes(date) ? date : date ? undefined : dateDirs[0];
     if (!latestDate) continue;
 
     const runDir = path.join(providerPath, latestDate);
@@ -67,12 +73,13 @@ function loadFromFs(): BrowserThroughputEntry[] {
       entries.push(...parseLines(fs.readFileSync(file, "utf-8"), latestDate));
     }
   }
-  return entries;
+  return { entries, dates: [...availableDates].sort() };
 }
 
-async function loadFromGitHub(): Promise<BrowserThroughputEntry[]> {
+async function loadFromGitHub(date?: string): Promise<{ entries: BrowserThroughputEntry[]; dates: string[] }> {
   const basePath = `results/${BENCHMARK}`;
   const entries: BrowserThroughputEntry[] = [];
+  const availableDates = new Set<string>();
   const providerDirs = (await listFromGitHub(basePath)).filter(
     (e) => e.type === "dir" && !e.name.startsWith("_")
   );
@@ -83,7 +90,8 @@ async function loadFromGitHub(): Promise<BrowserThroughputEntry[]> {
       .map((e) => e.name)
       .sort()
       .reverse();
-    const latestDate = dates[0];
+    for (const name of dates) availableDates.add(name);
+    const latestDate = date && dates.includes(date) ? date : date ? undefined : dates[0];
     if (!latestDate) continue;
 
     const concDirs = (await listFromGitHub(`${basePath}/${dir.name}/${latestDate}`))
@@ -98,13 +106,15 @@ async function loadFromGitHub(): Promise<BrowserThroughputEntry[]> {
       }
     }
   }
-  return entries;
+  return { entries, dates: [...availableDates].sort() };
 }
 
 export async function loadBrowserThroughputLeaderboard(
-  concurrency?: number
+  concurrency?: number,
+  date?: string
 ): Promise<BrowserThroughputLeaderboardResult> {
-  const allEntries = fs.existsSync(getResultsDir()) ? loadFromFs() : await loadFromGitHub();
+  const loaded = fs.existsSync(getResultsDir()) ? loadFromFs(date) : await loadFromGitHub(date);
+  const allEntries = loaded.entries;
 
   const measured = allEntries.filter(
     (e) => e.warmup !== true && !EXCLUDED_PROVIDERS.has(e.provider)
@@ -141,6 +151,92 @@ export async function loadBrowserThroughputLeaderboard(
 
   return {
     providers: rankBrowserThroughput(providers),
-    metadata: { dateRange, availableConcurrencyLevels: levels },
+    metadata: {
+      date: date && loaded.dates.includes(date) ? date : undefined,
+      dateRange,
+      availableDates: loaded.dates,
+      availableConcurrencyLevels: levels,
+    },
   };
+}
+
+const measuredTriple = (value: Triple): Triple | null => value.samples > 0 ? value : null;
+
+function historyFromDays(days: { provider: string; date: string; entries: BrowserThroughputEntry[] }[]): ThroughputHistory {
+  const dates = new Set<string>();
+  const byProvider = new Map<string, { displayName: string; points: ThroughputHistoryPoint[] }>();
+  for (const day of days) {
+    const measured = day.entries.filter((entry) => entry.warmup !== true && !EXCLUDED_PROVIDERS.has(entry.provider));
+    if (measured.length === 0) continue;
+    const meta = PROVIDERS_BY_ID[day.provider] ?? { displayName: day.provider, url: "#" };
+    const row = summarizeBrowserThroughput(
+      day.provider,
+      measured,
+      { displayName: meta.displayName, url: meta.url, browserRegion: meta.browserRegion },
+      getUnitPricing(day.provider),
+      getPricePerHour(day.provider)
+    );
+    if (!row) continue;
+    dates.add(day.date);
+    const series = byProvider.get(day.provider) ?? { displayName: row.displayName, points: [] };
+    series.points.push({
+      date: day.date,
+      actionsPerSecond: measuredTriple(row.actionsPerSecond),
+      taskMs: measuredTriple(row.taskMs),
+      screenshotMs: measuredTriple(row.perAction.screenshot),
+    });
+    byProvider.set(day.provider, series);
+  }
+  return {
+    dates: [...dates].sort(),
+    providers: [...byProvider.entries()]
+      .map(([provider, series]) => ({
+        provider,
+        displayName: series.displayName,
+        points: series.points.sort((a, b) => a.date.localeCompare(b.date)),
+      }))
+      .sort((a, b) => a.displayName.localeCompare(b.displayName)),
+  };
+}
+
+function loadHistoryFromFs(concurrency: number): ThroughputHistory {
+  const benchDir = path.join(getResultsDir(), BENCHMARK);
+  if (!fs.existsSync(benchDir)) return { dates: [], providers: [] };
+  const days: { provider: string; date: string; entries: BrowserThroughputEntry[] }[] = [];
+  const providerDirs = fs.readdirSync(benchDir, { withFileTypes: true }).filter((entry) => entry.isDirectory() && !entry.name.startsWith("_"));
+  for (const dir of providerDirs) {
+    const providerPath = path.join(benchDir, dir.name);
+    const dateDirs = fs.readdirSync(providerPath, { withFileTypes: true }).filter((entry) => entry.isDirectory() && DATE_RE.test(entry.name)).map((entry) => entry.name);
+    for (const date of dateDirs) {
+      const file = path.join(providerPath, date, `c${concurrency}`, "results.jsonl");
+      if (!fs.existsSync(file)) continue;
+      const entries = parseLines(fs.readFileSync(file, "utf-8"), date);
+      days.push({ provider: entries.find((entry) => entry.provider)?.provider ?? dir.name, date, entries });
+    }
+  }
+  return historyFromDays(days);
+}
+
+async function loadHistoryFromGitHub(concurrency: number): Promise<ThroughputHistory> {
+  const basePath = `results/${BENCHMARK}`;
+  const days: { provider: string; date: string; entries: BrowserThroughputEntry[] }[] = [];
+  const providerDirs = (await listFromGitHub(basePath)).filter((entry) => entry.type === "dir" && !entry.name.startsWith("_"));
+  for (const dir of providerDirs) {
+    const dates = (await listFromGitHub(`${basePath}/${dir.name}`)).filter((entry) => entry.type === "dir" && DATE_RE.test(entry.name)).map((entry) => entry.name);
+    for (const date of dates) {
+      try {
+        const content = await fetchFromGitHub(`${basePath}/${dir.name}/${date}/c${concurrency}/results.jsonl`);
+        const entries = parseLines(content, date);
+        days.push({ provider: entries.find((entry) => entry.provider)?.provider ?? dir.name, date, entries });
+      } catch {
+        // This provider has no run at this concurrency on this day.
+      }
+    }
+  }
+  return historyFromDays(days);
+}
+
+/** Every recorded day at one concurrency, for the throughput history line. */
+export async function loadBrowserThroughputHistory(concurrency = 1): Promise<ThroughputHistory> {
+  return fs.existsSync(getResultsDir()) ? loadHistoryFromFs(concurrency) : loadHistoryFromGitHub(concurrency);
 }

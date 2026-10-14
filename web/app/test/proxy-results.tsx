@@ -75,7 +75,7 @@ export async function TestProxyResults({ country, sort, date, simulated }: { cou
               </tr></thead>
               <tbody>{providers.map(p => <tr key={p.provider} className={`border-b border-foreground/10 last:border-b-0 ${p.provider === fastest?.provider ? "bg-primary/8" : ""}`}>
                 <th scope="row" className="px-4 py-3 font-medium min-w-44"><a href={p.url} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:underline">
-                  {PROVIDERS_BY_ID[p.provider]?.logo && <img src={PROVIDERS_BY_ID[p.provider].logo} alt="" className="size-5 rounded-[2px] object-contain" />}
+                  {PROVIDERS_BY_ID[p.provider]?.logo && <img src={PROVIDERS_BY_ID[p.provider].logo} alt="" decoding="sync" className="size-5 rounded-[2px] object-contain" />}
                   {p.displayName}<span className="size-1.5 rounded-full" style={{ background: proxyProviderColor(p.provider) }} /></a></th>
                 {p.status === "unsupported" ? <td colSpan={6} className="px-4 py-3 text-muted-foreground">Country proxy integration not verified</td> : <>
                   <td className="px-4 py-3 whitespace-nowrap"><span className={`inline-flex rounded-[3px] px-2 py-1 text-[0.65rem] ${p.successes === p.attempts ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400" : "bg-amber-500/10 text-amber-700 dark:text-amber-400"}`}>{p.successes} / {p.attempts}</span></td>

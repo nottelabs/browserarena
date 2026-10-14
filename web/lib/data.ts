@@ -256,9 +256,11 @@ async function loadEntriesFromGitHub(
   entries: BenchmarkEntry[];
   dateRange?: { min: string; max: string };
   providerRunDateMap: Map<string, string>;
+  availableDates: string[];
 }> {
   const providerMap = new Map<string, BenchmarkEntry[]>();
   const providerRunDateMap = new Map<string, string>();
+  const availableDateSet = new Set<string>();
   const basePath = `results/${benchmark}`;
 
   // Structure: results/{benchmark}/{provider}/{date}/results.jsonl
@@ -275,10 +277,11 @@ async function loadEntriesFromGitHub(
       .sort()
       .reverse();
 
+    for (const name of dates) availableDateSet.add(name);
+
     if (benchmark === "hello-browser") {
-      // Use the latest run date for each provider. Older concurrency levels
-      // remain in history but should not create active leaderboard tabs.
-      const latestDate = dates[0];
+      // Latest run per provider, or the requested day when that provider has it.
+      const latestDate = date && dates.includes(date) ? date : date ? undefined : dates[0];
       if (!latestDate) continue;
 
       const dateContents = await listFromGitHub(`${basePath}/${dir.name}/${latestDate}`);
@@ -339,7 +342,7 @@ async function loadEntriesFromGitHub(
     const dates = entries.map((e) => e.created_at).filter(Boolean).sort();
     dateRange = { min: dates[0]!, max: dates[dates.length - 1]! };
   }
-  return { entries, dateRange, providerRunDateMap };
+  return { entries, dateRange, providerRunDateMap, availableDates: [...availableDateSet].sort() };
 }
 
 function loadEntriesFromFs(
@@ -350,17 +353,19 @@ function loadEntriesFromFs(
   dateRange?: { min: string; max: string };
   providerMetaMap: Map<string, VmMeta>;
   providerRunDateMap: Map<string, string>;
+  availableDates: string[];
 } {
   const resultsDir = getResultsDir();
   const providerMap = new Map<string, BenchmarkEntry[]>();
   const providerMetaMap = new Map<string, VmMeta>();
   const providerRunDateMap = new Map<string, string>();
+  const availableDateSet = new Set<string>();
   let dateRange: { min: string; max: string } | undefined;
 
   // Structure: results/{benchmark}/{provider}/{date}/results.jsonl
   const benchDir = path.join(resultsDir, benchmark);
   if (!fs.existsSync(benchDir))
-    return { entries: [], providerMetaMap, providerRunDateMap };
+    return { entries: [], providerMetaMap, providerRunDateMap, availableDates: [] };
 
   const providerDirs = fs.readdirSync(benchDir, { withFileTypes: true })
     .filter((e) => e.isDirectory() && !e.name.startsWith("_"));
@@ -372,12 +377,12 @@ function loadEntriesFromFs(
       .map((e) => e.name)
       .sort()
       .reverse();
+    for (const name of dateDirs) availableDateSet.add(name);
 
     if (benchmark === "hello-browser") {
-      // Use the latest run date for each provider. Older concurrency levels
-      // remain in history but should not create active leaderboard tabs.
+      // Latest run per provider, or the requested day when that provider has it.
       let providerName: string | undefined;
-      const latestDate = dateDirs[0];
+      const latestDate = date && dateDirs.includes(date) ? date : date ? undefined : dateDirs[0];
       if (!latestDate) continue;
 
       const runDir = path.join(providerPath, latestDate);
@@ -478,6 +483,7 @@ function loadEntriesFromFs(
     dateRange,
     providerMetaMap,
     providerRunDateMap,
+    availableDates: [...availableDateSet].sort(),
   };
 }
 
@@ -727,15 +733,27 @@ async function loadHistoricalLeaderboardFromGitHub(
   };
 }
 
+const historicalInflight = new Map<string, Promise<HistoricalLeaderboardResult>>();
+
 export async function loadHistoricalLeaderboard(
   benchmark: "hello-browser" = "hello-browser",
   concurrency?: number
 ): Promise<HistoricalLeaderboardResult> {
-  const resultsDir = getResultsDir();
-  if (fs.existsSync(resultsDir)) {
-    return loadHistoricalLeaderboardFromFs(benchmark, concurrency);
+  // Provider pages and prefetched routes ask for the same history at once.
+  const key = `${benchmark}:${concurrency ?? ""}`;
+  const pending = historicalInflight.get(key);
+  if (pending) return pending;
+  const result = (async () => {
+    const resultsDir = getResultsDir();
+    if (fs.existsSync(resultsDir)) return loadHistoricalLeaderboardFromFs(benchmark, concurrency);
+    return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency);
+  })();
+  historicalInflight.set(key, result);
+  try {
+    return await result;
+  } finally {
+    historicalInflight.delete(key);
   }
-  return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency);
 }
 
 function listBenchmarkDatesFromFs(benchmark: "v0"): string[] {
@@ -778,7 +796,7 @@ export async function loadLeaderboard(
 ): Promise<LeaderboardResult> {
   const v0Dates = await listBenchmarkDates("v0");
   const effectiveDate =
-    benchmark === "v0" ? date || v0Dates[0] : undefined;
+    benchmark === "v0" ? date || v0Dates[0] : date;
 
   const resultsDir = getResultsDir();
   const useFs = fs.existsSync(resultsDir);
@@ -965,6 +983,7 @@ export async function loadLeaderboard(
       p90TotalMs,
       p95TotalMs,
       p99TotalMs,
+      sessionMs: sessionTotals,
       medianExtractMs,
       medianCrawlMs,
       medianFormMs,
@@ -1040,12 +1059,14 @@ export async function loadLeaderboard(
   }
 
   const metadata: LeaderboardMetadata = {
-    availableDates: v0Dates,
+    availableDates: benchmark === "hello-browser"
+      ? (fsResult?.availableDates ?? ghResult?.availableDates ?? [])
+      : v0Dates,
     availableConcurrencyLevels,
     vmMeta,
     vmMetas: uniqueVmMetas.length > 0 ? uniqueVmMetas : undefined,
   };
-  if (effectiveDate) {
+  if (effectiveDate && (benchmark !== "hello-browser" || metadata.availableDates?.includes(effectiveDate))) {
     metadata.date = effectiveDate;
   }
   if (dateRange) {

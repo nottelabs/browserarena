@@ -1,3 +1,4 @@
+import { cacheLife } from "next/cache";
 import { withNotteUtm } from "@/lib/utm";
 import type { Metadata } from "next";
 import { PageShell } from "@/components/page-shell";
@@ -12,7 +13,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function FaqPage() {
+export default async function FaqPage() {
+  "use cache";
+  cacheLife("weeks");
+  const year = new Date().getFullYear();
   return (
     <PageShell>
       <section className="space-y-10 text-sm leading-relaxed text-muted-foreground">
@@ -31,7 +35,7 @@ export default function FaqPage() {
 
         <div>
           <h2 className="text-base font-semibold text-foreground mb-3">
-            Cloud browser provider comparison {new Date().getFullYear()}
+            Cloud browser provider comparison {year}
           </h2>
           <p>
             The cloud browser infrastructure market is growing rapidly as AI agents and web automation demand managed browser instances. Key factors when comparing providers include session creation latency, CDP connection speed, page navigation time, concurrent session support, reliability, and cost. The Browser Arena is the first open-source benchmark — created by the team at{" "}

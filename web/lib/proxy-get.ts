@@ -3,6 +3,7 @@ import path from "node:path";
 import type { ProxyGetRecord } from "../../src/benchmarks/proxy-get/schema";
 import { PROVIDERS_BY_ID } from "./providers";
 import { proxyAttemptCost, proxyCostExplanation } from "./proxy-get-cost";
+import type { VmMeta } from "./data-shared";
 
 export { PROXY_COUNTRIES, COUNTRY_NAMES } from "../../src/benchmarks/proxy-get/schema";
 export type { ProxyGetRecord } from "../../src/benchmarks/proxy-get/schema";
@@ -27,6 +28,7 @@ export interface ProxyGetStats {
   estimatedTraffic: boolean;
   costExplanation: string;
   samples: ProxyGetRecord[];
+  vmMeta?: VmMeta;
 }
 
 function median(values: number[]): number | null {
@@ -87,12 +89,29 @@ export function parseProxyGetJsonl(content: string): ProxyGetRecord[] {
       if (e.benchmark !== "proxy-get" || e.version !== 1 || !e.run_id || !e.created_at || !e.provider
         || !["success", "failed", "unsupported"].includes(e.status)
         || !["US", "FR", "BR", "IN", "JP"].includes(e.country)) return [];
+      // Network traces stay in the result files. The page only needs the sample fields.
+      delete e.diagnostics;
       return [e];
     } catch { return []; }
   });
 }
 
+const proxyEntriesInflight = new Map<string, Promise<ProxyGetRecord[]>>();
+
 export async function loadProxyGetEntries(allDates = false): Promise<ProxyGetRecord[]> {
+  const key = allDates ? "all" : "latest";
+  const pending = proxyEntriesInflight.get(key);
+  if (pending) return pending;
+  const result = loadProxyGetEntriesUncached(allDates);
+  proxyEntriesInflight.set(key, result);
+  try {
+    return await result;
+  } finally {
+    proxyEntriesInflight.delete(key);
+  }
+}
+
+async function loadProxyGetEntriesUncached(allDates = false): Promise<ProxyGetRecord[]> {
   const base = path.resolve(process.env.RESULTS_DIR || path.join(process.cwd(), "..", "results"), "proxy-get");
   let entries: ProxyGetRecord[] = [];
   // Vercel's build-time files are immutable: published daily data comes from GitHub.
@@ -148,6 +167,29 @@ export async function loadProxyGetEntries(allDates = false): Promise<ProxyGetRec
     entries = loaded.flat();
   }
   return entries;
+}
+
+export async function loadProxyRunMeta(provider: string, runDate: string): Promise<VmMeta | undefined> {
+  if (!/^[A-Z0-9_]+$/.test(provider) || !/^\d{4}-\d{2}-\d{2}$/.test(runDate)) return undefined;
+  const dir = provider.toLowerCase().replace(/_/g, "-");
+  const base = path.resolve(process.env.RESULTS_DIR || path.join(process.cwd(), "..", "results"), "proxy-get");
+  if (fs.existsSync(base) && (!process.env.VERCEL || process.env.RESULTS_DIR)) {
+    const file = path.join(base, dir, runDate, "_meta.json");
+    if (!fs.existsSync(file)) return undefined;
+    try {
+      return JSON.parse(fs.readFileSync(file, "utf-8")) as VmMeta;
+    } catch {
+      return undefined;
+    }
+  }
+  const repo = process.env.RESULTS_GITHUB_REPO || "nottelabs/browserarena";
+  const branch = process.env.RESULTS_GITHUB_BRANCH
+    || (process.env.VERCEL_ENV === "preview"
+      ? process.env.VERCEL_GIT_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_REF : undefined)
+    || "main";
+  const response = await fetch(`https://raw.githubusercontent.com/${repo}/${branch}/results/proxy-get/${dir}/${runDate}/_meta.json`, { next: { revalidate: 60 } });
+  if (!response.ok) return undefined;
+  return await response.json() as VmMeta;
 }
 
 export async function loadProxyGet(country = "US") {

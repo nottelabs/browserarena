@@ -42,12 +42,7 @@
   background: var(--foreground);
   color: var(--background);
 }
-.optionDetail {
-  display: block;
-  margin-top: 2px;
-  font-size: 11px;
-  opacity: 0.7;
-}
+.optionLine { white-space: nowrap; }
 .flag {
   font-size: 18px;
   line-height: 1;
@@ -55,11 +50,6 @@
 }
 .config {
   margin-top: 32px;
-}
-.configLabel {
-  margin-bottom: 8px;
-  font-size: 12px;
-  color: var(--muted-foreground);
 }
 .allLink {
   display: flex;
@@ -78,10 +68,7 @@
   display: none;
 }
 @media (min-width: 1280px) {
-  .sidebar {
-    /* Main padding + hero height/gap + centered benchmark heading. */
-    top: calc(var(--spacing) * 16 + 79.75px);
-  }
+  .sidebar { top: 39px; }
 }
 @media (min-width: 1280px) and (max-width: 1799px) {
   .sidebar {
@@ -148,4 +135,18 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .sidebar[data-open="true"] { animation: none; }
+}
+@media (min-width: 1280px) {
+  .sidebar[data-in-page="true"] {
+    position: sticky;
+    top: 5.5rem;
+    left: auto;
+    float: none;
+    width: 184px;
+    height: max-content;
+    margin: 0;
+  }
+}
+@media (min-width: 1800px) {
+  .sidebar[data-in-page="true"] { width: 208px; }
 }

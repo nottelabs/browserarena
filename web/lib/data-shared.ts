@@ -53,6 +53,8 @@ export interface ProviderStats {
   p90TotalMs: number;
   p95TotalMs: number;
   p99TotalMs: number;
+  /** Successful session totals for this run, one number per session. */
+  sessionMs: number[];
   medianExtractMs: number;
   medianCrawlMs: number;
   medianFormMs: number;
@@ -156,7 +158,7 @@ export interface ProviderCdpEndpointInfo {
 export const PROVIDER_CDP_ENDPOINT: Record<string, ProviderCdpEndpointInfo> = {
   BROWSERBASE: { cdpHost: "connect.usw2.browserbase.com", rttMs: 62, proxied: false },
   STEEL: { cdpHost: "connect.steel.dev", rttMs: 14, proxied: true },
-  NOTTE: { cdpHost: "[redacted host]", rttMs: 12, proxied: true },
+  NOTTE: { cdpHost: "api.notte.cc", rttMs: 12, proxied: true },
   KERNEL: { cdpHost: "api.onkernel.com", rttMs: 14, proxied: false },
   ANCHORBROWSER: { cdpHost: "connect.anchorbrowser.io", rttMs: 38, proxied: false },
   HYPERBROWSER: { cdpHost: "connect-us-east-1.hyperbrowser.ai", rttMs: 9, proxied: false },

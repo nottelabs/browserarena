@@ -1,71 +1,115 @@
-import { withNotteUtm } from "@/lib/utm";
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { cacheLife } from "next/cache";
 import {
   loadHistoricalLeaderboard,
   loadLeaderboard,
   type PercentileType,
   type SortByType,
 } from "@/lib/data";
+import { BENCHMARK_CACHE_LIFE } from "@/lib/benchmark-cache";
 import { LeaderboardTable } from "@/components/leaderboard-table";
-import { BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
+import { BenchmarkPending, BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
 import { HistoryCharts } from "@/components/history-charts";
 import styles from "@/components/benchmarks/benchmark.module.css";
+import { BENCHMARK_TITLES, BenchmarkTitle } from "@/components/benchmarks/benchmark-title";
+import { RunDatePicker } from "@/components/benchmarks/run-date-picker";
 
 const VALID_PERCENTILES: PercentileType[] = ["median", "p90", "p95", "p99"];
 const VALID_SORT: SortByType[] = ["latency", "reliability", "price"];
 
 export const metadata: Metadata = {
-  title: "Session Performance",
+  title: "Browser Lifecycle",
   description: "Compare browser session creation, connection, navigation, and release speed, reliability, and cost.",
   alternates: {
     canonical: "https://browserarena.ai",
   },
 };
 
-
-export default async function Home({
+export default function Home({
   searchParams,
 }: {
   searchParams: Promise<{
     percentile?: string;
     sort?: string;
     concurrency?: string;
+    date?: string;
   }>;
 }) {
+  return <Suspense fallback={<BenchmarkPending />}>
+    <LifecycleContent searchParams={searchParams} />
+  </Suspense>;
+}
+
+async function LifecycleContent({
+  searchParams,
+}: {
+  searchParams: Promise<{ percentile?: string; sort?: string; concurrency?: string; date?: string }>;
+}) {
   const params = await searchParams;
-  const requestedConcurrency = Number(params.concurrency ?? 1);
+  return <LifecycleView
+    date={/^\d{4}-\d{2}-\d{2}$/.test(params.date ?? "") ? params.date! : ""}
+    percentile={params.percentile ?? ""}
+    sort={params.sort ?? ""}
+    concurrency={params.concurrency ?? ""}
+  />;
+}
+
+async function LifecycleView({
+  date,
+  percentile: requestedPercentileParam,
+  sort: requestedSort,
+  concurrency: requestedConcurrencyParam,
+}: {
+  date: string;
+  percentile: string;
+  sort: string;
+  concurrency: string;
+}) {
+  "use cache: remote";
+  cacheLife(BENCHMARK_CACHE_LIFE);
+  const requestedDate = date || undefined;
+  const requestedConcurrency = Number(requestedConcurrencyParam || 1);
   let effectiveConcurrency = Number.isInteger(requestedConcurrency) && requestedConcurrency > 0 ? requestedConcurrency : 1;
-  const requestedPercentile = (VALID_PERCENTILES.includes(params.percentile as PercentileType)
-    ? params.percentile
+  const requestedPercentile = (VALID_PERCENTILES.includes(requestedPercentileParam as PercentileType)
+    ? requestedPercentileParam
     : "median") as PercentileType;
   let percentile = requestedPercentile;
   if (effectiveConcurrency > 1) percentile = "median";
-  const sortBy = (VALID_SORT.includes(params.sort as SortByType)
-    ? params.sort
+  const sortBy = (VALID_SORT.includes(requestedSort as SortByType)
+    ? requestedSort
     : "latency") as SortByType;
 
   let leaderboard = await loadLeaderboard(
     "hello-browser",
-    undefined,
+    requestedDate,
     percentile,
     sortBy,
     effectiveConcurrency
   );
+  if (requestedDate && !leaderboard.metadata.availableDates?.includes(requestedDate)) {
+    leaderboard = await loadLeaderboard("hello-browser", undefined, percentile, sortBy, effectiveConcurrency);
+  }
   const concurrencyLevels = leaderboard.metadata.availableConcurrencyLevels?.length ? leaderboard.metadata.availableConcurrencyLevels : [1];
   if (!concurrencyLevels.includes(effectiveConcurrency)) {
     effectiveConcurrency = concurrencyLevels[0];
     percentile = effectiveConcurrency > 1 ? "median" : requestedPercentile;
-    leaderboard = await loadLeaderboard("hello-browser", undefined, percentile, sortBy, effectiveConcurrency);
+    leaderboard = await loadLeaderboard("hello-browser", requestedDate, percentile, sortBy, effectiveConcurrency);
   }
   const { providers } = leaderboard;
   const history = await loadHistoricalLeaderboard("hello-browser", effectiveConcurrency);
-  const lifecycleQuery = new URLSearchParams({ percentile: requestedPercentile, sort: sortBy }).toString();
-
+  const availableDates = leaderboard.metadata.availableDates ?? [];
+  const selectedDate = leaderboard.metadata.date && availableDates.includes(leaderboard.metadata.date)
+    ? leaderboard.metadata.date
+    : availableDates.at(-1) ?? "";
+  const lifecycleParams = new URLSearchParams({ percentile: requestedPercentile, sort: sortBy });
+  if (leaderboard.metadata.date) lifecycleParams.set("date", leaderboard.metadata.date);
+  const lifecycleQuery = lifecycleParams.toString();
+  const dateQuery: Record<string, string> = { percentile: requestedPercentile, sort: sortBy };
+  if (effectiveConcurrency !== 1) dateQuery.concurrency = String(effectiveConcurrency);
 
   return (
     <BenchmarkShell benchmark="hello-browser" concurrency={effectiveConcurrency} concurrencyLevels={concurrencyLevels} lifecycleQuery={lifecycleQuery}>
-
-      {/* Leaderboard */}
       <div id="leaderboard" className={`${styles.tableStage} scroll-mt-20`}>
         {providers.length > 0 ? (
           <div className="reveal-up">
@@ -73,10 +117,7 @@ export default async function Home({
               data={providers}
               percentile={percentile}
               hideTitle
-              controls={<div>
-                <h2 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Benchmark</h2>
-                <p className="mt-1 text-[0.72rem] text-muted-foreground">Session Performance · {effectiveConcurrency === 1 ? "Sequential runs" : `Concurrent runs · c = ${effectiveConcurrency}`} · {percentile === "median" ? "Median" : percentile.toUpperCase()} latency</p>
-              </div>}
+              controls={<BenchmarkTitle name={BENCHMARK_TITLES["hello-browser"]} date={<RunDatePicker dates={availableDates} selectedDate={selectedDate} benchmark="session-performance" pathname="/" query={dateQuery} />} />}
             />
           </div>
         ) : (
@@ -85,48 +126,18 @@ export default async function Home({
           </div>
         )}
       </div>
-
       <HistoryCharts
         history={history}
         percentile={percentile}
+        selectedDate={selectedDate}
         initialProvider={providers[0]?.provider}
         animate={false}
+        distributions={providers.map((provider) => ({
+          provider: provider.provider,
+          displayName: provider.displayName,
+          sessionMs: provider.sessionMs,
+        }))}
       />
-
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-        <span className="text-sm text-muted-foreground">
-          We&apos;re open-source and reproducible!<span className="hidden sm:inline"> Contribute.</span>{' '}
-          Built by{' '}
-          <a href={withNotteUtm("https://notte.cc", "footer")} target="_blank" rel="noopener noreferrer" className="text-foreground hover:underline">Notte</a>.
-        </span>
-        <div className="flex items-center gap-3 flex-wrap">
-          <a
-            href="https://railway.com/deploy/UNedGj?referralCode=YUwE3Q&utm_medium=integration&utm_source=template&utm_campaign=generic"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-[3px] border-[1.5px] border-foreground px-4 py-2 text-[0.78rem] font-medium text-foreground hover:bg-foreground hover:text-background transition-colors"
-          >
-            Reproduce Now
-          </a>
-          <a
-            href="https://github.com/nottelabs/browserarena"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-[3px] border-[1.5px] border-foreground px-4 py-2 text-[0.78rem] font-medium text-foreground hover:bg-foreground hover:text-background transition-colors"
-          >
-            + Add a Provider
-          </a>
-          <a
-            href="https://github.com/nottelabs/browserarena"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden sm:inline-flex rounded-[3px] border-[1.5px] border-foreground px-4 py-2 text-[0.78rem] font-medium text-foreground hover:bg-foreground hover:text-background transition-colors"
-          >
-            + Add a Bench
-          </a>
-        </div>
-      </div>
-
     </BenchmarkShell>
   );
 }

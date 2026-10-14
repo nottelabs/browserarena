@@ -49,7 +49,7 @@ export function ProxyHistoryChart({ days, dates, selectedDate, country, countryN
   const metricDays = visibleDays.filter(d => d.providers.some(p => p[metric] !== null));
   const chooseDate = (date: string) => {
     const query = new URLSearchParams({ country, date });
-    if (basePath !== "/proxy-get") { query.set("benchmark", "proxy-get"); query.set("demo", simulated ? "1" : "0"); }
+    if (basePath !== "/proxies") { query.set("benchmark", "proxy-get"); query.set("demo", simulated ? "1" : "0"); }
     if (sort === "cost") query.set("sort", "cost");
     if (!pending) navigate(`${basePath}?${query}`);
   };

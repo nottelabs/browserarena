@@ -1,0 +1,24 @@
+.mark {
+  color: var(--primary);
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.055em;
+  line-height: 1;
+  white-space: nowrap;
+  -webkit-text-stroke: 0.06em var(--foreground);
+  paint-order: stroke fill;
+  text-shadow: 0.08em 0.08em 0 var(--foreground);
+  user-select: none;
+}
+
+.sm {
+  font-size: 0.95rem;
+}
+
+.md {
+  font-size: 1.15rem;
+}
+
+.lg {
+  font-size: 1.35rem;
+}

@@ -1,8 +1,5 @@
 import { PAYLOAD, PAYLOAD_SHA256 } from "../../../../../src/benchmarks/proxy-get/payload";
 
-export const runtime = "nodejs";
-export const dynamic = "force-dynamic";
-
 export function GET() {
   return new Response(new Uint8Array(PAYLOAD), { headers: {
     "Content-Type": "application/octet-stream",

@@ -1,8 +1,6 @@
 import { ImageResponse } from "next/og";
 import { MARKETED_PROVIDER_NAMES } from "@/lib/providers";
 
-export const runtime = "edge";
-
 // Notte (the site's author) is kept in the third slot rather than leading the row.
 const OG_PROVIDER_NAMES = (() => {
   const names = MARKETED_PROVIDER_NAMES.filter((name) => name !== "Notte");
