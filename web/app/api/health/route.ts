@@ -37,7 +37,13 @@ function fail(message: string, status: number) {
 }
 
 export async function GET(request: Request) {
-  await connection();
+  // Unit tests call the handler directly, outside a Next.js request.
+  try {
+    await connection();
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "";
+    if (!message.includes("outside a request scope")) throw error;
+  }
   captureApiRequest(request, "/api/health");
   const params = new URL(request.url).searchParams;
 
