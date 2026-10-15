@@ -32,7 +32,7 @@
   },
   "dependencies": {
     "@browserbasehq/sdk": "^2.20.0",
-    "anchorbrowser": "^0.16.3",
+    "anchorbrowser": "^1.0.0",
     "steel-sdk": "^0.18.0",
     "@hyperbrowser/sdk": "^0.71.0",
     "@onkernel/sdk": "^0.119.0",
