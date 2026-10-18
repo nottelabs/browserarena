@@ -46,3 +46,14 @@ jobs:
       # advisory (GHSA-vfj7-8cjw-p6xm) has no patched release yet.
       - run: npm audit --package-lock-only --omit=dev
         working-directory: web
+
+  cicd:
+    if: ${{ always() }}
+    needs: [root, web]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require runner and web checks
+        env:
+          ROOT_RESULT: ${{ needs.root.result }}
+          WEB_RESULT: ${{ needs.web.result }}
+        run: test "$ROOT_RESULT" = success && test "$WEB_RESULT" = success
