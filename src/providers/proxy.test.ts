@@ -4,7 +4,7 @@ import test from "node:test";
 import type { AddressInfo } from "node:net";
 import Browserbase from "@browserbasehq/sdk";
 import Steel from "steel-sdk";
-import Anchorbrowser from "anchorbrowser";
+import { createAnchorbrowserClient } from "anchorbrowser";
 import { Hyperbrowser } from "@hyperbrowser/sdk";
 import { BrowserbaseProvider } from "./browserbase.js";
 import { SteelProvider } from "./steel.js";
@@ -48,7 +48,7 @@ test("native proxy adapters send documented country settings and Kernel deletes 
     await steel.create({ proxyCountry: "BR" });
     assert.deepEqual(requests.at(-1)!.body.useProxy, { geolocation: { country: "BR" } });
     const anchor = new AnchorBrowserProvider();
-    Object.assign(anchor, { _client: new Anchorbrowser({ apiKey: "test", baseURL: origin }) });
+    Object.assign(anchor, { _client: createAnchorbrowserClient({ auth: () => "test", baseUrl: origin }) });
     await anchor.create({ proxyCountry: "IN", recording: true });
     assert.deepEqual(requests.at(-1)!.body.browser, { adblock: { active: false }, popup_blocker: { active: false } });
     assert.deepEqual(requests.at(-1)!.body.session, { recording: { active: true }, proxy: { active: true, type: "anchor_proxy", country_code: "in" } });

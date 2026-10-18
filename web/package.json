@@ -17,7 +17,7 @@
     "next": "^16.3.5",
     "posthog-js": "^1.438.9",
     "posthog-node": "^5.55.3",
-    "radix-ui": "^1.6.5",
+    "radix-ui": "^1.7.0",
     "react": "19.3.0",
     "react-dom": "19.3.0",
     "recharts": "^3.10.0",
@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^26.6.2",
+    "@types/node": "^26.6.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
