@@ -11,7 +11,7 @@ npm install
 cp .env.example .env  # add your provider API keys
 ```
 
-Requires Node.js >= 18.
+Requires Node.js >= 20.20.2.
 
 ### CLI (benchmark runner)
 

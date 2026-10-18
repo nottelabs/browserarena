@@ -143,8 +143,9 @@ test("other providers are released through their API", async (t) => {
     assert.deepEqual(provider.releases, ["session-1"]);
     assert.equal(typeof record.session_release_ms, "number");
   } finally {
-    await page.close();
+    // Close Chrome's speculative connections before waiting for the HTTP server.
     await browser.close();
+    await page.close();
   }
 });
 
@@ -177,8 +178,9 @@ test("Lightpanda is released by closing the browser", async (t) => {
       assert.equal(typeof phase, "number", JSON.stringify(record));
     }
   } finally {
-    await page.close();
+    // Close Chrome's speculative connections before waiting for the HTTP server.
     await browser.close();
+    await page.close();
   }
 });
 

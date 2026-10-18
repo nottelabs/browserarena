@@ -155,7 +155,7 @@ cp .env.example .env   # add your provider API keys
 npm run bench -- --provider=notte --runs=100
 ```
 
-Requires Node.js >= 18. Run `npm run bench -- --help` for all options. Query results locally with [DuckDB](https://duckdb.org/docs/installation/): `duckdb -c ".read queries/hello-browser/simple.sql"`
+Requires Node.js >= 20.20.2. Run `npm run bench -- --help` for all options. Query results locally with [DuckDB](https://duckdb.org/docs/installation/): `duckdb -c ".read queries/hello-browser/simple.sql"`
 
 Or deploy directly on Railway:
 

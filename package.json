@@ -13,7 +13,7 @@
     "url": "https://github.com/nottelabs/browserarena/issues"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=20.20.2"
   },
   "description": "remote browser benchmark",
   "main": "index.js",
