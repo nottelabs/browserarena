@@ -11,7 +11,8 @@ export type ProviderName =
   | "LIGHTPANDA"
   | "BROWSERLESS"
   | "CLOUDFLARE"
-  | "AWS_AGENTCORE";
+  | "AWS_AGENTCORE"
+  | "GOLOGIN";
 
 export type ProviderSession = {
   id: string;
