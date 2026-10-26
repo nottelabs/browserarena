@@ -35,7 +35,7 @@
     "anchorbrowser": "^1.0.0",
     "steel-sdk": "^0.18.0",
     "@hyperbrowser/sdk": "^1.2.2",
-    "@onkernel/sdk": "^0.119.0",
+    "@onkernel/sdk": "^0.127.0",
     "dotenv": "^18.0.6",
     "playwright-core": "^1.64.0",
     "@aws-sdk/client-bedrock-agentcore": "^3.1152.0",
