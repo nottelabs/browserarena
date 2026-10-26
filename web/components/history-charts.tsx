@@ -760,9 +760,7 @@ export function HistoryCharts({
         </section>
         {distributions.length > 0 && <section data-chart-span="row" className="flex min-w-0 flex-col">
           <BenchmarkSectionHeader chart title="Distribution" description={`${formatDateLabel(selectedDate || snapshotDate || "")} · Successful session totals. A fast median can still have a long tail.`} />
-          <div className="flex flex-1 flex-col rounded-[3px] border-[1.5px] border-foreground bg-background p-3 sm:p-4">
-            <LifecycleDistribution providers={distributions} dateLabel={formatDateLabel(selectedDate || snapshotDate || "")} />
-          </div>
+          <LifecycleDistribution providers={distributions} dateLabel={formatDateLabel(selectedDate || snapshotDate || "")} />
         </section>}
         <section data-chart-span="row" className="flex min-w-0 flex-col">
           <BenchmarkSectionHeader chart title="Comparison" description={snapshotDate ? `${formatDateLabel(snapshotDate)} · ${metric === "score" ? "Higher is better." : `${percentileLabel} latency. Lower is better.`}` : "No run day in this range."} />

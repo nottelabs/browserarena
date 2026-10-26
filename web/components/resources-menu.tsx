@@ -28,7 +28,7 @@ export function ResourcesMenu() {
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="group inline-flex h-9 items-center gap-1.5 rounded-[3px] border-[1.5px] border-foreground bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-foreground hover:text-background data-[state=open]:bg-foreground data-[state=open]:text-background"
+          className="group inline-flex h-9 items-center gap-1.5 rounded-[3px] border-[1.5px] border-foreground bg-background px-2 text-xs min-[360px]:px-3 min-[360px]:text-sm font-medium text-foreground transition-colors hover:bg-foreground hover:text-background data-[state=open]:bg-foreground data-[state=open]:text-background"
         >
           Resources
           <ChevronDown className="size-3.5 transition-transform group-data-[state=open]:rotate-180" aria-hidden="true" />

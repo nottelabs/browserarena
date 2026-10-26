@@ -7,14 +7,15 @@
     "build": "next build",
     "start": "next start",
     "check-regressions": "tsx scripts/check-regressions.ts",
-    "test": "tsx --test lib/*.test.ts"
+    "test": "tsx --test lib/*.test.ts",
+    "test:layout": "playwright test"
   },
   "dependencies": {
     "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^1.57.0",
-    "next": "^16.3.5",
+    "next": "^16.4.3",
     "posthog-js": "^1.438.10",
     "posthog-node": "^5.55.3",
     "radix-ui": "^1.7.0",
@@ -24,6 +25,7 @@
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^26.6.4",
     "@types/react": "^19",

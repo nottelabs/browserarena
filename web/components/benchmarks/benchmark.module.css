@@ -12,16 +12,15 @@
 .dashboard > header { margin-bottom: calc(var(--spacing) * 8); }
 .dashboard :global(.reveal-up) { animation: none; opacity: 1; transform: none; }
 .dashboard > button[aria-controls] {
-  position: absolute;
-  right: 40px;
-  top: 20px;
-  margin: 0;
+  position: relative;
+  margin: 0 0 16px auto;
   padding: 9px 12px;
 }
 .heading { padding-right: 220px; }
 .charts { display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); gap: calc(var(--spacing) * 4); }
 .dashboard [data-section-header] { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: var(--section-header-height); margin-bottom: calc(var(--spacing) * 4); }
-.dashboard [data-section-header="benchmark"] { height: 112px; }
+.dashboard [data-section-header="benchmark"] { height: auto; min-height: 112px; }
+.dashboard [data-section-header="benchmark"] > [data-section-controls] { min-width: 0; max-width: 100%; }
 .dashboard [data-run-date] {
   display: inline-flex;
   align-items: center;
@@ -160,9 +159,8 @@
 @media (max-width: 1023px) { .charts { grid-template-columns: minmax(0, 1fr); gap: calc(var(--spacing) * 4); } }
 @media (max-width: 639px) {
   .charts [data-benchmark-panel] { min-height: 480px; }
-  .dashboard > button[aria-controls] { position: static; margin-bottom: 16px; }
   .heading { padding-right: 0; }
-  .dashboard [data-section-header="benchmark"] { height: auto; min-height: 168px; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 12px; }
+  .dashboard [data-section-header="benchmark"] { min-height: 0; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 12px; }
   .dashboard [data-section-header="benchmark"] > [data-section-controls] { margin-top: auto; }
   .charts [data-violin-grid] { grid-template-columns: 100px minmax(0, 1fr) 54px; gap: 8px; }
   .dashboard { --panel-padding: calc(var(--spacing) * 3); }
@@ -181,6 +179,10 @@
   .charts [data-benchmark-panel] { min-height: 510px; }
 }
 @media (max-width: 1279px) {
+  .dashboard > button[aria-controls] {
+    display: flex;
+    width: fit-content;
+  }
   .dashboard button[aria-controls][data-in-page="true"] {
     position: sticky;
     top: 4.5rem;
