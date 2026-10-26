@@ -177,6 +177,10 @@ Daily results are produced by `scripts/run-and-publish.sh`, which runs one bench
 
 The east Browser Throughput run sits at 21:00 UTC, after the last Proxy Performance batch (01:00 to 17:00, see docs/proxy-get.md), so the two never share the box. `--concurrency 1,10,25,50` and `--loops 5` are accepted on either line; see the plan-cap note above before raising concurrency. The script holds a lock on the checkout, so if the first job overruns its slot the second waits instead of racing it.
 
+Each provider runs in a separate process with a hard deadline covering all its sessions and concurrency levels: **30 minutes for Browser Lifecycle**, **60 minutes for Browser Throughput**. Override it with `--provider-timeout SECONDS` for larger runs. The script requires GNU `timeout`; it sends SIGTERM at the deadline and SIGKILL to the process group after another 30 seconds if needed.
+
+A failed or timed-out provider does not stop the remaining providers or their results from being published. Completed samples are retained, and the interrupted provider's `_meta.json` records `run_status`, `process_exit_code`, and `finished_at`. After publication the script exits nonzero if any provider failed. Scheduled throughput runs explicitly use the fixed article pool. All providers share the campaign's UTC run date for output paths and article rotation, even across midnight.
+
 Per-EC2 setup: clone the repo, populate `.env` with that region's provider keys, and add an SSH key as a [deploy key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/managing-deploy-keys) with write access (one key per box). Cron logs go to `logs/` (gitignored).
 
 Proxy Performance has a separate publisher, `scripts/run-proxy-and-publish.sh`, for a
