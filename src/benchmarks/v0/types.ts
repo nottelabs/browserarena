@@ -1,3 +1,4 @@
+import type { SessionCreationDiagnostics } from "../../utils/create-session.js";
 import type { ProviderName } from "../../types.js";
 
 export type V0Record = {
@@ -12,6 +13,7 @@ export type V0Record = {
 
   // Infra timings
   session_creation_ms: number | null;
+  session_creation_diagnostics?: SessionCreationDiagnostics;
   session_connect_ms: number | null;
   session_release_ms: number | null;
 
