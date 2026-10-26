@@ -97,7 +97,8 @@ and failed attempts. Unknown prices remain unknown.
 - 10 warm-up runs before measurement to reduce cold-start effects. Warm-ups are recorded too, flagged `warmup: true` and excluded from every stat; the first session of a run is flagged `cold_start: true` and surfaced as the cold-start creation time
 - Same URL across all providers (`example.com`)
 - No provider-specific tuning, default SDK settings only
-- Automatic 30s backoff on 429 rate limit errors
+- Session creation retries transient HTTP 429 errors up to three total attempts, with 30s between attempts. Credit, quota, and billing rejections fail immediately. Legacy errors without an HTTP status must explicitly identify a rate limit to be retried
+- `session_creation_ms` times the successful API call; `session_creation_diagnostics` also records the total elapsed time, attempts, backoff, and sanitized error status/code/request ID, including on failed sessions
 - Most provider SDKs auto-retry transient errors; success rates reflect post-retry outcomes
 
 ### Network

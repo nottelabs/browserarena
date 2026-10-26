@@ -1,9 +1,11 @@
+import type { SessionCreationDiagnostics } from "../../utils/create-session.js";
 import type { ProviderName } from "../../types.js";
 
 export type HelloBrowserRecord = {
   created_at: string;
   id: string | null;
   session_creation_ms: number | null;
+  session_creation_diagnostics?: SessionCreationDiagnostics;
   session_connect_ms: number | null;
   page_goto_ms: number | null;
   session_release_ms: number | null;

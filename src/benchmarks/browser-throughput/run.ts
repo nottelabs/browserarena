@@ -4,6 +4,7 @@ import type { Browser, Page } from "playwright-core";
 import type { ProviderClient } from "../../types.js";
 import { isoUtcNow, nowNs, msSince } from "../../utils/time.js";
 import { sanitizeErrorMessage } from "../../utils/sanitize.js";
+import { createSessionWithBackoff } from "../../utils/create-session.js";
 import type { BrowserThroughputRecord } from "./types.js";
 import { ACTIONS_PER_LOOP, DEFAULT_ACTION_TIMEOUT_MS, runActionLoops, summarizeActions } from "./actions.js";
 import type { UrlForSlot } from "./articles.js";
@@ -44,6 +45,7 @@ export async function runSingleSession(
     error_stage: null,
     error_message: null,
     session_creation_ms: null,
+    session_creation_diagnostics: { attempts: 0, backoff_ms: 0, elapsed_ms: 0, errors: [] },
     session_connect_ms: null,
     session_release_ms: null,
     viewport_width: VIEWPORT.width,
@@ -67,29 +69,14 @@ export async function runSingleSession(
     let cdpUrl: string;
     let headers: Record<string, string> | undefined;
 
-    while (true) {
-      try {
-        const t0 = nowNs();
-        const created = await provider.create();
-        ({ id, cdpUrl, headers } = created);
-        result.id = id;
-        session = { id };
-        result.session_creation_ms = msSince(t0);
-        console.error(`[Session created] provider=${provider.name} id=${id} ${result.session_creation_ms}ms`);
-        break;
-      } catch (e: unknown) {
-        const err = e as { status?: number; statusCode?: number; response?: { status?: number } };
-        const status = err?.status ?? err?.statusCode ?? err?.response?.status;
-        const message = e instanceof Error ? e.message : `${e}`;
-        const isRateLimit = status === 429 || /rate|limit|429|too many/i.test(message || "");
-        if (isRateLimit) {
-          console.error(`[RATE_LIMIT] provider=${provider.name} message="${message}" → retry in 30s`);
-          await new Promise((r) => setTimeout(r, 30_000));
-          continue;
-        }
-        throw e;
-      }
-    }
+    const { session: created, creationMs } = await createSessionWithBackoff(
+      provider, result.session_creation_diagnostics!
+    );
+    ({ id, cdpUrl, headers } = created);
+    result.id = id;
+    session = { id };
+    result.session_creation_ms = creationMs;
+    console.error(`[Session created] provider=${provider.name} id=${id} ${creationMs}ms`);
 
     stage = "connect_over_cdp";
     const t1 = nowNs();
