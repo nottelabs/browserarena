@@ -143,6 +143,7 @@ npm run build
 result_status=0
 for p in "${PROV_LIST[@]}"; do
   echo "[INFO] starting provider=$p timeout=${PROVIDER_TIMEOUT}s"
+  provider_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   # A process boundary also bounds SDK retries, cleanup, and a blocked event
   # loop. GNU timeout signals the whole process group, then forces termination
   # after 30s if SIGTERM is ignored. Do not use --foreground: it leaves children
@@ -166,25 +167,27 @@ for p in "${PROV_LIST[@]}"; do
     esac
     echo "[ERROR] provider=$p outcome=$outcome exit=$provider_status limit=${PROVIDER_TIMEOUT}s; continuing with remaining providers"
     meta="results/$BENCHMARK/$p/$DATE/_meta.json"
-    if [[ -f "$meta" ]]; then
-      # Keep completed samples, but mark the provider's run as incomplete.
-      node --input-type=module - "$meta" "$outcome" "$provider_status" <<'NODE'
+    # Record even failures during startup/VM discovery, before the CLI has
+    # created a result directory. Do not manufacture any measured samples.
+    node --input-type=module - "$meta" "$outcome" "$provider_status" "$provider_started_at" <<'NODE'
 import fs from "node:fs";
-const [file, status, exitCode] = process.argv.slice(2);
+import path from "node:path";
+const [file, status, exitCode, startedAt] = process.argv.slice(2);
 let meta;
 try {
   meta = JSON.parse(fs.readFileSync(file, "utf8"));
 } catch (error) {
-  // SIGKILL can interrupt the worker while it is rewriting this file.
-  if (!(error instanceof SyntaxError)) throw error;
+  // The worker may not have written metadata, or SIGKILL interrupted a write.
+  if (!(error instanceof SyntaxError) && error.code !== "ENOENT") throw error;
   meta = {};
 }
+meta.started_at ||= startedAt;
 meta.finished_at = new Date().toISOString();
 meta.run_status = status;
 meta.process_exit_code = Number(exitCode);
+fs.mkdirSync(path.dirname(file), { recursive: true });
 fs.writeFileSync(file, JSON.stringify(meta, null, 2) + "\n");
 NODE
-    fi
   fi
 done
 

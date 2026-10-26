@@ -40,6 +40,10 @@ import { spawn } from "node:child_process";
 const args = Object.fromEntries(process.argv.slice(2).filter(x => x.startsWith("--")).map(x => x.slice(2).split("=")));
 const p = args.provider;
 fs.appendFileSync("logs/calls.jsonl", JSON.stringify(args) + "\\n");
+if (p === process.env.EARLY_PROVIDER) {
+  if (process.env.EARLY_EXIT_CODE) process.exit(Number(process.env.EARLY_EXIT_CODE));
+  await new Promise(() => { setInterval(() => {}, 1000); });
+}
 const dir = "results/" + args.benchmark + "/" + p + "/" + args["run-date"];
 fs.mkdirSync(dir + "/c1", { recursive: true });
 fs.writeFileSync(dir + "/_meta.json", JSON.stringify({ started_at: new Date().toISOString(), finished_at: "" }));
@@ -145,6 +149,25 @@ test("a timeout during a metadata write does not stop later providers", () => {
     assert.ok(f.meta("browserless").finished_at);
     f.checkPublication();
   } finally { f.cleanup(); }
+});
+
+test("failures before provider startup publish metadata without inventing samples", () => {
+  for (const earlyExit of ["", "42"]) {
+    const f = fixture();
+    try {
+      const result = f.run(["--provider-timeout", "1"], { EARLY_PROVIDER: "notte", EARLY_EXIT_CODE: earlyExit });
+      assert.equal(result.status, 1, result.stdout + result.stderr);
+      const meta = f.meta("notte");
+      assert.equal(meta.run_status, earlyExit ? "failed" : "timed_out");
+      assert.equal(meta.process_exit_code, earlyExit ? 42 : 124);
+      assert.ok(Number.isFinite(Date.parse(meta.started_at)));
+      assert.ok(Date.parse(meta.finished_at) >= Date.parse(meta.started_at));
+      const date = f.calls()[0]["run-date"];
+      assert.throws(() => f.git("show", `origin/main:results/hello-browser/notte/${date}/c1/results.jsonl`));
+      assert.ok(f.meta("browserless").finished_at);
+      f.checkPublication();
+    } finally { f.cleanup(); }
+  }
 });
 
 test("successful throughput campaign uses the longer default and exits zero", () => {
