@@ -52,6 +52,7 @@ async function main() {
   if (hasFlag("help")) {
     console.log(`Usage: npm run bench -- --benchmark=hello-browser|v0|proxy-get|browser-throughput --provider=steel,kernel,...
 Common: --runs=N --out=PATH --rate=SESSIONS_PER_MINUTE --url=URL --concurrency=1,10 --record
+  --run-date=YYYY-MM-DD (shared output date and article rotation for scheduled providers)
 browser-throughput: --loops=N (10 actions per loop) --articles=fixed|random --action-timeout=MS
 Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fresh sessions)
   --preflight (check credentials and endpoints without sessions)
@@ -100,7 +101,12 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
     .map((p) => p.trim())
     .filter(Boolean);
 
-  const date = new Date().toISOString().slice(0, 10);
+  const date = getArg("run-date", new Date().toISOString().slice(0, 10))!;
+  const runDate = new Date(`${date}T00:00:00.000Z`);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(runDate.getTime())
+    || runDate.toISOString().slice(0, 10) !== date) {
+    throw new Error("--run-date must be a valid UTC date in YYYY-MM-DD format");
+  }
   let providersRun = 0;
 
   if (benchmarkArg === "proxy-get") {
@@ -223,7 +229,7 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
   // pool is in use or the run crosses midnight.
   const urlFor =
     benchmarkArg === "browser-throughput"
-      ? await resolveArticleUrls(articles, runs + BROWSER_THROUGHPUT_WARMUPS, loops, new Date())
+      ? await resolveArticleUrls(articles, runs + BROWSER_THROUGHPUT_WARMUPS, loops, runDate)
       : null;
 
   for (const providerName of providerNames) {

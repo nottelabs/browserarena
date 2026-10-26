@@ -4,7 +4,8 @@
 #
 # Usage:
 #   scripts/run-and-publish.sh --region us-east|us-west [--benchmark hello-browser|browser-throughput]
-#       [--concurrency 1,10] [--runs N] [--loops N] [--dry-run] [--no-reset]
+#       [--concurrency 1,10] [--runs N] [--loops N] [--provider-timeout SECONDS]
+#       [--dry-run] [--no-reset]
 #
 # c25/c50 are valid --concurrency levels; check the provider plan's concurrent
 # session cap first, or the run reports plan limits as reliability.
@@ -20,6 +21,7 @@ BENCHMARK="hello-browser"
 CONCURRENCY="1,10"
 RUNS=100
 LOOPS=1
+PROVIDER_TIMEOUT=""
 DRY_RUN=0
 NO_RESET=0
 
@@ -35,10 +37,12 @@ while [[ $# -gt 0 ]]; do
     --runs=*)    RUNS="${1#*=}"; shift ;;
     --loops)     LOOPS="${2:-}"; shift 2 ;;
     --loops=*)   LOOPS="${1#*=}"; shift ;;
+    --provider-timeout)   PROVIDER_TIMEOUT="${2:-}"; shift 2 ;;
+    --provider-timeout=*) PROVIDER_TIMEOUT="${1#*=}"; shift ;;
     --dry-run)   DRY_RUN=1; shift ;;
     --no-reset)  NO_RESET=1; shift ;;
     -h|--help)
-      sed -n '2,13p' "$0"; exit 0 ;;
+      sed -n '2,14p' "$0"; exit 0 ;;
     *) echo "[ERROR] unknown arg: $1" >&2; exit 2 ;;
   esac
 done
@@ -54,6 +58,19 @@ case "$BENCHMARK" in
   hello-browser|browser-throughput) ;;
   *) echo "[ERROR] invalid --benchmark: $BENCHMARK (want hello-browser or browser-throughput)" >&2; exit 2 ;;
 esac
+
+if [[ -z "$PROVIDER_TIMEOUT" ]]; then
+  if [[ "$BENCHMARK" == "browser-throughput" ]]; then
+    PROVIDER_TIMEOUT=3600
+  else
+    PROVIDER_TIMEOUT=1800
+  fi
+fi
+if [[ ! "$PROVIDER_TIMEOUT" =~ ^[1-9][0-9]*$ ]]; then
+  echo "[ERROR] --provider-timeout must be a positive integer number of seconds" >&2
+  exit 2
+fi
+command -v timeout >/dev/null || { echo "[ERROR] GNU timeout is required" >&2; exit 1; }
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
@@ -120,19 +137,59 @@ if [[ $have_any -eq 0 ]]; then
 fi
 
 DATE="$(date -u +%Y-%m-%d)"
-echo "[INFO] running benchmark=$BENCHMARK date=$DATE providers=$PROVIDERS"
-npm run bench -- \
-  --benchmark="$BENCHMARK" \
-  --provider="$PROVIDERS" \
-  --concurrency="$CONCURRENCY" \
-  --runs="$RUNS" \
-  --loops="$LOOPS"
+echo "[INFO] running benchmark=$BENCHMARK date=$DATE providers=$PROVIDERS provider_timeout=${PROVIDER_TIMEOUT}s"
+npm run build
 
-# Pull just before staging/commit so the commit is based on any results the
-# other region pushed while this benchmark was running.
-if [[ $DRY_RUN -eq 0 ]]; then
-  git pull --rebase origin main
-fi
+result_status=0
+for p in "${PROV_LIST[@]}"; do
+  echo "[INFO] starting provider=$p timeout=${PROVIDER_TIMEOUT}s"
+  provider_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  # A process boundary also bounds SDK retries, cleanup, and a blocked event
+  # loop. GNU timeout signals the whole process group, then forces termination
+  # after 30s if SIGTERM is ignored. Do not use --foreground: it leaves children
+  # outside the timeout's process group.
+  provider_status=0
+  timeout --kill-after=30s "${PROVIDER_TIMEOUT}s" node dist/cli.js \
+    --benchmark="$BENCHMARK" \
+    --provider="$p" \
+    --run-date="$DATE" \
+    --articles=fixed \
+    --concurrency="$CONCURRENCY" \
+    --runs="$RUNS" \
+    --loops="$LOOPS" || provider_status=$?
+
+  if [[ $provider_status -ne 0 ]]; then
+    result_status=1
+    case "$provider_status" in
+      124) outcome=timed_out ;;
+      137) outcome=killed ;;
+      *)   outcome=failed ;;
+    esac
+    echo "[ERROR] provider=$p outcome=$outcome exit=$provider_status limit=${PROVIDER_TIMEOUT}s; continuing with remaining providers"
+    meta="results/$BENCHMARK/$p/$DATE/_meta.json"
+    # Record even failures during startup/VM discovery, before the CLI has
+    # created a result directory. Do not manufacture any measured samples.
+    node --input-type=module - "$meta" "$outcome" "$provider_status" "$provider_started_at" <<'NODE'
+import fs from "node:fs";
+import path from "node:path";
+const [file, status, exitCode, startedAt] = process.argv.slice(2);
+let meta;
+try {
+  meta = JSON.parse(fs.readFileSync(file, "utf8"));
+} catch (error) {
+  // The worker may not have written metadata, or SIGKILL interrupted a write.
+  if (!(error instanceof SyntaxError) && error.code !== "ENOENT") throw error;
+  meta = {};
+}
+meta.started_at ||= startedAt;
+meta.finished_at = new Date().toISOString();
+meta.run_status = status;
+meta.process_exit_code = Number(exitCode);
+fs.mkdirSync(path.dirname(file), { recursive: true });
+fs.writeFileSync(file, JSON.stringify(meta, null, 2) + "\n");
+NODE
+  fi
+done
 
 echo "[INFO] staging results for $REGION"
 staged_any=0
@@ -148,19 +205,19 @@ for p in "${PROV_LIST[@]}"; do
 done
 
 if [[ $staged_any -eq 0 ]]; then
-  echo "[WARN] nothing to commit for region $REGION on $DATE; exiting clean"
-  exit 0
+  echo "[WARN] nothing to commit for region $REGION on $DATE"
+  exit "$result_status"
 fi
 
 if git diff --cached --quiet; then
-  echo "[WARN] staged paths contain no changes vs HEAD; exiting clean"
-  exit 0
+  echo "[WARN] staged paths contain no changes vs HEAD"
+  exit "$result_status"
 fi
 
 if [[ $DRY_RUN -eq 1 ]]; then
   echo "[INFO] --dry-run: skipping commit/push. Staged diff:"
   git diff --cached --stat
-  exit 0
+  exit "$result_status"
 fi
 
 # Use a region-tagged identity so commits are attributable per box. Falls back
@@ -177,17 +234,19 @@ else
   git commit -m "results: $BENCHMARK $REGION $DATE"
 fi
 
-# Push with retry. Disjoint dirs across regions mean rebase always auto-applies.
+# Commit before rebasing: a rerun can append to already tracked result files.
+# Publish completed providers even if another timed out, then report failure
+# to cron instead of making an incomplete campaign look healthy.
 attempts=5
 delay=10
 for i in $(seq 1 $attempts); do
+  git pull --rebase origin main
   if git push origin main; then
     echo "[INFO] push ok on attempt $i"
-    exit 0
+    exit "$result_status"
   fi
   echo "[WARN] push failed on attempt $i; rebasing and retrying in ${delay}s"
   sleep "$delay"
-  git pull --rebase origin main
   delay=$(( delay * 2 ))
 done
 
