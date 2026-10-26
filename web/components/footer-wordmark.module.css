@@ -20,6 +20,10 @@
   user-select: none;
 }
 
+@media (max-width: 359px) {
+  .word { font-size: 48px; }
+}
+
 @media (min-width: 640px) {
   .band {
     padding: 40px 1.25vw 48px;
