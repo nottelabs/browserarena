@@ -63,6 +63,13 @@ See the [Browser API reference](https://docs.tinyfish.ai/browser-api/reference)
 and [pricing](https://www.tinyfish.ai/pricing). Scheduled runs require adding
 TinyFish to the runner's provider list and configuring its key there.
 
+`npm test` covers the TinyFish adapter and benchmark lifecycle using a local API
+fixture and real Chromium. With `TINYFISH_API_KEY` set in your environment or
+`.env`, run `npm run test:tinyfish` for a live integration test. It creates one
+paid TinyFish session, connects over CDP, navigates to BrowserArena's controlled
+bootstrap page, checks its response and title, and terminates the session in
+cleanup even when an assertion fails.
+
 ## Browser Lifecycle benchmark
 
 The core benchmark measures the minimal end-to-end lifecycle for a remote Chrome session:
