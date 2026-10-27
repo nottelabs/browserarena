@@ -42,6 +42,27 @@ Create session → Connect via CDP → Navigate page → Release session
 
 Missing a provider? [Open a PR](https://github.com/nottelabs/browserarena/pulls).
 
+### TinyFish Browser
+
+Set `TINYFISH_API_KEY` and select `--provider=tinyfish` to run the Browser API
+adapter with your existing Playwright benchmarks:
+
+```bash
+npm run bench -- --provider=tinyfish --runs=100 --concurrency=1
+npm run bench -- --benchmark=browser-throughput --provider=tinyfish --runs=100 --concurrency=1
+```
+
+The adapter starts at `about:blank`, disables TinyFish's default residential
+proxy for lifecycle and throughput comparisons, and explicitly terminates each
+session through the API. Country-targeted proxy measurements are not yet verified.
+TinyFish's published account limit is five concurrent browser sessions; confirm
+your account limit before requesting higher concurrency. Its browser region is
+not documented, so no region is assigned here. Cost is an unrounded duration
+estimate at $0.002/minute ($0.12/hour); billing-rounding rules are not published.
+See the [Browser API reference](https://docs.tinyfish.ai/browser-api/reference)
+and [pricing](https://www.tinyfish.ai/pricing). Scheduled runs require adding
+TinyFish to the runner's provider list and configuring its key there.
+
 ## Browser Lifecycle benchmark
 
 The core benchmark measures the minimal end-to-end lifecycle for a remote Chrome session:

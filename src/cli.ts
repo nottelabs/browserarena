@@ -23,7 +23,7 @@ import { resolveArticleUrls, type ArticleSource } from "./benchmarks/browser-thr
 type BenchmarkName = "hello-browser" | "v0" | "proxy-get" | "browser-throughput";
 
 const DEFAULT_PROVIDERS =
-  "browserbase,steel,kernel,kernel-headful,notte,hyperbrowser,anchorbrowser,browser-use,lightpanda";
+  "browserbase,steel,kernel,kernel-headful,notte,hyperbrowser,anchorbrowser,browser-use,lightpanda,tinyfish";
 
 function hasFlag(name: string): boolean {
   return process.argv.slice(2).some(
