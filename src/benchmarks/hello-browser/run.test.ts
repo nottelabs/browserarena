@@ -24,6 +24,7 @@ import { chromium } from "playwright-core";
 import type { BrowserContext } from "playwright-core";
 
 import type { ProviderClient, ProviderName, ProviderSession } from "../../types.js";
+import { TinyFishProvider } from "../../providers/tinyfish.js";
 import { runSingleSession } from "./run.js";
 
 /** A provider backed by a local browser, recording what the runner asks of it. */
@@ -144,6 +145,55 @@ test("other providers are released through their API", async (t) => {
     assert.equal(typeof record.session_release_ms, "number");
   } finally {
     // Close Chrome's speculative connections before waiting for the HTTP server.
+    await browser.close();
+    await page.close();
+  }
+});
+
+test("TinyFish runs the real CDP lifecycle and releases after navigation failure", async (t) => {
+  const browser = await startCdpBrowser();
+  assert.ok(browser, "Chromium is required for the TinyFish lifecycle integration test");
+  const originalApiKey = process.env.TINYFISH_API_KEY;
+  const originalFetch = globalThis.fetch;
+  const requests: string[] = [];
+  let sessionCount = 0;
+  const page = await startPageServer();
+
+  process.env.TINYFISH_API_KEY = "tinyfish-integration-key";
+  t.mock.method(globalThis, "fetch", async (input: Parameters<typeof fetch>[0], init?: RequestInit) => {
+    const url = String(input);
+    if (!url.startsWith("https://api.browser.tinyfish.ai")) return originalFetch(input, init);
+    requests.push(`${init?.method} ${url}`);
+    assert.equal(new Headers(init?.headers).get("X-API-Key"), "tinyfish-integration-key");
+    if (init?.method === "POST") {
+      assert.equal(url, "https://api.browser.tinyfish.ai");
+      assert.deepEqual(JSON.parse(String(init.body)), { proxy_config: { enabled: false } });
+      return Response.json({ session_id: `br-${++sessionCount}`, cdp_url: browser.cdpUrl }, { status: 201 });
+    }
+    assert.equal(init?.method, "DELETE");
+    return new Response(null, { status: 204 });
+  });
+
+  try {
+    const provider = new TinyFishProvider();
+    const record = await runSingleSession(provider, page.url, 1);
+    assert.equal(record.success, true, record.error_message ?? "lifecycle failed");
+    assert.equal(record.provider, "TINYFISH");
+    assert.equal(record.id, "br-1");
+    for (const timing of [record.session_creation_ms, record.session_connect_ms,
+      record.page_goto_ms, record.session_release_ms]) assert.equal(typeof timing, "number");
+
+    const failed = await runSingleSession(provider, "http://127.0.0.1:1/", 1);
+    assert.equal(failed.success, false);
+    assert.equal(failed.error_stage, "page_goto");
+    assert.equal(typeof failed.session_release_ms, "number");
+    assert.deepEqual(requests, [
+      "POST https://api.browser.tinyfish.ai", "DELETE https://api.browser.tinyfish.ai/br-1",
+      "POST https://api.browser.tinyfish.ai", "DELETE https://api.browser.tinyfish.ai/br-2",
+    ]);
+  } finally {
+    if (originalApiKey === undefined) delete process.env.TINYFISH_API_KEY;
+    else process.env.TINYFISH_API_KEY = originalApiKey;
     await browser.close();
     await page.close();
   }

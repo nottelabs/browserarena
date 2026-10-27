@@ -112,6 +112,13 @@ export const PROVIDERS: ProviderInfo[] = [
   },
   // Adapters only so far: no published results yet, so not in marketing copy.
   {
+    id: "TINYFISH",
+    displayName: "TinyFish",
+    url: "https://www.tinyfish.ai/browser",
+    logo: "/logos/tinyfish.svg",
+    marketed: false,
+  },
+  {
     id: "BROWSERLESS",
     displayName: "Browserless",
     url: "https://www.browserless.io",

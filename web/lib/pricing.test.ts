@@ -29,3 +29,10 @@ test("median cost is taken across runs", () => {
   assert.equal(getMedianCostUsd("NOTTE", []), null);
   assert.equal(getMedianCostUsd("UNKNOWN", [10_000]), null);
 });
+
+test("TinyFish estimates unrounded duration at $0.002/minute", () => {
+  assert.equal(getPricePerHour("TINYFISH"), 0.12);
+  assert.equal(getPerSessionFee("TINYFISH"), null);
+  assert.equal(getMedianCostUsd("TINYFISH", [30_000]), 0.001);
+  assert.equal(getMedianCostUsd("TINYFISH", [90_000]), 0.003);
+});

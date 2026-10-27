@@ -8,7 +8,8 @@
 #       [--dry-run] [--no-reset]
 #
 # c25/c50 are valid --concurrency levels; check the provider plan's concurrent
-# session cap first, or the run reports plan limits as reliability.
+# session cap first, or the run reports plan limits as reliability. TinyFish
+# uses TINYFISH_CONCURRENCY separately (default 1, account default limit 5).
 #
 # Cron does git pull/reset + npm ci + bench + git commit/push. The two regions
 # write to disjoint provider directories, so simultaneous runs only race on
@@ -49,7 +50,7 @@ done
 
 case "$REGION" in
   us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion,cloudflare,aws-agentcore" ;;
-  us-west) PROVIDERS="notte,lightpanda,browserless" ;;
+  us-west) PROVIDERS="notte,lightpanda,browserless,tinyfish" ;;
   "")      echo "[ERROR] --region us-east|us-west required" >&2; exit 2 ;;
   *)       echo "[ERROR] invalid --region: $REGION (want us-east or us-west)" >&2; exit 2 ;;
 esac
@@ -109,6 +110,16 @@ else
   echo "[WARN] no .env found; provider env vars must already be exported"
 fi
 
+if [[ -f .env.tinyfish ]]; then
+  echo "[INFO] sourcing .env.tinyfish"
+  set -a; . ./.env.tinyfish; set +a
+fi
+tinyfish_concurrency="${TINYFISH_CONCURRENCY:-1}"
+if [[ ! "$tinyfish_concurrency" =~ ^[1-9][0-9]*(,[1-9][0-9]*)*$ ]]; then
+  echo "[ERROR] TINYFISH_CONCURRENCY must be a comma-separated list of positive integers" >&2
+  exit 2
+fi
+
 # Sanity: at least one provider in this region has its env var set. Mirrors
 # the env-var map in src/providers/index.ts.
 have_any=0
@@ -125,6 +136,7 @@ for p in "${PROV_LIST[@]}"; do
     tilion)          v="${TILION_API_KEY:-}" ;;
     lightpanda)      v="${LIGHTPANDA_API_KEY:-}" ;;
     browserless)     v="${BROWSERLESS_API_KEY:-}" ;;
+    tinyfish)        v="${TINYFISH_API_KEY:-}" ;;
     cloudflare)      v="${CLOUDFLARE_API_TOKEN:-}" ;;
     aws-agentcore)   v="${AWS_REGION:-}" ;;
     *) echo "[ERROR] unknown provider in region map: $p" >&2; exit 2 ;;
@@ -142,7 +154,9 @@ npm run build
 
 result_status=0
 for p in "${PROV_LIST[@]}"; do
-  echo "[INFO] starting provider=$p timeout=${PROVIDER_TIMEOUT}s"
+  provider_concurrency="$CONCURRENCY"
+  if [[ "$p" == "tinyfish" ]]; then provider_concurrency="$tinyfish_concurrency"; fi
+  echo "[INFO] starting provider=$p concurrency=$provider_concurrency timeout=${PROVIDER_TIMEOUT}s"
   provider_started_at="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
   # A process boundary also bounds SDK retries, cleanup, and a blocked event
   # loop. GNU timeout signals the whole process group, then forces termination
@@ -154,7 +168,7 @@ for p in "${PROV_LIST[@]}"; do
     --provider="$p" \
     --run-date="$DATE" \
     --articles=fixed \
-    --concurrency="$CONCURRENCY" \
+    --concurrency="$provider_concurrency" \
     --runs="$RUNS" \
     --loops="$LOOPS" || provider_status=$?
 
