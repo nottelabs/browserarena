@@ -60,8 +60,11 @@ your account limit before requesting higher concurrency. Its browser region is
 not documented, so no region is assigned here. Cost is an unrounded duration
 estimate at $0.002/minute ($0.12/hour); billing-rounding rules are not published.
 See the [Browser API reference](https://docs.tinyfish.ai/browser-api/reference)
-and [pricing](https://www.tinyfish.ai/pricing). Scheduled runs require adding
-TinyFish to the runner's provider list and configuring its key there.
+and [pricing](https://www.tinyfish.ai/pricing). The US West schedule includes
+TinyFish. Set its key in the runner's `.env` or a separate `.env.tinyfish` file
+with permissions `0600`. Scheduled TinyFish runs use concurrency 1;
+`TINYFISH_CONCURRENCY` selects other levels once the account limit is verified.
+This setting is separate from `--concurrency`, which controls the other providers.
 
 `npm test` covers the TinyFish adapter and benchmark lifecycle using a local API
 fixture and real Chromium. With `TINYFISH_API_KEY` set in your environment or
@@ -192,14 +195,14 @@ Or deploy directly on Railway:
 
 ### Automated runs
 
-Daily results are produced by `scripts/run-and-publish.sh`, which runs one benchmark for one region's providers (c1 + c10 by default, 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`. Two EC2 boxes share the script; the cron lines differ in `--region`, and the browser throughput benchmark is a second invocation offset from the first:
+Daily results are produced by `scripts/run-and-publish.sh`, which runs one benchmark for one region's providers (c1 + c10 by default, except TinyFish at c1; 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`. Two EC2 boxes share the script; the cron lines differ in `--region`, and the browser throughput benchmark is a second invocation offset from the first:
 
 ```cron
 # us-east-1 box (Steel, Kernel, Hyperbrowser, Anchor Browser, Browser Use)
 0 3 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east
 0 21 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east --benchmark browser-throughput --concurrency 1
 
-# us-west-1 box (Notte, Browserbase) — staggered 1h to avoid push races
+# us-west-1 box (Notte, Lightpanda, Browserless, TinyFish), staggered 1h to avoid push races
 0 4 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west
 0 6 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west --benchmark browser-throughput --concurrency 1
 ```

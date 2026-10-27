@@ -96,7 +96,7 @@ test("hung provider is terminated; later providers publish and cron reports fail
     const result = f.run(["--provider-timeout", "1"], { STUCK_PROVIDER: "notte" });
     assert.equal(result.status, 1, result.stdout + result.stderr);
     assert.match(result.stdout, /provider=notte outcome=timed_out/);
-    assert.deepEqual(f.calls().map(c => c.provider), ["notte", "lightpanda", "browserless"]);
+    assert.deepEqual(f.calls().map(c => c.provider), ["notte", "lightpanda", "browserless", "tinyfish"]);
     assert.equal(new Set(f.calls().map(c => c["run-date"])).size, 1);
     assert.equal(f.meta("notte").run_status, "timed_out");
     assert.equal(f.meta("notte").process_exit_code, 124);
@@ -114,7 +114,7 @@ test("SIGKILL stops a provider and its child when both ignore SIGTERM", { timeou
     assert.equal(result.status, 1, result.stdout + result.stderr);
     assert.equal(f.meta("notte").run_status, "killed");
     assert.equal(f.meta("notte").process_exit_code, 137);
-    assert.deepEqual(f.calls().map(c => c.provider), ["notte", "lightpanda", "browserless"]);
+    assert.deepEqual(f.calls().map(c => c.provider), ["notte", "lightpanda", "browserless", "tinyfish"]);
     const pid = Number(fs.readFileSync(path.join(f.repo, "logs/child.pid"), "utf8"));
     try {
       const stat = fs.readFileSync(`/proc/${pid}/stat`, "utf8");
@@ -192,6 +192,36 @@ test("same-day rerun commits tracked results before rebasing", () => {
     const c = f.calls()[0];
     const samples = f.git("show", `origin/main:results/hello-browser/notte/${c["run-date"]}/c1/results.jsonl`);
     assert.equal(samples.trim().split("\n").length, 2);
+  } finally { f.cleanup(); }
+});
+
+test("TinyFish scheduling loads its private configuration and records its own concurrency", () => {
+  const f = fixture();
+  try {
+    fs.writeFileSync(path.join(f.repo, ".env.tinyfish"), "TINYFISH_API_KEY=private-tinyfish-fixture\n");
+    const result = f.run(["--concurrency", "1,10"]);
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.equal(f.calls().find(c => c.provider === "tinyfish").concurrency, "1");
+    assert.ok(f.calls().filter(c => c.provider !== "tinyfish").every(c => c.concurrency === "1,10"));
+    assert.doesNotMatch(result.stdout + result.stderr, /private-tinyfish-fixture/);
+    assert.throws(() => f.git("show", "origin/main:.env.tinyfish"));
+    f.checkPublication();
+  } finally { f.cleanup(); }
+});
+
+test("TinyFish concurrency is configurable and invalid values fail before sessions", () => {
+  const f = fixture();
+  try {
+    const configured = f.run([], { TINYFISH_CONCURRENCY: "1,5" });
+    assert.equal(configured.status, 0, configured.stdout + configured.stderr);
+    assert.equal(f.calls().find(c => c.provider === "tinyfish").concurrency, "1,5");
+    const before = f.calls().length;
+    for (const value of ["0", "-1", "1.5", "1,", "invalid"]) {
+      const invalid = f.run([], { TINYFISH_CONCURRENCY: value });
+      assert.equal(invalid.status, 2, invalid.stdout + invalid.stderr);
+      assert.match(invalid.stdout + invalid.stderr, /TINYFISH_CONCURRENCY must be/);
+      assert.equal(f.calls().length, before);
+    }
   } finally { f.cleanup(); }
 });
 
