@@ -273,7 +273,8 @@ export function LeaderboardTable({
       </BenchmarkSectionHeader>
 
       <BenchmarkTablePanel label="Browser Lifecycle provider results">
-      <Table style={showBreakdown ? { minWidth: 1280 } : undefined}>
+      {/* Include failure badges in column sizing so reliability cannot overlap Runs. */}
+      <Table style={{ tableLayout: "auto", minWidth: showBreakdown ? 1280 : undefined }}>
         <TableHeader className="[&_tr]:border-b-[1.5px]">
           <TableRow className="border-b-[1.5px] border-foreground hover:bg-transparent">
             {visibleHeaders.map((h) => {
