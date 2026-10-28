@@ -1,4 +1,4 @@
-import { loadBrowserThroughputLeaderboard } from "@/lib/browser-throughput-data";
+import { loadPublishedBrowserThroughput } from "@/lib/browser-throughput-data";
 import { captureApiRequest } from "@/lib/posthog-server";
 
 /**
@@ -20,8 +20,17 @@ export async function GET(request: Request) {
     );
   }
 
-  const result = await loadBrowserThroughputLeaderboard(concurrency);
-  return Response.json(result, {
+  const date = params.get("date") ?? undefined;
+  if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return Response.json({ error: "Invalid date. Use YYYY-MM-DD." }, {
+      status: 400, headers: { "Cache-Control": "no-store" },
+    });
+  }
+  const { leaderboard, publication } = await loadPublishedBrowserThroughput(concurrency, date);
+  return Response.json({
+    ...leaderboard,
+    metadata: { ...leaderboard.metadata, publication },
+  }, {
     headers: { "Cache-Control": "public, s-maxage=300, stale-while-revalidate=600" },
   });
 }

@@ -10,6 +10,7 @@ import { fetchFromGitHub, getResultsDir, listFromGitHub } from "./data";
 import { calendarDates } from "./history-range";
 import { PROVIDERS_BY_ID } from "./providers";
 import { getPricePerHour, getUnitPricing } from "./pricing";
+import { throughputPublication } from "./throughput-publication";
 import {
   rankBrowserThroughput,
   summarizeBrowserThroughput,
@@ -240,4 +241,12 @@ async function loadHistoryFromGitHub(concurrency: number): Promise<ThroughputHis
 /** Every recorded day at one concurrency, for the throughput history line. */
 export async function loadBrowserThroughputHistory(concurrency = 1): Promise<ThroughputHistory> {
   return fs.existsSync(getResultsDir()) ? loadHistoryFromFs(concurrency) : loadHistoryFromGitHub(concurrency);
+}
+
+/** Shared publication policy for the website and API: one complete run day. */
+export async function loadPublishedBrowserThroughput(concurrency = 1, date?: string) {
+  const history = await loadBrowserThroughputHistory(concurrency);
+  const publication = throughputPublication(history, date);
+  const leaderboard = await loadBrowserThroughputLeaderboard(concurrency, publication.selectedDate);
+  return { leaderboard, history, publication };
 }
