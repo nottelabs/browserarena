@@ -137,6 +137,11 @@ days with gaps for missing providers. The API follows the same default and
 accepts `?date=YYYY-MM-DD` to inspect a specific day; its publication metadata
 reports coverage and the latest complete date. If a provider is permanently
 retired, this coverage policy will need an explicit end date for that provider.
+When local files are unavailable, assembled GitHub history is cached per
+concurrency for 60 seconds within each server process, shared across date
+selections and concurrent requests. The cache holds at most eight concurrency
+levels. Cold loads fetch providers in parallel, with one historical file per
+provider in flight at a time.
 
 ## Running it
 

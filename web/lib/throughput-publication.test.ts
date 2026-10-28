@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { throughputPublication } from "./throughput-publication";
-import { loadPublishedBrowserThroughput } from "./browser-throughput-data";
+import { loadBrowserThroughputHistory, loadPublishedBrowserThroughput } from "./browser-throughput-data";
 import type { ThroughputHistory } from "./browser-throughput-shared";
 
 function history(runs: Record<string, string[]>): ThroughputHistory {
@@ -90,5 +90,70 @@ test("publication reads measured attempts at the selected concurrency and pins e
   } finally {
     process.chdir(originalCwd);
     fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("remote history shares summaries and in-flight work, expires, and retries failed loads", async (t) => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "throughput-remote-"));
+  const originalCwd = process.cwd();
+  const requests: string[] = [];
+  let now = 1_000;
+  let failNextListing = false;
+  let runDates = [yesterday, today];
+  const listing = (names: string[]) => Response.json(names.map((name) => ({ name, type: "dir", path: name })));
+  t.mock.method(Date, "now", () => now);
+  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
+    const url = new URL(typeof input === "string" || input instanceof URL ? input : input.url);
+    requests.push(url.pathname);
+    if (url.hostname === "api.github.com") {
+      if (failNextListing) { failNextListing = false; throw new Error("GitHub unavailable"); }
+      if (url.pathname.endsWith("/browser-throughput")) return listing(["steel", "notte"]);
+      if (/\/c\d+$/.test(url.pathname)) throw new Error("Unexpected listing");
+      if (/\/\d{4}-\d{2}-\d{2}$/.test(url.pathname)) return listing(["c1", "c10"]);
+      return listing(runDates);
+    }
+    const match = url.pathname.match(/\/browser-throughput\/([^/]+)\/([^/]+)\/c(\d+)\/results.jsonl$/)!;
+    const [, provider, date, concurrency] = match;
+    return new Response(JSON.stringify({
+      provider: provider.toUpperCase(), created_at: `${date}T06:00:00Z`, concurrency: Number(concurrency),
+      success: false, loops: 1, actions_total: 10, actions_completed: 0, actions: [], task_ms: null,
+    }) + "\n");
+  });
+  try {
+    fs.mkdirSync(path.join(root, "web"));
+    process.chdir(path.join(root, "web")); // No results directory: exercise GitHub fallback.
+    const [first, concurrent] = await Promise.all([loadBrowserThroughputHistory(), loadBrowserThroughputHistory()]);
+    assert.equal(first, concurrent);
+    assert.equal(requests.length, 7, "one archive load serves concurrent calls");
+    assert.equal(await loadBrowserThroughputHistory(), first);
+    assert.equal(requests.length, 7, "a warm call does not fetch or summarize history again");
+
+    const selected = await loadPublishedBrowserThroughput(1, today);
+    assert.equal(selected.history, first, "different selected dates share the same cached history");
+    assert.equal(selected.leaderboard.metadata.date, today);
+    assert.equal(requests.filter((url) => url.includes(`/${yesterday}/c1/`)).length, 2,
+      "the API loads only selected-day rows after the history is cached");
+    const otherConcurrency = await loadBrowserThroughputHistory(10);
+    assert.notEqual(otherConcurrency, first);
+
+    now += 60_001;
+    runDates = [...runDates, "2026-10-29"];
+    const refreshed = await loadBrowserThroughputHistory();
+    assert.notEqual(refreshed, first);
+    assert.equal(refreshed.dates.at(-1), "2026-10-29");
+
+    failNextListing = true;
+    await assert.rejects(loadBrowserThroughputHistory(42), /GitHub unavailable/);
+    assert.equal((await loadBrowserThroughputHistory(42)).providers.length, 2,
+      "a rejected load is removed from the cache");
+
+    for (let concurrency = 100; concurrency < 109; concurrency++) await loadBrowserThroughputHistory(concurrency);
+    const beforeEvictedLoad = requests.length;
+    await loadBrowserThroughputHistory(100);
+    assert.ok(requests.length > beforeEvictedLoad, "old concurrency entries are evicted instead of growing without bound");
+  } finally {
+    process.chdir(originalCwd);
+    fs.rmSync(root, { recursive: true, force: true });
+    t.mock.restoreAll();
   }
 });
