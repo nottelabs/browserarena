@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { accessMediaOrigin } from "./lib/website-access-media";
 
 const isDev = process.env.NODE_ENV !== "production";
 
@@ -46,7 +47,9 @@ const nextConfig: NextConfig = {
   async rewrites() {
     // First-party PostHog proxy: the CSP only allows this origin, and ad
     // blockers ignore same-origin requests.
+    const media = accessMediaOrigin(process.env.WEBSITE_ACCESS_MEDIA_ORIGIN);
     return [
+      ...(media ? [{ source: "/website-access/evidence/:date/:file", destination: `${media}/:date/:file` }] : []),
       { source: "/ingest/static/:path*", destination: "https://us-assets.i.posthog.com/static/:path*" },
       { source: "/ingest/array/:path*", destination: "https://us-assets.i.posthog.com/array/:path*" },
       { source: "/ingest/:path*", destination: "https://us.i.posthog.com/:path*" },
