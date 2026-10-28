@@ -119,8 +119,8 @@ delivered/attempted counts for hCaptcha, with per-round details, conditional
 medians and 95% Wilson intervals. Errors remain in the denominator and unrun
 attempts appear separately. Five successes out of five still has a lower bound
 near 57%; small campaigns are exploratory, not reliable speed rankings. Campaigns
-are never pooled across protocols or dates. No sample or synthetic campaign is
-published by this change.
+are never pooled across protocols or dates. Synthetic layout fixtures are not
+published as provider results.
 
 ## Validation
 
