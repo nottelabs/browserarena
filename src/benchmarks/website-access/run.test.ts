@@ -65,3 +65,27 @@ test('release errors halt new visits and still disconnect the owned browser',asy
 test('exact credentials and CDP URLs are removed from persisted diagnostic text',()=>{
  const clean=cleaner({NOTTE_API_KEY:'private-test-key'});const text=clean('failed private-test-key at wss://example.test?secret=hello');assert.equal(text.includes('private-test-key'),false);assert.equal(text.includes('wss://'),false);
 });
+
+for(const failure of ['state','screenshot'] as const)test(`an early ${failure} capture failure survives a successful final capture`,async t=>{
+ const root=await mkdtemp(join(tmpdir(),'access-capture-failure-'));t.after(()=>rm(root,{recursive:true,force:true}));
+ const result=await runCampaign({...config,captures_ms:[100,500],targets:[{...config.targets[0],url:'data:text/html,<h1>Ready</h1>'}]},join(root,'run'),{
+  create:async()=>({id:'owned',cdpUrl:'ws://unused',configuration:{},release:async()=>{}}),
+  connect:async()=>{
+   const browser=await chromium.launch();t.after(()=>browser.close());const context=await browser.newContext(),page=await context.newPage();
+   if(failure==='state'){
+    const original=page.evaluate.bind(page);let calls=0;
+    page.evaluate=(async(...args:Parameters<typeof page.evaluate>)=>{if(calls++===0)throw Error('controlled state failure');return original(...args);}) as typeof page.evaluate;
+   }else{
+    const original=page.screenshot.bind(page);let calls=0;
+    page.screenshot=async(...args)=>{if(calls++===0)throw Error('controlled screenshot failure');return original(...args);};
+   }
+   return browser;
+  },
+ });
+ const row=result.rows[0];assert.equal(result.complete,true);assert.equal(row.status,'capture_error');
+ assert.match(row.captures[0].error!,/controlled/);assert.equal(row.captures[1].error,undefined);
+ assert.ok(row.captures[1].state);assert.ok(row.captures[1].screenshot);
+ assert.equal(row.cleanup.released,true);assert.equal(row.cleanup.disconnected,true);
+ const persisted=JSON.parse(await readFile(join(root,'run','attempts.jsonl'),'utf8'));
+ assert.equal(persisted.status,'capture_error');assert.match(persisted.captures[0].error,/controlled/);
+});

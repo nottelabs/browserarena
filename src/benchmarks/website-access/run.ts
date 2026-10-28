@@ -65,7 +65,7 @@ export async function runCampaign(config:CampaignConfig,out:string,dependencies:
    page.on('response',r=>{try{if(r.request().resourceType()==='document'&&r.frame()===page.mainFrame())row.documents.push({atMs:Date.now()-started,url:clean(r.url()),status:r.status()});}catch{}});
    try {await page.goto(task.target.url,{waitUntil:'domcontentloaded',timeout:Math.min(19000,config.captures_ms[0])});}catch(e){row.error=clean(e);}
    for(const ms of config.captures_ms){await pause(started+ms-Date.now(),signal);row.captures.push(await capture(page,task,started,ms));}
-   const final=row.captures.at(-1);row.status=final?.state&&final.screenshot?'captured':'capture_error';
+   row.status=row.captures.length===config.captures_ms.length&&row.captures.every(c=>c.state&&c.screenshot&&!c.error)?'captured':'capture_error';
   }catch(e){row.error=clean(e);if(signal?.aborted)row.status='interrupted';if(createStarted&&row.stage==='create'&&!row.sessionId){row.ownershipUnknown=true;halted=true;}}
   finally {
    if(stopRecording)try{row.recording=await stopRecording();}catch(e){row.recordingError=clean(e);}

@@ -23,7 +23,7 @@ async function main() {
   const metadata={node:process.version,revision:execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim(),sources,notteOrigin:process.env.NOTTE_API_URL||'https://api.notte.cc'};
   const result=await runCampaign(config,out,{signal:controller.signal,metadata});
   console.log(JSON.stringify({complete:result.complete,attempted:result.rows.length,halted:result.halted}));
-  if(!result.complete||result.halted||result.rows.some(r=>r.status!=='captured'||r.recordingError||r.recording?.error))process.exitCode=1;
+  if(!result.complete||result.halted||result.rows.some(r=>r.status!=='captured'||r.recordingError||r.recording?.error||r.captures.some(c=>c.error)))process.exitCode=1;
  }else if(command==='encode') {
   const [runDir]=args;if(!runDir)throw Error('Provide a run directory');
   for(const name of await readdir(join(runDir,'recordings'))){console.log(name);await encodeRecording(join(runDir,'recordings',name));}
