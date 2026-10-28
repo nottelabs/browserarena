@@ -42,3 +42,6 @@ Thumbs.db
 build/
 coverage/
 .run-and-publish.lock
+
+# Private CAPTCHA campaign evidence; export only allowlisted results.
+.captcha-runs/

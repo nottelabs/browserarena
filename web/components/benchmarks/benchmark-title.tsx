@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 
 export const BENCHMARK_TITLES = {
+  "captcha": "CAPTCHA Handling",
   "hello-browser": "Browser Lifecycle",
   "proxy-get": "Proxy Performance",
   "browser-throughput": "Browser Throughput",

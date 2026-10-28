@@ -30,6 +30,11 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["127.0.0.1", "localhost"],
   // The app imports benchmark code from the repo root, which also holds a lockfile.
   turbopack: { root: new URL("..", import.meta.url).pathname },
+  // CAPTCHA campaigns ship from the reviewed revision, including in previews.
+  outputFileTracingIncludes: {
+    "/captcha": ["../results/captcha/*.json"],
+    "/api/captcha": ["../results/captcha/*.json"],
+  },
   // Proxy loaders fetch published GitHub results on Vercel, so these files
   // only bloat function bundles. Keep lifecycle and throughput files bundled.
   outputFileTracingExcludes: {
