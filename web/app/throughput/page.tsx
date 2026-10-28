@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
 import { cacheLife } from "next/cache";
-import { loadBrowserThroughputHistory, loadBrowserThroughputLeaderboard } from "@/lib/browser-throughput-data";
+import { loadPublishedBrowserThroughput } from "@/lib/browser-throughput-data";
 import { BENCHMARK_CACHE_LIFE } from "@/lib/benchmark-cache";
 import { BrowserThroughputTable } from "@/components/browser-throughput-table";
 import { BenchmarkPending, BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
@@ -40,39 +40,42 @@ async function ThroughputView({ date, concurrency: requestedConcurrency }: { dat
   const requestedDate = date || undefined;
   const requested = Number(requestedConcurrency || 1);
   let concurrency = Number.isInteger(requested) && requested > 0 ? requested : 1;
-  let leaderboard = await loadBrowserThroughputLeaderboard(concurrency, requestedDate);
-  // The picker labels one calendar day. Load that day, not each provider's
-  // newest file, so the rows match the date on screen.
-  const knownDates = leaderboard.metadata.availableDates ?? [];
-  const pinnedDate = requestedDate && knownDates.includes(requestedDate) ? requestedDate : knownDates.at(-1);
-  if (pinnedDate && leaderboard.metadata.date !== pinnedDate) {
-    leaderboard = await loadBrowserThroughputLeaderboard(concurrency, pinnedDate);
-  }
-  const concurrencyLevels = leaderboard.metadata.availableConcurrencyLevels?.length
-    ? leaderboard.metadata.availableConcurrencyLevels
+  let published = await loadPublishedBrowserThroughput(concurrency, requestedDate);
+  const concurrencyLevels = published.leaderboard.metadata.availableConcurrencyLevels?.length
+    ? published.leaderboard.metadata.availableConcurrencyLevels
     : [1];
   if (!concurrencyLevels.includes(concurrency)) {
     concurrency = concurrencyLevels[0];
-    leaderboard = await loadBrowserThroughputLeaderboard(concurrency, leaderboard.metadata.date ?? pinnedDate);
+    published = await loadPublishedBrowserThroughput(concurrency, requestedDate);
   }
+  const { leaderboard, history, publication } = published;
   const { providers } = leaderboard;
-  const availableDates = leaderboard.metadata.availableDates ?? [];
-  const selectedDate = leaderboard.metadata.date && availableDates.includes(leaderboard.metadata.date)
-    ? leaderboard.metadata.date
-    : availableDates.at(-1) ?? "";
+  const availableDates = publication.dates;
+  const selectedDate = publication.selectedDate ?? "";
+  const selectedCoverage = publication.coverage.find((day) => day.date === selectedDate);
+  const newerResultsPending = selectedDate === publication.latestCompleteDate && selectedDate !== availableDates.at(-1);
+  const partialDates = publication.coverage.filter((day) => !day.complete).map((day) => day.date);
   const dateQuery: Record<string, string> = {};
   if (concurrency !== 1) dateQuery.concurrency = String(concurrency);
-  const history = await loadBrowserThroughputHistory(concurrency);
 
   return (
     <BenchmarkShell benchmark="browser-throughput" concurrency={concurrency} concurrencyLevels={concurrencyLevels} date={leaderboard.metadata.date}>
       <div id="leaderboard" className={`${styles.tableStage} scroll-mt-20`}>
         {providers.length > 0 ? (
           <div className="reveal-up">
+            {selectedCoverage && !selectedCoverage.complete ? (
+              <p className="mb-4 text-sm text-muted-foreground" role="status">
+                Partial results: {selectedCoverage.reported} of {selectedCoverage.expected} providers have reported for this date.
+              </p>
+            ) : newerResultsPending ? (
+              <p className="mb-4 text-sm text-muted-foreground" role="status">
+                Showing the latest complete day. Newer results are partial and available in the date picker.
+              </p>
+            ) : null}
             <BrowserThroughputTable
               data={providers}
               history={history}
-              controls={<BenchmarkTitle name={BENCHMARK_TITLES["browser-throughput"]} date={<RunDatePicker dates={availableDates} selectedDate={selectedDate} benchmark="browser-throughput" pathname="/throughput" query={dateQuery} />} />}
+              controls={<BenchmarkTitle name={BENCHMARK_TITLES["browser-throughput"]} date={<RunDatePicker dates={availableDates} selectedDate={selectedDate} partialDates={partialDates} benchmark="browser-throughput" pathname="/throughput" query={dateQuery} />} />}
             />
           </div>
         ) : (

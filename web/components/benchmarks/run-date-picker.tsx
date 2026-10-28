@@ -16,17 +16,20 @@ export function RunDatePicker({
   benchmark,
   pathname,
   query = {},
+  partialDates = [],
 }: {
   dates: string[];
   selectedDate: string;
   benchmark: Benchmark;
   pathname: string;
   query?: Record<string, string>;
+  partialDates?: string[];
 }) {
   const { pending, navigate } = useBenchmarkNavigation();
   if (!selectedDate) return null;
   const options = [...new Set(dates.length ? dates : [selectedDate])].sort().reverse();
-  if (options.length < 2) return <span data-run-date="">{formatDate(selectedDate)}</span>;
+  const label = (date: string) => `${formatDate(date)}${partialDates.includes(date) ? " (partial)" : ""}`;
+  if (options.length < 2) return <span data-run-date="">{label(selectedDate)}</span>;
   const hrefs = options.filter((date) => date !== selectedDate).slice(0, 8).map((date) => {
     const params = new URLSearchParams(query);
     params.set("date", date);
@@ -47,7 +50,7 @@ export function RunDatePicker({
         navigate(`${pathname}?${params}`);
       }}
     >
-      {options.map((date) => <option key={date} value={date}>{formatDate(date)}</option>)}
+      {options.map((date) => <option key={date} value={date}>{label(date)}</option>)}
     </select>
     </>
   );

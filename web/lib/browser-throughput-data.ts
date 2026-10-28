@@ -10,6 +10,7 @@ import { fetchFromGitHub, getResultsDir, listFromGitHub } from "./data";
 import { calendarDates } from "./history-range";
 import { PROVIDERS_BY_ID } from "./providers";
 import { getPricePerHour, getUnitPricing } from "./pricing";
+import { throughputPublication } from "./throughput-publication";
 import {
   rankBrowserThroughput,
   summarizeBrowserThroughput,
@@ -220,24 +221,61 @@ function loadHistoryFromFs(concurrency: number): ThroughputHistory {
 
 async function loadHistoryFromGitHub(concurrency: number): Promise<ThroughputHistory> {
   const basePath = `results/${BENCHMARK}`;
-  const days: { provider: string; date: string; entries: BrowserThroughputEntry[] }[] = [];
   const providerDirs = (await listFromGitHub(basePath)).filter((entry) => entry.type === "dir" && !entry.name.startsWith("_"));
-  for (const dir of providerDirs) {
+  // Independent providers load together; each provider's archive stays serial
+  // so cold loads have at most one file request per provider in flight.
+  const days = await Promise.all(providerDirs.map(async (dir) => {
+    const providerDays: { provider: string; date: string; entries: BrowserThroughputEntry[] }[] = [];
     const dates = (await listFromGitHub(`${basePath}/${dir.name}`)).filter((entry) => entry.type === "dir" && DATE_RE.test(entry.name)).map((entry) => entry.name);
     for (const date of dates) {
       try {
         const content = await fetchFromGitHub(`${basePath}/${dir.name}/${date}/c${concurrency}/results.jsonl`);
         const entries = parseLines(content, date);
-        days.push({ provider: entries.find((entry) => entry.provider)?.provider ?? dir.name, date, entries });
+        providerDays.push({ provider: entries.find((entry) => entry.provider)?.provider ?? dir.name, date, entries });
       } catch {
         // This provider has no run at this concurrency on this day.
       }
     }
-  }
-  return historyFromDays(days);
+    return providerDays;
+  }));
+  return historyFromDays(days.flat());
 }
+
+// Cache assembled summaries, not raw sessions, across page/API date selections.
+// Keep the cache bounded because concurrency is supplied by public requests.
+const remoteHistoryCache = new Map<number, { expiresAt: number; value: Promise<ThroughputHistory> }>();
+const REMOTE_HISTORY_TTL_MS = 60_000;
+const REMOTE_HISTORY_CACHE_LIMIT = 8;
 
 /** Every recorded day at one concurrency, for the throughput history line. */
 export async function loadBrowserThroughputHistory(concurrency = 1): Promise<ThroughputHistory> {
-  return fs.existsSync(getResultsDir()) ? loadHistoryFromFs(concurrency) : loadHistoryFromGitHub(concurrency);
+  // Local files can change between calls (runner output and local development).
+  if (fs.existsSync(getResultsDir())) return loadHistoryFromFs(concurrency);
+  const cached = remoteHistoryCache.get(concurrency);
+  if (cached && cached.expiresAt > Date.now()) return cached.value;
+
+  const entry = { expiresAt: Infinity, value: loadHistoryFromGitHub(concurrency) };
+  remoteHistoryCache.delete(concurrency);
+  remoteHistoryCache.set(concurrency, entry);
+  if (remoteHistoryCache.size > REMOTE_HISTORY_CACHE_LIMIT) {
+    remoteHistoryCache.delete(remoteHistoryCache.keys().next().value!);
+  }
+  try {
+    // The pending promise also coalesces simultaneous cold requests. Start the
+    // freshness window after loading, so a slow archive gets a full minute.
+    const history = await entry.value;
+    entry.expiresAt = Date.now() + REMOTE_HISTORY_TTL_MS;
+    return history;
+  } catch (error) {
+    if (remoteHistoryCache.get(concurrency) === entry) remoteHistoryCache.delete(concurrency);
+    throw error;
+  }
+}
+
+/** Shared publication policy for the website and API: one complete run day. */
+export async function loadPublishedBrowserThroughput(concurrency = 1, date?: string) {
+  const history = await loadBrowserThroughputHistory(concurrency);
+  const publication = throughputPublication(history, date);
+  const leaderboard = await loadBrowserThroughputLeaderboard(concurrency, publication.selectedDate);
+  return { leaderboard, history, publication };
 }

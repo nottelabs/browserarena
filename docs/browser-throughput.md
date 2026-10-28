@@ -119,6 +119,30 @@ repo models pricing.
 
 Ranking is by median actions per second.
 
+### Publishing daily comparisons
+
+The east and west runners publish at different times. The website and API
+default to the latest day for which every provider active on that date has
+published measured attempts at the selected concurrency. Provider coverage is
+derived from run history: a provider is expected from its first published day
+onward, so adding a provider does not invalidate older complete days. Warm-ups
+and the hidden Kernel headful variant do not count. A failed session counts as
+a reported attempt; missing timings such as Browserless's exhausted quota do
+not prevent the day from becoming complete.
+
+Newer partial days remain accessible in the date picker, marked `(partial)`,
+with the number of providers reporting shown above the table. The default
+advances once the remaining results arrive. Historical charts retain partial
+days with gaps for missing providers. The API follows the same default and
+accepts `?date=YYYY-MM-DD` to inspect a specific day; its publication metadata
+reports coverage and the latest complete date. If a provider is permanently
+retired, this coverage policy will need an explicit end date for that provider.
+When local files are unavailable, assembled GitHub history is cached per
+concurrency for 60 seconds within each server process, shared across date
+selections and concurrent requests. The cache holds at most eight concurrency
+levels. Cold loads fetch providers in parallel, with one historical file per
+provider in flight at a time.
+
 ## Running it
 
 ```bash

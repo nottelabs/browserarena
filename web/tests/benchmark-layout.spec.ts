@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-// Keep the provider count and history stable as new daily runs are published.
+// Keep the selected day's leaderboard stable as new daily runs are published.
 const runDate = "2026-10-26";
 
 for (const route of ["/", "/proxies", "/throughput"]) {
@@ -55,18 +55,24 @@ test("history tooltip paints above overlapping legend text", async ({ page }) =>
       const range = document.createRange();
       range.selectNodeContents(node);
       const textBox = range.getBoundingClientRect();
-      const left = Math.max(tooltipBox.left, textBox.left);
-      const right = Math.min(tooltipBox.right, textBox.right);
-      const top = Math.max(tooltipBox.top, textBox.top);
-      const bottom = Math.min(tooltipBox.bottom, textBox.bottom);
-      if (right <= left || bottom <= top) continue;
-      // Tooltips ignore pointer events normally. Enable hit testing briefly
-      // so the browser can tell us which element actually paints on top.
-      const pointerEvents = tooltip.style.pointerEvents;
-      tooltip.style.pointerEvents = "auto";
-      const topElement = document.elementFromPoint((left + right) / 2, (top + bottom) / 2);
-      tooltip.style.pointerEvents = pointerEvents;
-      return tooltip.contains(topElement);
+      if (textBox.width === 0 || textBox.height === 0) continue;
+      // History rolls forward independently of the selected leaderboard date.
+      // A sparse day can have a tooltip too short to overlap the legend at all.
+      // Place it over actual legend text without changing either stacking order.
+      const originalStyle = tooltip.getAttribute("style");
+      try {
+        tooltip.style.translate = `${textBox.left - tooltipBox.left}px ${textBox.top - tooltipBox.top}px`;
+        // Enable hit testing so the browser reports which element paints on top.
+        tooltip.style.pointerEvents = "auto";
+        const topElement = document.elementFromPoint(
+          textBox.left + Math.min(textBox.width, tooltipBox.width) / 2,
+          textBox.top + Math.min(textBox.height, tooltipBox.height) / 2,
+        );
+        return tooltip.contains(topElement);
+      } finally {
+        if (originalStyle === null) tooltip.removeAttribute("style");
+        else tooltip.setAttribute("style", originalStyle);
+      }
     }
     return false;
   });
