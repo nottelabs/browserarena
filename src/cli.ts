@@ -1,4 +1,6 @@
 import "dotenv/config";
+import { fileURLToPath } from "node:url";
+import { runCaptchaCli } from "./benchmarks/captcha/cli.mjs";
 import fs from "node:fs";
 import path from "node:path";
 import { getMissingEnvVarsForProvider, resolveProvider } from "./providers/index.js";
@@ -20,7 +22,7 @@ import { proxySuiteOutput, readProxyResults } from "./benchmarks/proxy-get/outpu
 import { runLoop as runBrowserThroughput, WARMUP_RUNS as BROWSER_THROUGHPUT_WARMUPS } from "./benchmarks/browser-throughput/run.js";
 import { resolveArticleUrls, type ArticleSource } from "./benchmarks/browser-throughput/articles.js";
 
-type BenchmarkName = "hello-browser" | "v0" | "proxy-get" | "browser-throughput";
+type BenchmarkName = "captcha" | "hello-browser" | "v0" | "proxy-get" | "browser-throughput";
 
 const DEFAULT_PROVIDERS =
   "browserbase,steel,kernel,kernel-headful,notte,hyperbrowser,anchorbrowser,browser-use,lightpanda,tinyfish";
@@ -50,7 +52,10 @@ function startLogging(logPath: string): () => void {
 
 async function main() {
   if (hasFlag("help")) {
-    console.log(`Usage: npm run bench -- --benchmark=hello-browser|v0|proxy-get|browser-throughput --provider=steel,kernel,...
+    console.log(`Usage: npm run bench -- --benchmark=hello-browser|v0|proxy-get|browser-throughput|captcha --provider=steel,kernel,...
+CAPTCHA: --runs=5 (per provider/type, 1-20) --concurrency=3 (global, 1-3)
+  --provider=kernel,browserbase,browser-use,steel,notte --out=NEW_DIRECTORY --preflight
+  Fixed 180s solve window; no retries; raw evidence defaults to .captcha-runs/.
 Common: --runs=N --out=PATH --rate=SESSIONS_PER_MINUTE --url=URL --concurrency=1,10 --record
   --run-date=YYYY-MM-DD (shared output date and article rotation for scheduled providers)
 browser-throughput: --loops=N (10 actions per loop) --articles=fixed|random --action-timeout=MS
@@ -67,6 +72,10 @@ Proxy GET: --countries=US,FR,BR,IN,JP (50 runs/country by default; sequential fr
     "benchmark",
     process.env.BENCHMARK || "hello-browser"
   )! as BenchmarkName;
+  if (benchmarkArg === "captcha") {
+    await runCaptchaCli(process.argv.slice(2), fileURLToPath(new URL("..", import.meta.url)));
+    return;
+  }
   if (!["hello-browser", "v0", "proxy-get", "browser-throughput"].includes(benchmarkArg)) throw new Error(`Unknown benchmark: ${benchmarkArg}`);
   const providerArg = getArg(
     "provider",

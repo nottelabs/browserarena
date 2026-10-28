@@ -21,9 +21,10 @@
     "dev": "tsx src/cli.ts",
     "build": "tsc -p tsconfig.json",
     "bench": "npm run build && node dist/cli.js",
-    "test": "tsx --test src/providers/*.test.ts src/benchmarks/*/*.test.ts",
+    "test": "tsx --test src/providers/*.test.ts src/benchmarks/*/*.test.ts src/benchmarks/captcha/*.test.mjs",
     "test:tinyfish": "tsx --test src/integration/tinyfish.test.ts",
-    "check-regressions": "npm --prefix web run check-regressions --"
+    "check-regressions": "npm --prefix web run check-regressions --",
+    "captcha:export": "tsx src/benchmarks/captcha/export.ts"
   },
   "author": "junhsss <junhsssr@gmail.com>",
   "devDependencies": {
