@@ -4,11 +4,12 @@ import { execFileSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
-import { fileURLToPath, pathToFileURL } from "node:url";
+import { fileURLToPath } from "node:url";
 import { hostname } from "node:os";
 import { preflight, schedule, summarize } from "./protocol.mjs";
 import { createProviders, REQUIRED_ENV } from "./providers.mjs";
 import { attempt, installCancellation, runSuite } from "./run.mjs";
+import { sanitizeErrorMessage } from "../../utils/sanitize.js";
 
 export function sanitizer(base, env = process.env) {
   const secrets = Object.entries(env).filter(([key, value]) => /KEY|TOKEN|SECRET/.test(key) && value?.length > 8).map(([, value]) => value);
@@ -35,7 +36,6 @@ export function report(config, rows, complete) {
 export async function runCampaign(config, outputArg, repository, { preflightOnly = false } = {}) {
   const output = resolve(outputArg);
   const load = createRequire(join(repository, "package.json"));
-  const { sanitizeErrorMessage } = await import(pathToFileURL(join(repository, "dist/utils/sanitize.js")));
   const clean = sanitizer(sanitizeErrorMessage);
   const missing = config.providers.flatMap(provider => REQUIRED_ENV[provider].filter(key => !process.env[key]));
   if (missing.length) throw new Error(`Missing credential variables: ${[...new Set(missing)].join(", ")}`);

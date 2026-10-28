@@ -303,3 +303,40 @@ test("HTML evidence escapes script payloads and labels partial campaigns", () =>
   assert.match(html, /Token delivery only/);
   assert.match(html, /hCaptcha results are never labeled accepted/);
 });
+
+test("Turnstile records timely acceptance immediately without another page probe", async () => {
+  for (const beforeToken of [0, 170_000]) {
+    const h = harness(); h.task.fixture = FIXTURES[0];
+    let probes = 0;
+    h.deps.probe = async () => {
+      probes++;
+      if (probes === 2) await h.deps.sleep(beforeToken);
+      if (probes > 2) { await h.deps.sleep(2_000); throw new Error("Unnecessary page probe"); }
+      return { formPresent: true, tokenPresent: true };
+    };
+    const verificationTime = beforeToken ? 9_000 : 14_000;
+    h.deps.verify = async () => {
+      await h.deps.sleep(verificationTime);
+      return { httpStatus: 200, success: true, testSecret: false, hostname: "zerocaptcha.io", widget: "managed" };
+    };
+    const row = await attempt(h.task, config, h.deps);
+    assert.equal(row.status, "verified");
+    assert.equal(row.accepted_ms, 100 + beforeToken + verificationTime);
+    assert.equal(probes, 2);
+    assert.equal(row.cleanup.released, true);
+  }
+});
+
+test("Turnstile still rejects late verdicts and preserves server rejection", async () => {
+  for (const [delay, success, expected] of [[15_001, true, "error"], [180_001, true, "timeout"], [100, false, "rejected"]]) {
+    const h = harness(); h.task.fixture = FIXTURES[0];
+    h.deps.verify = async () => {
+      await h.deps.sleep(delay);
+      return { httpStatus: 200, success, testSecret: false, hostname: "zerocaptcha.io", widget: "managed" };
+    };
+    const row = await attempt(h.task, config, h.deps);
+    assert.equal(row.status, expected);
+    assert.equal(row.accepted_ms, null);
+    assert.equal(row.cleanup.released, true);
+  }
+});

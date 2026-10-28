@@ -165,6 +165,18 @@ export async function attempt(task, config, deps) {
         verificationDeadline = Math.min(deadline, now() + 15_000);
         const budget = Math.max(1, Math.floor(verificationDeadline - now()));
         row.verification = await bounded(verify(page, task.fixture, budget), budget);
+        if (task.fixture.type === "turnstile") {
+          // The returned server verdict is the evidence. A later page probe
+          // must neither delay its timestamp nor turn timely acceptance into failure.
+          const verifiedAt = now();
+          if (verifiedAt >= deadline) break;
+          if (verifiedAt >= verificationDeadline)
+            throw new Error("No independent verification verdict within 15s of submission");
+          if (!row.verification) throw new Error("Missing Turnstile verification verdict");
+          row.status = acceptedTurnstile(row.verification) ? "verified" : "rejected";
+          if (row.status === "verified") row.accepted_ms = verifiedAt - navigationStart;
+          break;
+        }
         continue;
       }
       if (!checkboxChecked && !submitted && !state.largeChallengeFrameVisible && now() - navigationStart >= 10_000) {
