@@ -56,15 +56,15 @@ inspect and reconcile the owned sessions before a new campaign. Nothing resumes
 or retries automatically. A completed campaign may contain rejected tokens,
 timeouts and setup errors; a zero exit code does not mean every challenge passed.
 
-## Protocol v2
+## Protocol v3
 
 Each session uses a 1920 × 1080 viewport, a 30-second navigation limit and a
 180-second solve window after navigation. Timing starts at navigation and ends
 at independent acceptance, or token delivery for hCaptcha. Setup, screenshots
-and cleanup are excluded. A single checkbox initiation is eligible after ten
-seconds when no image challenge is visible; the harness never answers an image
-puzzle or clicks Turnstile. Provider solvers may make their own internal attempts
-within the fixed window. SDK retries and benchmark retries are disabled.
+and cleanup are excluded. The harness never clicks a CAPTCHA or answers a
+challenge: each provider's own solver goes through every step. Provider solvers
+may make their own internal attempts within the fixed window. SDK retries and
+benchmark retries are disabled.
 
 | Provider | Native preset |
 | --- | --- |
@@ -72,7 +72,7 @@ within the fixed window. SDK retries and benchmark retries are disabled.
 | Browserbase | Native solving, managed proxy, US East browser |
 | Browser Use | Default solving, US proxy, v4 browser API |
 | Steel | Native solving, managed proxy |
-| Notte | Headless Chrome, native solving, US proxy, ad filter disabled, public API |
+| Notte | Headless Chrome, automatic solving only, US proxy, ad filter disabled, public API |
 
 These presets compare the provider products, including their proxy pools. They
 are not identical networks and do not isolate solver quality from browser or
@@ -84,8 +84,8 @@ proxy behavior. Lifecycle benchmark presets and retry policy do not apply here.
 - **reCAPTCHA v2:** Google's official submission demo. A POST response at the
   exact demo URL and the accepted page must both be observed. The form uses
   `requestSubmit()` so pointer overlays cannot block verification.
-- **hCaptcha:** NopeCHA's enterprise demo. A non-dummy token must match the widget
-  response, and its success callback must have run. This is **token delivery**,
+- **hCaptcha:** NopeCHA's enterprise demo. Delivery means the demo page reports
+  success, the same signal the page shows a visitor. This is **token delivery**,
   not server acceptance: the demo's callback does not call a server verifier.
 
 Fixture sitekeys and the hCaptcha script are pinned. Preflight also checks that
@@ -97,7 +97,7 @@ visual-puzzle accuracy benchmark nor a test of Cloudflare's full interstitial.
 ## Export results for review
 
 ```bash
-npm run captcha:export -- .captcha-runs/repeated-campaign 2026-10-28-west-v2
+npm run captcha:export -- .captcha-runs/repeated-campaign 2026-10-29-west-v3
 ```
 
 This writes one new `results/captcha/<id>.json` locally. It never pushes or

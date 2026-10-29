@@ -22,38 +22,13 @@ export async function observe(page, fixture) {
       length: input.value.length, dummy: input.value.includes("DUMMY"),
     }));
     const accepted = fixture.type === "recaptcha" && /Verification Success/i.test(text);
-    let widgetResponseMatches = false;
-    if (fixture.type === "hcaptcha") {
-      const widget = document.querySelector('iframe[data-hcaptcha-widget-id]')?.getAttribute('data-hcaptcha-widget-id');
-      try {
-        const response = widget && window.hcaptcha?.getResponse(widget);
-        widgetResponseMatches = typeof response === "string" && response.length > 20 && !response.includes("DUMMY") &&
-          [...document.querySelectorAll(fixture.token)].some(input => input.value === response);
-      } catch { /* A widget being replaced is not a delivered token. */ }
-    }
     return { title: document.title, formPresent: !!document.querySelector(fixture.form), accepted,
       callbackSuccess: fixture.result ? document.querySelector(fixture.result)?.textContent?.trim() === "success" : false,
-      widgetResponseMatches,
       rejected: /Verification Failed|Your response was invalid/i.test(text),
       tokens, tokenPresent: tokens.some(t => t.length > 20 && !t.dummy),
       sitekeys: [...document.querySelectorAll("[data-sitekey]")].map(e => e.getAttribute("data-sitekey")),
-      largeChallengeFrameVisible: [...document.querySelectorAll('iframe[src*="recaptcha"],iframe[src*="hcaptcha"]')]
-        .some(frame => { const rect = frame.getBoundingClientRect();
-          return rect.width > 100 && rect.height > 100 && getComputedStyle(frame).visibility !== "hidden"; }),
     };
   }, fixture));
-}
-
-export async function initiateCheckbox(page, type, timeout = 3_000) {
-  if (type === "turnstile") return { attempted: false, reason: "Native Turnstile handling" };
-  const selector = type === "recaptcha" ? 'iframe[src*="api2/anchor"]' : 'iframe[data-hcaptcha-widget-id]';
-  const frames = page.locator(selector);
-  if (!await frames.count()) return { attempted: false, reason: "Checkbox frame absent" };
-  const checkbox = page.frameLocator(selector).first().locator(type === "recaptcha" ? "#recaptcha-anchor" : "#checkbox");
-  if (!await checkbox.count()) return { attempted: false, reason: "Checkbox absent" };
-  if (await checkbox.getAttribute("aria-checked") === "true") return { attempted: false, reason: "Already checked" };
-  await checkbox.click({ timeout });
-  return { attempted: true };
 }
 
 export async function submit(page, fixture, timeout = 15_000) {
@@ -81,14 +56,13 @@ export async function submit(page, fixture, timeout = 15_000) {
 export async function attempt(task, config, deps) {
   const { create, chromium, clean, journal = async () => {}, signal,
     now = () => performance.now(), sleep = ms => new Promise(r => setTimeout(r, ms)),
-    probe = observe, verify = submit, click = initiateCheckbox, screenshot = async () => {} } = deps;
+    probe = observe, verify = submit, screenshot = async () => {} } = deps;
   const started = now();
   const row = { id: task.id, round: task.round, provider: task.provider, type: task.fixture.type,
     url: task.fixture.url, started_at: new Date().toISOString(), status: "error", stage: "create",
     session_id: null, accepted_ms: null, cleanup: { released: false, disconnected: false } };
-  let session, browser, page, navigationStart, providerTask, providerTimer, deadline, verificationDeadline = null, createStarted = false;
+  let session, browser, page, navigationStart, deadline, verificationDeadline = null, createStarted = false;
   let receipt = null;
-  const solverStop = new AbortController();
   const progress = async event => {
     try { await journal(event); }
     catch (error) { row.journal_error = clean(error); throw error; }
@@ -129,12 +103,7 @@ export async function attempt(task, config, deps) {
     row.stage = "solve";
     row.solve_start_ms = now() - navigationStart;
     deadline = now() + config.solveTimeoutMs;
-    providerTimer = setTimeout(() => solverStop.abort(new Error("Solve window ended")), config.solveTimeoutMs);
-    if (session.solve) providerTask = session.solve(task.fixture.type, solverStop.signal).then(
-      verdict => { row.provider_verdict = JSON.parse(JSON.stringify(verdict, (_key, value) => typeof value === "string" ? clean(value) : value)); },
-      error => { if (!solverStop.signal.aborted) row.provider_solve_error = clean(error); },
-    );
-    let submitted = false, checkboxChecked = false;
+    let submitted = false;
     while (now() < deadline && !signal?.aborted) {
       const remaining = Math.min(deadline, verificationDeadline ?? deadline) - now();
       const state = await bounded(probe(page, task.fixture), Math.min(10_000, Math.max(1, remaining)));
@@ -179,12 +148,6 @@ export async function attempt(task, config, deps) {
         }
         continue;
       }
-      if (!checkboxChecked && !submitted && !state.largeChallengeFrameVisible && now() - navigationStart >= 10_000) {
-        checkboxChecked = true;
-        const budget = Math.max(1, Math.floor(Math.min(3_000, deadline - now())));
-        try { row.checkbox = await bounded(click(page, task.fixture.type, budget), budget); }
-        catch (error) { row.checkbox = { attempted: true, error: clean(error) }; }
-      }
       await sleep(Math.min(1_000, Math.max(0, deadline - now())));
     }
     if (!["verified", "token_delivered", "rejected"].includes(row.status)) row.status = signal?.aborted ? "interrupted" : "timeout";
@@ -196,8 +159,6 @@ export async function attempt(task, config, deps) {
     if (createStarted && row.stage === "create" && !row.session_id) row.ownership_unknown = true;
   } finally {
     row.external_receipt = receipt;
-    clearTimeout(providerTimer);
-    solverStop.abort(new Error("Attempt ended"));
     if (page) {
       try { await screenshot(page, task, row); }
       catch (error) { row.screenshot_error = clean(error); }
@@ -224,7 +185,6 @@ export async function attempt(task, config, deps) {
       try { await bounded(browser.close(), 15_000); row.cleanup.disconnected = true; }
       catch (error) { row.cleanup.disconnect_error = clean(error); }
     }
-    if (providerTask) await bounded(providerTask, 5_000).catch(error => { row.provider_task_cleanup_error = clean(error); });
     row.total_ms = now() - started;
     row.finished_at = new Date().toISOString();
     row.halt_campaign = !!row.ownership_unknown || !!row.journal_error || !!row.session_id && !row.cleanup.released || !!browser && !row.cleanup.disconnected;

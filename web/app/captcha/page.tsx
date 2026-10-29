@@ -45,7 +45,7 @@ async function CampaignView({ selected }: { selected: string }) {
             {item.id}{!item.complete ? " (partial)" : ""}
           </Link>)}
         </nav>
-        <p className={styles.context}>{campaign.rounds} planned attempts per provider and CAPTCHA type · 180-second solve window · Protocol v2</p>
+        <p className={styles.context}>{campaign.rounds} planned attempts per provider and CAPTCHA type · 180-second solve window · Protocol v3</p>
         <p className={styles.context}>Started {campaign.started_at.replace("T", " ").replace(".000Z", " UTC")} · {campaign.attempts.length} of {campaign.providers.length * campaign.rounds * 3} attempts recorded</p>
         {(!campaign.complete || campaign.halted || campaign.interrupted) && <p className={styles.notice} role="status">
           {campaign.halted ? "Campaign halted. " : campaign.interrupted ? "Campaign interrupted. " : "Partial campaign. "}
@@ -88,7 +88,7 @@ async function CampaignView({ selected }: { selected: string }) {
       </div>}
       <section className={styles.method} aria-labelledby="measurement-title">
         <h2 id="measurement-title">What these results measure</h2>
-        <p>Turnstile and reCAPTCHA require an independently observed server acceptance. hCaptcha uses NopeCHA’s enterprise demo: a matching widget token and success callback show token delivery. Its demo does not verify that token on a server.</p>
+        <p>Turnstile and reCAPTCHA require an independently observed server acceptance. hCaptcha uses NopeCHA’s enterprise demo: delivery means the demo page reports success. Its demo does not verify that token on a server.</p>
         <p>Each attempt uses a fresh 1920 × 1080 session with native solving and the provider’s proxy preset. No warm-ups are discarded and attempts are not retried. Fixtures choose challenge difficulty dynamically, so automatic clearance can count as acceptance. This does not measure visual-puzzle accuracy or Cloudflare’s full interstitial challenge.</p>
       </section>
     </section>
