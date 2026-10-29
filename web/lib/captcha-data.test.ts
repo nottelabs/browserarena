@@ -11,7 +11,7 @@ test("CAPTCHA loader distinguishes no campaigns, partial campaigns, and invalid 
   try {
     assert.deepEqual(await loadCaptchaCampaigns(directory), []);
     await fs.mkdir(directory);
-    const campaign = { benchmark: "captcha", schema_version: 1, protocol_version: 2, id: "partial",
+    const campaign = { benchmark: "captcha", schema_version: 1, protocol_version: 3, id: "partial",
       started_at: "2026-10-28T00:00:00Z", finished_at: "2026-10-28T00:01:00Z", revision: "a".repeat(40),
       providers: ["kernel"], rounds: 1, concurrency: 1, complete: false, halted: true, interrupted: true, attempts: [] };
     await fs.writeFile(path.join(directory, "partial.json"), JSON.stringify(campaign));

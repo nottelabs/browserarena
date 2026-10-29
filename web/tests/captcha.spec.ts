@@ -7,7 +7,7 @@ const campaignId = `synthetic-layout-${process.pid}`;
 const file = path.join(directory, `${campaignId}.json`);
 const providers = ["kernel", "browserbase", "browser-use", "steel", "notte"];
 const fixture = {
-  benchmark: "captcha", schema_version: 1, protocol_version: 2, id: campaignId,
+  benchmark: "captcha", schema_version: 1, protocol_version: 3, id: campaignId,
   started_at: "2026-10-28T00:00:00Z", finished_at: "2026-10-28T00:02:00Z", revision: "a".repeat(40),
   providers, rounds: 1, concurrency: 3, complete: false, halted: true, interrupted: false,
   attempts: providers.flatMap((provider, index) => [

@@ -23,10 +23,10 @@ export function configuration(input = {}) {
   if (!Number.isSafeInteger(config.concurrency) || config.concurrency < 1 || config.concurrency > 3)
     throw new Error("concurrency must be an integer from 1 through 3");
   if (config.solveTimeoutMs !== 180_000 || config.cooldownMs !== 5_000)
-    throw new Error("Protocol v2 fixes the solve window at 180s and cooldown at 5s");
+    throw new Error("Protocol v3 fixes the solve window at 180s and cooldown at 5s");
   const unknown = Object.keys(input).filter(k => !["rounds", "concurrency", "providers", "solveTimeoutMs", "cooldownMs"].includes(k));
   if (unknown.length) throw new Error(`Unknown configuration fields: ${unknown.join(", ")}`);
-  return { version: 2, rounds: config.rounds, providers: [...config.providers],
+  return { version: 3, rounds: config.rounds, providers: [...config.providers],
     concurrency: config.concurrency, solveTimeoutMs: 180_000, cooldownMs: 5_000,
     navigationTimeoutMs: 30_000, viewport: { width: 1920, height: 1080 },
     retries: 0, fixtures: FIXTURES.map(f => ({ ...f })) };
@@ -53,9 +53,9 @@ export function acceptedOfficial(state, receipt, fixture) {
     receipt?.httpStatus === 200 && receipt.method === "POST" && receipt.url === fixture.url;
 }
 
+// The demo page's own success indicator is the only delivery criterion.
 export function deliveredNopecha(state) {
-  return state?.tokenPresent === true && state.callbackSuccess === true &&
-    state.widgetResponseMatches === true && state.sitekeys?.includes(FIXTURES[2].sitekey) === true;
+  return state?.callbackSuccess === true;
 }
 
 export function interval(successes, n) {

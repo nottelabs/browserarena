@@ -51,26 +51,7 @@ export function createProviders(load, env = process.env, request = fetch) {
       });
       return { id: data.session_id, cdpUrl: data.cdp_url,
         configuration: { browser_type: "chrome", headless: true, solve_captchas: true, proxy: "US", block_ads: false, api: base },
-        release: () => api(`${base}/sessions/${data.session_id}/stop`, "DELETE", headers, undefined, AbortSignal.timeout(30_000)),
-        solve: async (type, signal) => {
-          const url = `${base}/sessions/${data.session_id}/page/execute`;
-          let result = await api(url, "POST", headers, { type: "captcha_solve", captcha_type: type === "turnstile" ? "cloudflare" : type }, signal);
-          while (result.captcha?.state === "solving" || result.code === "captcha_in_progress") {
-            if (!result.captcha?.captcha_id) throw new Error("Pending solve missing captcha ID");
-            const retryAfter = result.captcha.retry_after_ms;
-            const ms = typeof retryAfter === "number" && Number.isFinite(retryAfter)
-              ? Math.max(500, Math.min(5_000, retryAfter)) : 1_000;
-            await new Promise((resolve, reject) => {
-              signal.throwIfAborted();
-              const abort = () => { clearTimeout(timer); reject(signal.reason); };
-              const timer = setTimeout(() => { signal.removeEventListener("abort", abort); resolve(); }, ms);
-              signal.addEventListener("abort", abort, { once: true });
-            });
-            result = await api(`${url}?captcha_id=${encodeURIComponent(result.captcha.captcha_id)}`, "POST", headers, { type: "captcha_solve" }, signal);
-          }
-          return { success: result.success, code: result.code ?? null,
-            state: result.captcha?.state ?? null, message: result.captcha?.message ?? result.message ?? null };
-        } };
+        release: () => api(`${base}/sessions/${data.session_id}/stop`, "DELETE", headers, undefined, AbortSignal.timeout(30_000)) };
     }
     throw new Error(`Unsupported provider: ${provider}`);
   };

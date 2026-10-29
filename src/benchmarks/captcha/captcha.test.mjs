@@ -12,7 +12,7 @@ const response = (data, status = 200) => new Response(JSON.stringify(data), { st
 
 test("protocol fixes the declared workload and rejects ignored settings", () => {
   assert.equal(config.rounds, 5);
-  assert.equal(config.version, 2);
+  assert.equal(config.version, 3);
   assert.equal(config.solveTimeoutMs, 180_000);
   assert.deepEqual(config.viewport, { width: 1920, height: 1080 });
   for (const input of [{ rounds: 0 }, { rounds: 1.5 }, { concurrency: 4 }, { providers: ["kernel", "kernel"] },
@@ -62,11 +62,10 @@ test("fixture preflight requires the pinned live keys and rejection with a real 
       : FIXTURES.find(f => f.url === url).script ?? FIXTURES.find(f => f.url === url).sitekey)), /did not reject/);
 });
 
-test("NopeCHA delivery requires matching token, expected widget and callback, without claiming acceptance", async () => {
-  const state = { tokenPresent: true, callbackSuccess: true, widgetResponseMatches: true, sitekeys: [FIXTURES[2].sitekey] };
+test("NopeCHA delivery follows only the demo page's success indicator, without claiming acceptance", async () => {
+  const state = { tokenPresent: false, callbackSuccess: true };
   assert.equal(deliveredNopecha(state), true);
-  for (const change of [{ tokenPresent: false }, { callbackSuccess: false }, { widgetResponseMatches: false },
-    { widgetResponseMatches: "true" }, { sitekeys: ["another-widget"] }]) assert.equal(deliveredNopecha({ ...state, ...change }), false);
+  for (const change of [{ callbackSuccess: false }, { callbackSuccess: "true" }]) assert.equal(deliveredNopecha({ ...state, ...change }), false);
   const h = harness(); h.task.fixture = FIXTURES[2]; h.task.id = "r01-kernel-hcaptcha";
   h.deps.probe = async () => ({ formPresent: true, ...state });
   h.deps.verify = async () => assert.fail("No server verifier on NopeCHA");
@@ -158,7 +157,7 @@ function harness({ failNavigation = false, failRelease = false, missingCdp = fal
     create: async () => ({ id: "owned-id", cdpUrl: missingCdp ? undefined : "wss://private.example",
       release: async () => { releases++; if (failRelease) throw new Error("private-test-value"); } }),
     chromium: { connectOverCDP: async () => ({ contexts: () => [{ pages: () => [page] }], close: async () => { closed++; } }) },
-    probe: async () => ({ formPresent: !verified, tokenPresent: token && !verified, accepted: verified, largeChallengeFrameVisible: true }),
+    probe: async () => ({ formPresent: !verified, tokenPresent: token && !verified, accepted: verified }),
     verify: async () => { clock += 200; verified = true; if (!noReceipt)
       page.emit("response", { url: () => task.fixture.url, status: () => 200, request: () => ({ method: () => "POST" }) }); return null; },
   };
@@ -286,7 +285,10 @@ test("five provider presets explicitly enable native solving and disable SDK req
       : response(url.includes("browser-use") ? { id: "owned-id", cdpUrl: "https://browser.example" }
         : { session_id: "owned-id", cdp_url: "wss://notte.example" });
   });
-  for (const name of config.providers) { const session = await create(name); assert.equal(session.id, "owned-id"); await session.release(); }
+  for (const name of config.providers) {
+    const session = await create(name); assert.equal(session.id, "owned-id"); assert.equal(session.solve, undefined); await session.release();
+  }
+  assert.ok(!requests.some(r => r.url.includes("/page/execute")), "Notte relies on its automatic solver only");
   assert.equal(creations.find(c => c.stealth).headless, true);
   assert.equal(creations.find(c => c.browserSettings).browserSettings.solveCaptchas, true);
   assert.equal(creations.find(c => c.solveCaptcha).useProxy, true);

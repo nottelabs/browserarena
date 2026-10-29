@@ -8,7 +8,7 @@ export type PublicAttempt = {
   cleanup_failed: boolean;
 };
 export type PublicCampaign = {
-  benchmark: "captcha"; schema_version: 1; protocol_version: 2; id: string;
+  benchmark: "captcha"; schema_version: 1; protocol_version: 3; id: string;
   started_at: string; finished_at: string; revision: string;
   providers: string[]; rounds: number; concurrency: number;
   complete: boolean; halted: boolean; interrupted: boolean; attempts: PublicAttempt[];
@@ -37,7 +37,7 @@ function boolean(value: unknown): boolean {
 // screenshots, error strings, and arbitrary future fields never cross this boundary.
 export function validateCampaign(input: unknown): PublicCampaign {
   const raw = object(input);
-  if (raw.benchmark !== "captcha" || raw.schema_version !== 1 || raw.protocol_version !== 2)
+  if (raw.benchmark !== "captcha" || raw.schema_version !== 1 || raw.protocol_version !== 3)
     throw new Error("Unsupported CAPTCHA campaign protocol/schema");
   if (typeof raw.id !== "string" || !CAMPAIGN_ID.test(raw.id)) throw new Error("Invalid campaign ID");
   if (typeof raw.revision !== "string" || !/^[a-f0-9]{40}$/.test(raw.revision)) throw new Error("Invalid source revision");
@@ -68,7 +68,7 @@ export function validateCampaign(input: unknown): PublicCampaign {
   if (complete !== (attempts.length === planned.size)) throw new Error("Campaign completion disagrees with the declared plan");
   const started_at = timestamp(raw.started_at), finished_at = timestamp(raw.finished_at);
   if (finished_at < started_at) throw new Error("Campaign ends before it starts");
-  return { benchmark: "captcha", schema_version: 1, protocol_version: 2, id: raw.id,
+  return { benchmark: "captcha", schema_version: 1, protocol_version: 3, id: raw.id,
     started_at, finished_at, revision: raw.revision,
     providers: config.providers, rounds: config.rounds, concurrency: config.concurrency,
     complete, halted: boolean(raw.halted), interrupted: boolean(raw.interrupted), attempts };
@@ -76,12 +76,12 @@ export function validateCampaign(input: unknown): PublicCampaign {
 
 export function exportCampaign(id: string, summaryInput: unknown, rows: unknown[]): PublicCampaign {
   const summary = object(summaryInput), config = object(summary.configuration);
-  if (config.version !== 2) throw new Error("Only protocol v2 can be exported");
+  if (config.version !== 3) throw new Error("Only protocol v3 can be exported");
   // Reject fixture or timing drift instead of mislabeling it as the same protocol.
   const expected = configuration({ providers: config.providers, rounds: config.rounds, concurrency: config.concurrency });
   for (const key of ["fixtures", "viewport", "solveTimeoutMs", "cooldownMs", "navigationTimeoutMs", "retries"] as const)
     if (JSON.stringify(config[key]) !== JSON.stringify(expected[key])) throw new Error(`Protocol drift: ${key}`);
-  return validateCampaign({ benchmark: "captcha", schema_version: 1, protocol_version: 2, id,
+  return validateCampaign({ benchmark: "captcha", schema_version: 1, protocol_version: 3, id,
     started_at: config.started_at, finished_at: summary.finished_at, revision: config.browserarena_sha,
     providers: config.providers, rounds: config.rounds, concurrency: config.concurrency,
     complete: summary.complete, halted: summary.halted, interrupted: summary.interrupted,
