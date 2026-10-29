@@ -42,6 +42,7 @@ export function BenchmarkShell({ children, benchmark, country = "US", date, conc
     "/",
     "/proxies",
     "/throughput",
+    "/stealth",
     "/faq",
     ...PROXY_COUNTRIES.filter((countryCode) => countryCode !== "US").map((countryCode) => `/proxies?country=${countryCode}`),
     ...concurrencyLevels.filter((level) => level !== 1).flatMap((level) => [`/?concurrency=${level}`, `/throughput?concurrency=${level}`]),
