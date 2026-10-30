@@ -207,6 +207,48 @@ test("verification time includes submission and late accepted pages remain verif
   assert.match(row.error, /15s of submission/);
 });
 
+test("a probe cut off by the end of the solve window is a timeout, not an error", async () => {
+  const h = harness({ token: false }), sleep = h.deps.sleep;
+  let probes = 0;
+  h.deps.sleep = async ms => { if (ms >= 1) await sleep(ms); };
+  h.deps.probe = async () => {
+    probes++;
+    if (probes === 2) await sleep(179_999.5);
+    if (probes === 3) return new Promise(() => {});
+    return { formPresent: true, tokenPresent: false, accepted: false };
+  };
+  const row = await attempt(h.task, config, h.deps);
+  assert.equal(row.status, "timeout"); assert.equal(row.error, undefined);
+  assert.equal(row.final.formPresent, true); assert.ok(row.elapsed_ms >= 179_999);
+  assert.equal(h.counts().releases, 1);
+});
+
+test("a probe cut off by the end of the verification window reports the missing verdict", async () => {
+  const h = harness(), probe = h.deps.probe, sleep = h.deps.sleep;
+  let submitted = false;
+  h.deps.verify = async () => { await sleep(14_999.5); submitted = true; return null; };
+  h.deps.probe = async (...args) => submitted ? new Promise(() => {}) : probe(...args);
+  const row = await attempt(h.task, config, h.deps);
+  assert.equal(row.status, "error"); assert.match(row.error, /15s of submission/);
+});
+
+test("a probe hanging with time left in the window stays a page error", async t => {
+  t.mock.timers.enable({ apis: ["setTimeout"] });
+  const h = harness({ token: false });
+  let probes = 0;
+  h.deps.probe = async () => {
+    probes++;
+    if (probes === 2) return new Promise(() => {});
+    return { formPresent: true, tokenPresent: false, accepted: false };
+  };
+  const running = attempt(h.task, config, h.deps);
+  while (probes < 2) await new Promise(setImmediate);
+  await new Promise(setImmediate);
+  t.mock.timers.tick(10_000);
+  const row = await running;
+  assert.equal(row.status, "error"); assert.match(row.error, /exceeded 10000ms/);
+});
+
 test("a broken ownership journal halts further work but still releases the recovered ID", async () => {
   const h = harness();
   h.deps.journal = async event => { if (event.event === "session_created") throw new Error("Disk write failed"); };
