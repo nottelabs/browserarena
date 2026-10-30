@@ -1,0 +1,13 @@
+{
+  "date": "2026-10-29",
+  "sites": 30,
+  "rounds": 3,
+  "region": "us-west-1",
+  "providers": [
+    { "provider": "BROWSER_USE", "accessible": 64, "blocked": 15, "errors": 11, "sitesAccessed": 24 },
+    { "provider": "KERNEL", "accessible": 44, "blocked": 36, "errors": 10, "sitesAccessed": 18 },
+    { "provider": "NOTTE", "accessible": 41, "blocked": 34, "errors": 15, "sitesAccessed": 16 },
+    { "provider": "BROWSERBASE", "accessible": 25, "blocked": 55, "errors": 10, "sitesAccessed": 10 },
+    { "provider": "STEEL", "accessible": 22, "blocked": 56, "errors": 12, "sitesAccessed": 9 }
+  ]
+}
