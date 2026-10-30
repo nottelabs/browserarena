@@ -17,7 +17,7 @@ const PAGE_SECTIONS = [
 ] as const;
 
 export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyLevels, date, simulated, proxyBasePath = "/test", publicRoutes = false, lifecycleQuery = "", sort, inPage = false }: {
-  benchmark: "hello-browser" | "proxy-get" | "browser-throughput" | "all";
+  benchmark: "hello-browser" | "proxy-get" | "browser-throughput" | "website-access" | "all";
   country: (typeof PROXY_COUNTRIES)[number];
   concurrency: number;
   concurrencyLevels: number[];
@@ -116,10 +116,11 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
           <Link href={lifecycleHref()} prefetch={true} className={linkClass(benchmark === "hello-browser")} aria-current={benchmark === "hello-browser" ? "page" : undefined} onClick={() => setOpen(false)}>{BENCHMARK_TITLES["hello-browser"]}</Link>
           <Link href={publicRoutes ? "/proxies" : `${proxyBasePath}?benchmark=proxy-get&demo=${simulated ? "1" : "0"}`} prefetch={true} className={linkClass(benchmark === "proxy-get")} aria-current={benchmark === "proxy-get" ? "page" : undefined} onClick={() => setOpen(false)}>{BENCHMARK_TITLES["proxy-get"]}</Link>
           <Link href="/throughput" prefetch={true} className={linkClass(benchmark === "browser-throughput")} aria-current={benchmark === "browser-throughput" ? "page" : undefined} onClick={() => setOpen(false)}>{BENCHMARK_TITLES["browser-throughput"]}</Link>
+          <Link href="/website-access" prefetch={true} className={linkClass(benchmark === "website-access")} aria-current={benchmark === "website-access" ? "page" : undefined} onClick={() => setOpen(false)}>Website Access</Link>
           </>}
         </nav>
       </section>
-      {benchmark !== "all" && <section className={styles.config}>
+      {benchmark !== "all" && benchmark !== "website-access" && <section className={styles.config}>
         <h2 className={styles.label}>Setup</h2>
         <nav className={styles.options} aria-label={benchmark === "proxy-get" ? "Proxy country" : "Run mode"}>
           {benchmark === "proxy-get" ? PROXY_COUNTRIES.map(c => <BenchmarkLink key={c} href={countryHref(c)} className={linkClass(c === country)} aria-current={c === country ? "page" : undefined} onClick={() => setOpen(false)}>
