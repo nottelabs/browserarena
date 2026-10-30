@@ -1,10 +1,12 @@
 import { acceptedOfficial, acceptedTurnstile, deliveredNopecha, schedule } from "./protocol.mjs";
 
+class BoundExceeded extends Error {}
+
 export async function bounded(work, ms = 10_000) {
   let timer;
   try {
     return await Promise.race([work, new Promise((_, reject) => {
-      timer = setTimeout(() => reject(new Error(`Operation exceeded ${ms}ms`)), ms);
+      timer = setTimeout(() => reject(new BoundExceeded(`Operation exceeded ${ms}ms`)), ms);
     })]);
   } finally { clearTimeout(timer); }
 }
@@ -105,11 +107,18 @@ export async function attempt(task, config, deps) {
     deadline = now() + config.solveTimeoutMs;
     let submitted = false;
     while (now() < deadline && !signal?.aborted) {
-      const remaining = Math.min(deadline, verificationDeadline ?? deadline) - now();
-      const state = await bounded(probe(page, task.fixture), Math.min(10_000, Math.max(1, remaining)));
-      row.final = state;
-      if (now() >= deadline) break;
-      if (verificationDeadline !== null && now() >= verificationDeadline)
+      const windowEnd = Math.min(deadline, verificationDeadline ?? deadline);
+      const remaining = windowEnd - now();
+      let state = null;
+      try {
+        state = await bounded(probe(page, task.fixture), Math.min(10_000, Math.max(1, remaining)));
+      } catch (error) {
+        // A probe cut off by the end of its window is that window ending, not a page failure.
+        if (!(error instanceof BoundExceeded) || remaining >= 10_000) throw error;
+      }
+      if (state) row.final = state;
+      if (now() >= deadline || (!state && windowEnd >= deadline)) break;
+      if (verificationDeadline !== null && (!state || now() >= verificationDeadline))
         throw new Error("No independent verification verdict within 15s of submission");
       if (task.fixture.type === "hcaptcha" && deliveredNopecha(state)) {
         row.status = "token_delivered";
