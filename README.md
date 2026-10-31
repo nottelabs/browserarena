@@ -105,6 +105,20 @@ npm run bench -- --benchmark=browser-throughput --provider=notte --runs=100
 npm run bench -- --benchmark=browser-throughput --provider=notte --runs=25 --loops=5   # fifty actions, for drift
 ```
 
+### CAPTCHA handling
+
+The opt-in CAPTCHA benchmark compares native handling of Turnstile, reCAPTCHA v2
+and hCaptcha across Kernel, Browserbase, Browser Use, Steel and Notte. Each attempt
+uses a fresh session with a fixed solve window and no retries. Turnstile and
+reCAPTCHA measure server acceptance; hCaptcha measures token delivery separately.
+
+```bash
+npm run bench -- --benchmark=captcha --runs=5
+```
+
+Review and export a campaign to populate `/captcha` and `GET /api/captcha`.
+See [the protocol, running and publication instructions](docs/captcha.md).
+
 ## Methodology
 
 ### Proxy Performance benchmark

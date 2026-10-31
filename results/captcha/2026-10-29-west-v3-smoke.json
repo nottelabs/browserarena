@@ -1,0 +1,188 @@
+{
+  "benchmark": "captcha",
+  "schema_version": 1,
+  "protocol_version": 3,
+  "id": "2026-10-29-west-v3-smoke",
+  "started_at": "2026-10-29T15:53:46.743Z",
+  "finished_at": "2026-10-29T16:02:43.625Z",
+  "revision": "4d24e04085f42eb863351c54ccb24b3da24bf0e8",
+  "providers": [
+    "kernel",
+    "browserbase",
+    "browser-use",
+    "steel",
+    "notte"
+  ],
+  "rounds": 1,
+  "concurrency": 3,
+  "complete": true,
+  "halted": false,
+  "interrupted": false,
+  "attempts": [
+    {
+      "id": "r01-browser-use-turnstile",
+      "provider": "browser-use",
+      "type": "turnstile",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 3457.4159120000004,
+      "token_ms": 3235.5887950000006,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-browserbase-turnstile",
+      "provider": "browserbase",
+      "type": "turnstile",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 7036.176944,
+      "token_ms": 6637.199307,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-browser-use-recaptcha",
+      "provider": "browser-use",
+      "type": "recaptcha",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 3283.7591349999984,
+      "token_ms": 2175.4233670000012,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-kernel-turnstile",
+      "provider": "kernel",
+      "type": "turnstile",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 17277.704638,
+      "token_ms": 16948.975156,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-browserbase-recaptcha",
+      "provider": "browserbase",
+      "type": "recaptcha",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 12253.230366,
+      "token_ms": 11102.0992,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-kernel-recaptcha",
+      "provider": "kernel",
+      "type": "recaptcha",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 7916.761631000001,
+      "token_ms": 6684.504582000001,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-browser-use-hcaptcha",
+      "provider": "browser-use",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "token_delivered",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": 27022.276257,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-browserbase-hcaptcha",
+      "provider": "browserbase",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-kernel-hcaptcha",
+      "provider": "kernel",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-steel-turnstile",
+      "provider": "steel",
+      "type": "turnstile",
+      "round": 1,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-steel-recaptcha",
+      "provider": "steel",
+      "type": "recaptcha",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 45229.67797500003,
+      "token_ms": 43898.06163099999,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-steel-hcaptcha",
+      "provider": "steel",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "token_delivered",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": 24505.06469900004,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-notte-turnstile",
+      "provider": "notte",
+      "type": "turnstile",
+      "round": 1,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-notte-recaptcha",
+      "provider": "notte",
+      "type": "recaptcha",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 47639.51643299998,
+      "token_ms": 47317.00040600001,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-notte-hcaptcha",
+      "provider": "notte",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "token_delivered",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": 68458.18160499993,
+      "cleanup_failed": false
+    }
+  ]
+}
