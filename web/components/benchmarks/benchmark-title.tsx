@@ -4,6 +4,7 @@ export const BENCHMARK_TITLES = {
   "hello-browser": "Browser Lifecycle",
   "proxy-get": "Proxy Performance",
   "browser-throughput": "Browser Throughput",
+  stealth: "Stealth",
 } as const;
 
 export function BenchmarkTitle({ name, date }: { name: string; date?: ReactNode }) {
