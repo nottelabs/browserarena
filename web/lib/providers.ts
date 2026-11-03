@@ -116,6 +116,8 @@ export const PROVIDERS: ProviderInfo[] = [
     displayName: "TinyFish",
     url: "https://www.tinyfish.ai/browser",
     logo: "/logos/tinyfish.svg",
+    // Proxy-free sessions egress from an EC2 us-west-1 address.
+    browserRegion: "us-west-1",
     marketed: false,
   },
   {
