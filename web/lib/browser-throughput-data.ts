@@ -8,7 +8,7 @@ import fs from "fs";
 import path from "path";
 import { fetchFromGitHub, getResultsDir, listFromGitHub } from "./data";
 import { calendarDates } from "./history-range";
-import { PROVIDERS_BY_ID } from "./providers";
+import { HIDDEN_PROVIDER_IDS, PROVIDERS_BY_ID } from "./providers";
 import { getPricePerHour, getUnitPricing } from "./pricing";
 import { throughputPublication } from "./throughput-publication";
 import {
@@ -22,7 +22,6 @@ import {
 } from "./browser-throughput-shared";
 
 const BENCHMARK = "browser-throughput";
-const EXCLUDED_PROVIDERS = new Set(["KERNEL_HEADFUL"]);
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 const CONC_RE = /^c\d+$/;
 
@@ -119,7 +118,7 @@ export async function loadBrowserThroughputLeaderboard(
   const allEntries = loaded.entries;
 
   const measured = allEntries.filter(
-    (e) => e.warmup !== true && !EXCLUDED_PROVIDERS.has(e.provider)
+    (e) => e.warmup !== true && !HIDDEN_PROVIDER_IDS.has(e.provider)
   );
 
   const levels = [...new Set(measured.map((e) => e.concurrency ?? 1))].sort((a, b) => a - b);
@@ -168,7 +167,7 @@ function historyFromDays(days: { provider: string; date: string; entries: Browse
   const dates = new Set<string>();
   const byProvider = new Map<string, { displayName: string; points: ThroughputHistoryPoint[] }>();
   for (const day of days) {
-    const measured = day.entries.filter((entry) => entry.warmup !== true && !EXCLUDED_PROVIDERS.has(entry.provider));
+    const measured = day.entries.filter((entry) => entry.warmup !== true && !HIDDEN_PROVIDER_IDS.has(entry.provider));
     if (measured.length === 0) continue;
     const meta = PROVIDERS_BY_ID[day.provider] ?? { displayName: day.provider, url: "#" };
     const row = summarizeBrowserThroughput(

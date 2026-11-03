@@ -24,6 +24,8 @@ export interface ProviderInfo {
   description?: string;
   /** Whether the provider is listed (and counted) in marketing copy. */
   marketed: boolean;
+  /** Kept out of every leaderboard and provider page, e.g. while its runs are broken. */
+  hidden?: boolean;
 }
 
 /** Ordered as the providers appear in marketing copy. */
@@ -125,6 +127,8 @@ export const PROVIDERS: ProviderInfo[] = [
     logo: PROVIDER_LOGO_SRC.BROWSERLESS,
     browserRegion: "us-west",
     marketed: false,
+    // Hidden while every session fails with HTTP 401.
+    hidden: true,
   },
   {
     id: "CLOUDFLARE",
@@ -150,6 +154,12 @@ export const PROVIDERS_BY_ID: Record<string, ProviderInfo> = Object.fromEntries(
   PROVIDERS.map((p) => [p.id, p])
 );
 
+/** Result providers left out of every leaderboard, chart, and provider page. */
+export const HIDDEN_PROVIDER_IDS: ReadonlySet<string> = new Set([
+  "KERNEL_HEADFUL",
+  ...PROVIDERS.filter((p) => p.hidden).map((p) => p.id),
+]);
+
 export const MARKETED_PROVIDERS = PROVIDERS.filter((p) => p.marketed);
 
 export function providerName(p: ProviderInfo): string {
@@ -162,12 +172,12 @@ export function providerSlug(provider: Pick<ProviderInfo, "displayName">): strin
 }
 
 export function providerFromSlug(slug: string): ProviderInfo | undefined {
-  return PROVIDERS.find((provider) => providerSlug(provider) === slug);
+  return PROVIDERS.find((provider) => !provider.hidden && providerSlug(provider) === slug);
 }
 
 export function providerPath(id: string): string | null {
   const provider = PROVIDERS_BY_ID[id];
-  return provider ? `/provider/${providerSlug(provider)}` : null;
+  return provider && !provider.hidden ? `/provider/${providerSlug(provider)}` : null;
 }
 
 /** "notte.cc" for "https://www.notte.cc". */

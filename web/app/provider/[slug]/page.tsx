@@ -9,7 +9,7 @@ import { PROVIDERS, providerFromSlug, providerSlug } from "@/lib/providers";
 import { loadProviderPage } from "@/lib/provider-page-data";
 
 export function generateStaticParams() {
-  return PROVIDERS.map((provider) => ({ slug: providerSlug(provider) }));
+  return PROVIDERS.filter((provider) => !provider.hidden).map((provider) => ({ slug: providerSlug(provider) }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {

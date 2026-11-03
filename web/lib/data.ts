@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { getMedianCostUsd, getPricePerHour, getPerSessionFee } from "./pricing";
-import { PROVIDERS_BY_ID } from "./providers";
+import { HIDDEN_PROVIDER_IDS, PROVIDERS_BY_ID } from "./providers";
 
 export type {
   PercentileType,
@@ -591,7 +591,6 @@ function loadHistoricalLeaderboardFromFs(
   const benchDir = path.join(resultsDir, benchmark);
   if (!fs.existsSync(benchDir)) return { dates: [], providers: [] };
 
-  const EXCLUDED_PROVIDERS = new Set(["KERNEL_HEADFUL"]);
   const effectiveConcurrency = concurrency ?? 1;
   const dates = new Set<string>();
   const providers = fs
@@ -617,7 +616,7 @@ function loadHistoricalLeaderboardFromFs(
         : effectiveConcurrency === 1
           ? readEntriesFromFsFile(path.join(runDir, "results.jsonl"), date)
           : [];
-      const filtered = entries.filter((entry) => !EXCLUDED_PROVIDERS.has(entry.provider));
+      const filtered = entries.filter((entry) => !HIDDEN_PROVIDER_IDS.has(entry.provider));
       if (filtered.length === 0) continue;
 
       providerName = filtered[0]?.provider;
@@ -627,7 +626,7 @@ function loadHistoricalLeaderboardFromFs(
       points.push(point);
     }
 
-    if (!providerName || points.length === 0 || EXCLUDED_PROVIDERS.has(providerName)) {
+    if (!providerName || points.length === 0 || HIDDEN_PROVIDER_IDS.has(providerName)) {
       return [];
     }
 
@@ -659,7 +658,6 @@ async function loadHistoricalLeaderboardFromGitHub(
 ): Promise<HistoricalLeaderboardResult> {
   const basePath = `results/${benchmark}`;
   const effectiveConcurrency = concurrency ?? 1;
-  const EXCLUDED_PROVIDERS = new Set(["KERNEL_HEADFUL"]);
   const dates = new Set<string>();
   const series: HistoricalLeaderboardResult["providers"] = [];
 
@@ -695,7 +693,7 @@ async function loadHistoricalLeaderboardFromGitHub(
         const entries = parseJsonlLines(await fetchFromGitHub(resultPath)).map(
           (entry) => ({ ...entry, _runDate: date })
         );
-        const filtered = entries.filter((entry) => !EXCLUDED_PROVIDERS.has(entry.provider));
+        const filtered = entries.filter((entry) => !HIDDEN_PROVIDER_IDS.has(entry.provider));
         if (filtered.length === 0) continue;
 
         providerName = filtered[0]?.provider;
@@ -708,7 +706,7 @@ async function loadHistoricalLeaderboardFromGitHub(
       }
     }
 
-    if (!providerName || points.length === 0 || EXCLUDED_PROVIDERS.has(providerName)) {
+    if (!providerName || points.length === 0 || HIDDEN_PROVIDER_IDS.has(providerName)) {
       continue;
     }
 
@@ -817,11 +815,10 @@ export async function loadLeaderboard(
 
   // Filter entries by concurrency level (default to 1 for hello-browser)
   const effectiveConcurrency = concurrency ?? (benchmark === "hello-browser" ? 1 : undefined);
-  const EXCLUDED_PROVIDERS = new Set(["KERNEL_HEADFUL"]);
   const filteredEntries = (effectiveConcurrency != null
     ? allEntries.filter((e) => (e.concurrency ?? 1) === effectiveConcurrency)
     : allEntries
-  ).filter((e) => !EXCLUDED_PROVIDERS.has(e.provider));
+  ).filter((e) => !HIDDEN_PROVIDER_IDS.has(e.provider));
 
   // Use first available provider meta for the overall VM meta display
   const vmMeta = providerMetaMap.size > 0

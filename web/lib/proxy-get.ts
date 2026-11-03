@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { ProxyGetRecord } from "../../src/benchmarks/proxy-get/schema";
-import { PROVIDERS_BY_ID } from "./providers";
+import { HIDDEN_PROVIDER_IDS, PROVIDERS_BY_ID } from "./providers";
 import { proxyAttemptCost, proxyCostExplanation } from "./proxy-get-cost";
 import type { VmMeta } from "./data-shared";
 
@@ -166,7 +166,7 @@ async function loadProxyGetEntriesUncached(allDates = false): Promise<ProxyGetRe
     }));
     entries = loaded.flat();
   }
-  return entries;
+  return entries.filter((entry) => !HIDDEN_PROVIDER_IDS.has(entry.provider));
 }
 
 export async function loadProxyRunMeta(provider: string, runDate: string): Promise<VmMeta | undefined> {
