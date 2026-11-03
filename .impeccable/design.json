@@ -1,0 +1,149 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-28T16:36:19.536156+00:00",
+  "title": "Design System: BrowserArena website access",
+  "extensions": {
+    "scope": {
+      "surface": "/website-access",
+      "includes": "Implemented report and inherited BrowserArena shell",
+      "evidence": [
+        "web/app/website-access/results.tsx",
+        "web/app/website-access/results.module.css",
+        "web/app/globals.css",
+        "web/app/layout.tsx",
+        "web/components/benchmarks/benchmark-shell.tsx",
+        "web/components/benchmarks/benchmark.module.css",
+        "web/components/benchmarks/sidebar.module.css",
+        "web/components/ui/navbar.tsx",
+        "web/components/logo.module.css",
+        "web/components/footer-wordmark.module.css",
+        ".impeccable/review/desktop.png",
+        ".impeccable/review/mobile.png"
+      ],
+      "disposition": "ship at narrow UI scope (supplied final review)",
+      "resolvedFindings": [
+        "Evidence keyboard focus transfer",
+        "Sticky mobile website names"
+      ],
+      "verification": "Source and supplied screenshots only; no whole-app audit, live deployment, runner or overall playback verification.",
+      "inventory": {
+        "originalReviewedVisits": 300,
+        "originalScreenshots": 300,
+        "originalRecordings": 180,
+        "followupRecordings": 120
+      },
+      "mediaState": "Supplied captures show archived replays with video hosting unconfigured; follow-ups are excluded from scores."
+    },
+    "typographyMeta": {
+      "title": {
+        "displayName": "Report title",
+        "purpose": "Reduces to 28px at max-width 767px."
+      },
+      "count": {
+        "displayName": "Visit count",
+        "purpose": "Monospace accessible / planned counts."
+      }
+    },
+    "shadows": [
+      {
+        "name": "shell-drawer",
+        "value": "0 8px 32px rgb(0 0 0 / 15%)",
+        "purpose": "Inherited mobile sidebar only."
+      }
+    ],
+    "motion": [
+      {
+        "name": "dashboard-entry",
+        "value": "160ms ease-out",
+        "purpose": "Inherited entry; disabled for reduced motion."
+      },
+      {
+        "name": "drawer-entry",
+        "value": "180ms ease-out",
+        "purpose": "Inherited mobile sidebar entry; disabled for reduced motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "report-stack-max",
+        "value": "767px"
+      },
+      {
+        "name": "sidebar-drawer-max",
+        "value": "1279px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Download results",
+      "kind": "button",
+      "refersTo": "download",
+      "description": "Outlined report export link.",
+      "html": "<a class=\"ds-download\" href=\"/website-access/export\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3\"/></svg>Download results</a>",
+      "css": ".ds-download{display:inline-flex;align-items:center;gap:7px;white-space:nowrap;border:1px solid var(--foreground, oklch(0 0 0));border-radius:5px;padding:8px 12px;font:12px/1.6 var(--font-sans, \"Plus Jakarta Sans\", sans-serif);color:var(--foreground, oklch(0 0 0));text-decoration:none}.ds-download:hover{background:var(--secondary, oklch(0.96 0.02 75))}.ds-download:focus-visible{outline:2px solid var(--foreground, oklch(0 0 0));outline-offset:3px}"
+    },
+    {
+      "name": "Website search",
+      "kind": "input",
+      "refersTo": "search",
+      "description": "Labeled native search field.",
+      "html": "<label class=\"ds-search\">Find a website<input type=\"search\" placeholder=\"Search domains\"></label>",
+      "css": ".ds-search{display:grid;gap:4px;font:600 11px/1.6 var(--font-sans, \"Plus Jakarta Sans\", sans-serif);color:var(--foreground, oklch(0 0 0))}.ds-search input{border:1px solid var(--input, oklch(0.9401 0 0));border-radius:4px;background:var(--background, oklch(0.9940 0 0));padding:8px 10px;min-height:36px;font:400 12px/1.6 var(--font-sans, \"Plus Jakarta Sans\", sans-serif);color:var(--foreground, oklch(0 0 0))}.ds-search input::placeholder{color:var(--muted-foreground, oklch(0.4386 0 0))}.ds-search input:focus-visible{outline:2px solid var(--foreground, oklch(0 0 0));outline-offset:3px}"
+    },
+    {
+      "name": "Current benchmark",
+      "kind": "nav",
+      "refersTo": "navigation-active",
+      "description": "Inherited sidebar current-route treatment; compact laptop padding.",
+      "html": "<nav aria-label=\"Choose benchmark\"><a class=\"ds-nav\" aria-current=\"page\" href=\"/website-access\">Website Access</a></nav>",
+      "css": ".ds-nav{display:flex;align-items:center;gap:10px;min-height:44px;padding:12px;border:1px solid var(--foreground, oklch(0 0 0));border-radius:3px;background:var(--foreground, oklch(0 0 0));color:var(--background, oklch(0.9940 0 0));font:13px/1.5 var(--font-sans, \"Plus Jakarta Sans\", sans-serif);text-decoration:none;transition:background 150ms,border-color 150ms,color 150ms}.ds-nav:hover{border-color:color-mix(in oklab,var(--foreground, oklch(0 0 0)) 50%,transparent)}.ds-nav:focus-visible{outline:2px solid var(--foreground, oklch(0 0 0));outline-offset:3px}"
+    },
+    {
+      "name": "Accessible outcome",
+      "kind": "chip",
+      "refersTo": "outcome-accessible",
+      "description": "Noninteractive outcome label; color always accompanies text.",
+      "html": "<span class=\"ds-outcome\">Accessible</span>",
+      "css": ".ds-outcome{padding:3px 7px;border-radius:3px;background:#e1f0e7;color:#205836;font:11px/1.6 var(--font-sans, \"Plus Jakarta Sans\", sans-serif)}"
+    },
+    {
+      "name": "Evidence article / archived replay",
+      "kind": "card",
+      "description": "Open evidence container with the implemented unconfigured-hosting message; static excerpt without sample media.",
+      "html": "<article class=\"ds-evidence\"><header><h4>Provider</h4></header><p class=\"ds-caption\">Original scored visit · round 1 · 60s</p><div class=\"ds-replay\"><p><strong>Original scored recording</strong> · 60s</p><p class=\"ds-muted\">Replay archived; video hosting is not configured for this deployment.</p></div></article>",
+      "css": ".ds-evidence{min-width:0;border-top:1px solid var(--foreground, oklch(0 0 0));padding-top:12px;color:var(--foreground, oklch(0 0 0));font:14px/1.6 var(--font-sans, \"Plus Jakarta Sans\", sans-serif)}.ds-evidence header{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}.ds-evidence h4{margin:0;font-size:14px;font-weight:650}.ds-caption{font-size:11px;color:var(--muted-foreground, oklch(0.4386 0 0));margin-top:7px}.ds-replay{margin-top:12px;border-top:1px solid var(--border,oklch(0.9722 0.0034 247.8581));padding-top:10px;font-size:11px}.ds-replay p{margin:0 0 6px}.ds-muted{color:var(--muted-foreground, oklch(0.4386 0 0))}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Reviewable evidence",
+    "overview": "BrowserArena’s existing amber wordmark and header frame a compact, neutral evidence report. Preserve that identity: readable comparisons, restrained outcome colors, monospace counts and original screenshots carry the information.\n\nThis document covers the implemented `/website-access` surface and the shell it inherits, based on source and the supplied desktop/mobile captures. It is not an audit of the entire application. Light-theme captures are the visual evidence; dark-theme tokens exist in globals but were not visually reviewed here.",
+    "keyCharacteristics": [
+      "Compact comparison table with persistent website context.",
+      "Original evidence, review reasons and replay provenance remain adjacent.",
+      "Amber shell identity; quiet report surfaces."
+    ],
+    "rules": [
+      {
+        "name": "The Label Rule",
+        "body": "Outcome color accompanies letters or explicit labels; it never carries the result alone.",
+        "section": "colors"
+      },
+      {
+        "name": "The Provenance Rule",
+        "body": "Keep original evidence, later recordings and availability separate in both labels and claims.",
+        "section": "components"
+      }
+    ],
+    "dos": [
+      "Do preserve the inherited BrowserArena shell and compact report hierarchy.",
+      "Do keep site names visible during horizontal scrolling and move keyboard focus into selected evidence.",
+      "Do label original recordings, follow-ups and missing media explicitly."
+    ],
+    "donts": [
+      "Don't use follow-up recordings to change original scores.",
+      "Don't replace unavailable media with a working-playback claim.",
+      "Don't extend this surface’s ship disposition to the full app, runner or live deployment."
+    ]
+  }
+}

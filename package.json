@@ -23,7 +23,8 @@
     "bench": "npm run build && node dist/cli.js",
     "test": "tsx --test src/providers/*.test.ts src/benchmarks/*/*.test.ts",
     "test:tinyfish": "tsx --test src/integration/tinyfish.test.ts",
-    "check-regressions": "npm --prefix web run check-regressions --"
+    "check-regressions": "npm --prefix web run check-regressions --",
+    "access": "npm run build && node dist/benchmarks/website-access/cli.js"
   },
   "author": "junhsss <junhsssr@gmail.com>",
   "devDependencies": {

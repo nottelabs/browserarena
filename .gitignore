@@ -42,3 +42,7 @@ Thumbs.db
 build/
 coverage/
 .run-and-publish.lock
+
+# Local evidence and UI review captures
+website-access-runs/
+.impeccable/review/

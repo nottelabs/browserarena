@@ -73,6 +73,12 @@ paid TinyFish session, connects over CDP, navigates to BrowserArena's controlled
 bootstrap page, checks its response and title, and terminates the session in
 cleanup even when an assertion fails.
 
+## Website access benchmark
+
+The `/website-access` report compares 300 reviewed visits across 20 difficult websites and five providers, with original screenshots and separately labelled replay provenance. The opt-in collector captures each visit before human review; it does not schedule traffic or score HTTP responses automatically.
+
+Start with `npm run access -- plan config/website-access/difficult-20.json`. See [the protocol, full runner and evidence publishing instructions](docs/benchmarks/website-access.md) before a live campaign.
+
 ## Browser Lifecycle benchmark
 
 The core benchmark measures the minimal end-to-end lifecycle for a remote Chrome session:

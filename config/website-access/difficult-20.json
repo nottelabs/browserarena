@@ -1,0 +1,178 @@
+{
+  "rounds": 3,
+  "providers": [
+    "browserbase",
+    "kernel",
+    "browser-use",
+    "steel",
+    "notte"
+  ],
+  "viewport": {
+    "width": 1365,
+    "height": 900
+  },
+  "observation_ms": 60000,
+  "captures_ms": [
+    20000,
+    60000
+  ],
+  "cooldown_ms": 5000,
+  "targets": [
+    {
+      "domain": "celine.com",
+      "url": "https://celine.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-090",
+      "expected_text": null,
+      "id": "s01"
+    },
+    {
+      "domain": "bloomingdales.com",
+      "url": "https://bloomingdales.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-089",
+      "expected_text": null,
+      "id": "s02"
+    },
+    {
+      "domain": "marriott.com",
+      "url": "https://marriott.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-092",
+      "expected_text": null,
+      "id": "s03"
+    },
+    {
+      "domain": "douglas.de",
+      "url": "https://douglas.de/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-028",
+      "expected_text": null,
+      "id": "s04"
+    },
+    {
+      "domain": "edinarealty.com",
+      "url": "https://edinarealty.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-032",
+      "expected_text": null,
+      "id": "s05"
+    },
+    {
+      "domain": "longrealty.com",
+      "url": "https://longrealty.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-046",
+      "expected_text": null,
+      "id": "s06"
+    },
+    {
+      "domain": "realtysouth.com",
+      "url": "https://realtysouth.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-061",
+      "expected_text": null,
+      "id": "s07"
+    },
+    {
+      "domain": "adidas.com",
+      "url": "https://adidas.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-002",
+      "expected_text": null,
+      "id": "s08"
+    },
+    {
+      "domain": "loopnet.com",
+      "url": "https://loopnet.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-091",
+      "expected_text": null,
+      "id": "s09"
+    },
+    {
+      "domain": "flo.com.tr",
+      "url": "https://flo.com.tr/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-070",
+      "expected_text": null,
+      "id": "s10"
+    },
+    {
+      "domain": "gamestop.com",
+      "url": "https://gamestop.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-005",
+      "expected_text": null,
+      "id": "s11"
+    },
+    {
+      "domain": "realtor.com",
+      "url": "https://realtor.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-012",
+      "expected_text": null,
+      "id": "s12"
+    },
+    {
+      "domain": "easyjet.com",
+      "url": "https://easyjet.com/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-087",
+      "expected_text": null,
+      "id": "s13"
+    },
+    {
+      "domain": "reddit.com",
+      "url": "https://www.reddit.com/r/technology/",
+      "source": "Stealth Bench v2",
+      "source_task": "shs100-093",
+      "expected_text": null,
+      "id": "s14"
+    },
+    {
+      "domain": "temu.com",
+      "url": "https://www.temu.com/60w-fast-charging-usb-to-type-c-cable-high-speed-data-sync-for-iphone-15-16-for--pro-for-ipad-for-samsung-for-xiaomi-other-devices-g-605554969821574.html",
+      "source": "String Web Data Frontier",
+      "expected_text": "60W Fast Charging USB to Type-C Cable, High-Speed Data Sync, for iPhone 15/16, for MacBook Air/Pro, for iPad, for SamSung, for Xiaomi Other Devices",
+      "id": "s15"
+    },
+    {
+      "domain": "allegro.pl",
+      "url": "https://allegro.pl/oferta/bukiet-roz-roze-sztuczne-kwiaty-jak-zywe-prezent-walentynki-piekne-mydlane-16842279548",
+      "source": "String Web Data Frontier",
+      "expected_text": "BUKIET R\u00d3\u017b R\u00d3\u017bE SZTUCZNE KWIATY JAK \u017bYWE PREZENT",
+      "id": "s16"
+    },
+    {
+      "domain": "mouser.com",
+      "url": "https://www.mouser.com/ProductDetail/DFRobot/FIT1030?qs=6avfeC6zeS76UUpWZZX%252B0w%3D%3D",
+      "source": "String Web Data Frontier",
+      "expected_text": "426-FIT1030",
+      "id": "s17"
+    },
+    {
+      "domain": "idealista.com",
+      "url": "https://www.idealista.com/venta-viviendas/madrid-madrid/",
+      "source": "String Web Data Frontier",
+      "expected_text": "Madrid",
+      "id": "s18"
+    },
+    {
+      "domain": "g2.com",
+      "url": "https://www.g2.com/categories/emerging-ai-software?order=g2_score&page=92&_pjax=%23ajax-container#product-list",
+      "source": "String Web Data Frontier",
+      "expected_text": "Best Emerging AI Software - Page 92",
+      "id": "s19"
+    },
+    {
+      "domain": "yelp.com",
+      "url": "https://www.yelp.com/search?find_desc=mexican+restuarant&find_loc=Chicago%2C+IL",
+      "source": "String Web Data Frontier",
+      "expected_text": "Top 10 Best mexican restaurant Near Chicago, Illinois",
+      "id": "s20"
+    }
+  ],
+  "schemaVersion": 1,
+  "viewport_mode": "requested"
+}
