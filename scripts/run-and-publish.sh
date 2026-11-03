@@ -71,7 +71,16 @@ if [[ ! "$PROVIDER_TIMEOUT" =~ ^[1-9][0-9]*$ ]]; then
   echo "[ERROR] --provider-timeout must be a positive integer number of seconds" >&2
   exit 2
 fi
-command -v timeout >/dev/null || { echo "[ERROR] GNU timeout is required" >&2; exit 1; }
+# Ubuntu 26.04 ships uutils timeout, whose --kill-after leaves the provider's
+# children running. GNU coreutils stays installed there as gnutimeout.
+TIMEOUT_BIN=""
+for candidate in timeout gnutimeout; do
+  if [[ "$("$candidate" --version 2>/dev/null)" == *"GNU coreutils"* ]]; then
+    TIMEOUT_BIN="$candidate"
+    break
+  fi
+done
+[[ -n "$TIMEOUT_BIN" ]] || { echo "[ERROR] GNU timeout is required (timeout or gnutimeout)" >&2; exit 1; }
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
@@ -163,7 +172,7 @@ for p in "${PROV_LIST[@]}"; do
   # after 30s if SIGTERM is ignored. Do not use --foreground: it leaves children
   # outside the timeout's process group.
   provider_status=0
-  timeout --kill-after=30s "${PROVIDER_TIMEOUT}s" node dist/cli.js \
+  "$TIMEOUT_BIN" --kill-after=30s "${PROVIDER_TIMEOUT}s" node dist/cli.js \
     --benchmark="$BENCHMARK" \
     --provider="$p" \
     --run-date="$DATE" \
