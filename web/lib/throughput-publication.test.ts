@@ -20,7 +20,7 @@ function history(runs: Record<string, string[]>): ThroughputHistory {
 
 const yesterday = "2026-10-27";
 const today = "2026-10-28";
-const split = history({ STEEL: [yesterday], NOTTE: [yesterday, today], BROWSERLESS: [yesterday, today], TINYFISH: [today] });
+const split = history({ STEEL: [yesterday], NOTTE: [yesterday, today], HYPERBROWSER: [yesterday, today], TINYFISH: [today] });
 
 test("morning publication keeps the complete prior day, including when a provider joins today", () => {
   const result = throughputPublication(split);
@@ -32,7 +32,7 @@ test("morning publication keeps the complete prior day, including when a provide
 });
 
 test("the default advances when the other region arrives, even with failed providers", () => {
-  const complete = history({ STEEL: [yesterday, today], NOTTE: [yesterday, today], BROWSERLESS: [yesterday, today] });
+  const complete = history({ STEEL: [yesterday, today], NOTTE: [yesterday, today], HYPERBROWSER: [yesterday, today] });
   assert.equal(throughputPublication(complete).selectedDate, today);
 });
 
@@ -65,8 +65,8 @@ test("publication reads measured attempts at the selected concurrency and pins e
   try {
     fs.mkdirSync(path.join(root, "web"));
     process.chdir(path.join(root, "web"));
-    for (const provider of ["STEEL", "NOTTE", "BROWSERLESS"]) write(provider, yesterday, 1);
-    for (const provider of ["NOTTE", "BROWSERLESS", "TINYFISH"]) write(provider, today, 1);
+    for (const provider of ["STEEL", "NOTTE", "HYPERBROWSER"]) write(provider, yesterday, 1);
+    for (const provider of ["NOTTE", "HYPERBROWSER", "TINYFISH"]) write(provider, today, 1);
     write("STEEL", today, 1, true); // Warm-up-only upload cannot complete the day.
     write("STEEL", today, 10); // Another concurrency cannot complete c1 either.
     write("KERNEL_HEADFUL", "2026-10-26", 1); // Hidden variant cannot block publication.
