@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { parseStealth, rankStealth, loadStealthRuns, STEALTH_PROVIDERS } from "./stealth";
@@ -37,4 +39,32 @@ test("history loads only valid aggregate files and fails on contaminated data", 
     writeFileSync(join(dir, "visits.jsonl"), "private");
     assert.throws(() => loadStealthRuns(dir));
   } finally { rmSync(dir, { recursive: true }); }
+});
+
+test("the deployment validator rejects malformed committed results", () => {
+  const root = mkdtempSync(join(tmpdir(), "score-deployment-"));
+  const cwd = join(root, "web");
+  const results = join(root, "results", "stealth");
+  mkdirSync(cwd);
+  mkdirSync(results, { recursive: true });
+  const check = () => spawnSync(process.execPath, [
+    "--import", createRequire(__filename).resolve("tsx"),
+    join(__dirname, "../scripts/validate-stealth.ts"),
+  ], { cwd, encoding: "utf8" });
+  try {
+    assert.equal(check().status, 0);
+    const file = join(results, "2026-11-02.json");
+    writeFileSync(file, JSON.stringify(fixture()));
+    assert.equal(check().status, 0);
+    for (const value of [
+      { ...fixture(), websites: ["PRIVATE_SENTINEL"] },
+      { ...fixture(), providers: [] },
+    ]) {
+      writeFileSync(file, JSON.stringify(value));
+      const result = check();
+      assert.equal(result.status, 1);
+      assert.match(result.stderr, /Deployment refused/);
+      assert.doesNotMatch(result.stdout + result.stderr, /PRIVATE_SENTINEL/);
+    }
+  } finally { rmSync(root, { recursive: true }); }
 });

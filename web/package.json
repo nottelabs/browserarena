@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx scripts/validate-stealth.ts && next build",
     "start": "next start",
     "check-regressions": "tsx scripts/check-regressions.ts",
     "test": "tsx --test lib/*.test.ts",
