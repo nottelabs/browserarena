@@ -2,9 +2,10 @@
 
 Run a fixed campaign of fresh sessions against Cloudflare Turnstile, reCAPTCHA v2
 and hCaptcha. The supported presets are Kernel, Browserbase, Browser Use, Steel
-and Notte. This benchmark is opt-in: it has no cron entry and does not use the
-lifecycle publisher. The website at `/captcha` reads reviewed campaign exports;
-`GET /api/captcha` exposes the same data.
+and Notte. Campaigns can be run by hand, and the US West runner publishes one
+every day (see [Daily run](#daily-run)). It does not use the lifecycle publisher.
+The website at `/captcha` reads campaign exports; `GET /api/captcha` exposes the
+same data.
 
 ## Run a campaign
 
@@ -94,6 +95,31 @@ run; test widgets cannot count as accepted tokens. Challenge difficulty varies
 per visit and automatic clearance can count as success. This is neither a
 visual-puzzle accuracy benchmark nor a test of Cloudflare's full interstitial.
 
+## Daily run
+
+`scripts/run-captcha-and-publish.sh` runs one campaign from the US West runner,
+exports it as `results/captcha/<date>-west-v3.json` and pushes that file to
+`main` as `browserarena-bot (us-west)`. It resets the checkout to `origin/main`,
+reuses the runner's `.env`, and takes the checkout lock and the comparison lock
+first, so it queues behind the other jobs on the box instead of overlapping them.
+
+```cron
+0 8 * * * /home/ubuntu/browserarena/scripts/run-captcha-and-publish.sh
+```
+
+The default is 5 attempts per provider per CAPTCHA type: 75 paid sessions and
+about 30 minutes. `--runs N` changes it, `--dry-run` stops before the commit, and
+`--date YYYY-MM-DD` names the campaign. Guards:
+
+- A date that already has a published campaign is never run again.
+- Only a complete campaign is published. One that exits with an error, halts or is
+  interrupted is kept as private evidence in `.captcha-runs/daily-*`, and the
+  script writes `.captcha-runs/needs-review`. Later runs refuse to start until
+  someone has reconciled the provider sessions it names and removed that file.
+- The campaign has a two-hour limit. At the limit it gets SIGTERM so active
+  attempts can finish cleanup, and SIGKILL only ten minutes later.
+- Private evidence older than two weeks is deleted after a successful push.
+
 ## Export results for review
 
 ```bash
@@ -101,7 +127,8 @@ npm run captcha:export -- .captcha-runs/repeated-campaign 2026-10-29-west-v3
 ```
 
 This writes one new `results/captcha/<id>.json` locally. It never pushes or
-updates a live site. Review that file in a PR. The site bundles the files from
+updates a live site. For a manual campaign, review that file in a PR; the daily
+run above publishes its own. The site bundles the files from
 its own revision, so a preview can display proposed results without fetching
 results from another branch. `/captcha?campaign=<id>` selects an exact campaign;
 unknown IDs return not found. No campaigns produces an explicit empty state.
