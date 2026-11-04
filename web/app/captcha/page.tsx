@@ -58,27 +58,24 @@ async function CampaignView({ selected }: { selected: string }) {
         </p>}
         <div className={styles.tableScroll} role="region" aria-label="Provider CAPTCHA results" tabIndex={0}>
           <table className={styles.table}>
-            <caption>Outcomes per attempted session. Expand a result to inspect every round.</caption>
             <thead><tr><th scope="col">Provider</th>{Object.entries(titles).map(([type, title]) => <th scope="col" key={type}>{title}<span>{type === "hcaptcha" ? "Token delivery only" : "Server acceptance"}</span></th>)}</tr></thead>
             <tbody>{campaign.providers.map(provider => <tr key={provider}>
               <th scope="row">{names[provider]}</th>
               {cells.filter(cell => cell.provider === provider).map(cell => {
                 const delivery = cell.type === "hcaptcha";
                 const count = delivery ? cell.token_delivered : cell.verified;
-                const interval = delivery ? cell.delivery_interval_95 : cell.acceptance_interval_95;
                 const median = delivery ? cell.delivered_median_ms : cell.accepted_median_ms;
-                const rate = cell.attempted ? Math.round((count / cell.attempted) * 100) : 0;
-                return <td key={cell.type} data-rate={rate === 100 ? "full" : rate === 0 ? "zero" : "partial"}><details>
-                  <summary aria-label={`${names[provider]} ${titles[cell.type]}: ${count} of ${cell.attempted} ${delivery ? "delivered" : "accepted"}`}>
-                    <strong>{count}/{cell.attempted}</strong> {delivery ? "delivered" : "accepted"}
-                  </summary>
-                  <ol className={styles.rounds}>{campaign.attempts.filter(row => row.provider === provider && row.type === cell.type).sort((a, b) => a.round - b.round).map(row => <li key={row.id} data-outcome={row.status}>
-                    Round {row.round}: {outcomes[row.status]}{row.status === "error" ? ` during ${row.stage}` : ""}{row.cleanup_failed ? "; cleanup failed" : ""}
-                  </li>)}</ol>
-                </details>
-                  <span className={styles.bar} aria-hidden="true"><i style={{ width: `${rate}%` }} /></span>
-                  {median !== null && <span className={styles.stat}>{(median / 1000).toFixed(1)}s median on {delivery ? "delivery" : "acceptance"}</span>}
-                  <span className={styles.stat}>{interval ? `${Math.round(interval[0] * 100)}–${Math.round(interval[1] * 100)}% interval (95%)` : "No attempts"}</span>
+                const rate = cell.attempted ? count / cell.attempted : 0;
+                const rows = campaign.attempts.filter(row => row.provider === provider && row.type === cell.type).sort((a, b) => a.round - b.round);
+                return <td key={cell.type} data-rate={rate === 1 ? "full" : rate === 0 ? "zero" : "partial"}>
+                  <div className={styles.score}>
+                    <strong aria-label={`${names[provider]} ${titles[cell.type]}: ${count} of ${cell.attempted} ${delivery ? "delivered" : "accepted"}`}>{count}/{cell.attempted}</strong>
+                    {median !== null && <span className={styles.time}>{(median / 1000).toFixed(1)}s</span>}
+                  </div>
+                  <ol className={styles.rounds} aria-label="Rounds">{rows.map(row => {
+                    const label = `Round ${row.round}: ${outcomes[row.status]}${row.status === "error" ? ` during ${row.stage}` : ""}${row.cleanup_failed ? "; cleanup failed" : ""}`;
+                    return <li key={row.id} data-outcome={row.status} title={label} aria-label={label} />;
+                  })}{Array.from({ length: cell.not_run }, (_, index) => <li key={`not-run-${index}`} data-outcome="not_run" title="Not run" aria-label="Not run" />)}</ol>
                   {cell.not_run > 0 && <span className={styles.stat}>{cell.not_run} not run</span>}
                   {cell.cleanup_errors > 0 && <span className={styles.stat}>{cell.cleanup_errors} cleanup failure{cell.cleanup_errors === 1 ? "" : "s"}</span>}
                 </td>;
@@ -86,18 +83,12 @@ async function CampaignView({ selected }: { selected: string }) {
             </tr>)}</tbody>
           </table>
         </div>
-        <p className={styles.context}>Errors count in the denominator. Times include navigation and only successful outcomes. Small samples are exploratory; they do not establish a speed ranking.</p>
-        <a className={styles.link} href={`/api/captcha?campaign=${campaign.id}`}>View campaign JSON</a>
+        <p className={styles.legend}>One dot per attempt: green succeeded, amber timed out, red failed. Time is the median of successful attempts.</p>
       </> : <div className={styles.empty}>
         <h2>No CAPTCHA campaigns published yet</h2>
         <p>The benchmark is ready for opt-in trials across Kernel, Browserbase, Browser Use, Steel and Notte. Results will appear here after a campaign is run and its export is reviewed.</p>
         <a className={styles.link} href="https://github.com/nottelabs/browserarena/blob/main/docs/captcha.md">Run a campaign</a>
       </div>}
-      <section className={styles.method} aria-labelledby="measurement-title">
-        <h2 id="measurement-title">What these results measure</h2>
-        <p>Turnstile and reCAPTCHA require an independently observed server acceptance. hCaptcha uses NopeCHA’s enterprise demo: delivery means the demo page reports success. Its demo does not verify that token on a server.</p>
-        <p>Each attempt uses a fresh 1920 × 1080 session with native solving and the provider’s proxy preset. No warm-ups are discarded and attempts are not retried. Fixtures choose challenge difficulty dynamically, so automatic clearance can count as acceptance. This does not measure visual-puzzle accuracy or Cloudflare’s full interstitial challenge.</p>
-      </section>
     </section>
   </BenchmarkShell>;
 }
