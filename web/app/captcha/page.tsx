@@ -43,7 +43,7 @@ async function CampaignView({ selected }: { selected: string }) {
       </header>
       {campaign ? <>
         <p className={styles.summary}>
-          Latest run <strong>{formatDate(campaign.started_at)}</strong> · {campaign.rounds} fresh sessions per provider and CAPTCHA · {SOLVE_WINDOW_SECONDS} seconds to solve each
+          {campaign.id === campaigns[0].id ? "Latest run" : "Run on"} <strong>{formatDate(campaign.started_at)}</strong> · {campaign.rounds} fresh sessions per provider and CAPTCHA · {SOLVE_WINDOW_SECONDS} seconds to solve each
         </p>
         {campaigns.length > 1 && <p className={styles.runs}>Other runs: {campaigns.filter(item => item.id !== campaign.id).map((item, index) => <span key={item.id}>
           {index > 0 && ", "}<Link href={`/captcha?campaign=${item.id}`}>{formatDate(item.started_at)}{!item.complete ? " (partial)" : ""}</Link></span>)}
