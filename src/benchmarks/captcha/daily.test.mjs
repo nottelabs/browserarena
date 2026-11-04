@@ -158,6 +158,21 @@ test("a result whose push failed is pushed by the next run instead of being rese
   assert.equal(cliCalls().length, 1);
 });
 
+test("a dry run leaves a pending result unpushed, in place, and runs no campaign", t => {
+  const { work, origin, reject, cliCalls, run, published } = setup(t);
+  fs.writeFileSync(reject, "");
+  assert.equal(run().status, 1);
+  fs.unlinkSync(reject);
+  const before = git(origin, "rev-parse", "main").trim();
+  const dry = run(["--dry-run"], {}, { reset: true });
+  assert.equal(dry.status, 0, dry.stdout + dry.stderr);
+  assert.match(dry.stdout + dry.stderr, /--dry-run: 1 commit/);
+  assert.equal(git(origin, "rev-parse", "main").trim(), before);
+  assert.ok(!published().includes(`results/captcha/${ID}.json`));
+  assert.match(git(work, "log", "origin/main..HEAD", "--format=%s"), /results: captcha us-west/);
+  assert.equal(cliCalls().length, 1);
+});
+
 test("local commits that are not CAPTCHA results are never pushed or reset away", t => {
   const { work, cliCalls, run, published } = setup(t);
   fs.writeFileSync(path.join(work, "notes.txt"), "someone's work\n");

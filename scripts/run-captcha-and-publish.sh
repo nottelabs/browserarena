@@ -156,6 +156,10 @@ if [[ "$pending" -gt 0 ]]; then
     echo "$unrelated" >&2
     exit 1
   fi
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo "[INFO] --dry-run: $pending commit(s) from an earlier failed push are waiting to be pushed; stopping without pushing, resetting or running a campaign"
+    exit 0
+  fi
   echo "[INFO] pushing $pending commit(s) left by an earlier failed push"
   push_main || { echo "[ERROR] could not push the pending results; leaving them in place" >&2; exit 1; }
 fi

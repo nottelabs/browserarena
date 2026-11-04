@@ -108,7 +108,8 @@ first, so it queues behind the other jobs on the box instead of overlapping them
 ```
 
 The default is 5 attempts per provider per CAPTCHA type: 75 paid sessions and
-about 30 minutes. `--runs N` changes it, `--dry-run` stops before the commit, and
+about 30 minutes. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
+push failed, reports the waiting result without pushing it), and
 `--date YYYY-MM-DD` names the campaign. `--no-reset` keeps the checkout as it is
 and refuses tracked changes. Guards:
 
