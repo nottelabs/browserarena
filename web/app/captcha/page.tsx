@@ -16,6 +16,8 @@ export const metadata: Metadata = {
 };
 const names: Record<string, string> = { kernel: "Kernel", browserbase: "Browserbase", "browser-use": "Browser Use", steel: "Steel", notte: "Notte" };
 const titles: Record<string, string> = { turnstile: "Cloudflare Turnstile", recaptcha: "reCAPTCHA v2", hcaptcha: "hCaptcha" };
+const SOLVE_WINDOW_SECONDS = 180;
+const formatDate = (value: string) => new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", day: "numeric", month: "long", year: "numeric" }).format(new Date(value));
 const outcomes: Record<string, string> = { verified: "Accepted", token_delivered: "Token delivered", timeout: "Timed out", rejected: "Rejected", error: "Error", interrupted: "Interrupted" };
 
 export default function CaptchaPage({ searchParams }: { searchParams: Promise<{ campaign?: string }> }) {
@@ -40,18 +42,12 @@ async function CampaignView({ selected }: { selected: string }) {
         <a className={styles.link} href="https://github.com/nottelabs/browserarena/blob/main/docs/captcha.md">Methodology</a>
       </header>
       {campaign ? <>
-        <nav className={styles.campaigns} aria-label="CAPTCHA campaigns">
-          {campaigns.map(item => <Link key={item.id} href={`/captcha?campaign=${item.id}`} aria-current={item.id === campaign.id ? "page" : undefined}>
-            {item.id}{!item.complete ? " (partial)" : ""}
-          </Link>)}
-        </nav>
-        <ul className={styles.meta} aria-label="Campaign details">
-          <li>{campaign.rounds} planned attempts per provider and CAPTCHA type</li>
-          <li>180-second solve window</li>
-          <li>Protocol v3</li>
-          <li>Started {campaign.started_at.slice(0, 16).replace("T", " ")} UTC</li>
-          <li>{campaign.attempts.length} of {campaign.providers.length * campaign.rounds * 3} attempts recorded</li>
-        </ul>
+        <p className={styles.summary}>
+          Latest run <strong>{formatDate(campaign.started_at)}</strong> · {campaign.rounds} fresh sessions per provider and CAPTCHA · {SOLVE_WINDOW_SECONDS} seconds to solve each
+        </p>
+        {campaigns.length > 1 && <p className={styles.runs}>Other runs: {campaigns.filter(item => item.id !== campaign.id).map((item, index) => <span key={item.id}>
+          {index > 0 && ", "}<Link href={`/captcha?campaign=${item.id}`}>{formatDate(item.started_at)}{!item.complete ? " (partial)" : ""}</Link></span>)}
+        </p>}
         {(!campaign.complete || campaign.halted || campaign.interrupted) && <p className={styles.notice} role="status">
           {campaign.halted ? "Campaign halted. " : campaign.interrupted ? "Campaign interrupted. " : "Partial campaign. "}
           Unrun attempts stay visible; cleanup failures are reported separately from challenge outcomes.
@@ -65,9 +61,8 @@ async function CampaignView({ selected }: { selected: string }) {
                 const delivery = cell.type === "hcaptcha";
                 const count = delivery ? cell.token_delivered : cell.verified;
                 const median = delivery ? cell.delivered_median_ms : cell.accepted_median_ms;
-                const rate = cell.attempted ? count / cell.attempted : 0;
                 const rows = campaign.attempts.filter(row => row.provider === provider && row.type === cell.type).sort((a, b) => a.round - b.round);
-                return <td key={cell.type} data-rate={rate === 1 ? "full" : rate === 0 ? "zero" : "partial"}>
+                return <td key={cell.type}>
                   <div className={styles.score}>
                     <strong aria-label={`${names[provider]} ${titles[cell.type]}: ${count} of ${cell.attempted} ${delivery ? "delivered" : "accepted"}`}>{count}/{cell.attempted}</strong>
                     {median !== null && <span className={styles.time}>{(median / 1000).toFixed(1)}s</span>}
