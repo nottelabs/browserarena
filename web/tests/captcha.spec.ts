@@ -33,6 +33,9 @@ test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile ac
   await expect(page.getByText("1 cleanup failure", { exact: true })).toBeVisible();
   await expect(page.locator('strong[aria-label="Kernel hCaptcha: 1 of 1 delivered"]')).toBeVisible();
   await expect(page.locator('li[aria-label="Round 1: Token delivered"]').first()).toBeVisible();
+  const dot = page.locator('li[aria-label="Round 1: Token delivered"]').first();
+  await dot.focus();
+  await expect.poll(() => dot.evaluate(element => { const tip = getComputedStyle(element, "::after"); return `${tip.visibility} ${tip.content}`; })).toBe('visible "Round 1: Token delivered"');
   const response = await request.get(`/api/captcha?campaign=${campaignId}`);
   expect(response.status()).toBe(200);
   expect((await response.json()).attempts).toHaveLength(10);

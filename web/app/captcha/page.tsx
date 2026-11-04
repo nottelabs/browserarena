@@ -74,8 +74,8 @@ async function CampaignView({ selected }: { selected: string }) {
                   </div>
                   <ol className={styles.rounds} aria-label="Rounds">{rows.map(row => {
                     const label = `Round ${row.round}: ${outcomes[row.status]}${row.status === "error" ? ` during ${row.stage}` : ""}${row.cleanup_failed ? "; cleanup failed" : ""}`;
-                    return <li key={row.id} data-outcome={row.status} title={label} aria-label={label} />;
-                  })}{Array.from({ length: cell.not_run }, (_, index) => <li key={`not-run-${index}`} data-outcome="not_run" title="Not run" aria-label="Not run" />)}</ol>
+                    return <li key={row.id} data-outcome={row.status} data-label={label} aria-label={label} tabIndex={0} />;
+                  })}{Array.from({ length: cell.not_run }, (_, index) => <li key={`not-run-${index}`} data-outcome="not_run" data-label="Not run" aria-label="Not run" tabIndex={0} />)}</ol>
                   {cell.not_run > 0 && <span className={styles.stat}>{cell.not_run} not run</span>}
                   {cell.cleanup_errors > 0 && <span className={styles.stat}>{cell.cleanup_errors} cleanup failure{cell.cleanup_errors === 1 ? "" : "s"}</span>}
                 </td>;

@@ -116,10 +116,10 @@ silently become successes. Preserve private evidence to investigate errors.
 
 The page reports accepted/attempted counts for Turnstile and reCAPTCHA and
 delivered/attempted counts for hCaptcha, with one dot per round and the median
-time of successful attempts. The campaign JSON also carries 95% Wilson intervals.
-Errors remain in the denominator and unrun attempts appear separately. Five
-successes out of five still has a lower bound near 57%; small campaigns are
-exploratory, not reliable speed rankings. Campaigns
+time of successful attempts. Hovering, focusing or tapping a dot names its
+round and outcome. Errors remain in the denominator and unrun attempts appear
+separately. Five successes out of five still has a 95% lower bound near 57%;
+small campaigns are exploratory, not reliable speed rankings. Campaigns
 are never pooled across protocols or dates. Synthetic layout fixtures are not
 published as provider results.
 
