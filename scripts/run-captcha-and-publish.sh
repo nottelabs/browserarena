@@ -7,12 +7,18 @@
 #       [--dry-run] [--no-reset] [--no-install]
 #
 # --runs is attempts per provider per CAPTCHA type (default 5: 75 paid sessions,
-# about 30 minutes). Only a complete campaign is published. A campaign that
-# fails, halts or is interrupted is kept as private evidence under
-# .captcha-runs/ and writes .captcha-runs/needs-review: later runs refuse to
-# start until someone has reconciled the provider sessions and removed it, as
-# docs/captcha.md requires. A result already published for the date is never
-# run again.
+# about 30 minutes). The five providers are always passed explicitly, so a
+# PROVIDER, RUNS or CONCURRENCY in the runner's environment cannot shrink the
+# campaign. Only a complete campaign is published.
+#
+# .captcha-runs/needs-review is written before the campaign starts and removed
+# only once it has exited cleanly. A campaign that fails, halts, is incomplete,
+# or whose publisher is killed mid-run therefore leaves it behind, and later
+# runs refuse to start until someone has reconciled the provider sessions and
+# removed it, as docs/captcha.md requires. A result already published for the
+# date is never run again, and a result committed but not pushed is pushed
+# before anything else, so a failed push does not cost a second paid campaign.
+# --no-reset keeps the checkout as it is and refuses tracked changes.
 
 set -euo pipefail
 
@@ -25,6 +31,9 @@ NO_RESET=0
 NO_INSTALL=0
 REGION=us-west
 PROTOCOL=3
+# Keep in sync with PROVIDERS in src/benchmarks/captcha/protocol.mjs (a test checks it).
+CAPTCHA_PROVIDERS="kernel,browserbase,browser-use,steel,notte"
+PUSH_RETRY_DELAY="${CAPTCHA_PUSH_RETRY_DELAY:-10}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -38,7 +47,7 @@ while [[ $# -gt 0 ]]; do
     --no-reset)  NO_RESET=1; shift ;;
     --no-install) NO_INSTALL=1; shift ;;
     -h|--help)
-      sed -n '2,15p' "$0"; exit 0 ;;
+      sed -n '2,21p' "$0"; exit 0 ;;
     *) echo "[ERROR] unknown arg: $1" >&2; exit 2 ;;
   esac
 done
@@ -49,6 +58,10 @@ if [[ ! "$RUNS" =~ ^([1-9]|1[0-9]|20)$ ]]; then
 fi
 if [[ ! "$TIMEOUT" =~ ^[1-9][0-9]*$ ]]; then
   echo "[ERROR] --timeout must be a positive integer number of seconds" >&2
+  exit 2
+fi
+if [[ ! "$PUSH_RETRY_DELAY" =~ ^[0-9]+$ ]]; then
+  echo "[ERROR] CAPTCHA_PUSH_RETRY_DELAY must be a non-negative integer" >&2
   exit 2
 fi
 [[ -n "$DATE" ]] || DATE="$(date -u +%Y-%m-%d)"
@@ -96,13 +109,62 @@ fi
 
 echo "[INFO] start region=$REGION date=$DATE runs=$RUNS concurrency=$CONCURRENCY timeout=${TIMEOUT}s dry_run=$DRY_RUN no_reset=$NO_RESET repo=$REPO_ROOT"
 
+# A region-tagged identity so commits are attributable per box. Set before any
+# rebase, which also creates commits.
+GIT_AUTHOR_NAME="${GIT_AUTHOR_NAME:-browserarena-bot ($REGION)}"
+GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-bot@browserarena.ai}"
+GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
+GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
+export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+
+push_main() {
+  local attempts=5 delay="$PUSH_RETRY_DELAY" i
+  for i in $(seq 1 $attempts); do
+    if git pull --rebase origin main && git push origin main; then
+      echo "[INFO] push ok on attempt $i"
+      return 0
+    fi
+    echo "[WARN] push failed on attempt $i; retrying in ${delay}s"
+    sleep "$delay"
+    delay=$(( delay * 2 ))
+  done
+  return 1
+}
+
+hold_for_review() {
+  printf '%s date=%s evidence=%s reason=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$DATE" "${OUT:-none}" "$1" > "$REVIEW_MARKER"
+  echo "[ERROR] $1; evidence kept at ${OUT:-none}; wrote $REVIEW_MARKER" >&2
+  exit 1
+}
+
+git fetch origin
+if [[ $NO_RESET -eq 0 ]]; then
+  git checkout main
+elif [[ -n "$(git status --porcelain --untracked-files=no)" ]]; then
+  echo "[ERROR] --no-reset needs a clean index and tracked files; found changes:" >&2
+  git status --short --untracked-files=no >&2
+  exit 1
+fi
+
+# A result committed on an earlier day whose push failed is still unpublished.
+# Push it before the reset below would discard it.
+pending="$(git rev-list --count origin/main..HEAD)"
+if [[ "$pending" -gt 0 ]]; then
+  unrelated="$(git diff --name-only origin/main..HEAD | grep -v '^results/captcha/' || true)"
+  if [[ -n "$unrelated" ]]; then
+    echo "[ERROR] local commits ahead of origin/main touch files other than CAPTCHA results; resolve them by hand:" >&2
+    echo "$unrelated" >&2
+    exit 1
+  fi
+  echo "[INFO] pushing $pending commit(s) left by an earlier failed push"
+  push_main || { echo "[ERROR] could not push the pending results; leaving them in place" >&2; exit 1; }
+fi
+
 if [[ $NO_RESET -eq 0 ]]; then
   echo "[INFO] resetting working tree to origin/main"
-  git fetch origin
-  git checkout main
   git reset --hard origin/main
 else
-  echo "[INFO] --no-reset: skipping fetch/reset"
+  echo "[INFO] --no-reset: leaving the working tree as it is"
 fi
 
 ID="${DATE}-west-v${PROTOCOL}"
@@ -127,24 +189,24 @@ fi
 
 OUT=".captcha-runs/daily-${DATE}-$(date -u +%H%M%S)"
 echo "[INFO] running campaign id=$ID out=$OUT"
+# Written before the first session starts. If this script or the box dies during
+# the campaign, nothing below runs and the marker keeps the next run from
+# starting on top of sessions nobody has checked.
+printf '%s date=%s evidence=%s reason=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$DATE" "$OUT" "campaign started and did not finish" > "$REVIEW_MARKER"
 # SIGTERM lets active attempts finish cleanup, so the kill comes much later than
 # in the lifecycle publisher. Never skip straight to SIGKILL.
 campaign_status=0
 "$TIMEOUT_BIN" --signal=TERM --kill-after=600s "${TIMEOUT}s" node dist/cli.js \
   --benchmark=captcha \
+  --provider="$CAPTCHA_PROVIDERS" \
   --runs="$RUNS" \
   --concurrency="$CONCURRENCY" \
   --out="$OUT" || campaign_status=$?
 
-hold_for_review() {
-  printf '%s date=%s evidence=%s reason=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$DATE" "$OUT" "$1" > "$REVIEW_MARKER"
-  echo "[ERROR] $1; evidence kept at $OUT; wrote $REVIEW_MARKER" >&2
-  exit 1
-}
-
 if [[ $campaign_status -ne 0 ]]; then
   hold_for_review "campaign exited with status $campaign_status"
 fi
+rm -f -- "$REVIEW_MARKER"
 
 echo "[INFO] exporting $ID"
 if ! npm run captcha:export -- "$OUT" "$ID"; then
@@ -164,39 +226,26 @@ then
 fi
 
 git add -- "$RESULT"
-if git diff --cached --quiet; then
+if git diff --cached --quiet -- "$RESULT"; then
   echo "[WARN] nothing staged for $RESULT"
   exit 1
 fi
 
 if [[ $DRY_RUN -eq 1 ]]; then
   echo "[INFO] --dry-run: skipping commit/push. Staged diff:"
-  git diff --cached --stat
+  git diff --cached --stat -- "$RESULT"
   exit 0
 fi
 
-GIT_AUTHOR_NAME="${GIT_AUTHOR_NAME:-browserarena-bot ($REGION)}"
-GIT_AUTHOR_EMAIL="${GIT_AUTHOR_EMAIL:-bot@browserarena.ai}"
-GIT_COMMITTER_NAME="$GIT_AUTHOR_NAME"
-GIT_COMMITTER_EMAIL="$GIT_AUTHOR_EMAIL"
-export GIT_AUTHOR_NAME GIT_AUTHOR_EMAIL GIT_COMMITTER_NAME GIT_COMMITTER_EMAIL
+# Only the result: nothing else in the index goes into this commit.
+git commit -m "results: captcha $REGION $DATE" -- "$RESULT"
 
-git commit -m "results: captcha $REGION $DATE"
+if push_main; then
+  # Private evidence is large (screenshots); keep two weeks of it.
+  find .captcha-runs -maxdepth 1 -type d -name 'daily-*' -mtime +14 -exec rm -rf -- {} +
+  exit 0
+fi
 
-attempts=5
-delay=10
-for i in $(seq 1 $attempts); do
-  git pull --rebase origin main
-  if git push origin main; then
-    echo "[INFO] push ok on attempt $i"
-    # Private evidence is large (screenshots); keep two weeks of it.
-    find .captcha-runs -maxdepth 1 -type d -name 'daily-*' -mtime +14 -exec rm -rf -- {} +
-    exit 0
-  fi
-  echo "[WARN] push failed on attempt $i; rebasing and retrying in ${delay}s"
-  sleep "$delay"
-  delay=$(( delay * 2 ))
-done
-
-echo "[ERROR] push failed after $attempts attempts; evidence kept at $OUT" >&2
+# The commit stays; the next run pushes it before resetting.
+echo "[ERROR] push failed after 5 attempts; $RESULT is committed locally and the next run will retry it. Evidence kept at $OUT" >&2
 exit 1

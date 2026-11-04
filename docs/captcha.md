@@ -109,13 +109,20 @@ first, so it queues behind the other jobs on the box instead of overlapping them
 
 The default is 5 attempts per provider per CAPTCHA type: 75 paid sessions and
 about 30 minutes. `--runs N` changes it, `--dry-run` stops before the commit, and
-`--date YYYY-MM-DD` names the campaign. Guards:
+`--date YYYY-MM-DD` names the campaign. `--no-reset` keeps the checkout as it is
+and refuses tracked changes. Guards:
 
-- A date that already has a published campaign is never run again.
-- Only a complete campaign is published. One that exits with an error, halts or is
-  interrupted is kept as private evidence in `.captcha-runs/daily-*`, and the
-  script writes `.captcha-runs/needs-review`. Later runs refuse to start until
-  someone has reconciled the provider sessions it names and removed that file.
+- A date that already has a published campaign is never run again. A result that
+  was committed but not pushed is pushed first on the next run, so a failed push
+  does not cost a second paid campaign.
+- All five providers are always passed explicitly, so `PROVIDER`, `RUNS` or
+  `CONCURRENCY` in the runner's environment cannot shrink the campaign.
+- Only a complete campaign is published, and only its result file is committed.
+- `.captcha-runs/needs-review` is written before the campaign starts and removed
+  only once it exits cleanly. A campaign that fails, halts or is incomplete, or a
+  publisher that is killed mid-run, leaves it behind. Later runs refuse to start
+  until someone has reconciled the provider sessions it names and removed it. The
+  evidence stays in `.captcha-runs/daily-*`.
 - The campaign has a two-hour limit. At the limit it gets SIGTERM so active
   attempts can finish cleanup, and SIGKILL only ten minutes later.
 - Private evidence older than two weeks is deleted after a successful push.
