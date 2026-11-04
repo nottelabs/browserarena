@@ -18,11 +18,26 @@ const fixture = {
   ]),
 };
 
+const newerId = `${campaignId}-newer`;
+const newerFile = path.join(directory, `${newerId}.json`);
+const newer = { ...fixture, id: newerId, started_at: "2099-01-01T00:00:00Z", finished_at: "2099-01-01T00:02:00Z" };
+
 test.beforeAll(async () => {
   await fs.mkdir(directory, { recursive: true });
   await fs.writeFile(file, JSON.stringify(fixture), { flag: "wx" });
+  await fs.writeFile(newerFile, JSON.stringify(newer), { flag: "wx" });
 });
-test.afterAll(async () => { await fs.unlink(file); });
+test.afterAll(async () => { await fs.unlink(file); await fs.unlink(newerFile); });
+
+test("CAPTCHA page labels only the newest campaign as the latest run", async ({ page }) => {
+  await page.goto("/captcha");
+  await expect(page.getByText("Latest run", { exact: false })).toContainText("1 January 2099");
+  await page.goto(`/captcha?campaign=${newerId}`);
+  await expect(page.getByText("Latest run", { exact: false })).toContainText("1 January 2099");
+  await page.goto(`/captcha?campaign=${campaignId}`);
+  await expect(page.getByText("Run on", { exact: false })).toContainText("28 October 2026");
+  await expect(page.getByText("Latest run", { exact: false })).toHaveCount(0);
+});
 
 test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile access", async ({ page, request }) => {
   await page.goto(`/captcha?campaign=${campaignId}`);
