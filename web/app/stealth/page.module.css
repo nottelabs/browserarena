@@ -1,0 +1,35 @@
+.scores.scores {
+  min-width: 640px;
+  table-layout: fixed;
+}
+
+.scores.scores tr > :first-child {
+  width: 180px;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  text-align: left;
+  color: var(--foreground);
+  background: var(--background);
+  border-right: 1px solid var(--border);
+}
+
+.scores.scores tr > :nth-child(2) {
+  width: 120px;
+  text-align: right;
+}
+
+.scores.scores tbody th:first-child {
+  font-family: var(--font-dm-sans), sans-serif;
+  font-weight: 500;
+  text-align: left;
+}
+
+.scores.scores tbody tr {
+  cursor: default;
+}
+
+.scroll:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
