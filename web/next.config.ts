@@ -32,6 +32,7 @@ const nextConfig: NextConfig = {
   turbopack: { root: new URL("..", import.meta.url).pathname },
   // CAPTCHA campaigns ship from the reviewed revision, including in previews.
   outputFileTracingIncludes: {
+    "/stealth": ["../results/stealth/*.json"],
     "/captcha": ["../results/captcha/*.json"],
     "/api/captcha": ["../results/captcha/*.json"],
   },
