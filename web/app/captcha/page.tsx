@@ -45,8 +45,13 @@ async function CampaignView({ selected }: { selected: string }) {
             {item.id}{!item.complete ? " (partial)" : ""}
           </Link>)}
         </nav>
-        <p className={styles.context}>{campaign.rounds} planned attempts per provider and CAPTCHA type · 180-second solve window · Protocol v3</p>
-        <p className={styles.context}>Started {campaign.started_at.replace("T", " ").replace(".000Z", " UTC")} · {campaign.attempts.length} of {campaign.providers.length * campaign.rounds * 3} attempts recorded</p>
+        <ul className={styles.meta} aria-label="Campaign details">
+          <li>{campaign.rounds} planned attempts per provider and CAPTCHA type</li>
+          <li>180-second solve window</li>
+          <li>Protocol v3</li>
+          <li>Started {campaign.started_at.slice(0, 16).replace("T", " ")} UTC</li>
+          <li>{campaign.attempts.length} of {campaign.providers.length * campaign.rounds * 3} attempts recorded</li>
+        </ul>
         {(!campaign.complete || campaign.halted || campaign.interrupted) && <p className={styles.notice} role="status">
           {campaign.halted ? "Campaign halted. " : campaign.interrupted ? "Campaign interrupted. " : "Partial campaign. "}
           Unrun attempts stay visible; cleanup failures are reported separately from challenge outcomes.
@@ -62,16 +67,18 @@ async function CampaignView({ selected }: { selected: string }) {
                 const count = delivery ? cell.token_delivered : cell.verified;
                 const interval = delivery ? cell.delivery_interval_95 : cell.acceptance_interval_95;
                 const median = delivery ? cell.delivered_median_ms : cell.accepted_median_ms;
-                return <td key={cell.type}><details>
+                const rate = cell.attempted ? Math.round((count / cell.attempted) * 100) : 0;
+                return <td key={cell.type} data-rate={rate === 100 ? "full" : rate === 0 ? "zero" : "partial"}><details>
                   <summary aria-label={`${names[provider]} ${titles[cell.type]}: ${count} of ${cell.attempted} ${delivery ? "delivered" : "accepted"}`}>
                     <strong>{count}/{cell.attempted}</strong> {delivery ? "delivered" : "accepted"}
                   </summary>
-                  <ol className={styles.rounds}>{campaign.attempts.filter(row => row.provider === provider && row.type === cell.type).sort((a, b) => a.round - b.round).map(row => <li key={row.id}>
+                  <ol className={styles.rounds}>{campaign.attempts.filter(row => row.provider === provider && row.type === cell.type).sort((a, b) => a.round - b.round).map(row => <li key={row.id} data-outcome={row.status}>
                     Round {row.round}: {outcomes[row.status]}{row.status === "error" ? ` during ${row.stage}` : ""}{row.cleanup_failed ? "; cleanup failed" : ""}
                   </li>)}</ol>
                 </details>
-                  <span className={styles.stat}>{interval ? `${Math.round(interval[0] * 100)}–${Math.round(interval[1] * 100)}% interval (95%)` : "No attempts"}</span>
+                  <span className={styles.bar} aria-hidden="true"><i style={{ width: `${rate}%` }} /></span>
                   {median !== null && <span className={styles.stat}>{(median / 1000).toFixed(1)}s median on {delivery ? "delivery" : "acceptance"}</span>}
+                  <span className={styles.stat}>{interval ? `${Math.round(interval[0] * 100)}–${Math.round(interval[1] * 100)}% interval (95%)` : "No attempts"}</span>
                   {cell.not_run > 0 && <span className={styles.stat}>{cell.not_run} not run</span>}
                   {cell.cleanup_errors > 0 && <span className={styles.stat}>{cell.cleanup_errors} cleanup failure{cell.cleanup_errors === 1 ? "" : "s"}</span>}
                 </td>;
