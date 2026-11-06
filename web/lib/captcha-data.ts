@@ -36,7 +36,7 @@ export const CAPTCHA_UNSUPPORTED_PROVIDERS: Readonly<Record<string, string>> = {
 
 // Results ship with the reviewed revision, including on PR previews. Never read
 // main's results as a fallback for an empty or incomplete preview campaign.
-// next.config.ts explicitly traces results/captcha/*.json for both consumers.
+// next.config.ts explicitly traces results/captcha/*.json for every consumer.
 export async function loadCaptchaCampaigns(directory = path.join(getResultsDir(), "captcha")) {
   let names: string[];
   try { names = await fs.readdir(/* turbopackIgnore: true */ directory); }

@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   if (!provider) return { title: "Provider" };
   return {
     title: provider.displayName,
-    description: `Lifecycle, throughput, and proxy results for ${provider.displayName}.`,
+    description: `Lifecycle, throughput, proxy, and CAPTCHA results for ${provider.displayName}.`,
   };
 }
 
@@ -53,6 +53,6 @@ async function ProviderView({ slug, date, country }: { slug: string; date: strin
   if (!provider) notFound();
   const data = await loadProviderPage(provider.id, { date: date || undefined, country: country || undefined });
   return <BenchmarkShell benchmark="all" inPage>
-    <ProviderDeepDive provider={provider} slug={slug} lifecycle={data.lifecycle} throughput={data.throughput} proxy={data.proxy} />
+    <ProviderDeepDive provider={provider} slug={slug} lifecycle={data.lifecycle} throughput={data.throughput} proxy={data.proxy} captcha={data.captcha} />
   </BenchmarkShell>;
 }

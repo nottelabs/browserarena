@@ -1,21 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { ExternalLink } from "lucide-react";
 import { ChartContainer, ChartTooltip, ChartTooltipContent, type ChartConfig } from "@/components/ui/chart";
 import { BenchmarkSectionHeader } from "@/components/benchmarks/section-header";
+import { BenchmarkTablePanel } from "@/components/benchmarks/table-panel";
+import { BENCHMARK_TITLES } from "@/components/benchmarks/benchmark-title";
 import styles from "@/components/benchmarks/benchmark.module.css";
+import captchaStyles from "@/components/benchmarks/captcha.module.css";
 import { ProxyViolinChart } from "@/components/proxy-violin-chart";
 import { track, withNotteUtm } from "@/lib/analytics";
 import { calendarDates, filterDatesToRange, HISTORY_RANGES, isIsolatedPoint, type HistoryRangeKey } from "@/lib/history-range";
 import { hasSuccessfulRuns } from "@/lib/ranking";
 import { proxyProviderColor } from "@/lib/proxy-violin";
+import { SUCCESS_WORDS } from "@/lib/captcha-leaderboard";
 import { AGENT_ACTION_LABELS, AGENT_ACTION_TYPES } from "@/lib/browser-throughput-shared";
 import type { HistoricalProviderPoint } from "@/lib/data-shared";
 import type { ProviderInfo } from "@/lib/providers";
-import type { ActionPercentiles, PhaseSamples, ProviderLifecycle, ProviderProxy, ProviderThroughput } from "@/lib/provider-page-data";
+import type { ActionPercentiles, PhaseSamples, ProviderCaptcha, ProviderLifecycle, ProviderProxy, ProviderThroughput } from "@/lib/provider-page-data";
 import { COUNTRY_NAMES, PROXY_COUNTRIES } from "../../src/benchmarks/proxy-get/schema";
 
 type LatencyView = "median" | "p95" | "p99";
@@ -324,14 +328,71 @@ function ProxySection({ data, color, slug }: { data: ProviderProxy; color: strin
   </section>;
 }
 
-export function ProviderDeepDive({ provider, slug, lifecycle, throughput, proxy }: {
+const formatRunDate = (value: string) => new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", day: "numeric", month: "long", year: "numeric" }).format(new Date(value));
+const captchaSeconds = (ms: number | null) => ms === null ? "–" : `${(ms / 1000).toFixed(1)}s`;
+const captchaPercent = (successes: number, attempted: number) => attempted ? `${Math.round(successes / attempted * 100)}%` : "–";
+
+function CaptchaSection({ data, name }: { data: ProviderCaptcha; name: string }) {
+  const { campaign, row, columns } = data;
+  const measured = data.status === "measured" && campaign && row;
+  const description = measured
+    ? `${campaign.latest ? "Latest run" : "Last run with this provider"} ${formatRunDate(campaign.startedAt)} · ${campaign.rounds} fresh sessions per CAPTCHA.`
+    : data.status === "unsupported" ? "No native CAPTCHA solving." : "No CAPTCHA runs for this provider.";
+  return <section id="captcha" className="mt-12 scroll-mt-24">
+    <BenchmarkSectionHeader chart title={BENCHMARK_TITLES.captcha} description={description} />
+    {data.status === "unsupported" && <p className="rounded-[3px] border-[1.5px] border-foreground bg-background px-4 py-6 text-sm text-muted-foreground">{data.note}</p>}
+    {measured && <>
+      <p className="mb-3 text-sm text-muted-foreground">
+        <strong className="font-semibold text-foreground">{captchaPercent(row.successes, row.attempted)}</strong> success · {row.successes} of {row.attempted} attempts
+        {row.rank !== null && <> · ranked <strong className="font-semibold text-foreground">#{row.rank}</strong> of {data.ranked}</>}
+        {row.medianMs !== null && <> · median {captchaSeconds(row.medianMs)}</>}
+      </p>
+      <BenchmarkTablePanel label={`${name} CAPTCHA results`}>
+        <div className={`${styles.tableScroll} ${captchaStyles.region}`} role="region" aria-label={`${name} CAPTCHA results by type`} tabIndex={0}>
+          <table className="w-full text-left text-[0.78rem] tabular-nums" style={{ minWidth: 640 }}>
+            <caption className="sr-only">{`${name} CAPTCHA results for the campaign started ${formatRunDate(campaign.startedAt)}, by CAPTCHA type.`}</caption>
+            <thead><tr>{["#", "CAPTCHA", "Success signal", "Rounds", "Success", "Median"].map((label) => <th key={label} scope="col" className="whitespace-nowrap">{label}</th>)}</tr></thead>
+            <tbody>{columns.map((column, index) => {
+              const result = row.results.find((item) => item.type === column.id);
+              if (!result) return null;
+              const word = SUCCESS_WORDS[column.signal];
+              return <tr key={column.id} style={{ cursor: "default" }}>
+                <td>{index + 1}</td>
+                <th scope="row" className="whitespace-nowrap">{column.label}</th>
+                <td className="text-muted-foreground">{column.signal_label}</td>
+                <td>
+                  <ol className={captchaStyles.rounds} aria-label="Rounds" style={{ marginLeft: "auto" }}>{result.rounds.map((round) =>
+                    <li key={round.key} data-outcome={round.outcome} data-label={round.label} aria-label={round.label} tabIndex={0} />)}</ol>
+                </td>
+                <td title={`${result.successes} of ${result.attempted} ${word}${result.notRun ? `, ${result.notRun} not run` : ""}`}>
+                  {result.successes} / {result.attempted}
+                  {result.cleanupErrors > 0 && <span className={captchaStyles.stat}>{result.cleanupErrors} cleanup failure{result.cleanupErrors === 1 ? "" : "s"}</span>}
+                </td>
+                <td>{captchaSeconds(result.medianMs)}</td>
+              </tr>;
+            })}</tbody>
+          </table>
+        </div>
+      </BenchmarkTablePanel>
+    </>}
+  </section>;
+}
+
+export function ProviderDeepDive({ provider, slug, lifecycle, throughput, proxy, captcha }: {
   provider: ProviderInfo;
   slug: string;
   lifecycle: ProviderLifecycle | null;
   throughput: ProviderThroughput | null;
   proxy: ProviderProxy;
+  captcha: ProviderCaptcha;
 }) {
   const color = proxyProviderColor(provider.id);
+  // Sections stream in after navigation, too late for the browser's own jump to
+  // a link's hash such as #captcha from the CAPTCHA leaderboard.
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1));
+    if (id) document.getElementById(id)?.scrollIntoView();
+  }, []);
   return <>
     <header className="mb-8 flex items-center gap-3">
       {provider.logo && <span className={`inline-flex size-10 items-center justify-center overflow-hidden rounded-[3px] ${provider.id === "NOTTE" ? "bg-black p-[2px]" : ""}`}><img src={provider.logo} alt="" decoding="sync" className="size-full object-contain" /></span>}
@@ -346,5 +407,6 @@ export function ProviderDeepDive({ provider, slug, lifecycle, throughput, proxy 
     <LifecycleSection data={lifecycle} color={color} />
     <ThroughputSection data={throughput} color={color} />
     <ProxySection data={proxy} color={color} slug={slug} />
+    <CaptchaSection data={captcha} name={provider.displayName} />
   </>;
 }

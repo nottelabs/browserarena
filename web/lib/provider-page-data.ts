@@ -16,6 +16,9 @@ import { loadProxyGetHistory } from "./proxy-get-history";
 import type { ProxyGetStats } from "./proxy-get";
 import { PROVIDERS_BY_ID } from "./providers";
 import { PROXY_COUNTRIES } from "../../src/benchmarks/proxy-get/schema";
+import { CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes, loadCaptchaCampaigns, type PublicCampaign } from "./captcha-data";
+import { captchaColumns, captchaLeaderboard, type CaptchaRow, type CaptchaTypeColumn } from "./captcha-leaderboard";
+import { campaignCells } from "../../src/benchmarks/captcha/publication";
 
 export type ProxyCountry = (typeof PROXY_COUNTRIES)[number];
 
@@ -69,6 +72,16 @@ export interface ProviderProxy {
   history: ProviderProxyDay[];
 }
 
+export interface ProviderCaptcha {
+  status: "measured" | "unsupported" | "absent";
+  note: string | null;
+  /** The newest campaign that ran this provider. */
+  campaign: { id: string; startedAt: string; rounds: number; latest: boolean } | null;
+  columns: CaptchaTypeColumn[];
+  row: CaptchaRow | null;
+  ranked: number;
+}
+
 const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
 
 function folderName(providerId: string): string {
@@ -119,6 +132,26 @@ function parseJsonl<T>(content: string): T[] {
 
 function emptyPhases(): PhaseSamples {
   return { total: [], create: [], connect: [], goto: [], release: [] };
+}
+
+/** The provider's results in the newest campaign that ran it; campaigns are newest first. */
+export function captchaForProvider(providerId: string, campaigns: PublicCampaign[]): ProviderCaptcha {
+  const id = folderName(providerId);
+  const empty = { campaign: null, columns: [], row: null, ranked: 0 };
+  if (id in CAPTCHA_UNSUPPORTED_PROVIDERS) return { status: "unsupported", note: CAPTCHA_UNSUPPORTED_PROVIDERS[id], ...empty };
+  // A halted campaign can list a provider it never ran; keep its older results.
+  const campaign = campaigns.find((item) => item.attempts.some((attempt) => attempt.provider === id));
+  if (!campaign) return { status: "absent", note: null, ...empty };
+  const columns = captchaColumns(campaign);
+  const rows = captchaLeaderboard(campaign, campaignCells(campaign), columns, CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes(campaign, campaigns));
+  return {
+    status: "measured",
+    note: null,
+    campaign: { id: campaign.id, startedAt: campaign.started_at, rounds: campaign.rounds, latest: campaign.id === campaigns[0].id },
+    columns,
+    row: rows.find((row) => row.providerKey === providerId) ?? null,
+    ranked: rows.filter((row) => row.rank !== null).length,
+  };
 }
 
 function lifecycleFromFile(content: string | null, providerId: string): Pick<ProviderLifecycle, "runs" | "successes" | "samples"> {
@@ -200,12 +233,14 @@ export async function loadProviderPage(providerId: string, options: { date?: str
   lifecycle: ProviderLifecycle | null;
   throughput: ProviderThroughput | null;
   proxy: ProviderProxy;
+  captcha: ProviderCaptcha;
 }> {
   const country = PROXY_COUNTRIES.includes(options.country as ProxyCountry) ? options.country as ProxyCountry : "US";
-  const [history, throughputHistory, proxyHistory] = await Promise.all([
+  const [history, throughputHistory, proxyHistory, captcha] = await Promise.all([
     loadHistoricalLeaderboard("hello-browser", 1),
     loadBrowserThroughputHistory(1),
     loadProxyGetHistory(country, options.date),
+    loadCaptchaCampaigns().then((campaigns) => captchaForProvider(providerId, campaigns)),
   ]);
   const lifecycleSeries = history.providers.find((series) => series.provider === providerId) ?? null;
   const lifecycleDates = lifecycleSeries?.points.map((point) => point.date) ?? [];
@@ -255,5 +290,6 @@ export async function loadProviderPage(providerId: string, options: { date?: str
       stats: proxyStats?.status === "measured" ? proxyStats : null,
       history: providerDays,
     },
+    captcha,
   };
 }

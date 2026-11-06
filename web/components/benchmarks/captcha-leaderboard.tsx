@@ -70,7 +70,9 @@ export function CaptchaLeaderboard({ columns, rows, caption, dateControl, summar
             <span className="inline-flex items-center gap-0.5">{h.label}{h.description && <HeaderInfo label={h.label} description={h.description} />}</span>
           </th>)}</tr></thead>
           <tbody>{rows.map(row => {
-            const href = providerPath(row.providerKey);
+            // Land on the provider page's CAPTCHA section, not its top.
+            const path = providerPath(row.providerKey);
+            const href = path && `${path}#captcha`;
             const url = PROVIDERS_BY_ID[row.providerKey]?.url;
             return <tr key={row.provider} data-leader={row.rank === 1 ? "" : undefined} data-unsupported={row.unsupportedReason ? "" : undefined} onClick={() => { if (href) router.push(href); }}>
               <td>{row.rank ?? "–"}</td>

@@ -14,6 +14,7 @@ const PAGE_SECTIONS = [
   { id: "lifecycle", label: BENCHMARK_TITLES["hello-browser"] },
   { id: "proxy", label: BENCHMARK_TITLES["proxy-get"] },
   { id: "throughput", label: BENCHMARK_TITLES["browser-throughput"] },
+  { id: "captcha", label: BENCHMARK_TITLES.captcha },
 ] as const;
 
 export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyLevels, date, simulated, proxyBasePath = "/test", publicRoutes = false, lifecycleQuery = "", sort, inPage = false }: {
@@ -47,6 +48,9 @@ export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyL
           current = section.id;
         }
       }
+      // The last section is too short to reach the top; at the page bottom it is the one in view.
+      const last = PAGE_SECTIONS.at(-1)!.id;
+      if (document.getElementById(last) && window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) current = last;
       setSectionId(current);
     };
     update();
