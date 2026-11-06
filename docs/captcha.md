@@ -131,8 +131,10 @@ and refuses tracked changes. Guards:
   failed push does not cost a second paid campaign. A copy waits in
   `.captcha-runs/pending/` until the push succeeds, because the other jobs on the
   box reset the shared checkout and would drop the unpushed commit. An export
-  left untracked by a publisher that stopped before committing is published the
-  same way if it is complete, and held for review if it is not.
+  the publisher started (it leaves `.captcha-runs/pending/<id>.exporting`) but
+  stopped before committing is published the same way if it is complete, and held
+  for review if it is not. Any other export in `results/captcha/` is left alone
+  for PR review.
 - All five providers are always passed explicitly, so `PROVIDER`, `RUNS` or
   `CONCURRENCY` in the runner's environment cannot shrink the campaign. `.env`
   is loaded only into the campaign's environment, so it cannot change the

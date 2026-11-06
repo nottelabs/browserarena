@@ -204,11 +204,18 @@ test("a result whose push failed is still pushed after main gains other changes"
   assert.equal(cliCalls().length, 1);
 });
 
+// What the publisher leaves behind if it stops between export and commit.
+function leaveExport(work, id, complete) {
+  fs.mkdirSync(path.join(work, "results/captcha"), { recursive: true });
+  fs.mkdirSync(path.join(work, ".captcha-runs/pending"), { recursive: true });
+  fs.writeFileSync(path.join(work, `.captcha-runs/pending/${id}.exporting`), "");
+  fs.writeFileSync(path.join(work, `results/captcha/${id}.json`),
+    JSON.stringify({ id, complete, halted: false, interrupted: false }) + "\n");
+}
+
 test("an export left unstaged by an interrupted publisher is published, not skipped", t => {
   const { work, cliCalls, run, published } = setup(t);
-  fs.mkdirSync(path.join(work, "results/captcha"), { recursive: true });
-  fs.writeFileSync(path.join(work, `results/captcha/${ID}.json`),
-    JSON.stringify({ id: ID, complete: true, halted: false, interrupted: false }) + "\n");
+  leaveExport(work, ID, true);
   const result = run();
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.ok(published().includes(`results/captcha/${ID}.json`));
@@ -217,15 +224,28 @@ test("an export left unstaged by an interrupted publisher is published, not skip
 
 test("an incomplete export left by an interrupted publisher is held for review", t => {
   const { work, cliCalls, run, published } = setup(t);
-  fs.mkdirSync(path.join(work, "results/captcha"), { recursive: true });
-  fs.writeFileSync(path.join(work, `results/captcha/${ID}.json`),
-    JSON.stringify({ id: ID, complete: false, halted: false, interrupted: false }) + "\n");
+  leaveExport(work, ID, false);
   const result = run();
   assert.equal(result.status, 1);
   assert.ok(!published().includes(`results/captcha/${ID}.json`));
   assert.ok(!fs.existsSync(path.join(work, `results/captcha/${ID}.json`)));
   assert.match(fs.readFileSync(path.join(work, ".captcha-runs/needs-review"), "utf8"), /not a complete campaign/);
   assert.equal(cliCalls().length, 0);
+});
+
+test("an export the publisher did not make is left for PR review, never pushed", t => {
+  const { work, cliCalls, run, published } = setup(t);
+  const manual = "2026-11-04-west-v3-rerun";
+  fs.mkdirSync(path.join(work, "results/captcha"), { recursive: true });
+  fs.writeFileSync(path.join(work, `results/captcha/${manual}.json`),
+    JSON.stringify({ id: manual, complete: true, halted: false, interrupted: false }) + "\n");
+  const result = run([], {}, { reset: true });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.match(result.stdout + result.stderr, /needs PR review/);
+  assert.ok(!published().includes(`results/captcha/${manual}.json`));
+  assert.ok(fs.existsSync(path.join(work, `results/captcha/${manual}.json`)));
+  assert.ok(published().includes(`results/captcha/${ID}.json`));
+  assert.equal(cliCalls().length, 1);
 });
 
 test("a dry run leaves a pending result unpushed, in place, and runs no campaign", t => {

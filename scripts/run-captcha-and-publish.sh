@@ -193,24 +193,35 @@ fi
 
 # Results the reset cannot be trusted to keep: a copy saved in $PENDING_DIR
 # when a push failed (another job's reset may have dropped its commit since),
-# and an export left untracked by a publisher that stopped before committing.
+# and an export this publisher started (it leaves $PENDING_DIR/<id>.exporting)
+# but stopped before committing. Any other export in results/captcha is someone
+# else's and goes through PR review, never straight to main.
 leftovers=()
 for file in "$PENDING_DIR"/*.json; do
   [[ -e "$file" ]] && leftovers+=("$file")
 done
 while IFS= read -r file; do
-  [[ -n "$file" ]] && leftovers+=("$file")
+  [[ -n "$file" ]] || continue
+  name="$(basename "$file")"
+  if [[ -e "$PENDING_DIR/${name%.json}.exporting" ]]; then
+    leftovers+=("$file")
+  else
+    echo "[INFO] leaving $file alone: this publisher did not export it, so it needs PR review"
+  fi
 done < <(git ls-files --others --exclude-standard -- 'results/captcha/*.json')
 
 for file in ${leftovers[@]+"${leftovers[@]}"}; do
   name="$(basename "$file")"
   target="results/captcha/$name"
+  claim="$PENDING_DIR/${name%.json}.exporting"
   if on_origin "$target"; then
     [[ "$file" == "$PENDING_DIR/"* ]] && rm -f -- "$file"
+    rm -f -- "$claim"
     continue
   fi
   if ! is_complete "$file"; then
     mv -- "$file" ".captcha-runs/incomplete-$name"
+    rm -f -- "$claim"
     hold_for_review "found an unpublished export that is not a complete campaign; moved it to .captcha-runs/incomplete-$name"
   fi
   if [[ $DRY_RUN -eq 1 ]]; then
@@ -221,6 +232,7 @@ for file in ${leftovers[@]+"${leftovers[@]}"}; do
   mkdir -p results/captcha
   [[ "$file" == "$target" ]] || cp -- "$file" "$target"
   [[ -e "$PENDING_DIR/$name" ]] || cp -- "$target" "$PENDING_DIR/$name"
+  rm -f -- "$claim"
   git add -- "$target"
   git commit -m "results: captcha $REGION ${name:0:10}" -- "$target"
   push_main || { echo "[ERROR] could not push $target; a copy stays in $PENDING_DIR for the next run" >&2; exit 1; }
@@ -272,30 +284,37 @@ fi
 rm -f -- "$REVIEW_MARKER"
 
 echo "[INFO] exporting $ID"
+# Marks the export as this publisher's, so a later run may recover it if this
+# one stops before the result is copied to $PENDING_DIR.
+CLAIM="$PENDING_DIR/$ID.exporting"
+: > "$CLAIM"
 if ! npm run captcha:export -- "$OUT" "$ID"; then
   echo "[ERROR] export failed; evidence kept at $OUT" >&2
   exit 1
 fi
 
 if ! is_complete "$RESULT"; then
-  rm -f -- "$RESULT"
+  rm -f -- "$RESULT" "$CLAIM"
   hold_for_review "campaign was not complete"
 fi
 
 git add -- "$RESULT"
 if git diff --cached --quiet -- "$RESULT"; then
   echo "[WARN] nothing staged for $RESULT"
+  rm -f -- "$CLAIM"
   exit 1
 fi
 
 if [[ $DRY_RUN -eq 1 ]]; then
   echo "[INFO] --dry-run: skipping commit/push. Staged diff:"
   git diff --cached --stat -- "$RESULT"
+  rm -f -- "$CLAIM"
   exit 0
 fi
 
 # Kept until the push succeeds; git ignores it, so no reset can drop it.
 cp -- "$RESULT" "$PENDING_DIR/$ID.json"
+rm -f -- "$CLAIM"
 # Only the result: nothing else in the index goes into this commit.
 git commit -m "results: captcha $REGION $DATE" -- "$RESULT"
 
