@@ -2,6 +2,10 @@
 // reason, in web/lib/captcha-data.ts and are never run.
 export const PROVIDERS = ["kernel", "browserbase", "browser-use", "steel", "notte",
   "hyperbrowser", "anchorbrowser", "browserless", "tilion"];
+// Run by the daily publisher (scripts/run-captcha-and-publish.sh). Tilion stays
+// out until the US West runner has a TILION_API_KEY: a missing key fails the
+// campaign's preflight, which holds every later daily run for review.
+export const DAILY_PROVIDERS = PROVIDERS.filter(provider => provider !== "tilion");
 export const PROTOCOL_VERSION = 4;
 
 // What a success means for a type. The status a success records follows from it,

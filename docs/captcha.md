@@ -206,7 +206,10 @@ ID=$(aws ec2 describe-instances --region us-west-1 \
 aws ec2-instance-connect ssh --region us-west-1 --instance-id "$ID" --os-user ubuntu --connection-type eice
 ```
 
-The default is 5 attempts per provider per CAPTCHA type: 315 paid sessions. A
+The default is 5 attempts per provider per CAPTCHA type: 280 paid sessions for
+the eight daily providers. Tilion is left out (`DAILY_PROVIDERS` in
+`protocol.mjs`) until the runner has a `TILION_API_KEY`, because a missing key
+fails preflight and holds every later run for review. A
 35-session protocol v4 campaign (five providers, one round) took 22 minutes on
 2026-11-06, so expect roughly 3 to 4 hours on a normal day. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
 push failed, reports the waiting result without pushing it), and
@@ -222,7 +225,7 @@ and refuses tracked changes. Guards:
   stopped before committing is published the same way if it is complete, and held
   for review if it is not. Any other export in `results/captcha/` is left alone
   for PR review.
-- All nine providers are always passed explicitly, so `PROVIDER`, `RUNS` or
+- The daily providers are always passed explicitly, so `PROVIDER`, `RUNS` or
   `CONCURRENCY` in the runner's environment cannot shrink the campaign. `.env`
   is loaded only into the campaign's environment, so it cannot change the
   publisher's settings either.
@@ -234,7 +237,7 @@ and refuses tracked changes. Guards:
   evidence stays in `.captcha-runs/daily-*`.
 - The campaign's time limit defaults to its worst case: every attempt using its
   full create, connect, navigation, solve and cleanup limits (360 seconds),
-  three at a time, plus 15 minutes. That is 10 h 45 min for the default 315
+  three at a time, plus 15 minutes. That is 9 h 35 min for the default 280
   attempts, so a slow day is published instead of cut off. `--timeout SECONDS`
   overrides it. At the limit the campaign gets SIGTERM so active attempts can
   finish cleanup, and SIGKILL only ten minutes later.
