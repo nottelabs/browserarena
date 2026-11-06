@@ -68,10 +68,18 @@ test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile ac
   await expect(table.locator("tbody tr").first().locator("td").first()).toHaveText("1");
   await expect(table.locator("tbody tr").first()).toHaveAttribute("data-leader", "");
   // Ties on rate and median time fall back to the provider name.
-  // Providers without native solving follow, unranked, by name.
+  // Benchmarked providers missing from the run, then providers without native
+  // solving, follow unranked, each group by name.
   await expect(table.locator("tbody th")).toHaveText(["Browser Use", "KERNEL", "Notte", "Browserbase", "Steel",
+    "Anchor Browser", "Browserless", "Hyperbrowser", "Tilion",
     "AWS AgentCore", "Cloudflare", "Lightpanda", "TinyFish"]);
-  await expect(table.locator("tbody tr td:first-child")).toHaveText(["1", "2", "3", "4", "5", "–", "–", "–", "–"]);
+  await expect(table.locator("tbody tr td:first-child")).toHaveText(["1", "2", "3", "4", "5", "–", "–", "–", "–", "–", "–", "–", "–"]);
+  // The label depends on the published history these fixtures sit beside: once a
+  // real campaign includes Hyperbrowser, this synthetic run says "Not in this run".
+  const history = await Promise.all((await fs.readdir(directory)).filter(name => name.endsWith(".json"))
+    .map(async name => JSON.parse(await fs.readFile(path.join(directory, name), "utf8")) as { providers: string[] }));
+  const hyperbrowserNote = history.some(item => item.providers.includes("hyperbrowser")) ? "Not in this run" : "No results yet";
+  await expect(page.getByRole("row", { name: new RegExp(`Hyperbrowser.*${hyperbrowserNote}`) })).toBeVisible();
   await expect(table.locator("tbody tr").first().locator("img")).toHaveCount(1);
   await page.getByLabel("About hCaptcha").focus();
   await expect(page.getByRole("tooltip")).toContainText("Token delivery only");
