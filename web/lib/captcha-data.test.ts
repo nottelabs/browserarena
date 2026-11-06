@@ -3,7 +3,16 @@ import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { loadCaptchaCampaigns } from "./captcha-data";
+import { CAPTCHA_UNSUPPORTED_PROVIDERS, loadCaptchaCampaigns } from "./captcha-data";
+import { PROVIDERS } from "../../src/benchmarks/captcha/protocol.mjs";
+
+test("every site provider is either benchmarked or listed with a reason", () => {
+  const site = ["kernel", "browserbase", "browser-use", "steel", "notte", "hyperbrowser", "anchorbrowser",
+    "browserless", "tilion", "tinyfish", "aws-agentcore", "cloudflare", "lightpanda"];
+  const unsupported = Object.keys(CAPTCHA_UNSUPPORTED_PROVIDERS);
+  assert.deepEqual([...PROVIDERS, ...unsupported].sort(), [...site].sort());
+  for (const reason of Object.values(CAPTCHA_UNSUPPORTED_PROVIDERS)) assert.match(reason, /has no CAPTCHA solving/);
+});
 
 test("CAPTCHA loader distinguishes no campaigns, partial campaigns, and invalid data", async () => {
   const root = await fs.mkdtemp(path.join(os.tmpdir(), "captcha-data-"));

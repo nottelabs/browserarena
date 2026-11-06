@@ -46,6 +46,7 @@ test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile ac
   await expect(page.getByText("Token delivery only", { exact: true })).toBeVisible();
   await expect(page.getByText("1 not run", { exact: true })).toHaveCount(5);
   await expect(page.getByText("1 cleanup failure", { exact: true })).toBeVisible();
+  await expect(page.getByRole("row", { name: /Cloudflare Cloudflare Browser Run has no CAPTCHA solving/ })).toBeVisible();
   await expect(page.locator('strong[aria-label="Kernel hCaptcha: 1 of 1 delivered"]')).toBeVisible();
   await expect(page.locator('li[aria-label="Round 1: Token delivered"]').first()).toBeVisible();
   const dot = page.locator('li[aria-label="Round 1: Token delivered"]').first();
