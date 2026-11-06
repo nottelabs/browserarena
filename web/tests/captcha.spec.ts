@@ -118,6 +118,10 @@ test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile ac
   await expect(page.getByText("1 not run", { exact: true })).toHaveCount(5);
   await expect(page.getByText("1 cleanup failure", { exact: true })).toBeVisible();
   await expect(page.getByRole("row", { name: /Cloudflare Browser Run has no CAPTCHA solving/ })).toBeVisible();
+  // Clicking the reason shows it; it does not open the provider page like the rest of the row.
+  const reason = page.getByRole("row", { name: /Cloudflare Browser Run has no CAPTCHA solving/ }).getByText("Cloudflare Browser Run has no CAPTCHA solving");
+  const [leftPage] = await Promise.all([page.waitForURL(/\/provider\//, { timeout: 3000 }).then(() => true, () => false), reason.click()]);
+  expect(leftPage).toBe(false);
   await expect(page.locator('strong[aria-label="KERNEL hCaptcha: 1 of 1 delivered"]')).toHaveText("1 / 1");
   await expect(page.locator('li[aria-label="Round 1: Token delivered"]').first()).toBeVisible();
   const dot = page.locator('li[aria-label="Round 1: Token delivered"]').first();
