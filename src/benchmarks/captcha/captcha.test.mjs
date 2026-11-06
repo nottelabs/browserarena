@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
 import test from "node:test";
-import { acceptedOfficial, acceptedTurnstile, configuration, deliveredNopecha, FIXTURES, interval, preflight, schedule, summarize } from "./protocol.mjs";
+import { acceptedOfficial, acceptedTurnstile, configuration, FIXTURES, interval, schedule, summarize } from "./protocol.mjs";
 import { attempt, installCancellation, runSuite, submit } from "./run.mjs";
 import { createProviders, REQUIRED_ENV } from "./providers.mjs";
 import { report, sanitizer } from "./main.mjs";
@@ -12,21 +12,21 @@ const response = (data, status = 200) => new Response(JSON.stringify(data), { st
 
 test("protocol fixes the declared workload and rejects ignored settings", () => {
   assert.equal(config.rounds, 5);
-  assert.equal(config.version, 3);
+  assert.equal(config.version, 4);
   assert.equal(config.solveTimeoutMs, 180_000);
   assert.deepEqual(config.viewport, { width: 1920, height: 1080 });
   for (const input of [{ rounds: 0 }, { rounds: 1.5 }, { concurrency: 4 }, { providers: ["kernel", "kernel"] },
-    { providers: ["unknown"] }, { solveTimeoutMs: 999 }, { cooldownMs: 0 }, { retries: 1 }, { fixtures: [] }])
+    { providers: ["unknown"] }, { solveTimeoutMs: 999 }, { cooldownMs: 0 }, { retries: 1 }, { fixtures: [] }, { version: 5 }])
     assert.throws(() => configuration(input));
 });
 
 test("unique attempts rotate provider and fixture order with five attempts per cell", () => {
-  const rounds = schedule(config), tasks = rounds.flat(), total = config.providers.length * 15;
+  const rounds = schedule(config), tasks = rounds.flat(), total = config.providers.length * FIXTURES.length * 5;
   assert.equal(config.providers.length, 9);
   assert.equal(tasks.length, total);
   assert.equal(new Set(tasks.map(task => task.id)).size, total);
   assert.deepEqual(rounds.map(round => round[0].provider), config.providers.slice(0, config.rounds));
-  assert.deepEqual(rounds.map(round => round[0].fixture.type), ["turnstile", "recaptcha", "hcaptcha", "turnstile", "recaptcha"]);
+  assert.deepEqual(rounds.map(round => round[0].fixture.type), ["turnstile", "recaptcha", "hcaptcha", "recaptcha-v3", "geetest"]);
   for (const provider of config.providers) for (const fixture of FIXTURES)
     assert.equal(tasks.filter(task => task.provider === provider && task.fixture.type === fixture.type).length, 5);
 });
@@ -45,56 +45,13 @@ test("external acceptance rejects test secrets, false-like strings, wrong origin
   assert.equal(acceptedOfficial(state, { ...receipt, url: "https://other.example" }, fixture), false);
 });
 
-test("fixture preflight requires the pinned live keys and rejection with a real secret", async () => {
-  const calls = [];
-  const request = async (url, options) => {
-    calls.push({ url: String(url), options });
-    if (String(url) === new URL(FIXTURES[2].script, FIXTURES[2].url).href) return new Response(FIXTURES[2].sitekey);
-    return options.method === "POST" ? response({ success: false, testSecret: false, widget: "managed" })
-      : new Response(FIXTURES.find(f => f.url === url).script ?? FIXTURES.find(f => f.url === url).sitekey);
-  };
-  assert.equal((await preflight(request)).observations.length, 3);
-  assert.equal(calls.length, 5);
-  assert.equal(calls[4].url, "https://zerocaptcha.io/api/v1/demo/verify");
-  await assert.rejects(() => preflight(async () => new Response("unrecognized sitekey")), /sitekey changed/);
-  await assert.rejects(() => preflight(async (url, options) => options.method === "POST"
-    ? response({ success: true, testSecret: true, widget: "managed" })
-    : new Response(String(url) === new URL(FIXTURES[2].script, FIXTURES[2].url).href ? FIXTURES[2].sitekey
-      : FIXTURES.find(f => f.url === url).script ?? FIXTURES.find(f => f.url === url).sitekey)), /did not reject/);
-});
-
-test("NopeCHA delivery follows only the demo page's success indicator, without claiming acceptance", async () => {
-  const state = { tokenPresent: false, callbackSuccess: true };
-  assert.equal(deliveredNopecha(state), true);
-  for (const change of [{ callbackSuccess: false }, { callbackSuccess: "true" }]) assert.equal(deliveredNopecha({ ...state, ...change }), false);
-  const h = harness(); h.task.fixture = FIXTURES[2]; h.task.id = "r01-kernel-hcaptcha";
-  h.deps.probe = async () => ({ formPresent: true, ...state });
-  h.deps.verify = async () => assert.fail("No server verifier on NopeCHA");
-  const row = await attempt(h.task, config, h.deps);
-  assert.equal(row.status, "token_delivered"); assert.equal(row.accepted_ms, null);
-  assert.equal(row.verification.serverAcceptanceVerified, false); assert.equal(row.cleanup.released, true);
-  const cell = summarize(config, [row]).find(c => c.provider === "kernel" && c.type === "hcaptcha");
-  assert.equal(cell.verified, 0); assert.equal(cell.token_delivered, 1);
-  assert.equal(cell.accepted_median_ms, null); assert.equal(cell.delivered_median_ms, row.token_ms);
-  assert.equal(acceptedOfficial({ accepted: true, formPresent: false },
-    { method: "POST", url: FIXTURES[2].url, httpStatus: 200 }, FIXTURES[2]), false);
-  await assert.rejects(() => submit({}, FIXTURES[2]), /no server acceptance verifier/);
-});
-
-test("NopeCHA token without callback completion times out and never submits a form", async () => {
-  const h = harness(); h.task.fixture = FIXTURES[2];
-  h.deps.verify = async () => assert.fail("No form submission for NopeCHA");
-  const row = await attempt(h.task, config, h.deps);
-  assert.equal(row.status, "timeout"); assert.equal(row.accepted_ms, null);
-});
-
 test("counts retain every failed attempt and show wide intervals for five samples", () => {
   const tasks = schedule(configuration({ providers: ["kernel"] })).flat();
   const rows = tasks.map((task, index) => ({ ...task, type: task.fixture.type,
     status: index % 3 === 0 ? "verified" : index % 3 === 1 ? "timeout" : "error", accepted_ms: 100 + index }));
   const cells = summarize(configuration({ providers: ["kernel"] }), rows);
-  assert.equal(cells.reduce((sum, cell) => sum + cell.attempted, 0), 15);
-  assert.equal(cells.reduce((sum, cell) => sum + cell.verified + cell.timeout + cell.error, 0), 15);
+  assert.equal(cells.reduce((sum, cell) => sum + cell.attempted, 0), 35);
+  assert.equal(cells.reduce((sum, cell) => sum + cell.verified + cell.timeout + cell.error, 0), 35);
   assert.ok(interval(5, 5)[0] > 0.56 && interval(5, 5)[0] < 0.57);
   assert.ok(interval(0, 5)[1] > 0.43 && interval(0, 5)[1] < 0.44);
   assert.equal(interval(0, 0), null);
@@ -114,8 +71,8 @@ test("scheduler completes fixed failure counts, caps global concurrency and neve
     save: async row => { saved.push(row); },
     sleep: async ms => { assert.equal(ms, 5_000); await new Promise(resolve => setImmediate(resolve)); },
   });
-  assert.equal(result.rows.length, config.providers.length * 15);
-  assert.equal(saved.length, config.providers.length * 15);
+  assert.equal(result.rows.length, config.providers.length * FIXTURES.length * 5);
+  assert.equal(saved.length, config.providers.length * FIXTURES.length * 5);
   assert.equal(result.not_run.length, 0);
   assert.ok(maximum <= 3);
 });
@@ -126,12 +83,12 @@ test("a provider cannot start its next attempt until the post-cleanup cooldown e
     runAttempt: async task => { started.push(task.id); return { id: task.id }; }, save: async () => {},
     sleep: () => new Promise(resolve => gates.push(resolve)),
   });
-  for (let count = 1; count <= 3; count++) {
+  for (let count = 1; count <= FIXTURES.length; count++) {
     await new Promise(resolve => setImmediate(resolve));
     assert.equal(started.length, count);
     gates.shift()();
   }
-  assert.equal((await running).rows.length, 3);
+  assert.equal((await running).rows.length, FIXTURES.length);
 });
 
 test("a critical ownership failure stops starts immediately, before its journal save finishes", async () => {
@@ -142,7 +99,7 @@ test("a critical ownership failure stops starts immediately, before its journal 
   });
   assert.equal(started.length, 3);
   assert.equal(result.halted, true);
-  assert.equal(result.not_run.length, config.providers.length * 15 - 3);
+  assert.equal(result.not_run.length, config.providers.length * FIXTURES.length * 5 - 3);
 });
 
 function harness({ failNavigation = false, failRelease = false, missingCdp = false, token = true, noReceipt = false } = {}) {
@@ -409,8 +366,11 @@ test("HTML evidence escapes script payloads and labels partial campaigns", () =>
   assert.doesNotMatch(html, /<script>bad\(\)<\/script>/);
   assert.match(html, /Campaign incomplete/);
   assert.match(html, /95% Wilson/);
-  assert.match(html, /Token delivery only/);
-  assert.match(html, /hCaptcha results are never labeled accepted/);
+  assert.match(html, /reCAPTCHA v3<br><small>Server acceptance/);
+  assert.match(html, /Text CAPTCHA<br><small>Page check/);
+  assert.match(html, /PerimeterX<br><small>Page reached/);
+  assert.match(html, /never by a server/);
+  assert.match(report(configuration({ version: 3 }), [], true), /hCaptcha<br><small>Token delivery only/);
 });
 
 test("Turnstile records timely acceptance immediately without another page probe", async () => {
