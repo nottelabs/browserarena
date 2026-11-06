@@ -79,6 +79,37 @@ test("history tooltip paints above overlapping legend text", async ({ page }) =>
   expect(tooltipCoversLegend, "tooltip should cover legend text where they overlap").toBe(true);
 });
 
+test("select chevrons keep padding from the right border", async ({ page }) => {
+  await page.goto(`/?date=${runDate}`);
+  for (const name of ["Run date", "Breakdown provider"]) {
+    const select = page.getByRole("combobox", { name });
+    await select.scrollIntoViewIfNeeded();
+    const png = (await select.screenshot({ scale: "css" })).toString("base64");
+    // Darkest pixel in a vertical strip, measured in CSS pixels from the right edge.
+    const darkest = await page.evaluate(async (src) => {
+      const image = new Image();
+      image.src = `data:image/png;base64,${src}`;
+      await image.decode();
+      const canvas = document.createElement("canvas");
+      canvas.width = image.width;
+      canvas.height = image.height;
+      const context = canvas.getContext("2d")!;
+      context.drawImage(image, 0, 0);
+      const strip = (from: number, to: number) => {
+        let min = 255;
+        for (let x = image.width - to; x < image.width - from; x++) {
+          const { data } = context.getImageData(x, 3, 1, image.height - 6);
+          for (let i = 0; i < data.length; i += 4) min = Math.min(min, (data[i] + data[i + 1] + data[i + 2]) / 3);
+        }
+        return min;
+      };
+      return { gap: strip(3, 9), chevron: strip(10, 24) };
+    }, png);
+    expect(darkest.chevron, `${name} chevron should be drawn`).toBeLessThan(128);
+    expect(darkest.gap, `${name} chevron should not touch the border`).toBeGreaterThan(200);
+  }
+});
+
 test("Sessions has one panel border", async ({ page }) => {
   await page.goto(`/?date=${runDate}`);
   const distribution = page.getByRole("region", { name: "Session time distribution" });
