@@ -1,11 +1,12 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { parseCaptchaArgs, runCaptchaCli } from "./cli.mjs";
+import { PROVIDERS } from "./protocol.mjs";
 
 test("CAPTCHA CLI declares its own defaults and rejects ignored lifecycle flags", () => {
   const defaults = parseCaptchaArgs(["--benchmark=captcha"], {});
   assert.equal(defaults.config.rounds, 5);
-  assert.equal(defaults.config.providers.length, 5);
+  assert.deepEqual(defaults.config.providers, PROVIDERS);
   assert.equal(defaults.config.concurrency, 3);
   for (const args of [["--record"], ["--url=https://example.com"], ["--runs"], ["--runs=0"],
     ["--concurrency=1,3"], ["--runs=1", "--runs=2"], ["--preflight=false"], ["--provider=notte,notte"]])
