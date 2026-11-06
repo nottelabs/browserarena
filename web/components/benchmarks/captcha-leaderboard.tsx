@@ -68,7 +68,7 @@ export function CaptchaLeaderboard({ columns, rows, caption, dateControl, summar
               </span></th>
               {row.unsupportedReason || row.note ? <td colSpan={columns.length + 1} data-unsupported="" data-note={row.note ? "" : undefined}>
                 <Tooltip>
-                  <TooltipTrigger asChild><span tabIndex={0} title={row.unsupportedReason ?? row.note} className={styles.unsupportedReason}>{unsupportedSummary(row.unsupportedReason ?? row.note!)}</span></TooltipTrigger>
+                  <TooltipTrigger asChild><span tabIndex={0} title={row.unsupportedReason ?? row.note} onClick={event => event.stopPropagation()} className={styles.unsupportedReason}>{unsupportedSummary(row.unsupportedReason ?? row.note!)}</span></TooltipTrigger>
                   <TooltipContent side="bottom" className="max-w-[22rem] text-xs">{row.unsupportedReason ?? row.note}</TooltipContent>
                 </Tooltip>
               </td> : <>
