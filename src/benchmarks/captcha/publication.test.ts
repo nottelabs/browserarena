@@ -97,12 +97,13 @@ test("v5 exports carry typed columns and keep page checks apart from server acce
   ] as const) assert.throws(() => exportCampaign("v5-campaign", summary, swap(type, change)), error);
 });
 
-test("published v4 campaigns still validate with hCaptcha's own demo", async () => {
-  const file = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../../../results/captcha/2026-11-06-west-v4.json");
+test("the 2026-11-06 campaign validates as v5 with hCaptcha re-run on democaptcha.com", async () => {
+  const file = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../../../results/captcha/2026-11-06-west-v5.json");
   const campaign = validateCampaign(JSON.parse(await fs.readFile(file, "utf8")));
-  assert.equal(campaign.protocol_version, 4);
+  assert.equal(campaign.protocol_version, 5);
+  assert.equal(campaign.complete, true);
+  assert.equal(campaign.attempts.length, 210);
   assert.equal(campaign.types.length, 7);
-  assert.equal(campaignCells(campaign).filter(cell => cell.type === "hcaptcha" && cell.provider === "notte")[0].timeout, 5);
 });
 
 test("published v3 campaigns still validate with their three columns and token delivery", async () => {
