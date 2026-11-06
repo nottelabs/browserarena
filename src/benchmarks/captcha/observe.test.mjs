@@ -17,9 +17,10 @@ async function launch() {
 // Markup shaped like each live page on 2026-11-06, served at the fixture's own URL.
 const IMAGE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 const pages = {
-  hcaptcha: verdict => `<form id="hcaptcha-demo-form" method="POST"><div class="h-captcha" data-sitekey="${by("hcaptcha").sitekey}">
-    <textarea name="h-captcha-response">${"P1_" + "x".repeat(40)}</textarea></div></form>
-    ${verdict ? `<div class="hcaptcha-success">Verification Success!</div><pre class="hcaptcha-success">${verdict}</pre>` : ""}`,
+  // democaptcha.com replaces its form with a var_dump of siteverify, after an echo of the token.
+  hcaptcha: dump => `<div class="section article">${dump ? `string(51) "Hcaptcha code: P1_echoed-token"\n${dump}`
+    : `<form action="" name="hcaptcha_demo_form" method="POST"><div class="h-captcha" data-sitekey="${by("hcaptcha").sitekey}">
+    <textarea name="h-captcha-response">${"P1_" + "x".repeat(40)}</textarea></div></form>`}</div>`,
   "recaptcha-v3": sitekey => `<form><button data-action="demo_action" type="submit">Check</button></form>
     <script src="https://www.google.com/recaptcha/api.js?render=${sitekey}"></script>
     <script>window.grecaptcha = { execute: () => Promise.resolve("token") };</script>`,
@@ -38,7 +39,7 @@ const pages = {
     ${challenge ? `<div id="px-captcha" style="width:300px;height:100px">Press & Hold</div>` : ""}`,
 };
 
-test("page probes read each v4 fixture's real signals in a browser", async t => {
+test("page probes read each v5 fixture's real signals in a browser", async t => {
   const browser = await launch();
   if (!browser) { t.skip("No Chromium installed"); return; }
   try {
@@ -54,9 +55,16 @@ test("page probes read each v4 fixture's real signals in a browser", async t => 
     const hcaptcha = by("hcaptcha");
     let state = await show(hcaptcha, pages.hcaptcha(""));
     assert.equal(state.formPresent, true); assert.equal(state.tokenPresent, true); assert.equal(state.rejected, false);
-    state = await show(hcaptcha, pages.hcaptcha('{\n "success": true,\n "hostname": "hcaptcha.com"\n}'));
-    assert.deepEqual(state.siteverify, { success: true, hostname: "hcaptcha.com", errorCodes: undefined });
-    state = await show(hcaptcha, pages.hcaptcha('{"success": true, "hostname": "dummy-key-pass"}'));
+    const dump = (success, hostname) => `array(3) {\n  ["success"]=>\n  bool(${success})\n  ["credit"]=>\n  bool(false)\n` +
+      `  ["hostname"]=>\n  string(${hostname.length}) "${hostname}"\n}\n<h2>Your message was posted</h2>`;
+    state = await show(hcaptcha, pages.hcaptcha(dump(true, "democaptcha.com")));
+    assert.deepEqual(state.siteverify, { success: true, hostname: "democaptcha.com", errorCodes: undefined });
+    assert.equal(state.formPresent, false); assert.equal(state.rejected, false);
+    // The echoed token stays out of the recorded state.
+    assert.doesNotMatch(JSON.stringify(state), /echoed-token/);
+    state = await show(hcaptcha, pages.hcaptcha(dump(true, "dummy-key-pass")));
+    assert.equal(state.rejected, true);
+    state = await show(hcaptcha, pages.hcaptcha(dump(false, "democaptcha.com")));
     assert.equal(state.rejected, true);
     state = await show(hcaptcha, pages.hcaptcha("").replace(hcaptcha.sitekey, "10000000-ffff-ffff-ffff-000000000001"));
     assert.equal(state.drift, "hCaptcha sitekey changed");

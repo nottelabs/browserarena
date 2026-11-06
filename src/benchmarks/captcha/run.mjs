@@ -1,5 +1,5 @@
-import { acceptedGeetest, acceptedOfficial, acceptedRecaptchaV3, acceptedTurnstile, passedText, reachedPerimeterX,
-  schedule } from "./protocol.mjs";
+import { acceptedGeetest, acceptedOfficial, acceptedRecaptchaV3, acceptedTurnstile, parseSiteverifyDump, passedText,
+  reachedPerimeterX, schedule } from "./protocol.mjs";
 
 class BoundExceeded extends Error {}
 // A fixture that no longer matches its pinned contract. It stops the campaign so a
@@ -23,7 +23,7 @@ export function installCancellation(controller, source = process) {
 
 // Read-only page facts. Probes never click a widget, read a solution or write an answer.
 export async function observe(page, fixture) {
-  return bounded(page.evaluate(fixture => {
+  const state = await bounded(page.evaluate(fixture => {
     const text = document.body?.innerText ?? "";
     const visible = element => {
       const box = element.getBoundingClientRect();
@@ -39,14 +39,8 @@ export async function observe(page, fixture) {
       tokens, tokenPresent: tokens.some(t => t.length > 20 && !t.dummy),
       sitekeys: [...document.querySelectorAll("[data-sitekey]")].map(e => e.getAttribute("data-sitekey")), drift: null };
     if (fixture.type === "hcaptcha") {
-      const pre = document.querySelector("pre.hcaptcha-success");
-      if (pre) {
-        try {
-          const verdict = JSON.parse(pre.textContent);
-          state.siteverify = { success: verdict.success, hostname: verdict.hostname, errorCodes: verdict["error-codes"] };
-        } catch { state.siteverify = { success: false, invalid: true }; }
-      }
-      state.rejected = !!state.siteverify && !(state.siteverify.success === true && state.siteverify.hostname === fixture.hostname);
+      // Parsed outside the page; the printed text also echoes the submitted token.
+      state.siteverifyText = (document.body?.textContent ?? "").includes('["success"]=>') ? document.body.textContent : null;
       if ([...document.querySelectorAll(".h-captcha[data-sitekey]")].some(e => e.getAttribute("data-sitekey") !== fixture.sitekey))
         state.drift = "hCaptcha sitekey changed";
     } else if (fixture.type === "recaptcha-v3") {
@@ -78,6 +72,13 @@ export async function observe(page, fixture) {
     }
     return state;
   }, fixture));
+  if (fixture.type === "hcaptcha") {
+    const siteverify = parseSiteverifyDump(state.siteverifyText);
+    delete state.siteverifyText;
+    if (siteverify) state.siteverify = siteverify;
+    state.rejected = !!siteverify && !(siteverify.success === true && siteverify.hostname === fixture.hostname);
+  }
+  return state;
 }
 
 const submitForm = (page, fixture, timeout) => bounded(page.locator(fixture.form).evaluate(form => form.requestSubmit()), timeout);

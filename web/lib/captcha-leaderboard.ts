@@ -34,7 +34,7 @@ const median = (values: number[]) => {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 };
 
-/** Columns come from each campaign's protocol: v3 campaigns show three types, v4 seven. */
+/** Columns come from each campaign's protocol: v3 campaigns show three types, v4 and v5 seven. */
 export function captchaColumns(campaign: PublicCampaign): CaptchaTypeColumn[] {
   return campaign.types;
 }

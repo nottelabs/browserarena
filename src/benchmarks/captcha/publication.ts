@@ -1,7 +1,7 @@
 import { captchaTypes, configuration, schedule, SIGNALS, signalFor, summarize } from "./protocol.mjs";
 
 export const CAMPAIGN_ID = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,99}$/;
-export const PROTOCOL_VERSIONS = [3, 4] as const;
+export const PROTOCOL_VERSIONS = [3, 4, 5] as const;
 export type ProtocolVersion = typeof PROTOCOL_VERSIONS[number];
 export type SuccessSignal = "server_acceptance" | "token_delivery" | "page_check" | "page_reached";
 // One column of the results table, in plan order. Derived from the protocol version,
