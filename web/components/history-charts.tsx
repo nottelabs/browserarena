@@ -669,7 +669,7 @@ export function HistoryCharts({
         <section className="flex min-w-0 flex-col">
           <BenchmarkSectionHeader chart title="Results" description="Stacked daily phase latency. Lower is better." controls={
             <label className="flex items-center gap-2 text-xs text-muted-foreground">Provider
-              <select aria-label="Breakdown provider" value={selectedProvider ?? ""} onChange={e => { setSelectedProvider(e.target.value); track("history_provider_selected", { benchmark: "session-performance", provider: e.target.value }); }} className="border border-foreground/25 bg-background text-foreground">
+              <select aria-label="Breakdown provider" data-chevron="" value={selectedProvider ?? ""} onChange={e => { setSelectedProvider(e.target.value); track("history_provider_selected", { benchmark: "session-performance", provider: e.target.value }); }} className="border border-foreground/25 bg-background text-foreground">
                 {providerOptions.map(provider => <option key={provider.provider} value={provider.provider}>{provider.displayName}</option>)}
               </select>
             </label>
