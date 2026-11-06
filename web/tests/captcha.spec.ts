@@ -99,7 +99,7 @@ test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile ac
   await expect(table.locator("thead th")).toHaveText(["#", "Provider", "Success", "Cloudflare Turnstile", "reCAPTCHA v2", "hCaptcha"]);
   // Success is a percentage; the exact count stays available to screen readers.
   await expect(table.locator("tbody tr").first().locator("td[data-sorted] strong")).toHaveText("100%");
-  await expect(page.getByText("Browser Use: 2 of 2 attempts succeeded", { exact: true })).toHaveCount(1);
+  await expect(page.getByText(/^Browser Use: 2 of 2 attempts succeeded, median \d+\.\ds$/)).toHaveCount(1);
   // Ranked by overall success with errors and timeouts in the denominator: 2/2 before 1/2.
   await expect(table.locator("tbody tr").first().locator("td").first()).toHaveText("1");
   await expect(table.locator("tbody tr").first()).toHaveAttribute("data-leader", "");

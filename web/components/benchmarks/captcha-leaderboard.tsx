@@ -86,7 +86,7 @@ export function CaptchaLeaderboard({ columns, rows, caption, dateControl, summar
                 </Tooltip>
               </td> : <>
                 <td data-sorted="" title={row.attempted ? `${row.successes} of ${row.attempted} attempts succeeded` : "No attempts were run."}>
-                  <span className="sr-only">{row.attempted ? `${row.name}: ${row.successes} of ${row.attempted} attempts succeeded` : `${row.name}: no attempts were run`}</span>
+                  <span className="sr-only">{row.attempted ? `${row.name}: ${row.successes} of ${row.attempted} attempts succeeded${row.medianMs === null ? "" : `, median ${seconds(row.medianMs)}`}` : `${row.name}: no attempts were run`}</span>
                   <span className={captcha.score} aria-hidden="true"><strong>{percent(row.successes, row.attempted)}</strong><span className={captcha.time}>{seconds(row.medianMs)}</span></span>
                 </td>
                 {row.results.map((result, index) => {
