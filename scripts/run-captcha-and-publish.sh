@@ -7,7 +7,8 @@
 #       [--dry-run] [--no-reset] [--no-install]
 #
 # --runs is attempts per provider per CAPTCHA type (default 5: 135 paid sessions,
-# about 50 minutes). The nine providers are always passed explicitly, so a
+# about 50 minutes). --timeout defaults to the campaign's worst case: every
+# attempt using its full create, navigation, solve and cleanup limits. The nine providers are always passed explicitly, so a
 # PROVIDER, RUNS or CONCURRENCY in the runner's environment cannot shrink the
 # campaign. Only a complete campaign is published.
 #
@@ -29,7 +30,7 @@ set -euo pipefail
 
 RUNS=5
 CONCURRENCY=3
-TIMEOUT=7200
+TIMEOUT=""
 DATE=""
 DRY_RUN=0
 NO_RESET=0
@@ -38,6 +39,12 @@ REGION=us-west
 PROTOCOL=3
 # Keep in sync with PROVIDERS in src/benchmarks/captcha/protocol.mjs (a test checks it).
 CAPTCHA_PROVIDERS="kernel,browserbase,browser-use,steel,notte,hyperbrowser,anchorbrowser,browserless,tilion"
+# Keep in sync with FIXTURES in src/benchmarks/captcha/protocol.mjs (a test checks it).
+CAPTCHA_TYPES=3
+# Longest one attempt can hold a session slot: create 60s, connect 30s,
+# navigation 30s, solve 180s, screenshot 10s, release 30s, disconnect 15s,
+# cooldown 5s.
+ATTEMPT_LIMIT_S=360
 PUSH_RETRY_DELAY="${CAPTCHA_PUSH_RETRY_DELAY:-10}"
 
 while [[ $# -gt 0 ]]; do
@@ -60,6 +67,13 @@ done
 if [[ ! "$RUNS" =~ ^([1-9]|1[0-9]|20)$ ]]; then
   echo "[ERROR] --runs must be an integer from 1 to 20" >&2
   exit 2
+fi
+if [[ -z "$TIMEOUT" ]]; then
+  # Every attempt hitting its limits must still fit, or a slow day is cut off,
+  # publishes nothing and blocks the next day. 15 minutes of margin on top.
+  provider_count=$(( $(tr -cd ',' <<< "$CAPTCHA_PROVIDERS" | wc -c) + 1 ))
+  attempts=$(( RUNS * provider_count * CAPTCHA_TYPES ))
+  TIMEOUT=$(( (attempts * ATTEMPT_LIMIT_S + CONCURRENCY - 1) / CONCURRENCY + 900 ))
 fi
 if [[ ! "$TIMEOUT" =~ ^[1-9][0-9]*$ ]]; then
   echo "[ERROR] --timeout must be a positive integer number of seconds" >&2
