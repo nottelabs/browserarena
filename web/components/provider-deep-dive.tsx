@@ -334,13 +334,12 @@ const captchaPercent = (successes: number, attempted: number) => attempted ? `${
 
 function CaptchaSection({ data, name }: { data: ProviderCaptcha; name: string }) {
   const { campaign, row, columns } = data;
-  const href = campaign && !campaign.latest ? `/captcha?campaign=${encodeURIComponent(campaign.id)}` : "/captcha";
   const measured = data.status === "measured" && campaign && row;
   const description = measured
     ? `${campaign.latest ? "Latest run" : "Last run with this provider"} ${formatRunDate(campaign.startedAt)} · ${campaign.rounds} fresh sessions per CAPTCHA.`
     : data.status === "unsupported" ? "No native CAPTCHA solving." : "No CAPTCHA runs for this provider.";
   return <section id="captcha" className="mt-12 scroll-mt-24">
-    <BenchmarkSectionHeader chart title={BENCHMARK_TITLES.captcha} description={description} controls={<Link href={href} prefetch={true} className={buttonClass(false)}>Full leaderboard</Link>} />
+    <BenchmarkSectionHeader chart title={BENCHMARK_TITLES.captcha} description={description} />
     {data.status === "unsupported" && <p className="rounded-[3px] border-[1.5px] border-foreground bg-background px-4 py-6 text-sm text-muted-foreground">{data.note}</p>}
     {measured && <>
       <p className="mb-3 text-sm text-muted-foreground">
