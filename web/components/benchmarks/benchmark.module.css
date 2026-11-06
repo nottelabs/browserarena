@@ -124,7 +124,17 @@
 }
 .dashboard [data-badge] { border: 1px solid var(--border); background: var(--background); }
 .dashboard select:disabled { cursor: wait; opacity: 0.65; }
-.dashboard select[data-run-date] { border: 1.5px solid var(--foreground); background: var(--background); color: var(--foreground); }
+.dashboard select[data-run-date] {
+  /* The native arrow ignores padding-right and sits on the border, so draw our own. */
+  appearance: none;
+  padding-right: 30px;
+  border: 1.5px solid var(--foreground);
+  background: var(--background) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center / 14px;
+  color: var(--foreground);
+}
+:global(.dark) .dashboard select[data-run-date] {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f0f0f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
 .dashboard :is(button, a, select):focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
 .dashboard [data-benchmark-progress] { position: fixed; top: 69px; inset-inline: 0; height: 2px; overflow: hidden; z-index: 45; pointer-events: none; }
 .dashboard [data-benchmark-progress] span { display: block; width: 35%; height: 100%; background: var(--foreground); animation: progress 1.2s ease-in-out infinite; }
