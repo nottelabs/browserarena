@@ -131,6 +131,15 @@ const VERDICTS = {
 
 // A fresh, independently released session for every planned cell. Provider-reported
 // success is diagnostic; only the external verifier can set status=verified.
+// A provider that answers session creation with a 4xx status (other than 408, a
+// timeout) refused it: no session exists, so nothing can be left running. Quota,
+// credit and auth refusals then count against that attempt instead of halting the
+// campaign. Lost responses, timeouts and 5xx stay ambiguous and still halt.
+export function refusedCreate(error) {
+  const status = error?.status ?? error?.statusCode;
+  return Number.isInteger(status) && status >= 400 && status < 500 && status !== 408;
+}
+
 export async function attempt(task, config, deps) {
   const { create, chromium, clean, journal = async () => {}, signal,
     now = () => performance.now(), sleep = ms => new Promise(r => setTimeout(r, ms)),
@@ -278,7 +287,10 @@ export async function attempt(task, config, deps) {
     row.status = signal?.aborted ? "interrupted" : deadline !== undefined && now() >= deadline ? "timeout" : "error";
     if (error instanceof FixtureDrift) row.fixture_drift = true;
     row.error = clean(error);
-    if (createStarted && row.stage === "create" && !row.session_id) row.ownership_unknown = true;
+    if (createStarted && row.stage === "create" && !row.session_id) {
+      if (refusedCreate(error)) row.create_refused = true;
+      else row.ownership_unknown = true;
+    }
   } finally {
     row.external_receipt = receipt;
     if (page) {
