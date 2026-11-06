@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default function ProxyGetPage({ searchParams }: { searchParams: Promise<{ country?: string; date?: string; sort?: string }> }) {
-  return <Suspense fallback={<BenchmarkPending />}>
+  return <Suspense fallback={<BenchmarkPending benchmark="proxy-get" />}>
     <ProxyContent searchParams={searchParams} />
   </Suspense>;
 }

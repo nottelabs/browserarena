@@ -19,11 +19,14 @@ import {
   ChartTooltip,
   type ChartConfig,
 } from "@/components/ui/chart";
-import type {
-  HistoricalLeaderboardResult,
-  HistoricalProviderPoint,
-  PercentileType,
-} from "@/lib/data-shared";
+import type { PercentileType } from "@/lib/data-shared";
+import {
+  HISTORY_START_DATE,
+  PHASE_KEYS,
+  type HistoryChartData,
+  type HistoryChartPoint,
+  type PhaseMetricKeys,
+} from "@/lib/history-chart-data";
 import {
   HISTORY_RANGES,
   filterDatesToRange,
@@ -35,49 +38,9 @@ import { LifecycleDistribution } from "./benchmarks/lifecycle-distribution";
 import { BenchmarkSectionHeader } from "./benchmarks/section-header";
 import styles from "./benchmarks/benchmark.module.css";
 
-const HISTORY_START_DATE = "2026-05-15";
 // Above this many points, per-point dots turn the lines into noise.
 const LINE_DOT_MAX_POINTS = 14;
 const BREAKDOWN_AXIS_LEAD_MS = 360;
-
-type PhaseMetricKeys = {
-  create: keyof HistoricalProviderPoint;
-  connect: keyof HistoricalProviderPoint;
-  goto: keyof HistoricalProviderPoint;
-  release: keyof HistoricalProviderPoint;
-  total: keyof HistoricalProviderPoint;
-};
-
-const PHASE_KEYS: Record<PercentileType, PhaseMetricKeys> = {
-  median: {
-    create: "medianCreationMs",
-    connect: "medianConnectMs",
-    goto: "medianGotoMs",
-    release: "medianReleaseMs",
-    total: "totalTimeMs",
-  },
-  p90: {
-    create: "p90CreationMs",
-    connect: "p90ConnectMs",
-    goto: "p90GotoMs",
-    release: "p90ReleaseMs",
-    total: "p90TotalMs",
-  },
-  p95: {
-    create: "p95CreationMs",
-    connect: "p95ConnectMs",
-    goto: "p95GotoMs",
-    release: "p95ReleaseMs",
-    total: "p95TotalMs",
-  },
-  p99: {
-    create: "p99CreationMs",
-    connect: "p99ConnectMs",
-    goto: "p99GotoMs",
-    release: "p99ReleaseMs",
-    total: "p99TotalMs",
-  },
-};
 
 const PHASE_CONFIG = {
   create: {
@@ -120,7 +83,7 @@ const metricButtonClass = (active: boolean) =>
 
 function historyMetricValue(
   metric: HistoryMetric,
-  point: HistoricalProviderPoint,
+  point: HistoryChartPoint,
   keys: PhaseMetricKeys,
   pricePerHour: number | null,
 ): number | null {
@@ -207,7 +170,7 @@ function formatScore(value: unknown): string {
 }
 
 function computeBreakdownDomain(
-  series: { points: HistoricalProviderPoint[] } | undefined,
+  series: { points: HistoryChartPoint[] } | undefined,
   keys: PhaseMetricKeys
 ): [number, number] {
   if (!series) return [0, 1000];
@@ -348,7 +311,7 @@ export function HistoryCharts({
   animate = true,
   distributions = [],
 }: {
-  history: HistoricalLeaderboardResult;
+  history: HistoryChartData;
   percentile?: PercentileType;
   initialProvider?: string;
   selectedDate?: string;

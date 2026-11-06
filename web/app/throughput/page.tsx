@@ -23,7 +23,7 @@ export default function BrowserThroughputPage({
 }: {
   searchParams: Promise<{ concurrency?: string; date?: string }>;
 }) {
-  return <Suspense fallback={<BenchmarkPending />}>
+  return <Suspense fallback={<BenchmarkPending benchmark="browser-throughput" />}>
     <ThroughputContent searchParams={searchParams} />
   </Suspense>;
 }

@@ -1,4 +1,4 @@
-import type { ProxyGetStats } from "./proxy-get";
+import type { ProxyGetClientStats } from "./proxy-get";
 import { sortRanked } from "./ranking";
 
 export interface ProxyValueWeights { latency: number; reliability: number; cost: number }
@@ -9,7 +9,7 @@ export const PROXY_VALUE_ANCHORS = { latencyMs: 30_000, costPerSuccessUsd: 0.05 
 const clamp = (value: number) => Math.max(0, Math.min(1, value));
 const valid = (value: number | null): value is number => value !== null && Number.isFinite(value) && value >= 0;
 
-export function proxyValueScore(provider: ProxyGetStats, weights: ProxyValueWeights): number | null {
+export function proxyValueScore(provider: ProxyGetClientStats, weights: ProxyValueWeights): number | null {
   if (provider.status !== "measured" || provider.attempts <= 0 || provider.successes <= 0) return null;
   const sum = weights.latency + weights.reliability + weights.cost;
   const normalized = sum > 0 ? {
@@ -23,7 +23,7 @@ export function proxyValueScore(provider: ProxyGetStats, weights: ProxyValueWeig
   return normalized.latency * latency + normalized.reliability * reliability + normalized.cost * cost;
 }
 
-export function rankProxyValues(providers: ProxyGetStats[], weights: ProxyValueWeights) {
+export function rankProxyValues<T extends ProxyGetClientStats>(providers: T[], weights: ProxyValueWeights) {
   const scores = new Map(providers.map(p => [p.provider, proxyValueScore(p, weights)]));
   const sorted = sortRanked(providers, p => scores.get(p.provider) != null,
     (a, b) => scores.get(b.provider)! - scores.get(a.provider)! || a.displayName.localeCompare(b.displayName),

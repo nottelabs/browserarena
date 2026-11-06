@@ -18,8 +18,8 @@ const PAGE_SECTIONS = [
 
 export function BenchmarkSidebar({ benchmark, country, concurrency, concurrencyLevels, date, simulated, proxyBasePath = "/test", publicRoutes = false, lifecycleQuery = "", sort, inPage = false }: {
   benchmark: "captcha" | "hello-browser" | "proxy-get" | "browser-throughput" | "all";
-  country: (typeof PROXY_COUNTRIES)[number];
-  concurrency: number;
+  country?: (typeof PROXY_COUNTRIES)[number];
+  concurrency?: number;
   concurrencyLevels: number[];
   date?: string;
   simulated: boolean;

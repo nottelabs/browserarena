@@ -2,11 +2,11 @@
 import { track } from "@/lib/analytics";
 
 import { useState } from "react";
-import type { ProxyGetStats } from "@/lib/proxy-get";
+import type { ProxyGetClientStats } from "@/lib/proxy-get";
 import { proxyProviderColor, violinBandwidth, violinPath } from "@/lib/proxy-violin";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-export function ProxyDailyDistribution({ providers, dateLabel, timeoutMs }: { providers: ProxyGetStats[]; dateLabel: string; timeoutMs: number }) {
+export function ProxyDailyDistribution({ providers, dateLabel, timeoutMs }: { providers: ProxyGetClientStats[]; dateLabel: string; timeoutMs: number }) {
   const [metric, setMetric] = useState<"get_ms" | "first_byte_ms">("get_ms");
   const groups = providers.filter(p => p.attempts > 0).map(p => ({ ...p, values: p.samples.flatMap(s => s.status === "success" && s[metric] !== null ? [s[metric]!] : []) }));
   const values = groups.flatMap(p => p.values);

@@ -83,6 +83,17 @@ export function summarizeProxyGetHistory(entries: ProxyGetRecord[], country: str
     workloadChangeDates };
 }
 
+// Charts only compare workload keys for equality. The full key repeats a few
+// hundred bytes of URLs and hashes for every provider on every day.
+export function compactWorkloadKeys(days: ProxyHistoryDay[]): ProxyHistoryDay[] {
+  const ids = new Map<string, string>();
+  const id = (key: string) => {
+    if (!ids.has(key)) ids.set(key, String(ids.size));
+    return ids.get(key)!;
+  };
+  return days.map(day => ({ ...day, providers: day.providers.map(provider => ({ ...provider, workloadKey: id(provider.workloadKey) })) }));
+}
+
 export async function loadProxyGetHistory(country = "US", date?: string) {
   const history = summarizeProxyGetHistory(await loadProxyGetEntries(true), country, date);
   await Promise.all(history.overview.providers.map(async (provider) => {
