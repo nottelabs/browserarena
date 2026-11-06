@@ -1,7 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { getResultsDir } from "./data";
-import { CAMPAIGN_ID, validateCampaign } from "../../src/benchmarks/captcha/publication";
+import { CAMPAIGN_ID, validateCampaign, type CaptchaCell, type CaptchaType, type PublicCampaign } from "../../src/benchmarks/captcha/publication";
+import { SUCCESS_WORDS } from "./captcha-leaderboard";
 import { PROVIDERS } from "../../src/benchmarks/captcha/protocol.mjs";
 
 /** Providers the runner benchmarks today; newer ones may be missing from older runs. */
@@ -13,6 +14,15 @@ export function captchaProviderNotes(selected: { providers: string[] }, campaign
     [provider, campaigns.some(campaign => campaign.providers.includes(provider))
       ? "Not in this run: it was added to the benchmark after this run, or left out of it"
       : "No results yet: added to the benchmark after the latest published run"]));
+}
+
+export type { CaptchaCell, CaptchaType, PublicCampaign };
+// `signal_label` is "Server acceptance", "Token delivery only", "Page check" or "Page reached".
+export { captchaColumns, SUCCESS_WORDS } from "./captcha-leaderboard";
+
+// The count, success word and median that belong to a column's own success signal.
+export function cellSuccess(cell: CaptchaCell) {
+  return { count: cell.succeeded, word: SUCCESS_WORDS[cell.signal], median_ms: cell.success_median_ms, interval_95: cell.success_interval_95 };
 }
 
 // Benchmarked elsewhere on the site but never run here: these providers have no
@@ -44,21 +54,3 @@ export async function loadCaptchaCampaigns(directory = path.join(getResultsDir()
   return campaigns.sort((a, b) => b.started_at.localeCompare(a.started_at) || a.id.localeCompare(b.id));
 }
 
-export type CaptchaSuccessSignal = "acceptance" | "delivery";
-export type CaptchaTypeInfo = {
-  /** Fixture type as written in campaign attempts (`attempt.type`). */
-  id: string;
-  /** Column title on /captcha. */
-  label: string;
-  /** What counts as a success for this type. */
-  signal: CaptchaSuccessSignal;
-  /** Short label for that signal, shown in the column tooltip. */
-  signalLabel: string;
-};
-
-/** Column order and labels on /captcha. Columns come from the selected campaign; types missing here fall back to their ID. */
-export const CAPTCHA_TYPES: CaptchaTypeInfo[] = [
-  { id: "turnstile", label: "Cloudflare Turnstile", signal: "acceptance", signalLabel: "Server acceptance" },
-  { id: "recaptcha", label: "reCAPTCHA v2", signal: "acceptance", signalLabel: "Server acceptance" },
-  { id: "hcaptcha", label: "hCaptcha", signal: "delivery", signalLabel: "Token delivery only" },
-];

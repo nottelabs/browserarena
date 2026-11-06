@@ -1,17 +1,24 @@
-import { configuration, schedule, summarize } from "./protocol.mjs";
+import { captchaTypes, configuration, schedule, SIGNALS, signalFor, summarize } from "./protocol.mjs";
 
 export const CAMPAIGN_ID = /^[a-zA-Z0-9][a-zA-Z0-9_-]{0,99}$/;
+export const PROTOCOL_VERSIONS = [3, 4] as const;
+export type ProtocolVersion = typeof PROTOCOL_VERSIONS[number];
+export type SuccessSignal = "server_acceptance" | "token_delivery" | "page_check" | "page_reached";
+// One column of the results table, in plan order. Derived from the protocol version,
+// never read from a results file.
+export type CaptchaType = { id: string; label: string; signal: SuccessSignal; signal_label: string };
 export type PublicAttempt = {
   id: string; provider: string; type: string; round: number;
-  status: "verified" | "token_delivered" | "rejected" | "timeout" | "error" | "interrupted";
-  stage: string; accepted_ms: number | null; token_ms: number | null;
+  status: "verified" | "token_delivered" | "page_passed" | "rejected" | "timeout" | "error" | "interrupted";
+  stage: string; accepted_ms: number | null; token_ms: number | null; passed_ms: number | null;
   cleanup_failed: boolean;
 };
 export type PublicCampaign = {
-  benchmark: "captcha"; schema_version: 1; protocol_version: 3; id: string;
+  benchmark: "captcha"; schema_version: 1; protocol_version: ProtocolVersion; id: string;
   started_at: string; finished_at: string; revision: string;
   providers: string[]; rounds: number; concurrency: number;
-  complete: boolean; halted: boolean; interrupted: boolean; attempts: PublicAttempt[];
+  complete: boolean; halted: boolean; interrupted: boolean;
+  types: CaptchaType[]; attempts: PublicAttempt[];
 };
 
 type RecordValue = Record<string, unknown>;
@@ -32,16 +39,23 @@ function boolean(value: unknown): boolean {
   if (typeof value !== "boolean") throw new Error("Expected a boolean");
   return value;
 }
+function version(value: unknown): ProtocolVersion {
+  if (!PROTOCOL_VERSIONS.includes(value as ProtocolVersion)) throw new Error("Unsupported CAPTCHA campaign protocol/schema");
+  return value as ProtocolVersion;
+}
+
+const SUCCESS_STATUSES = ["verified", "token_delivered", "page_passed"];
+const TIMING: Record<string, "accepted_ms" | "token_ms" | "passed_ms"> = { verified: "accepted_ms", token_delivered: "token_ms", page_passed: "passed_ms" };
 
 // Rebuild the entire public object: raw provider payloads, session IDs, hostnames,
 // screenshots, error strings, and arbitrary future fields never cross this boundary.
 export function validateCampaign(input: unknown): PublicCampaign {
   const raw = object(input);
-  if (raw.benchmark !== "captcha" || raw.schema_version !== 1 || raw.protocol_version !== 3)
-    throw new Error("Unsupported CAPTCHA campaign protocol/schema");
+  if (raw.benchmark !== "captcha" || raw.schema_version !== 1) throw new Error("Unsupported CAPTCHA campaign protocol/schema");
+  const protocol_version = version(raw.protocol_version);
   if (typeof raw.id !== "string" || !CAMPAIGN_ID.test(raw.id)) throw new Error("Invalid campaign ID");
   if (typeof raw.revision !== "string" || !/^[a-f0-9]{40}$/.test(raw.revision)) throw new Error("Invalid source revision");
-  const config = configuration({ providers: raw.providers, rounds: raw.rounds, concurrency: raw.concurrency });
+  const config = configuration({ version: protocol_version, providers: raw.providers, rounds: raw.rounds, concurrency: raw.concurrency });
   const planned = new Map(schedule(config).flat().map(task => [task.id, task]));
   if (!Array.isArray(raw.attempts)) throw new Error("Expected attempts");
   const seen = new Set<string>();
@@ -51,37 +65,41 @@ export function validateCampaign(input: unknown): PublicCampaign {
     if (!task || seen.has(task.id) || row.provider !== task.provider || row.type !== task.fixture.type || row.round !== task.round)
       throw new Error("Duplicate or unplanned attempt");
     seen.add(task.id);
-    const statuses = ["verified", "token_delivered", "rejected", "timeout", "error", "interrupted"];
+    const statuses = [...SUCCESS_STATUSES, "rejected", "timeout", "error", "interrupted"];
     if (typeof row.status !== "string" || !statuses.includes(row.status)) throw new Error("Invalid attempt status");
-    if (row.status === "verified" && row.type === "hcaptcha" || row.status === "token_delivered" && row.type !== "hcaptcha")
-      throw new Error("Token delivery and server acceptance cannot be interchanged");
+    // Each type has one success signal; its status is the only success it may record.
+    const success = SIGNALS[signalFor(protocol_version, task.fixture.type) as SuccessSignal].status;
+    if (SUCCESS_STATUSES.includes(row.status) && row.status !== success)
+      throw new Error("Token delivery, page checks and server acceptance cannot be interchanged");
     if (typeof row.stage !== "string" || !["create", "connect", "navigate", "solve", "verify"].includes(row.stage)) throw new Error("Invalid attempt stage");
-    const accepted_ms = duration(row.accepted_ms), token_ms = duration(row.token_ms);
-    if (row.status === "verified" && accepted_ms === null || row.status === "token_delivered" && token_ms === null)
+    const timings = { accepted_ms: duration(row.accepted_ms), token_ms: duration(row.token_ms), passed_ms: duration(row.passed_ms) };
+    if (SUCCESS_STATUSES.includes(row.status) && timings[TIMING[row.status]] === null)
       throw new Error("Successful attempt missing its timing");
-    if (row.status !== "verified" && accepted_ms !== null) throw new Error("Unaccepted attempt has acceptance timing");
+    if (row.status !== "verified" && timings.accepted_ms !== null) throw new Error("Unaccepted attempt has acceptance timing");
+    if (row.status !== "page_passed" && timings.passed_ms !== null) throw new Error("Unpassed attempt has page timing");
     return { id: task.id, provider: task.provider, type: task.fixture.type, round: task.round,
-      status: row.status as PublicAttempt["status"], stage: row.stage, accepted_ms, token_ms,
+      status: row.status as PublicAttempt["status"], stage: row.stage, ...timings,
       cleanup_failed: boolean(row.cleanup_failed) };
   });
   const complete = boolean(raw.complete);
   if (complete !== (attempts.length === planned.size)) throw new Error("Campaign completion disagrees with the declared plan");
   const started_at = timestamp(raw.started_at), finished_at = timestamp(raw.finished_at);
   if (finished_at < started_at) throw new Error("Campaign ends before it starts");
-  return { benchmark: "captcha", schema_version: 1, protocol_version: 3, id: raw.id,
+  return { benchmark: "captcha", schema_version: 1, protocol_version, id: raw.id,
     started_at, finished_at, revision: raw.revision,
     providers: config.providers, rounds: config.rounds, concurrency: config.concurrency,
-    complete, halted: boolean(raw.halted), interrupted: boolean(raw.interrupted), attempts };
+    complete, halted: boolean(raw.halted), interrupted: boolean(raw.interrupted),
+    types: captchaTypes(protocol_version) as CaptchaType[], attempts };
 }
 
 export function exportCampaign(id: string, summaryInput: unknown, rows: unknown[]): PublicCampaign {
   const summary = object(summaryInput), config = object(summary.configuration);
-  if (config.version !== 3) throw new Error("Only protocol v3 can be exported");
+  const protocol_version = version(config.version);
   // Reject fixture or timing drift instead of mislabeling it as the same protocol.
-  const expected = configuration({ providers: config.providers, rounds: config.rounds, concurrency: config.concurrency });
+  const expected = configuration({ version: protocol_version, providers: config.providers, rounds: config.rounds, concurrency: config.concurrency });
   for (const key of ["fixtures", "viewport", "solveTimeoutMs", "cooldownMs", "navigationTimeoutMs", "retries"] as const)
     if (JSON.stringify(config[key]) !== JSON.stringify(expected[key])) throw new Error(`Protocol drift: ${key}`);
-  return validateCampaign({ benchmark: "captcha", schema_version: 1, protocol_version: 3, id,
+  return validateCampaign({ benchmark: "captcha", schema_version: 1, protocol_version, id,
     started_at: config.started_at, finished_at: summary.finished_at, revision: config.browserarena_sha,
     providers: config.providers, rounds: config.rounds, concurrency: config.concurrency,
     complete: summary.complete, halted: summary.halted, interrupted: summary.interrupted,
@@ -89,19 +107,21 @@ export function exportCampaign(id: string, summaryInput: unknown, rows: unknown[
       const row = object(value), cleanup = object(row.cleanup);
       return { id: row.id, provider: row.provider, type: row.type, round: row.round,
         status: row.status, stage: row.stage, accepted_ms: row.accepted_ms, token_ms: row.token_ms,
+        passed_ms: row.passed_ms,
         cleanup_failed: !!(row.session_id && cleanup.released !== true || cleanup.disconnect_error) };
     }),
   });
 }
 
 export type CaptchaCell = {
-  provider: string; type: string; planned: number; attempted: number;
-  verified: number; token_delivered: number; timeout: number; rejected: number;
-  error: number; interrupted: number; cleanup_errors: number; not_run: number;
+  provider: string; type: string; signal: SuccessSignal; planned: number; attempted: number;
+  verified: number; token_delivered: number; page_passed: number; succeeded: number;
+  timeout: number; rejected: number; error: number; interrupted: number; cleanup_errors: number; not_run: number;
   acceptance_interval_95: [number, number] | null; delivery_interval_95: [number, number] | null;
-  delivered_median_ms: number | null; accepted_median_ms: number | null;
+  success_interval_95: [number, number] | null;
+  delivered_median_ms: number | null; accepted_median_ms: number | null; success_median_ms: number | null;
 };
 export function campaignCells(campaign: PublicCampaign): CaptchaCell[] {
-  return summarize(configuration({ providers: campaign.providers, rounds: campaign.rounds, concurrency: campaign.concurrency }),
+  return summarize(configuration({ version: campaign.protocol_version, providers: campaign.providers, rounds: campaign.rounds, concurrency: campaign.concurrency }),
     campaign.attempts.map(row => ({ ...row, cleanup: row.cleanup_failed ? { disconnect_error: true } : {} })));
 }

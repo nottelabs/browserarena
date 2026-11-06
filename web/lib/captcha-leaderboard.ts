@@ -1,10 +1,14 @@
 // Pure ranking for /captcha. Keep free of Node-only imports: the table is a client component.
-import type { CaptchaCell, PublicCampaign } from "../../src/benchmarks/captcha/publication";
+import type { CaptchaCell, CaptchaType, PublicCampaign } from "../../src/benchmarks/captcha/publication";
 import { PROVIDERS_BY_ID } from "./providers";
-// Type-only: captcha-data reads the filesystem and must stay out of client bundles.
-import type { CaptchaTypeInfo } from "./captcha-data";
 
-export type CaptchaTypeColumn = CaptchaTypeInfo;
+/** A column: the campaign's own type metadata (id, label, success signal and its label). */
+export type CaptchaTypeColumn = CaptchaType;
+
+/** What one success means under each signal, e.g. "3 of 5 accepted". */
+export const SUCCESS_WORDS: Record<CaptchaType["signal"], string> = {
+  server_acceptance: "accepted", token_delivery: "delivered", page_check: "passed", page_reached: "reached",
+};
 export type CaptchaRound = { key: string; outcome: string; label: string };
 export type CaptchaTypeResult = {
   type: string; successes: number; attempted: number; medianMs: number | null;
@@ -18,7 +22,7 @@ export type CaptchaRow = {
   note?: string;
 };
 
-const OUTCOMES: Record<string, string> = { verified: "Accepted", token_delivered: "Token delivered", timeout: "Timed out", rejected: "Rejected", error: "Error", interrupted: "Interrupted" };
+const OUTCOMES: Record<string, string> = { verified: "Accepted", token_delivered: "Token delivered", page_passed: "Passed", timeout: "Timed out", rejected: "Rejected", error: "Error", interrupted: "Interrupted" };
 
 /** "browser-use" -> "BROWSER_USE", the ID used by the shared provider metadata. */
 export const captchaProviderKey = (id: string) => id.toUpperCase().replace(/-/g, "_");
@@ -30,16 +34,13 @@ const median = (values: number[]) => {
   return sorted.length % 2 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
 };
 
-/** Columns: types present in the campaign, in metadata order, then any unknown types. */
-export function captchaColumns(cells: CaptchaCell[], metadata: CaptchaTypeColumn[]): CaptchaTypeColumn[] {
-  const present = [...new Set(cells.map(cell => cell.type))];
-  const known = metadata.filter(type => present.includes(type.id));
-  const unknown = present.filter(type => !metadata.some(item => item.id === type)).map(type => {
-    const delivery = cells.some(cell => cell.type === type && cell.token_delivered > 0);
-    return { id: type, label: type, signal: delivery ? "delivery" as const : "acceptance" as const, signalLabel: delivery ? "Token delivery only" : "Server acceptance" };
-  });
-  return [...known, ...unknown];
+/** Columns come from each campaign's protocol: v3 campaigns show three types, v4 seven. */
+export function captchaColumns(campaign: PublicCampaign): CaptchaTypeColumn[] {
+  return campaign.types;
 }
+
+// Each success status and the timing field it records.
+const SUCCESS_TIMING = { verified: "accepted_ms", token_delivered: "token_ms", page_passed: "passed_ms" } as const;
 
 function providerInfo(provider: string) {
   const info = PROVIDERS_BY_ID[captchaProviderKey(provider)];
@@ -59,11 +60,14 @@ export function captchaLeaderboard(campaign: PublicCampaign, cells: CaptchaCell[
         label: `Round ${row.round}: ${OUTCOMES[row.status]}${row.status === "error" ? ` during ${row.stage}` : ""}${row.cleanup_failed ? "; cleanup failed" : ""}` }));
       const notRun = cell?.not_run ?? 0;
       for (let index = 0; index < notRun; index++) rounds.push({ key: `not-run-${index}`, outcome: "not_run", label: "Not run" });
-      return { type: column.id, successes: cell ? cell.verified + cell.token_delivered : 0, attempted: cell?.attempted ?? 0,
-        medianMs: cell ? cell.accepted_median_ms ?? cell.delivered_median_ms : null, rounds, notRun, cleanupErrors: cell?.cleanup_errors ?? 0 };
+      return { type: column.id, successes: cell?.succeeded ?? 0, attempted: cell?.attempted ?? 0,
+        medianMs: cell?.success_median_ms ?? null, rounds, notRun, cleanupErrors: cell?.cleanup_errors ?? 0 };
     });
-    const times = campaign.attempts.filter(row => row.provider === provider && columns.some(column => column.id === row.type)).flatMap(row =>
-      row.status === "verified" && row.accepted_ms !== null ? [row.accepted_ms] : row.status === "token_delivered" && row.token_ms !== null ? [row.token_ms] : []);
+    const times = campaign.attempts.filter(row => row.provider === provider && columns.some(column => column.id === row.type)).flatMap(row => {
+      const field = SUCCESS_TIMING[row.status as keyof typeof SUCCESS_TIMING];
+      const ms = field ? row[field] : null;
+      return ms === null ? [] : [ms];
+    });
     return { provider, ...providerInfo(provider), rank: null, results,
       successes: results.reduce((sum, result) => sum + result.successes, 0),
       attempted: results.reduce((sum, result) => sum + result.attempted, 0), medianMs: median(times) };

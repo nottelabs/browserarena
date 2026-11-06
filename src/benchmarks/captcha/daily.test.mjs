@@ -6,11 +6,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { FIXTURES, PROVIDERS } from "./protocol.mjs";
+import { FIXTURES, PROTOCOL_VERSION, PROVIDERS } from "./protocol.mjs";
 
 const script = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../scripts/run-captcha-and-publish.sh");
 const DATE = "2026-11-05";
-const ID = `${DATE}-west-v3`;
+const ID = `${DATE}-west-v${PROTOCOL_VERSION}`;
 const identity = { GIT_AUTHOR_NAME: "test", GIT_AUTHOR_EMAIL: "test@example.com", GIT_COMMITTER_NAME: "test", GIT_COMMITTER_EMAIL: "test@example.com" };
 
 function git(cwd, ...args) {
@@ -90,6 +90,8 @@ test("the campaign always covers every provider, whatever the runner environment
   const result = run([], { PROVIDER: "notte", RUNS: "1", CONCURRENCY: "1", OUTPUT: "/tmp/elsewhere" });
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.ok(cliCalls()[0].includes(`--provider=${PROVIDERS.join(",")}`), cliCalls()[0]);
+  // The published ID names the protocol the campaign ran under.
+  assert.match(fs.readFileSync(script, "utf8"), new RegExp(`^PROTOCOL=${PROTOCOL_VERSION}$`, "m"));
   assert.match(cliCalls()[0], /--runs=5 --concurrency=3 --out=\.captcha-runs\//);
 });
 

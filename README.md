@@ -107,11 +107,13 @@ npm run bench -- --benchmark=browser-throughput --provider=notte --runs=25 --loo
 
 ### CAPTCHA handling
 
-The CAPTCHA benchmark compares native handling of Turnstile, reCAPTCHA v2
-and hCaptcha across Kernel, Browserbase, Browser Use, Steel, Notte, Hyperbrowser,
-Anchor Browser, Browserless and Tilion. Each attempt
-uses a fresh session with a fixed solve window and no retries. Turnstile and
-reCAPTCHA measure server acceptance; hCaptcha measures token delivery separately.
+The CAPTCHA benchmark compares native handling of Turnstile, reCAPTCHA v2,
+hCaptcha, reCAPTCHA v3, GeeTest v3, a text CAPTCHA and PerimeterX across Kernel,
+Browserbase, Browser Use, Steel, Notte, Hyperbrowser, Anchor Browser, Browserless
+and Tilion. Each attempt uses a fresh session with a fixed solve window and no
+retries. Each type names its success signal: server acceptance for the first
+five, a page-level answer check for the text CAPTCHA, and reaching the protected
+page for PerimeterX.
 
 ```bash
 npm run bench -- --benchmark=captcha --runs=5
@@ -222,7 +224,7 @@ Daily results are produced by `scripts/run-and-publish.sh`, which runs one bench
 0 6 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west --benchmark browser-throughput --concurrency 1
 ```
 
-The CAPTCHA benchmark has its own publisher, `scripts/run-captcha-and-publish.sh`, on the us-west box (135 paid sessions a day, one cron line; see [docs/captcha.md](docs/captcha.md#daily-run)):
+The CAPTCHA benchmark has its own publisher, `scripts/run-captcha-and-publish.sh`, on the us-west box (315 paid sessions a day, one cron line; see [docs/captcha.md](docs/captcha.md#daily-run)):
 
 ```cron
 0 8 * * * /home/ubuntu/browserarena/scripts/run-captcha-and-publish.sh

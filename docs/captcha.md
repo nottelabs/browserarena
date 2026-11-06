@@ -1,7 +1,8 @@
 # CAPTCHA handling
 
-Run a fixed campaign of fresh sessions against Cloudflare Turnstile, reCAPTCHA v2
-and hCaptcha. The supported presets are Kernel, Browserbase, Browser Use, Steel,
+Run a fixed campaign of fresh sessions against seven CAPTCHA types: Cloudflare
+Turnstile, reCAPTCHA v2, hCaptcha, reCAPTCHA v3, GeeTest v3, a text (image to
+text) CAPTCHA and PerimeterX. The supported presets are Kernel, Browserbase, Browser Use, Steel,
 Notte, Hyperbrowser, Anchor Browser, Browserless and Tilion. Providers without
 native CAPTCHA solving are listed on the page with the reason and never run (see
 [Providers without a solver](#providers-without-a-solver)). Campaigns can be run by hand, and the US West runner publishes one
@@ -22,10 +23,10 @@ providers are required. Keep credentials out of results and logs.
 # Check fixture contracts and required credential presence; no paid sessions.
 npm run bench -- --benchmark=captcha --preflight
 
-# One attempt per type/provider: 27 fresh sessions.
+# One attempt per type/provider: 63 fresh sessions.
 npm run bench -- --benchmark=captcha --runs=1 --out=.captcha-runs/first-campaign
 
-# Default: 5 attempts per type/provider, 135 fresh sessions in total.
+# Default: 5 attempts per type/provider, 315 fresh sessions in total.
 npm run bench -- --benchmark=captcha --out=.captcha-runs/repeated-campaign
 
 # Select providers explicitly. Missing credentials fail before creating sessions.
@@ -61,11 +62,11 @@ inspect and reconcile the owned sessions before a new campaign. Nothing resumes
 or retries automatically. A completed campaign may contain rejected tokens,
 timeouts and setup errors; a zero exit code does not mean every challenge passed.
 
-## Protocol v3
+## Protocol v4
 
 Each session uses a 1920 × 1080 viewport, a 30-second navigation limit and a
 180-second solve window after navigation. Timing starts at navigation and ends
-at independent acceptance, or token delivery for hCaptcha. Setup, screenshots
+at the type's success signal (see the table below). Setup, screenshots
 and cleanup are excluded. The harness never clicks a CAPTCHA or answers a
 challenge: each provider's own solver goes through every step. Provider solvers
 may make their own internal attempts within the fixed window. SDK retries and
@@ -106,26 +107,84 @@ These presets compare the provider products, including their proxy pools. They
 are not identical networks and do not isolate solver quality from browser or
 proxy behavior. Lifecycle benchmark presets and retry policy do not apply here.
 
-- **Turnstile:** ZeroCaptcha's real managed-widget demo. The same-origin verifier
-  must report HTTP 200, `success=true`, `testSecret=false`, the expected hostname
-  and widget. No ZeroCaptcha solver is used.
-- **reCAPTCHA v2:** Google's official submission demo. A POST response at the
-  exact demo URL and the accepted page must both be observed. The form uses
-  `requestSubmit()` so pointer overlays cannot block verification.
-- **hCaptcha:** NopeCHA's enterprise demo. Delivery means the demo page reports
-  success, the same signal the page shows a visitor. This is **token delivery**,
-  not server acceptance: the demo's callback does not call a server verifier.
+Every type has exactly one success signal, shown under its column on the page
+and exported as `types[].signal_label`. A success under one signal can never be
+recorded as another:
 
-Fixture sitekeys and the hCaptcha script are pinned. Preflight also checks that
-Turnstile rejects an invalid token using a real secret. Fixture drift fails the
-run; test widgets cannot count as accepted tokens. Challenge difficulty varies
-per visit and automatic clearance can count as success. This is neither a
-visual-puzzle accuracy benchmark nor a test of Cloudflare's full interstitial.
+- **Server acceptance** (`verified`): a server holding the CAPTCHA's secret
+  accepted the solver's output.
+- **Token delivery only** (`token_delivered`): the widget produced a token, but no
+  server checked it. Only protocol v3's hCaptcha used this.
+- **Page check** (`page_passed`): the page itself judged the answer in the
+  browser. No server is involved.
+- **Page reached** (`page_passed`): there is no token. The protected page loaded
+  and stayed usable with no visible challenge.
+
+| Type | Test page | Signal | What counts as success |
+| --- | --- | --- | --- |
+| Cloudflare Turnstile | [ZeroCaptcha managed widget](https://zerocaptcha.io/captcha-test/cloudflare-turnstile-managed) | Server acceptance | Same-origin verifier returns HTTP 200, `success=true`, `testSecret=false`, hostname `zerocaptcha.io` and widget `managed`. No ZeroCaptcha solver is used. |
+| reCAPTCHA v2 | [Google's demo](https://www.google.com/recaptcha/api2/demo) | Server acceptance | A POST response at the exact demo URL and Google's "Verification Success" page. |
+| hCaptcha | [hCaptcha's own demo](https://accounts.hcaptcha.com/demo) | Server acceptance | The form is posted to the exact demo URL and the siteverify response it prints reports `success: true` and hostname `hcaptcha.com` (siteverify names the registered site, not the `accounts.` subdomain). |
+| reCAPTCHA v3 | [2Captcha demo](https://2captcha.com/demo/recaptcha-v3) | Server acceptance | The page's own Check runs `grecaptcha.execute` and its verifier returns Google's siteverify result: HTTP 200, `success=true`, hostname `2captcha.com`, action `demo_action` and **score ≥ 0.5**. |
+| GeeTest v3 | [2Captcha demo](https://2captcha.com/demo/geetest) | Server acceptance | The solver fills the three hidden `geetest_*` inputs; the same-origin verifier returns HTTP 200 and `success=true`, and the page's init call reported online mode (`success: 1`) with the pinned `gt`. |
+| Text CAPTCHA | [2Captcha normal CAPTCHA](https://2captcha.com/demo/normal) | Page check | The solver types the answer; once it has stopped changing for one probe the form is submitted and the page shows "Captcha is passed successfully!". |
+| PerimeterX | [Walmart search](https://www.walmart.com/search?q=desk+lamp) | Page reached | Search results for the query stay usable for five seconds with PerimeterX loaded (`_pxAppId` `PXu6b0qd2S`), no visible `#px-captcha` and not on `/blocked`. |
+
+Type-specific notes:
+
+- **Forms** are submitted with `requestSubmit()`, so pointer overlays cannot block
+  verification. The harness only submits; it never fills an answer.
+- **hCaptcha:** the demo switches to hCaptcha's dummy secret when the URL has a
+  `secret` query parameter, and then reports hostname `dummy-key-pass`. Both
+  the exact URL and the hostname are required, and preflight checks that the
+  published test token is rejected with `not-using-dummy-secret`.
+- **reCAPTCHA v3** has no challenge: the score reflects how Google rates the
+  browser, and a solver can only change it by its own means. The demo accepts any
+  score; 0.5 is Google's documented default threshold. The score of each attempt
+  stays in the private evidence. The form is submitted as soon as the pinned
+  sitekey's script has loaded.
+- **GeeTest:** in offline mode GeeTest's library validates locally, so a pass
+  there would not be a GeeTest verdict. An attempt whose init response was not
+  observed is an error.
+- **Text CAPTCHA:** the image is static and the page compares the answer with a
+  fixed string in the browser. This shows whether a provider's solver reads and
+  types an image CAPTCHA; it is not server acceptance and not an OCR accuracy
+  score. The page checks its React state, so an answer written into the field
+  without input events is rejected, and the page then clears the field. The
+  private evidence keeps the submitted answer (`submitted_answer`) to tell the
+  two apart.
+- **PerimeterX:** Walmart challenges some visits and not others. A visit that is
+  never challenged also passes, as with Turnstile's automatic clearance, and
+  the private evidence records `challenge_seen` when a challenge appeared. The
+  harness makes one navigation and never clicks; a challenge or `/blocked` page
+  resets the five-second clock. Walmart's block page may answer HTTP 403; that is
+  the challenge, not a navigation error.
+
+Sitekeys, GeeTest's `gt` and Walmart's PerimeterX app ID are pinned. Preflight
+fetches every page, checks that Turnstile, hCaptcha, reCAPTCHA v3 and GeeTest
+reject invalid input with a real secret, that GeeTest is online, and that
+Walmart either serves the PerimeterX app or redirects to its block page. A
+changed sitekey or GeeTest `gt` seen in the browser is fixture drift: that
+attempt records an error and the campaign halts, so it is never published.
+Fixture drift fails the run; test widgets cannot count as accepted tokens. Challenge
+difficulty varies per visit and automatic clearance can count as success. This
+is neither a visual-puzzle accuracy benchmark nor a test of Cloudflare's full
+interstitial.
+
+### Protocol v3
+
+Campaigns up to 2026-11-05 used protocol v3: Turnstile and reCAPTCHA v2 as
+above, and hCaptcha on [NopeCHA's enterprise demo](https://nopecha.com/captcha/hcaptcha#enterprise),
+counted as **token delivery only** because its callback calls no server verifier.
+They still validate and display with their three columns. Since 2026-11-05
+nopecha.com answers every visitor with a Cloudflare "Sorry, you have been
+blocked" page (HTTP 403), from residential, EC2 and provider proxy IPs alike,
+so v3 can no longer run and v4 uses no NopeCHA page.
 
 ## Daily run
 
 `scripts/run-captcha-and-publish.sh` runs one campaign from the US West runner,
-exports it as `results/captcha/<date>-west-v3.json` and pushes that file to
+exports it as `results/captcha/<date>-west-v4.json` and pushes that file to
 `main` as `browserarena-bot (us-west)`. It resets the checkout to `origin/main`,
 reuses the runner's `.env`, and takes the checkout lock and the comparison lock
 first, so it queues behind the other jobs on the box instead of overlapping them.
@@ -147,8 +206,9 @@ ID=$(aws ec2 describe-instances --region us-west-1 \
 aws ec2-instance-connect ssh --region us-west-1 --instance-id "$ID" --os-user ubuntu --connection-type eice
 ```
 
-The default is 5 attempts per provider per CAPTCHA type: 135 paid sessions and
-about 50 minutes on a normal day. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
+The default is 5 attempts per provider per CAPTCHA type: 315 paid sessions. A
+35-session protocol v4 campaign (five providers, one round) took 22 minutes on
+2026-11-06, so expect roughly 3 to 4 hours on a normal day. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
 push failed, reports the waiting result without pushing it), and
 `--date YYYY-MM-DD` names the campaign. `--no-reset` keeps the checkout as it is
 and refuses tracked changes. Guards:
@@ -174,7 +234,7 @@ and refuses tracked changes. Guards:
   evidence stays in `.captcha-runs/daily-*`.
 - The campaign's time limit defaults to its worst case: every attempt using its
   full create, connect, navigation, solve and cleanup limits (360 seconds),
-  three at a time, plus 15 minutes. That is 4 h 45 min for the default 135
+  three at a time, plus 15 minutes. That is 10 h 45 min for the default 315
   attempts, so a slow day is published instead of cut off. `--timeout SECONDS`
   overrides it. At the limit the campaign gets SIGTERM so active attempts can
   finish cleanup, and SIGKILL only ten minutes later.
@@ -183,7 +243,7 @@ and refuses tracked changes. Guards:
 ## Export results for review
 
 ```bash
-npm run captcha:export -- .captcha-runs/repeated-campaign 2026-10-29-west-v3
+npm run captcha:export -- .captcha-runs/repeated-campaign 2026-11-06-west-v4
 ```
 
 This writes one new `results/captcha/<id>.json` locally. It never pushes or
@@ -201,9 +261,9 @@ incomplete campaigns. It refuses existing filenames, mixed protocols, duplicate
 or unplanned attempts and inconsistent completion. Failed and unrun work cannot
 silently become successes. Preserve private evidence to investigate errors.
 
-The page reports accepted/attempted counts for Turnstile and reCAPTCHA and
-delivered/attempted counts for hCaptcha, with one dot per round and the median
-time of successful attempts. Hovering, focusing or tapping a dot names its
+The page shows one column per type of the campaign's protocol, labelled with its
+success signal, and successes/attempted on that signal, with one dot per round
+and the median time of successful attempts. Hovering, focusing or tapping a dot names its
 round and outcome. Errors remain in the denominator and unrun attempts appear
 separately. Five successes out of five still has a 95% lower bound near 57%;
 small campaigns are exploratory, not reliable speed rankings. Campaigns
@@ -213,6 +273,9 @@ published as provider results.
 ## Validation
 
 `npm test` includes the protocol, scheduler, cleanup, redaction, provider request,
-CLI and export tests without live provider credentials. `npm --prefix web test`
+CLI and export tests without live provider credentials, plus a browser test of
+each page probe against markup shaped like the live pages (skipped without
+Chromium). The daily-script tests need GNU `timeout` and fail on macOS; run them
+on Linux (CI or the runner). `npm --prefix web test`
 checks loading and validation. `npm --prefix web run test:layout` checks the
 CAPTCHA route, partial campaigns and its API as part of the website suite.

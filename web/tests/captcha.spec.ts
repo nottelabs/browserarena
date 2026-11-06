@@ -22,12 +22,44 @@ const newerId = `${campaignId}-newer`;
 const newerFile = path.join(directory, `${newerId}.json`);
 const newer = { ...fixture, id: newerId, started_at: "2099-01-01T00:00:00Z", finished_at: "2099-01-01T00:02:00Z" };
 
+// A protocol v4 campaign with the seven types; older campaigns keep their three columns.
+const v4Id = `${campaignId}-v4`;
+const v4File = path.join(directory, `${v4Id}.json`);
+const v4Types = ["turnstile", "recaptcha", "hcaptcha", "recaptcha-v3", "geetest", "text", "perimeterx"];
+// Its own day, so the run labels of the other fixtures stay unqualified.
+const v4 = { ...fixture, protocol_version: 4, id: v4Id, started_at: "2026-10-27T00:00:00Z", finished_at: "2026-10-27T00:02:00Z",
+  providers: ["kernel"], complete: false, halted: false,
+  attempts: [
+    { id: "r01-kernel-text", provider: "kernel", type: "text", round: 1, stage: "verify", status: "page_passed",
+      accepted_ms: null, token_ms: 9000, passed_ms: 9500, cleanup_failed: false },
+    { id: "r01-kernel-perimeterx", provider: "kernel", type: "perimeterx", round: 1, stage: "solve", status: "page_passed",
+      accepted_ms: null, token_ms: null, passed_ms: 3000, cleanup_failed: false },
+  ] };
+
 test.beforeAll(async () => {
   await fs.mkdir(directory, { recursive: true });
   await fs.writeFile(file, JSON.stringify(fixture), { flag: "wx" });
   await fs.writeFile(newerFile, JSON.stringify(newer), { flag: "wx" });
+  await fs.writeFile(v4File, JSON.stringify(v4), { flag: "wx" });
 });
-test.afterAll(async () => { await fs.unlink(file); await fs.unlink(newerFile); });
+test.afterAll(async () => { await fs.unlink(file); await fs.unlink(newerFile); await fs.unlink(v4File); });
+
+test("CAPTCHA v4 campaigns show every type with its success signal", async ({ page }) => {
+  await page.goto(`/captcha?campaign=${v4Id}`);
+  const table = page.getByRole("region", { name: "Provider CAPTCHA results" });
+  // #, Provider and Overall, then one column per type.
+  await expect(table.locator("thead th")).toHaveCount(3 + v4Types.length);
+  for (const label of ["reCAPTCHA v3", "GeeTest v3", "Text CAPTCHA", "PerimeterX"])
+    await expect(table.locator("thead th", { hasText: label })).toBeVisible();
+  await page.getByLabel("About Text CAPTCHA").focus();
+  await expect(page.getByRole("tooltip").filter({ hasText: "Page check" })).toBeVisible();
+  await page.getByLabel("About PerimeterX").focus();
+  await expect(page.getByRole("tooltip").filter({ hasText: "Page reached" })).toBeVisible();
+  await expect(page.getByText("Not checked by a server: Text CAPTCHA (page check), PerimeterX (page reached).", { exact: false })).toBeVisible();
+  await expect(page.locator('strong[aria-label="KERNEL PerimeterX: 1 of 1 reached"]')).toBeVisible();
+  await expect(page.locator('strong[aria-label="KERNEL Text CAPTCHA: 1 of 1 passed"]')).toBeVisible();
+  await expect(page.locator('li[aria-label="Round 1: Passed"]')).toHaveCount(2);
+});
 
 test("CAPTCHA page labels only the newest campaign as the latest run", async ({ page }) => {
   await page.goto("/captcha");
