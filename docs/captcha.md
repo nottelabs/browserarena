@@ -179,14 +179,20 @@ interstitial.
 
 ### Protocol v4
 
-Campaigns on 2026-11-06 used protocol v4: the same seven types, with hCaptcha
+The 2026-11-06 campaign ran under protocol v4: the same seven types, with hCaptcha
 on [hCaptcha's own demo](https://accounts.hcaptcha.com/demo). Success was the
 form posted to the exact URL and the printed siteverify response reporting
-`success: true` and hostname `hcaptcha.com`. They still validate and display.
+`success: true` and hostname `hcaptcha.com`. The validator still accepts v4.
 Anti-Captcha refuses every task on that domain (`ERROR_INCORRECT_SESSION_DATA
 ... Not valid domain hcaptcha.com`, seen from Notte on 2026-11-06), so any
 solver built on it could never pass there, whatever its quality. v5 moves only
 hCaptcha; every other fixture is unchanged.
+
+That campaign was amended the same day into `2026-11-06-west-v5`. Its six
+unchanged types are this morning's v4 attempts, run at `20e6f120`. Its hCaptcha
+column is a separate v5 run with the same providers, rounds, concurrency and
+task IDs, using the revision the file records. `started_at` is the v4 start and
+`finished_at` is the hCaptcha run's end. The v4 file is in git history.
 
 ### Protocol v3
 

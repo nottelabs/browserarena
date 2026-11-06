@@ -1,11 +1,11 @@
 {
   "benchmark": "captcha",
   "schema_version": 1,
-  "protocol_version": 4,
-  "id": "2026-11-06-west-v4",
+  "protocol_version": 5,
+  "id": "2026-11-06-west-v5",
   "started_at": "2026-11-06T06:57:09.488Z",
-  "finished_at": "2026-11-06T08:47:36.443Z",
-  "revision": "20e6f120fdeb76b26513ec7051fe6a9989130f20",
+  "finished_at": "2026-11-06T17:24:32.076Z",
+  "revision": "2abfa92b4aefecdb3730b0e4ca922f1091afe3f9",
   "providers": [
     "kernel",
     "browserbase",
@@ -137,30 +137,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r01-browser-use-hcaptcha",
-      "provider": "browser-use",
-      "type": "hcaptcha",
-      "round": 1,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r01-browserbase-hcaptcha",
-      "provider": "browserbase",
-      "type": "hcaptcha",
-      "round": 1,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r01-browser-use-recaptcha-v3",
       "provider": "browser-use",
       "type": "recaptcha-v3",
@@ -168,18 +144,6 @@
       "status": "verified",
       "stage": "verify",
       "accepted_ms": 4504.489801000018,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r01-kernel-hcaptcha",
-      "provider": "kernel",
-      "type": "hcaptcha",
-      "round": 1,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
       "token_ms": null,
       "passed_ms": null,
       "cleanup_failed": false
@@ -317,18 +281,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r01-steel-hcaptcha",
-      "provider": "steel",
-      "type": "hcaptcha",
-      "round": 1,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 69100.07593699999,
-      "token_ms": 67521.19475699996,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r01-browser-use-perimeterx",
       "provider": "browser-use",
       "type": "perimeterx",
@@ -413,18 +365,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r01-notte-hcaptcha",
-      "provider": "notte",
-      "type": "hcaptcha",
-      "round": 1,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r01-notte-recaptcha-v3",
       "provider": "notte",
       "type": "recaptcha-v3",
@@ -445,18 +385,6 @@
       "stage": "verify",
       "accepted_ms": 106508.19787799998,
       "token_ms": 103560.09306900005,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r01-anchorbrowser-hcaptcha",
-      "provider": "anchorbrowser",
-      "type": "hcaptcha",
-      "round": 1,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 37968.69763800001,
-      "token_ms": 36841.79392899992,
       "passed_ms": null,
       "cleanup_failed": false
     },
@@ -545,18 +473,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r02-browserbase-hcaptcha",
-      "provider": "browserbase",
-      "type": "hcaptcha",
-      "round": 2,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r02-browserbase-recaptcha-v3",
       "provider": "browserbase",
       "type": "recaptcha-v3",
@@ -613,18 +529,6 @@
       "stage": "solve",
       "accepted_ms": null,
       "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r02-browser-use-hcaptcha",
-      "provider": "browser-use",
-      "type": "hcaptcha",
-      "round": 2,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 93227.64347600006,
-      "token_ms": 92248.43625899986,
       "passed_ms": null,
       "cleanup_failed": false
     },
@@ -701,18 +605,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r02-steel-hcaptcha",
-      "provider": "steel",
-      "type": "hcaptcha",
-      "round": 2,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 21122.35592100001,
-      "token_ms": 19768.040205999976,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r02-steel-recaptcha-v3",
       "provider": "steel",
       "type": "recaptcha-v3",
@@ -740,18 +632,6 @@
       "id": "r02-browser-use-geetest",
       "provider": "browser-use",
       "type": "geetest",
-      "round": 2,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r02-notte-hcaptcha",
-      "provider": "notte",
-      "type": "hcaptcha",
       "round": 2,
       "status": "timeout",
       "stage": "solve",
@@ -857,18 +737,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r02-anchorbrowser-hcaptcha",
-      "provider": "anchorbrowser",
-      "type": "hcaptcha",
-      "round": 2,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 22292.272502999986,
-      "token_ms": 21282.747273999965,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r02-notte-geetest",
       "provider": "notte",
       "type": "geetest",
@@ -920,18 +788,6 @@
       "id": "r02-kernel-recaptcha",
       "provider": "kernel",
       "type": "recaptcha",
-      "round": 2,
-      "status": "error",
-      "stage": "create",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r02-kernel-hcaptcha",
-      "provider": "kernel",
-      "type": "hcaptcha",
       "round": 2,
       "status": "error",
       "stage": "create",
@@ -1033,30 +889,6 @@
       "stage": "verify",
       "accepted_ms": 17475.193628000095,
       "token_ms": 17221.211015000008,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r03-steel-hcaptcha",
-      "provider": "steel",
-      "type": "hcaptcha",
-      "round": 3,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 14551.671792000066,
-      "token_ms": 13200.083076000214,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r03-browser-use-hcaptcha",
-      "provider": "browser-use",
-      "type": "hcaptcha",
-      "round": 3,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 48839.145633999724,
-      "token_ms": 47875.738948999904,
       "passed_ms": null,
       "cleanup_failed": false
     },
@@ -1217,18 +1049,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r03-anchorbrowser-hcaptcha",
-      "provider": "anchorbrowser",
-      "type": "hcaptcha",
-      "round": 3,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 48054.59621499991,
-      "token_ms": 46861.38205599971,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r03-anchorbrowser-recaptcha-v3",
       "provider": "anchorbrowser",
       "type": "recaptcha-v3",
@@ -1236,18 +1056,6 @@
       "status": "verified",
       "stage": "verify",
       "accepted_ms": 11321.742461000104,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r03-notte-hcaptcha",
-      "provider": "notte",
-      "type": "hcaptcha",
-      "round": 3,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
       "token_ms": null,
       "passed_ms": null,
       "cleanup_failed": false
@@ -1304,18 +1112,6 @@
       "id": "r03-notte-geetest",
       "provider": "notte",
       "type": "geetest",
-      "round": 3,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r03-kernel-hcaptcha",
-      "provider": "kernel",
-      "type": "hcaptcha",
       "round": 3,
       "status": "timeout",
       "stage": "solve",
@@ -1512,18 +1308,6 @@
       "status": "verified",
       "stage": "verify",
       "accepted_ms": 8841.56370599987,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r03-browserbase-hcaptcha",
-      "provider": "browserbase",
-      "type": "hcaptcha",
-      "round": 3,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
       "token_ms": null,
       "passed_ms": null,
       "cleanup_failed": false
@@ -1745,18 +1529,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r04-steel-hcaptcha",
-      "provider": "steel",
-      "type": "hcaptcha",
-      "round": 4,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 96381.71362700034,
-      "token_ms": 95087.43626299966,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r04-kernel-recaptcha-v3",
       "provider": "kernel",
       "type": "recaptcha-v3",
@@ -1764,18 +1536,6 @@
       "status": "verified",
       "stage": "verify",
       "accepted_ms": 10395.712342999876,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r04-notte-hcaptcha",
-      "provider": "notte",
-      "type": "hcaptcha",
-      "round": 4,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
       "token_ms": null,
       "passed_ms": null,
       "cleanup_failed": false
@@ -1949,18 +1709,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r04-kernel-hcaptcha",
-      "provider": "kernel",
-      "type": "hcaptcha",
-      "round": 4,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r04-browser-use-recaptcha-v3",
       "provider": "browser-use",
       "type": "recaptcha-v3",
@@ -1976,30 +1724,6 @@
       "id": "r04-anchorbrowser-recaptcha",
       "provider": "anchorbrowser",
       "type": "recaptcha",
-      "round": 4,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r04-anchorbrowser-hcaptcha",
-      "provider": "anchorbrowser",
-      "type": "hcaptcha",
-      "round": 4,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 29057.53154799994,
-      "token_ms": 27955.699601999484,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r04-browserbase-hcaptcha",
-      "provider": "browserbase",
-      "type": "hcaptcha",
       "round": 4,
       "status": "timeout",
       "stage": "solve",
@@ -2153,33 +1877,9 @@
       "cleanup_failed": false
     },
     {
-      "id": "r04-browser-use-hcaptcha",
-      "provider": "browser-use",
-      "type": "hcaptcha",
-      "round": 4,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r05-anchorbrowser-perimeterx",
       "provider": "anchorbrowser",
       "type": "perimeterx",
-      "round": 5,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r05-notte-hcaptcha",
-      "provider": "notte",
-      "type": "hcaptcha",
       "round": 5,
       "status": "timeout",
       "stage": "solve",
@@ -2297,18 +1997,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r05-anchorbrowser-hcaptcha",
-      "provider": "anchorbrowser",
-      "type": "hcaptcha",
-      "round": 5,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 29967.307800999843,
-      "token_ms": 28070.40277600009,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r05-anchorbrowser-recaptcha-v3",
       "provider": "anchorbrowser",
       "type": "recaptcha-v3",
@@ -2342,18 +2030,6 @@
       "accepted_ms": null,
       "token_ms": null,
       "passed_ms": 6289.327920000069,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r05-kernel-hcaptcha",
-      "provider": "kernel",
-      "type": "hcaptcha",
-      "round": 5,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
       "cleanup_failed": false
     },
     {
@@ -2465,18 +2141,6 @@
       "cleanup_failed": false
     },
     {
-      "id": "r05-browserbase-hcaptcha",
-      "provider": "browserbase",
-      "type": "hcaptcha",
-      "round": 5,
-      "status": "timeout",
-      "stage": "solve",
-      "accepted_ms": null,
-      "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r05-browserbase-recaptcha-v3",
       "provider": "browserbase",
       "type": "recaptcha-v3",
@@ -2485,18 +2149,6 @@
       "stage": "verify",
       "accepted_ms": 6853.621322000399,
       "token_ms": null,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
-      "id": "r05-browser-use-hcaptcha",
-      "provider": "browser-use",
-      "type": "hcaptcha",
-      "round": 5,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 79671.93980600033,
-      "token_ms": 78550.90709100012,
       "passed_ms": null,
       "cleanup_failed": false
     },
@@ -2561,24 +2213,372 @@
       "cleanup_failed": false
     },
     {
-      "id": "r05-steel-hcaptcha",
-      "provider": "steel",
-      "type": "hcaptcha",
-      "round": 5,
-      "status": "verified",
-      "stage": "verify",
-      "accepted_ms": 21931.335859999992,
-      "token_ms": 20554.69289700035,
-      "passed_ms": null,
-      "cleanup_failed": false
-    },
-    {
       "id": "r05-steel-recaptcha-v3",
       "provider": "steel",
       "type": "recaptcha-v3",
       "round": 5,
       "status": "rejected",
       "stage": "verify",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-browser-use-hcaptcha",
+      "provider": "browser-use",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 116502.79132599999,
+      "token_ms": 114579.027349,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-steel-hcaptcha",
+      "provider": "steel",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 21967.855420999986,
+      "token_ms": 18959.981474,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-browserbase-hcaptcha",
+      "provider": "browserbase",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-kernel-hcaptcha",
+      "provider": "kernel",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-notte-hcaptcha",
+      "provider": "notte",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 61580.981392999995,
+      "token_ms": 60859.157951,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r01-anchorbrowser-hcaptcha",
+      "provider": "anchorbrowser",
+      "type": "hcaptcha",
+      "round": 1,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 25604.35858999999,
+      "token_ms": 23999.600131999992,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r02-steel-hcaptcha",
+      "provider": "steel",
+      "type": "hcaptcha",
+      "round": 2,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 18832.296353000012,
+      "token_ms": 17042.283601000003,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r02-browser-use-hcaptcha",
+      "provider": "browser-use",
+      "type": "hcaptcha",
+      "round": 2,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 26890.377722000005,
+      "token_ms": 25569.36718100001,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r02-notte-hcaptcha",
+      "provider": "notte",
+      "type": "hcaptcha",
+      "round": 2,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 39765.111808999995,
+      "token_ms": 38918.75005299997,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r02-anchorbrowser-hcaptcha",
+      "provider": "anchorbrowser",
+      "type": "hcaptcha",
+      "round": 2,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 75007.75337500003,
+      "token_ms": 72402.338453,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r03-browser-use-hcaptcha",
+      "provider": "browser-use",
+      "type": "hcaptcha",
+      "round": 3,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 30302.91948500002,
+      "token_ms": 28914.81842700002,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r02-browserbase-hcaptcha",
+      "provider": "browserbase",
+      "type": "hcaptcha",
+      "round": 2,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r03-steel-hcaptcha",
+      "provider": "steel",
+      "type": "hcaptcha",
+      "round": 3,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 22100.56672599999,
+      "token_ms": 19522.888452999992,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r03-notte-hcaptcha",
+      "provider": "notte",
+      "type": "hcaptcha",
+      "round": 3,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 30172.223008,
+      "token_ms": 29096.000912999967,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r03-anchorbrowser-hcaptcha",
+      "provider": "anchorbrowser",
+      "type": "hcaptcha",
+      "round": 3,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 37062.20857200003,
+      "token_ms": 34363.20230300003,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r02-kernel-hcaptcha",
+      "provider": "kernel",
+      "type": "hcaptcha",
+      "round": 2,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r04-steel-hcaptcha",
+      "provider": "steel",
+      "type": "hcaptcha",
+      "round": 4,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 28462.656890000042,
+      "token_ms": 25469.959606000048,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r04-notte-hcaptcha",
+      "provider": "notte",
+      "type": "hcaptcha",
+      "round": 4,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 96516.46896799997,
+      "token_ms": 95154.57711699995,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r03-browserbase-hcaptcha",
+      "provider": "browserbase",
+      "type": "hcaptcha",
+      "round": 3,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r04-anchorbrowser-hcaptcha",
+      "provider": "anchorbrowser",
+      "type": "hcaptcha",
+      "round": 4,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 69560.56734499999,
+      "token_ms": 66433.81536499993,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r03-kernel-hcaptcha",
+      "provider": "kernel",
+      "type": "hcaptcha",
+      "round": 3,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r04-browser-use-hcaptcha",
+      "provider": "browser-use",
+      "type": "hcaptcha",
+      "round": 4,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 39176.417703000014,
+      "token_ms": 37453.880822999985,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r05-notte-hcaptcha",
+      "provider": "notte",
+      "type": "hcaptcha",
+      "round": 5,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 31026.675810000044,
+      "token_ms": 30244.498908000067,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r05-anchorbrowser-hcaptcha",
+      "provider": "anchorbrowser",
+      "type": "hcaptcha",
+      "round": 5,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 17317.79611200001,
+      "token_ms": 14966.888880999992,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r04-browserbase-hcaptcha",
+      "provider": "browserbase",
+      "type": "hcaptcha",
+      "round": 4,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r05-browser-use-hcaptcha",
+      "provider": "browser-use",
+      "type": "hcaptcha",
+      "round": 5,
+      "status": "error",
+      "stage": "navigate",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r05-steel-hcaptcha",
+      "provider": "steel",
+      "type": "hcaptcha",
+      "round": 5,
+      "status": "verified",
+      "stage": "verify",
+      "accepted_ms": 21011.585384000093,
+      "token_ms": 18703.653499000007,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r04-kernel-hcaptcha",
+      "provider": "kernel",
+      "type": "hcaptcha",
+      "round": 4,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r05-browserbase-hcaptcha",
+      "provider": "browserbase",
+      "type": "hcaptcha",
+      "round": 5,
+      "status": "timeout",
+      "stage": "solve",
+      "accepted_ms": null,
+      "token_ms": null,
+      "passed_ms": null,
+      "cleanup_failed": false
+    },
+    {
+      "id": "r05-kernel-hcaptcha",
+      "provider": "kernel",
+      "type": "hcaptcha",
+      "round": 5,
+      "status": "timeout",
+      "stage": "solve",
       "accepted_ms": null,
       "token_ms": null,
       "passed_ms": null,
