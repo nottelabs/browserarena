@@ -15,18 +15,30 @@ import styles from "./benchmark.module.css";
 import captcha from "./captcha.module.css";
 
 // Fixed provider width so added CAPTCHA types get the space, not the provider column.
+// Type columns hold only the attempt dots, so they stay narrow.
 const PROVIDER_WIDTH = 200;
-const TYPE_WIDTH = 190;
+const OVERALL_WIDTH = 140;
+const TYPE_WIDTH = 96;
 const seconds = (ms: number | null) => ms === null ? "" : `${(ms / 1000).toFixed(1)}s`;
 const unsupportedSummary = (reason: string) => reason.split(/[;:]/)[0]?.trim() || reason;
-const OVERALL = "Successful attempts across all CAPTCHA types, out of attempts run. Errors count as failures. Ranked by this rate, then by the median time of successful attempts.";
+const SUCCESS = "Share of attempts that succeeded, across all CAPTCHA types. Errors count as failures; attempts not run are left out. Ranked by this rate, then by the median time of successful attempts.";
+const percent = (successes: number, attempted: number) => attempted ? `${Math.round(successes / attempted * 100)}%` : "–";
 const SIGNAL_MEANING: Record<CaptchaTypeColumn["signal"], string> = {
   server_acceptance: "Success means the fixture's server accepted the token.",
   token_delivery: "Success means the page reported a delivered token; no server verifier checks it.",
   page_check: "Success means the page's own in-browser check accepted the answer; no server verifies it.",
   page_reached: "Success means the page stayed usable with no challenge shown.",
 };
-const typeDescription = (column: CaptchaTypeColumn) => `${column.signal_label}. ${SIGNAL_MEANING[column.signal]} Errors count as failures. Time is the median of successful attempts.`;
+const typeDescription = (column: CaptchaTypeColumn) => `${column.signal_label}. ${SIGNAL_MEANING[column.signal]} Errors count as failures. Hover a dot for its round, outcome and time.`;
+const LEGEND = [["succeeded", "Succeeded"], ["timeout", "Timed out"], ["failed", "Failed"], ["not_run", "Not run"]] as const;
+
+/** What each dot color means, shown once above the table instead of in every cell. */
+function DotLegend() {
+  return <ul className={captcha.legend} aria-label="Dot legend">{LEGEND.map(([outcome, label]) =>
+    <li key={outcome}><span data-outcome={outcome} aria-hidden="true" />{label}</li>)}</ul>;
+}
+const cellSummary = (successes: number, attempted: number, word: string, medianMs: number | null, notRun: number) =>
+  `${successes} of ${attempted} ${word}${medianMs === null ? "" : `, median ${seconds(medianMs)}`}${notRun ? `, ${notRun} not run` : ""}`;
 
 function HeaderInfo({ label, description }: { label: string; description: string }) {
   return <Tooltip>
@@ -42,18 +54,19 @@ export function CaptchaLeaderboard({ columns, rows, caption, dateControl, summar
   const headers = [
     { key: "rank", label: "#" },
     { key: "provider", label: "Provider" },
-    { key: "overall", label: "Overall", description: OVERALL },
+    { key: "overall", label: "Success", description: SUCCESS },
     ...columns.map(column => ({ key: column.id, label: column.label, description: typeDescription(column) })),
   ];
   return <div className={styles.tableStage}>
     <BenchmarkSectionHeader controls={summary}>
       <BenchmarkTitle name={BENCHMARK_TITLES.captcha} date={dateControl} />
     </BenchmarkSectionHeader>
+    <DotLegend />
     <BenchmarkTablePanel label="CAPTCHA Handling provider results">
       <div className={`${styles.tableScroll} ${captcha.region}`} role="region" aria-label="Provider CAPTCHA results" tabIndex={0}>
-        <table className="w-full text-left text-[0.78rem] tabular-nums" style={{ minWidth: Math.max(960, PROVIDER_WIDTH + 40 + (columns.length + 1) * TYPE_WIDTH) }}>
+        <table className="w-full text-left text-[0.78rem] tabular-nums" style={{ minWidth: Math.max(720, PROVIDER_WIDTH + 40 + OVERALL_WIDTH + columns.length * TYPE_WIDTH) }}>
           <caption className="sr-only">{caption}</caption>
-          <thead><tr>{headers.map(h => <th key={h.key} scope="col" style={h.key === "provider" ? { width: PROVIDER_WIDTH } : undefined} data-sorted={h.key === "overall" ? "" : undefined} aria-sort={h.key === "overall" ? "descending" : undefined} className="whitespace-nowrap">
+          <thead><tr>{headers.map(h => <th key={h.key} scope="col" style={h.key === "provider" ? { width: PROVIDER_WIDTH } : h.key === "overall" ? { width: OVERALL_WIDTH } : h.key === "rank" ? undefined : { width: TYPE_WIDTH }} data-sorted={h.key === "overall" ? "" : undefined} aria-sort={h.key === "overall" ? "descending" : undefined} className={h.key === "rank" || h.key === "provider" || h.key === "overall" ? "whitespace-nowrap" : captcha.typeHeader}>
             <span className="inline-flex items-center gap-0.5">{h.label}{h.description && <HeaderInfo label={h.label} description={h.description} />}</span>
           </th>)}</tr></thead>
           <tbody>{rows.map(row => {
@@ -73,19 +86,18 @@ export function CaptchaLeaderboard({ columns, rows, caption, dateControl, summar
                 </Tooltip>
               </td> : <>
                 <td data-sorted="" title={row.attempted ? `${row.successes} of ${row.attempted} attempts succeeded` : "No attempts were run."}>
-                  <span className={captcha.score}><strong>{row.successes} / {row.attempted}</strong><span className={captcha.time}>{seconds(row.medianMs)}</span></span>
+                  <span className="sr-only">{row.attempted ? `${row.name}: ${row.successes} of ${row.attempted} attempts succeeded` : `${row.name}: no attempts were run`}</span>
+                  <span className={captcha.score} aria-hidden="true"><strong>{percent(row.successes, row.attempted)}</strong><span className={captcha.time}>{seconds(row.medianMs)}</span></span>
                 </td>
                 {row.results.map((result, index) => {
                   const column = columns[index];
-                  return <td key={result.type}>
-                    <span className={captcha.score}>
-                      {/* Tapping a dot shows its label; it must not open the provider page. */}
-                      <ol className={captcha.rounds} aria-label="Rounds" onClick={event => event.stopPropagation()}>{result.rounds.map(round =>
-                        <li key={round.key} data-outcome={round.outcome} data-label={round.label} aria-label={round.label} tabIndex={0} />)}</ol>
-                      <strong aria-label={`${row.name} ${column.label}: ${result.successes} of ${result.attempted} ${SUCCESS_WORDS[column.signal]}`}>{result.successes} / {result.attempted}</strong>
-                      <span className={captcha.time}>{seconds(result.medianMs)}</span>
-                    </span>
-                    {result.notRun > 0 && <span className={captcha.stat}>{result.notRun} not run</span>}
+                  const summary = cellSummary(result.successes, result.attempted, SUCCESS_WORDS[column.signal], result.medianMs, result.notRun);
+                  // Only the dots are shown; the count, median and not-run total are in the cell title and for screen readers.
+                  return <td key={result.type} title={summary}>
+                    <span className="sr-only">{`${row.name} ${column.label}: ${summary}`}</span>
+                    {/* Tapping a dot shows its label; it must not open the provider page. */}
+                    <ol className={captcha.rounds} aria-label="Rounds" onClick={event => event.stopPropagation()}>{result.rounds.map(round =>
+                      <li key={round.key} data-outcome={round.outcome} data-label={round.label} aria-label={round.label} tabIndex={0} />)}</ol>
                     {result.cleanupErrors > 0 && <span className={captcha.stat}>{result.cleanupErrors} cleanup failure{result.cleanupErrors === 1 ? "" : "s"}</span>}
                   </td>;
                 })}

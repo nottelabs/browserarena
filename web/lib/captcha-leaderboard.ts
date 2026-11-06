@@ -41,6 +41,12 @@ export function captchaColumns(campaign: PublicCampaign): CaptchaTypeColumn[] {
 
 // Each success status and the timing field it records.
 const SUCCESS_TIMING = { verified: "accepted_ms", token_delivered: "token_ms", page_passed: "passed_ms" } as const;
+/** " in 4.3s" for a successful attempt with its timing, so each dot's label carries its time. */
+function successTime(row: PublicCampaign["attempts"][number]) {
+  const field = SUCCESS_TIMING[row.status as keyof typeof SUCCESS_TIMING];
+  const ms = field ? row[field] : null;
+  return ms === null || ms === undefined ? "" : ` in ${(ms / 1000).toFixed(1)}s`;
+}
 
 function providerInfo(provider: string) {
   const info = PROVIDERS_BY_ID[captchaProviderKey(provider)];
@@ -57,7 +63,7 @@ export function captchaLeaderboard(campaign: PublicCampaign, cells: CaptchaCell[
       const cell = cells.find(item => item.provider === provider && item.type === column.id);
       const attempts = campaign.attempts.filter(row => row.provider === provider && row.type === column.id).sort((a, b) => a.round - b.round);
       const rounds: CaptchaRound[] = attempts.map(row => ({ key: row.id, outcome: row.status,
-        label: `Round ${row.round}: ${OUTCOMES[row.status]}${row.status === "error" ? ` during ${row.stage}` : ""}${row.cleanup_failed ? "; cleanup failed" : ""}` }));
+        label: `Round ${row.round}: ${OUTCOMES[row.status]}${successTime(row)}${row.status === "error" ? ` during ${row.stage}` : ""}${row.cleanup_failed ? "; cleanup failed" : ""}` }));
       const notRun = cell?.not_run ?? 0;
       for (let index = 0; index < notRun; index++) rounds.push({ key: `not-run-${index}`, outcome: "not_run", label: "Not run" });
       return { type: column.id, successes: cell?.succeeded ?? 0, attempted: cell?.attempted ?? 0,

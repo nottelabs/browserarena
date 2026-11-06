@@ -77,6 +77,6 @@ test("v4 columns come from the campaign and page passes count with their own tim
   assert.deepEqual([notte.successes, notte.attempted, notte.medianMs], [1, 2, 4000]);
   const perimeterx = notte.results[columns.findIndex(column => column.id === "perimeterx")];
   assert.deepEqual([perimeterx.successes, perimeterx.medianMs], [1, 4000]);
-  assert.deepEqual(perimeterx.rounds.map(round => round.label), ["Round 1: Passed"]);
+  assert.deepEqual(perimeterx.rounds.map(round => round.label), ["Round 1: Passed in 4.0s"]);
   assert.equal(rows.find(row => row.provider === "steel")!.rank, 2);
 });
