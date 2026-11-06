@@ -6,8 +6,8 @@
 #   scripts/run-captcha-and-publish.sh [--runs N] [--timeout SECONDS] [--date YYYY-MM-DD]
 #       [--dry-run] [--no-reset] [--no-install]
 #
-# --runs is attempts per provider per CAPTCHA type (default 5: 75 paid sessions,
-# about 30 minutes). The five providers are always passed explicitly, so a
+# --runs is attempts per provider per CAPTCHA type (default 5: 135 paid sessions,
+# about 50 minutes). The nine providers are always passed explicitly, so a
 # PROVIDER, RUNS or CONCURRENCY in the runner's environment cannot shrink the
 # campaign. Only a complete campaign is published.
 #
@@ -37,7 +37,7 @@ NO_INSTALL=0
 REGION=us-west
 PROTOCOL=3
 # Keep in sync with PROVIDERS in src/benchmarks/captcha/protocol.mjs (a test checks it).
-CAPTCHA_PROVIDERS="kernel,browserbase,browser-use,steel,notte"
+CAPTCHA_PROVIDERS="kernel,browserbase,browser-use,steel,notte,hyperbrowser,anchorbrowser,browserless,tilion"
 PUSH_RETRY_DELAY="${CAPTCHA_PUSH_RETRY_DELAY:-10}"
 
 while [[ $# -gt 0 ]]; do

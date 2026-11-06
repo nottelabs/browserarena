@@ -1,4 +1,7 @@
-export const PROVIDERS = ["kernel", "browserbase", "browser-use", "steel", "notte"];
+// Providers with a native CAPTCHA solver. Providers without one are listed, with the
+// reason, in web/lib/captcha-data.ts and are never run.
+export const PROVIDERS = ["kernel", "browserbase", "browser-use", "steel", "notte",
+  "hyperbrowser", "anchorbrowser", "browserless", "tilion"];
 export const FIXTURES = [
   { type: "turnstile", url: "https://zerocaptcha.io/captcha-test/cloudflare-turnstile-managed",
     form: "form[data-demo-form]", token: 'input[name="cf-turnstile-response"]',
@@ -19,7 +22,7 @@ export function configuration(input = {}) {
   if (!Array.isArray(config.providers) || !config.providers.length ||
       new Set(config.providers).size !== config.providers.length ||
       config.providers.some(name => !PROVIDERS.includes(name)))
-    throw new Error("providers must be a unique subset of the five supported providers");
+    throw new Error(`providers must be a unique subset of: ${PROVIDERS.join(", ")}`);
   if (!Number.isSafeInteger(config.concurrency) || config.concurrency < 1 || config.concurrency > 3)
     throw new Error("concurrency must be an integer from 1 through 3");
   if (config.solveTimeoutMs !== 180_000 || config.cooldownMs !== 5_000)

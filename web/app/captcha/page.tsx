@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
 import { BenchmarkPending, BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
-import { loadCaptchaCampaigns } from "@/lib/captcha-data";
+import { CAPTCHA_UNSUPPORTED_PROVIDERS, loadCaptchaCampaigns } from "@/lib/captcha-data";
 import { BENCHMARK_CACHE_LIFE } from "@/lib/benchmark-cache";
 import { campaignCells } from "../../../src/benchmarks/captcha/publication";
 import styles from "./captcha.module.css";
@@ -14,7 +14,9 @@ export const metadata: Metadata = {
   description: "Fresh-session trials of native CAPTCHA handling across cloud browser providers. Server acceptance and token delivery reported separately.",
   alternates: { canonical: "https://browserarena.ai/captcha" },
 };
-const names: Record<string, string> = { kernel: "Kernel", browserbase: "Browserbase", "browser-use": "Browser Use", steel: "Steel", notte: "Notte" };
+const names: Record<string, string> = { kernel: "Kernel", browserbase: "Browserbase", "browser-use": "Browser Use", steel: "Steel", notte: "Notte",
+  hyperbrowser: "Hyperbrowser", anchorbrowser: "Anchor Browser", browserless: "Browserless", tilion: "Tilion",
+  tinyfish: "TinyFish", "aws-agentcore": "AWS AgentCore", cloudflare: "Cloudflare", lightpanda: "Lightpanda" };
 const titles: Record<string, string> = { turnstile: "Cloudflare Turnstile", recaptcha: "reCAPTCHA v2", hcaptcha: "hCaptcha" };
 const SOLVE_WINDOW_SECONDS = 180;
 const formatDate = (value: string) => new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", day: "numeric", month: "long", year: "numeric" }).format(new Date(value));
@@ -75,13 +77,17 @@ async function CampaignView({ selected }: { selected: string }) {
                   {cell.cleanup_errors > 0 && <span className={styles.stat}>{cell.cleanup_errors} cleanup failure{cell.cleanup_errors === 1 ? "" : "s"}</span>}
                 </td>;
               })}
+            </tr>)}
+            {Object.entries(CAPTCHA_UNSUPPORTED_PROVIDERS).map(([provider, reason]) => <tr key={provider} data-unsupported="">
+              <th scope="row">{names[provider]}</th>
+              <td colSpan={Object.keys(titles).length}><span className={styles.stat}>{reason}</span></td>
             </tr>)}</tbody>
           </table>
         </div>
         <p className={styles.legend}>One dot per attempt: green succeeded, amber timed out, red failed. Time is the median of successful attempts.</p>
       </> : <div className={styles.empty}>
         <h2>No CAPTCHA campaigns published yet</h2>
-        <p>The benchmark is ready for opt-in trials across Kernel, Browserbase, Browser Use, Steel and Notte. Results will appear here after a campaign is run and its export is reviewed.</p>
+        <p>The benchmark is ready for opt-in trials of every provider with a native CAPTCHA solver. Results will appear here after a campaign is run and its export is reviewed.</p>
         <a className={styles.link} href="https://github.com/nottelabs/browserarena/blob/main/docs/captcha.md">Run a campaign</a>
       </div>}
     </section>
