@@ -3,7 +3,7 @@
 .score strong { font-weight: inherit; }
 .time { min-width: 3.5em; font-size: 0.72rem; font-weight: 400; color: var(--muted-foreground); text-align: right; }
 .stat { display: block; font-size: 0.65rem; line-height: 14px; color: var(--muted-foreground); text-align: right; }
-.rounds { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 64px; margin: 0; padding: 0; list-style: none; cursor: default; }
+.rounds { flex-shrink: 0; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 64px; margin: 0; padding: 0; list-style: none; cursor: default; }
 .rounds li { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--muted-foreground); }
 .rounds li[data-outcome="verified"], .rounds li[data-outcome="token_delivered"] { background: oklch(0.55 0.14 150); }
 .rounds li[data-outcome="timeout"] { background: oklch(0.66 0.14 70); }

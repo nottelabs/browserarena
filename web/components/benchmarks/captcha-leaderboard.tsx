@@ -14,6 +14,9 @@ import { BenchmarkTablePanel } from "./table-panel";
 import styles from "./benchmark.module.css";
 import captcha from "./captcha.module.css";
 
+// Fixed provider width so added CAPTCHA types get the space, not the provider column.
+const PROVIDER_WIDTH = 200;
+const TYPE_WIDTH = 190;
 const seconds = (ms: number | null) => ms === null ? "" : `${(ms / 1000).toFixed(1)}s`;
 const unsupportedSummary = (reason: string) => reason.split(/[;:]/)[0]?.trim() || reason;
 const OVERALL = "Successful attempts across all CAPTCHA types, out of attempts run. Errors count as failures. Ranked by this rate, then by the median time of successful attempts.";
@@ -44,9 +47,9 @@ export function CaptchaLeaderboard({ columns, rows, caption, dateControl, summar
     </BenchmarkSectionHeader>
     <BenchmarkTablePanel label="CAPTCHA Handling provider results">
       <div className={`${styles.tableScroll} ${captcha.region}`} role="region" aria-label="Provider CAPTCHA results" tabIndex={0}>
-        <table className="w-full text-left text-[0.78rem] tabular-nums" style={{ minWidth: Math.max(960, 400 + columns.length * 180) }}>
+        <table className="w-full text-left text-[0.78rem] tabular-nums" style={{ minWidth: Math.max(960, PROVIDER_WIDTH + 40 + (columns.length + 1) * TYPE_WIDTH) }}>
           <caption className="sr-only">{caption}</caption>
-          <thead><tr>{headers.map(h => <th key={h.key} scope="col" data-sorted={h.key === "overall" ? "" : undefined} aria-sort={h.key === "overall" ? "descending" : undefined} className="whitespace-nowrap">
+          <thead><tr>{headers.map(h => <th key={h.key} scope="col" style={h.key === "provider" ? { width: PROVIDER_WIDTH } : undefined} data-sorted={h.key === "overall" ? "" : undefined} aria-sort={h.key === "overall" ? "descending" : undefined} className="whitespace-nowrap">
             <span className="inline-flex items-center gap-0.5">{h.label}{h.description && <HeaderInfo label={h.label} description={h.description} />}</span>
           </th>)}</tr></thead>
           <tbody>{rows.map(row => {
