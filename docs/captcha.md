@@ -58,7 +58,10 @@ flock -n .run-and-publish.lock flock -n "$HOME/.browserarena-comparison.lock" \
 Run in a persistent terminal if SSH might disconnect. SIGINT, SIGTERM and SIGHUP
 stop new starts and let active attempts finish cleanup. Do not force-kill the
 process. Unknown session ownership or failed release/disconnect halts new work;
-inspect and reconcile the owned sessions before a new campaign. Nothing resumes
+inspect and reconcile the owned sessions before a new campaign. A session create
+the provider refuses with an HTTP 4xx (other than 408), such as a quota, credit
+or auth error, created nothing: it counts as an error for that attempt and the
+campaign continues. Nothing resumes
 or retries automatically. A completed campaign may contain rejected tokens,
 timeouts and setup errors; a zero exit code does not mean every challenge passed.
 

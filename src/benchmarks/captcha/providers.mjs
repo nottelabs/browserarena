@@ -5,7 +5,11 @@ export function createProviders(load, env = process.env, request = fetch) {
   async function api(url, method, headers, body, signal = AbortSignal.timeout(60_000)) {
     const response = await request(url, { method, headers: { "content-type": "application/json", ...headers },
       body: body === undefined ? undefined : JSON.stringify(body), signal });
-    if (!response.ok) throw new Error(`Provider request failed: HTTP ${response.status}`);
+    if (!response.ok) {
+      const error = new Error(`Provider request failed: HTTP ${response.status}`);
+      error.status = response.status;
+      throw error;
+    }
     const text = await response.text();
     return text ? JSON.parse(text) : null;
   }

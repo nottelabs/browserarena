@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
 import test from "node:test";
 import { acceptedOfficial, acceptedTurnstile, configuration, FIXTURES, interval, schedule, summarize } from "./protocol.mjs";
-import { attempt, installCancellation, runSuite, submit } from "./run.mjs";
+import { attempt, installCancellation, refusedCreate, runSuite, submit } from "./run.mjs";
 import { createProviders, REQUIRED_ENV } from "./providers.mjs";
 import { report, sanitizer } from "./main.mjs";
 
@@ -240,6 +240,33 @@ test("navigation errors redact secrets and release IDs; missing CDP retains owne
   const unknown = harness(); unknown.deps.create = async () => { throw new Error("Creation response lost"); };
   const uncertain = await attempt(unknown.task, config, unknown.deps);
   assert.equal(uncertain.ownership_unknown, true); assert.equal(uncertain.halt_campaign, true);
+});
+
+test("a session create the provider refuses with a 4xx is an error for that attempt, not a halt", async () => {
+  const refuse = async (fields) => {
+    const h = harness();
+    h.deps.create = async () => { throw Object.assign(new Error("org limit exceeded"), fields); };
+    return { row: await attempt(h.task, config, h.deps), counts: h.counts() };
+  };
+  // Kernel/Browserbase/Steel SDKs use `status`, Hyperbrowser's uses `statusCode`.
+  for (const fields of [{ status: 429 }, { status: 401 }, { statusCode: 402 }]) {
+    const { row, counts } = await refuse(fields);
+    assert.equal(row.status, "error"); assert.equal(row.stage, "create");
+    assert.equal(row.create_refused, true); assert.equal(row.ownership_unknown, undefined);
+    assert.equal(row.halt_campaign, false, JSON.stringify(fields));
+    assert.deepEqual(counts, { releases: 0, closed: 0 });
+  }
+  // Timeouts, server errors and errors without a status may have created a session.
+  for (const fields of [{ status: 408 }, { status: 500 }, { status: "429" }, {}]) {
+    const { row } = await refuse(fields);
+    assert.equal(row.ownership_unknown, true, JSON.stringify(fields)); assert.equal(row.halt_campaign, true);
+  }
+  assert.equal(refusedCreate({ status: 499 }), true); assert.equal(refusedCreate(undefined), false);
+});
+
+test("provider API errors carry their HTTP status", async () => {
+  const create = createProviders(() => ({}), { ANCHORBROWSER_API_KEY: "key" }, async () => new Response("{}", { status: 429 }));
+  await assert.rejects(create("anchorbrowser"), error => error.status === 429 && /HTTP 429/.test(error.message));
 });
 
 test("cleanup failure remains visible after token acceptance and stops the campaign", async () => {
