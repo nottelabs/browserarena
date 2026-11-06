@@ -47,7 +47,7 @@ test.afterAll(async () => { await fs.unlink(file); await fs.unlink(newerFile); a
 test("CAPTCHA v4 campaigns show every type with its success signal", async ({ page }) => {
   await page.goto(`/captcha?campaign=${v4Id}`);
   const table = page.getByRole("region", { name: "Provider CAPTCHA results" });
-  // #, Provider and Overall, then one column per type.
+  // #, Provider and Success, then one column per type.
   await expect(table.locator("thead th")).toHaveCount(3 + v4Types.length);
   for (const label of ["reCAPTCHA v3", "GeeTest v3", "Text CAPTCHA", "PerimeterX"])
     await expect(table.locator("thead th", { hasText: label })).toBeVisible();
@@ -56,9 +56,10 @@ test("CAPTCHA v4 campaigns show every type with its success signal", async ({ pa
   await page.getByLabel("About PerimeterX").focus();
   await expect(page.getByRole("tooltip").filter({ hasText: "Page reached" })).toBeVisible();
   await expect(page.getByText("Not checked by a server: Text CAPTCHA (page check), PerimeterX (page reached).", { exact: false })).toBeVisible();
-  await expect(page.locator('strong[aria-label="KERNEL PerimeterX: 1 of 1 reached"]')).toBeVisible();
-  await expect(page.locator('strong[aria-label="KERNEL Text CAPTCHA: 1 of 1 passed"]')).toBeVisible();
-  await expect(page.locator('li[aria-label="Round 1: Passed"]')).toHaveCount(2);
+  // Cells show only dots; the count and median are for screen readers and the cell title.
+  await expect(page.getByText("KERNEL PerimeterX: 1 of 1 reached, median 3.0s", { exact: true })).toHaveCount(1);
+  await expect(page.getByText("KERNEL Text CAPTCHA: 1 of 1 passed, median 9.5s", { exact: true })).toHaveCount(1);
+  await expect(page.locator('li[aria-label^="Round 1: Passed in "]')).toHaveCount(2);
 });
 
 test("CAPTCHA page labels only the newest campaign as the latest run", async ({ page }) => {
@@ -95,7 +96,10 @@ test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile ac
   await expect(page.getByRole("heading", { name: "CAPTCHA Handling", exact: true })).toBeVisible();
   await expect(page.getByRole("status")).toContainText("Campaign halted");
   const table = page.getByRole("region", { name: "Provider CAPTCHA results" });
-  await expect(table.locator("thead th")).toHaveText(["#", "Provider", "Overall", "Cloudflare Turnstile", "reCAPTCHA v2", "hCaptcha"]);
+  await expect(table.locator("thead th")).toHaveText(["#", "Provider", "Success", "Cloudflare Turnstile", "reCAPTCHA v2", "hCaptcha"]);
+  // Success is a percentage; the exact count stays available to screen readers.
+  await expect(table.locator("tbody tr").first().locator("td[data-sorted] strong")).toHaveText("100%");
+  await expect(page.getByText(/^Browser Use: 2 of 2 attempts succeeded, median \d+\.\ds$/)).toHaveCount(1);
   // Ranked by overall success with errors and timeouts in the denominator: 2/2 before 1/2.
   await expect(table.locator("tbody tr").first().locator("td").first()).toHaveText("1");
   await expect(table.locator("tbody tr").first()).toHaveAttribute("data-leader", "");
@@ -115,18 +119,25 @@ test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile ac
   await expect(table.locator("tbody tr").first().locator("img")).toHaveCount(1);
   await page.getByLabel("About hCaptcha").focus();
   await expect(page.getByRole("tooltip")).toContainText("Token delivery only");
-  await expect(page.getByText("1 not run", { exact: true })).toHaveCount(5);
+  // One legend above the table replaces per-cell counts and "not run" lines.
+  await expect(page.getByRole("list", { name: "Dot legend" }).getByRole("listitem")).toHaveText(["Succeeded", "Timed out", "Failed", "Not run"]);
+  // No per-cell "N not run" lines: unrun attempts are hollow dots.
+  await expect(table.getByText(/^\d+ not run$/)).toHaveCount(0);
+  await expect(table.locator('li[data-outcome="not_run"]')).toHaveCount(5);
   await expect(page.getByText("1 cleanup failure", { exact: true })).toBeVisible();
   await expect(page.getByRole("row", { name: /Cloudflare Browser Run has no CAPTCHA solving/ })).toBeVisible();
   // Clicking the reason shows it; it does not open the provider page like the rest of the row.
   const reason = page.getByRole("row", { name: /Cloudflare Browser Run has no CAPTCHA solving/ }).getByText("Cloudflare Browser Run has no CAPTCHA solving");
   const [leftPage] = await Promise.all([page.waitForURL(/\/provider\//, { timeout: 3000 }).then(() => true, () => false), reason.click()]);
   expect(leftPage).toBe(false);
-  await expect(page.locator('strong[aria-label="KERNEL hCaptcha: 1 of 1 delivered"]')).toHaveText("1 / 1");
-  await expect(page.locator('li[aria-label="Round 1: Token delivered"]').first()).toBeVisible();
-  const dot = page.locator('li[aria-label="Round 1: Token delivered"]').first();
+  await expect(page.getByText("KERNEL hCaptcha: 1 of 1 delivered, median 1.5s", { exact: true })).toHaveCount(1);
+  // Each type cell still shows its median time next to the dots.
+  // The visible time span, not the screen-reader summary that also mentions it.
+  await expect(table.getByRole("row", { name: /KERNEL/ }).locator("td").nth(4).locator('span[aria-hidden="true"]')).toHaveText("1.5s");
+  await expect(page.locator('li[aria-label="Round 1: Token delivered in 1.5s"]').first()).toBeVisible();
+  const dot = page.locator('li[aria-label="Round 1: Token delivered in 1.5s"]').first();
   await dot.focus();
-  await expect.poll(() => dot.evaluate(element => { const tip = getComputedStyle(element, "::after"); return `${tip.visibility} ${tip.content}`; })).toBe('visible "Round 1: Token delivered"');
+  await expect.poll(() => dot.evaluate(element => { const tip = getComputedStyle(element, "::after"); return `${tip.visibility} ${tip.content}`; })).toBe('visible "Round 1: Token delivered in 1.5s"');
   // Tapping a dot shows its label instead of opening the provider page.
   await dot.click();
   await expect(page).toHaveURL(new RegExp(`/captcha\\?campaign=${campaignId}$`));
