@@ -388,7 +388,16 @@ test("Hyperbrowser, Anchor, Browserless and Tilion presets use native solving an
   await tilion.release(); // A session that already ended answers 404.
   tilionRegion = "de";
   const before = requests.filter(r => r.options.method === "DELETE").length;
-  await assert.rejects(create("tilion"), /region de instead of us/);
+  const wrongRegion = await create("tilion");
+  assert.equal(wrongRegion.id, "tilion-id");
+  assert.match(wrongRegion.rejected, /region de instead of us/);
+  // Through attempt(): an error for this cell, the session released, the campaign not halted.
+  const h = harness();
+  h.deps.create = async () => wrongRegion;
+  const row = await attempt({ ...h.task, provider: "tilion" }, config, h.deps);
+  assert.equal(row.status, "error"); assert.match(row.error, /region de instead of us/);
+  assert.equal(row.session_id, "tilion-id"); assert.equal(row.cleanup.released, true);
+  assert.equal(row.ownership_unknown, undefined); assert.equal(row.halt_campaign, false);
   assert.equal(requests.filter(r => r.options.method === "DELETE").length, before + 1, "A wrong-region session is released");
 
   for (const provider of config.providers) assert.ok(REQUIRED_ENV[provider]?.length, provider);

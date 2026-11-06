@@ -101,13 +101,13 @@ export function createProviders(load, env = process.env, request = fetch) {
         try { await api(`${base}/v1/session/${encodeURIComponent(data.session_id)}`, "DELETE", headers, undefined, AbortSignal.timeout(30_000)); }
         catch (error) { if (!/HTTP 404$/.test(error.message)) throw error; }
       };
-      if (data?.session_id && data.region !== "us") {
-        await release();
-        throw new Error(`Tilion returned region ${data.region ?? "unknown"} instead of us`);
-      }
+      // A wrong-region session is still ours: return it as rejected so the runner
+      // records the error and releases it, instead of losing its ID and halting.
+      const rejected = data?.session_id && data.region !== "us"
+        ? `Tilion returned region ${data.region ?? "unknown"} instead of us` : undefined;
       return { id: data?.session_id, cdpUrl,
         configuration: { automatic_recovery: true, residential: true, region: "us" },
-        release };
+        release, ...(rejected && { rejected }) };
     }
     throw new Error(`Unsupported provider: ${provider}`);
   };
