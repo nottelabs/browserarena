@@ -61,8 +61,8 @@ test("export writes a separate public file and never overwrites an earlier campa
   } finally { await fs.rm(directory, { recursive: true, force: true }); }
 });
 
-// A protocol v4 campaign covering one attempt of each success signal.
-function v4Evidence() {
+// A protocol v5 campaign covering one attempt of each success signal.
+function v5Evidence() {
   const config = configuration({ providers: ["kernel"], rounds: 1 });
   const row = (type: string, status: string, timings: Record<string, number | null>) => ({ id: `r01-kernel-${type}`, provider: "kernel",
     type, round: 1, stage: "verify", status, accepted_ms: null, token_ms: null, passed_ms: null, ...timings,
@@ -74,10 +74,10 @@ function v4Evidence() {
     row("geetest", "rejected", { token_ms: 7000 })] };
 }
 
-test("v4 exports carry typed columns and keep page checks apart from server acceptance", () => {
-  const { summary, rows } = v4Evidence();
-  const result = exportCampaign("v4-campaign", summary, rows);
-  assert.equal(result.protocol_version, 4);
+test("v5 exports carry typed columns and keep page checks apart from server acceptance", () => {
+  const { summary, rows } = v5Evidence();
+  const result = exportCampaign("v5-campaign", summary, rows);
+  assert.equal(result.protocol_version, 5);
   assert.deepEqual(result.types.map(type => `${type.id}:${type.signal_label}`), ["turnstile:Server acceptance", "recaptcha:Server acceptance",
     "hcaptcha:Server acceptance", "recaptcha-v3:Server acceptance", "geetest:Server acceptance", "text:Page check", "perimeterx:Page reached"]);
   assert.doesNotMatch(JSON.stringify(result), /private|score/);
@@ -94,7 +94,15 @@ test("v4 exports carry typed columns and keep page checks apart from server acce
     ["recaptcha-v3", { status: "page_passed", accepted_ms: null, passed_ms: 3000 }, /interchanged/],
     ["text", { passed_ms: null }, /missing its timing/],
     ["geetest", { passed_ms: 7000 }, /page timing/],
-  ] as const) assert.throws(() => exportCampaign("v4-campaign", summary, swap(type, change)), error);
+  ] as const) assert.throws(() => exportCampaign("v5-campaign", summary, swap(type, change)), error);
+});
+
+test("published v4 campaigns still validate with hCaptcha's own demo", async () => {
+  const file = path.resolve(path.dirname(new URL(import.meta.url).pathname), "../../../results/captcha/2026-11-06-west-v4.json");
+  const campaign = validateCampaign(JSON.parse(await fs.readFile(file, "utf8")));
+  assert.equal(campaign.protocol_version, 4);
+  assert.equal(campaign.types.length, 7);
+  assert.equal(campaignCells(campaign).filter(cell => cell.type === "hcaptcha" && cell.provider === "notte")[0].timeout, 5);
 });
 
 test("published v3 campaigns still validate with their three columns and token delivery", async () => {

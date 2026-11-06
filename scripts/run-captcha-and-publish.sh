@@ -38,7 +38,7 @@ NO_RESET=0
 NO_INSTALL=0
 REGION=us-west
 # Keep in sync with PROTOCOL_VERSION in src/benchmarks/captcha/protocol.mjs (a test checks it).
-PROTOCOL=4
+PROTOCOL=5
 # Keep in sync with DAILY_PROVIDERS in src/benchmarks/captcha/protocol.mjs (a test checks it).
 CAPTCHA_PROVIDERS="kernel,browserbase,browser-use,steel,notte,anchorbrowser"
 # Keep in sync with FIXTURES in src/benchmarks/captcha/protocol.mjs (a test checks it).
