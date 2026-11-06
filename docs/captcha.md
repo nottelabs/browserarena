@@ -1,8 +1,10 @@
 # CAPTCHA handling
 
 Run a fixed campaign of fresh sessions against Cloudflare Turnstile, reCAPTCHA v2
-and hCaptcha. The supported presets are Kernel, Browserbase, Browser Use, Steel
-and Notte. Campaigns can be run by hand, and the US West runner publishes one
+and hCaptcha. The supported presets are Kernel, Browserbase, Browser Use, Steel,
+Notte, Hyperbrowser, Anchor Browser, Browserless and Tilion. Providers without
+native CAPTCHA solving are listed on the page with the reason and never run (see
+[Providers without a solver](#providers-without-a-solver)). Campaigns can be run by hand, and the US West runner publishes one
 every day (see [Daily run](#daily-run)). It does not use the lifecycle publisher.
 The website at `/captcha` reads campaign exports; `GET /api/captcha` exposes the
 same data.
@@ -11,17 +13,19 @@ same data.
 
 Install dependencies with `npm ci`. Set the existing provider variables in `.env`:
 `KERNEL_API_KEY`, `BROWSERBASE_API_KEY` and `BROWSERBASE_PROJECT_ID`,
-`BROWSER_USE_API_KEY`, `STEEL_API_KEY`, and `NOTTE_API_KEY`. Only keys for selected
+`BROWSER_USE_API_KEY`, `STEEL_API_KEY`, `NOTTE_API_KEY`, `HYPERBROWSER_API_KEY`,
+`ANCHORBROWSER_API_KEY`, `BROWSERLESS_API_KEY`, and `TILION_API_KEY` (plus
+`TILION_BASE_URL` when the lifecycle benchmark uses one). Only keys for selected
 providers are required. Keep credentials out of results and logs.
 
 ```bash
 # Check fixture contracts and required credential presence; no paid sessions.
 npm run bench -- --benchmark=captcha --preflight
 
-# One attempt per type/provider: 15 fresh sessions.
+# One attempt per type/provider: 27 fresh sessions.
 npm run bench -- --benchmark=captcha --runs=1 --out=.captcha-runs/first-campaign
 
-# Default: 5 attempts per type/provider, 75 fresh sessions in total.
+# Default: 5 attempts per type/provider, 135 fresh sessions in total.
 npm run bench -- --benchmark=captcha --out=.captcha-runs/repeated-campaign
 
 # Select providers explicitly. Missing credentials fail before creating sessions.
@@ -74,6 +78,29 @@ benchmark retries are disabled.
 | Browser Use | Default solving, US proxy, v4 browser API |
 | Steel | Native solving, managed proxy |
 | Notte | Headless Chrome, automatic solving only, US proxy, ad filter disabled, public API |
+| Hyperbrowser | [Native solving](https://www.hyperbrowser.ai/docs/sessions/captcha-solving), US proxy, US East browser, ad blocking off |
+| Anchor Browser | [Native solving](https://docs.anchorbrowser.io/advanced/captcha-solving), Anchor US proxy (the solver requires one), ad and popup blocking off |
+| Browserless | [Native solving](https://docs.browserless.io/baas/bot-detection/captchas) on the stealth route, residential US proxy, SFO fleet |
+| Tilion | [Automatic challenge recovery](https://docs.tilion.dev/sessions/sessions) for CDP clients (`cdp_observe`, its default), residential US exit |
+
+Browserless has no session API: connecting starts the browser and disconnecting
+ends it, so its session ID is local to the run. Tilion is never asked to solve
+through `POST /v1/solve`; only its automatic recovery runs, as for Notte.
+
+### Providers without a solver
+
+These providers are benchmarked elsewhere on the site but have no native CAPTCHA
+solving, so they are shown with the reason and never run:
+
+| Provider | Reason |
+| --- | --- |
+| TinyFish | Its docs say it [cannot solve CAPTCHAs](https://docs.tinyfish.ai/anti-bot-guide) |
+| AWS AgentCore | No solver; [Web Bot Auth](https://docs.aws.amazon.com/bedrock-agentcore/latest/devguide/browser-web-bot-auth.html) only reduces CAPTCHAs on sites that accept verified bots |
+| Cloudflare Browser Run | No solver; CAPTCHAs go to a person through [Human in the Loop](https://developers.cloudflare.com/browser-run/features/human-in-the-loop/) |
+| Lightpanda | No CAPTCHA solving in its [docs](https://lightpanda.io/docs) |
+
+The reasons shown on the page live in `CAPTCHA_UNSUPPORTED_PROVIDERS` in
+`web/lib/captcha-data.ts`.
 
 These presets compare the provider products, including their proxy pools. They
 are not identical networks and do not isolate solver quality from browser or
@@ -120,8 +147,8 @@ ID=$(aws ec2 describe-instances --region us-west-1 \
 aws ec2-instance-connect ssh --region us-west-1 --instance-id "$ID" --os-user ubuntu --connection-type eice
 ```
 
-The default is 5 attempts per provider per CAPTCHA type: 75 paid sessions and
-about 30 minutes. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
+The default is 5 attempts per provider per CAPTCHA type: 135 paid sessions and
+about 50 minutes on a normal day. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
 push failed, reports the waiting result without pushing it), and
 `--date YYYY-MM-DD` names the campaign. `--no-reset` keeps the checkout as it is
 and refuses tracked changes. Guards:
@@ -135,7 +162,7 @@ and refuses tracked changes. Guards:
   stopped before committing is published the same way if it is complete, and held
   for review if it is not. Any other export in `results/captcha/` is left alone
   for PR review.
-- All five providers are always passed explicitly, so `PROVIDER`, `RUNS` or
+- All nine providers are always passed explicitly, so `PROVIDER`, `RUNS` or
   `CONCURRENCY` in the runner's environment cannot shrink the campaign. `.env`
   is loaded only into the campaign's environment, so it cannot change the
   publisher's settings either.
@@ -145,8 +172,12 @@ and refuses tracked changes. Guards:
   publisher that is killed mid-run, leaves it behind. Later runs refuse to start
   until someone has reconciled the provider sessions it names and removed it. The
   evidence stays in `.captcha-runs/daily-*`.
-- The campaign has a two-hour limit. At the limit it gets SIGTERM so active
-  attempts can finish cleanup, and SIGKILL only ten minutes later.
+- The campaign's time limit defaults to its worst case: every attempt using its
+  full create, connect, navigation, solve and cleanup limits (360 seconds),
+  three at a time, plus 15 minutes. That is 4 h 45 min for the default 135
+  attempts, so a slow day is published instead of cut off. `--timeout SECONDS`
+  overrides it. At the limit the campaign gets SIGTERM so active attempts can
+  finish cleanup, and SIGKILL only ten minutes later.
 - Private evidence older than two weeks is deleted after a successful push.
 
 ## Export results for review

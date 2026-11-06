@@ -82,6 +82,9 @@ export async function attempt(task, config, deps) {
     if (typeof session.id === "string" && session.id) row.session_id = session.id;
     row.configuration = session.configuration;
     await progress({ event: "session_created", id: task.id, session_id: row.session_id });
+    // An adapter may refuse a session it owns (e.g. a wrong region); the ID is
+    // recorded above, so cleanup below still releases it.
+    if (typeof session.rejected === "string") throw new Error(session.rejected);
     if (!row.session_id || typeof session.cdpUrl !== "string" || !/^wss?:\/\//.test(session.cdpUrl))
       throw new Error("Create returned an invalid session ID or CDP URL");
     signal?.throwIfAborted();

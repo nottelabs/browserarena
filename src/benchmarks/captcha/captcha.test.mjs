@@ -3,7 +3,7 @@ import { EventEmitter } from "node:events";
 import test from "node:test";
 import { acceptedOfficial, acceptedTurnstile, configuration, deliveredNopecha, FIXTURES, interval, preflight, schedule, summarize } from "./protocol.mjs";
 import { attempt, installCancellation, runSuite, submit } from "./run.mjs";
-import { createProviders } from "./providers.mjs";
+import { createProviders, REQUIRED_ENV } from "./providers.mjs";
 import { report, sanitizer } from "./main.mjs";
 
 const config = configuration();
@@ -20,11 +20,12 @@ test("protocol fixes the declared workload and rejects ignored settings", () => 
     assert.throws(() => configuration(input));
 });
 
-test("75 unique attempts rotate provider and fixture order with five attempts per cell", () => {
-  const rounds = schedule(config), tasks = rounds.flat();
-  assert.equal(tasks.length, 75);
-  assert.equal(new Set(tasks.map(task => task.id)).size, 75);
-  assert.deepEqual(rounds.map(round => round[0].provider), config.providers);
+test("unique attempts rotate provider and fixture order with five attempts per cell", () => {
+  const rounds = schedule(config), tasks = rounds.flat(), total = config.providers.length * 15;
+  assert.equal(config.providers.length, 9);
+  assert.equal(tasks.length, total);
+  assert.equal(new Set(tasks.map(task => task.id)).size, total);
+  assert.deepEqual(rounds.map(round => round[0].provider), config.providers.slice(0, config.rounds));
   assert.deepEqual(rounds.map(round => round[0].fixture.type), ["turnstile", "recaptcha", "hcaptcha", "turnstile", "recaptcha"]);
   for (const provider of config.providers) for (const fixture of FIXTURES)
     assert.equal(tasks.filter(task => task.provider === provider && task.fixture.type === fixture.type).length, 5);
@@ -113,8 +114,8 @@ test("scheduler completes fixed failure counts, caps global concurrency and neve
     save: async row => { saved.push(row); },
     sleep: async ms => { assert.equal(ms, 5_000); await new Promise(resolve => setImmediate(resolve)); },
   });
-  assert.equal(result.rows.length, 75);
-  assert.equal(saved.length, 75);
+  assert.equal(result.rows.length, config.providers.length * 15);
+  assert.equal(saved.length, config.providers.length * 15);
   assert.equal(result.not_run.length, 0);
   assert.ok(maximum <= 3);
 });
@@ -141,7 +142,7 @@ test("a critical ownership failure stops starts immediately, before its journal 
   });
   assert.equal(started.length, 3);
   assert.equal(result.halted, true);
-  assert.equal(result.not_run.length, 72);
+  assert.equal(result.not_run.length, config.providers.length * 15 - 3);
 });
 
 function harness({ failNavigation = false, failRelease = false, missingCdp = false, token = true, noReceipt = false } = {}) {
@@ -327,7 +328,7 @@ test("five provider presets explicitly enable native solving and disable SDK req
       : response(url.includes("browser-use") ? { id: "owned-id", cdpUrl: "https://browser.example" }
         : { session_id: "owned-id", cdp_url: "wss://notte.example" });
   });
-  for (const name of config.providers) {
+  for (const name of ["kernel", "browserbase", "browser-use", "steel", "notte"]) {
     const session = await create(name); assert.equal(session.id, "owned-id"); assert.equal(session.solve, undefined); await session.release();
   }
   assert.ok(!requests.some(r => r.url.includes("/page/execute")), "Notte relies on its automatic solver only");
@@ -336,6 +337,70 @@ test("five provider presets explicitly enable native solving and disable SDK req
   assert.equal(creations.find(c => c.solveCaptcha).useProxy, true);
   assert.equal(JSON.parse(requests.find(r => r.url.includes("notte.cc/sessions/start")).options.body).solve_captchas, true);
   assert.equal(JSON.parse(requests.find(r => r.url.endsWith("/browsers")).options.body).proxyCountryCode, "us");
+});
+
+test("Hyperbrowser, Anchor, Browserless and Tilion presets use native solving and a US proxy", async () => {
+  const requests = [], creations = [], stopped = [];
+  class Hyperbrowser {
+    constructor(options) {
+      assert.equal(options.apiKey, "hb-key");
+      this.sessions = { create: async body => { creations.push(body); return { id: "hb-id", wsEndpoint: "wss://hb.example" }; },
+        stop: async id => { stopped.push(id); } };
+    }
+  }
+  const env = { HYPERBROWSER_API_KEY: "hb-key", ANCHORBROWSER_API_KEY: "anchor-key", BROWSERLESS_API_KEY: "bl-key", TILION_API_KEY: "tilion-key" };
+  let tilionRegion = "us";
+  const create = createProviders(() => ({ Hyperbrowser }), env, async (url, options) => {
+    requests.push({ url, options, body: options.body && JSON.parse(options.body) });
+    if (options.method === "DELETE") return new Response(null, { status: url.includes("tilion") ? 404 : 204 });
+    return url.includes("anchorbrowser") ? response({ data: { id: "anchor-id", cdp_url: "wss://anchor.example" } })
+      : response({ session_id: "tilion-id", connect_url: "ws://tilion.example/cdp?token=t", region: tilionRegion });
+  });
+
+  const hyper = await create("hyperbrowser");
+  assert.deepEqual([hyper.id, hyper.cdpUrl], ["hb-id", "wss://hb.example"]);
+  assert.deepEqual(creations[0], { solveCaptchas: true, useProxy: true, proxyCountry: "US", region: "us-east", adblock: false, timeoutMinutes: 5 });
+  await hyper.release(); assert.deepEqual(stopped, ["hb-id"]);
+
+  const anchor = await create("anchorbrowser");
+  assert.deepEqual([anchor.id, anchor.cdpUrl], ["anchor-id", "wss://anchor.example"]);
+  const anchorCreate = requests.find(r => r.url === "https://api.anchorbrowser.io/v1/sessions");
+  assert.equal(anchorCreate.options.headers["anchor-api-key"], "anchor-key");
+  assert.equal(anchorCreate.body.browser.captcha_solver.active, true);
+  assert.deepEqual(anchorCreate.body.session.proxy, { active: true, type: "anchor_proxy", country_code: "us" });
+  await anchor.release();
+  assert.ok(requests.some(r => r.options.method === "DELETE" && r.url.endsWith("/v1/sessions/anchor-id")));
+
+  const browserless = await create("browserless");
+  const url = new URL(browserless.cdpUrl);
+  assert.equal(`${url.origin}${url.pathname}`, "wss://production-sfo.browserless.io/stealth");
+  assert.deepEqual(Object.fromEntries(url.searchParams), { token: "bl-key", proxy: "residential", proxyCountry: "us", solveCaptchas: "true", timeout: "300000" });
+  assert.match(browserless.id, /^browserless-[0-9a-f-]{36}$/);
+  assert.notEqual((await create("browserless")).id, browserless.id);
+  assert.doesNotMatch(JSON.stringify(browserless.configuration), /bl-key/);
+  await browserless.release();
+
+  const tilion = await create("tilion");
+  assert.deepEqual([tilion.id, tilion.cdpUrl], ["tilion-id", "wss://tilion.example/cdp?token=t"]);
+  const tilionCreate = requests.find(r => r.url === "https://api.tilion.dev/v1/session");
+  assert.equal(tilionCreate.options.headers.Authorization, "Bearer tilion-key");
+  assert.deepEqual(tilionCreate.body, { residential: true, region: "us", cdp_observe: true, ttl: 300 });
+  await tilion.release(); // A session that already ended answers 404.
+  tilionRegion = "de";
+  const before = requests.filter(r => r.options.method === "DELETE").length;
+  const wrongRegion = await create("tilion");
+  assert.equal(wrongRegion.id, "tilion-id");
+  assert.match(wrongRegion.rejected, /region de instead of us/);
+  // Through attempt(): an error for this cell, the session released, the campaign not halted.
+  const h = harness();
+  h.deps.create = async () => wrongRegion;
+  const row = await attempt({ ...h.task, provider: "tilion" }, config, h.deps);
+  assert.equal(row.status, "error"); assert.match(row.error, /region de instead of us/);
+  assert.equal(row.session_id, "tilion-id"); assert.equal(row.cleanup.released, true);
+  assert.equal(row.ownership_unknown, undefined); assert.equal(row.halt_campaign, false);
+  assert.equal(requests.filter(r => r.options.method === "DELETE").length, before + 1, "A wrong-region session is released");
+
+  for (const provider of config.providers) assert.ok(REQUIRED_ENV[provider]?.length, provider);
 });
 
 test("HTML evidence escapes script payloads and labels partial campaigns", () => {
