@@ -164,8 +164,9 @@ Sitekeys, GeeTest's `gt` and Walmart's PerimeterX app ID are pinned. Preflight
 fetches every page, checks that Turnstile, hCaptcha, reCAPTCHA v3 and GeeTest
 reject invalid input with a real secret, that GeeTest is online, and that
 Walmart either serves the PerimeterX app or redirects to its block page. A
-changed sitekey seen in the browser fails the attempt as fixture drift. Fixture
-drift fails the run; test widgets cannot count as accepted tokens. Challenge
+changed sitekey or GeeTest `gt` seen in the browser is fixture drift: that
+attempt records an error and the campaign halts, so it is never published.
+Fixture drift fails the run; test widgets cannot count as accepted tokens. Challenge
 difficulty varies per visit and automatic clearance can count as success. This
 is neither a visual-puzzle accuracy benchmark nor a test of Cloudflare's full
 interstitial.

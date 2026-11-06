@@ -143,6 +143,9 @@ test("hCaptcha v4 counts only the demo's own siteverify success after an observe
   const drift = harness(fixture, [{ drift: "hCaptcha sitekey changed" }]);
   const driftRow = await attempt(drift.task, config, drift.deps);
   assert.equal(driftRow.status, "error"); assert.match(driftRow.error, /Fixture drift/);
+  // Drift stops the campaign, so an incomplete run is never published; cleanup still ran.
+  assert.equal(driftRow.fixture_drift, true); assert.equal(driftRow.halt_campaign, true);
+  assert.equal(drift.counts().releases, 1);
 });
 
 test("reCAPTCHA v3 submits once the page's own script is ready and needs the score threshold", async () => {
@@ -184,12 +187,15 @@ test("GeeTest is accepted only by the verifier in online mode with the pinned gt
     [[jsonResponse(`${init}?t=1`, { success: 1, gt: fixture.gt })], "verified"],
     [[jsonResponse(`${init}?t=1`, { success: 0, gt: fixture.gt })], "rejected"],
     [[], "error"],
+    [[jsonResponse(`${init}?t=1`, { success: 1, gt: "other" })], "drift"],
   ];
   for (const [responses, status] of cases) {
     const h = harness(fixture, [{ tokenPresent: false }, { tokenPresent: true }], { responses,
       verify: async () => ({ httpStatus: 200, success: true }) });
     const row = await attempt(h.task, config, h.deps);
+    if (status === "drift") { assert.equal(row.status, "error"); assert.equal(row.halt_campaign, true); continue; }
     assert.equal(row.status, status, JSON.stringify(responses.length));
+    assert.equal(row.halt_campaign, false);
     if (status === "error") assert.match(row.error, /init parameters were not observed/);
     else assert.equal(row.geetest_init.online, status === "verified");
   }
@@ -212,9 +218,16 @@ test("text CAPTCHA submits a stable solver answer and reports a page check, neve
   assert.equal(cell.success_median_ms, row.passed_ms); assert.equal(cell.signal, "page_check");
   const wrong = harness(fixture, [...filling.slice(0, 4), { passed: false, failed: true, rejected: true }]);
   assert.equal((await attempt(wrong.task, config, wrong.deps)).status, "rejected");
-  const stale = harness(fixture, [{ tokenPresent: true, imageReady: true, answer: "x" }]);
+  // A solver that typed during navigation still goes through the stability check.
+  const early = harness(fixture, [{ tokenPresent: true, imageReady: true, answer: "w9h5k" },
+    { tokenPresent: true, imageReady: true, answer: "w9h5k" }, { tokenPresent: true, imageReady: true, answer: "w9h5k" },
+    { passed: true, failed: false }]);
+  const earlyRow = await attempt(early.task, config, early.deps);
+  assert.equal(earlyRow.status, "page_passed"); assert.equal(early.counts().submissions, 1);
+  const stale = harness(fixture, [{ passed: true, failed: false }]);
   const staleRow = await attempt(stale.task, config, stale.deps);
   assert.equal(staleRow.status, "error"); assert.match(staleRow.error, /not a fresh challenge/);
+  assert.equal(staleRow.halt_campaign, false);
 });
 
 test("PerimeterX passes when Walmart results stay usable for five seconds, from the moment they cleared", async () => {

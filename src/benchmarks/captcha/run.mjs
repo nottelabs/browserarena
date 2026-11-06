@@ -2,6 +2,9 @@ import { acceptedGeetest, acceptedOfficial, acceptedRecaptchaV3, acceptedTurnsti
   schedule } from "./protocol.mjs";
 
 class BoundExceeded extends Error {}
+// A fixture that no longer matches its pinned contract. It stops the campaign so a
+// changed demo is never published as provider failures.
+class FixtureDrift extends Error {}
 
 export async function bounded(work, ms = 10_000) {
   let timer;
@@ -184,7 +187,8 @@ export async function attempt(task, config, deps) {
     row.initial = await probe(page, task.fixture);
     if (!row.initial.formPresent && !acceptedOfficial(row.initial, receipt, task.fixture))
       throw new Error("Expected fixture form missing");
-    if (fixture.type === "text" && (row.initial.tokenPresent || row.initial.passed))
+    // A solver may type during navigation; only a verdict before any submission is stale.
+    if (fixture.type === "text" && row.initial.passed)
       throw new Error("Text CAPTCHA demo is not a fresh challenge");
     row.stage = "solve";
     row.solve_start_ms = now() - navigationStart;
@@ -204,7 +208,7 @@ export async function attempt(task, config, deps) {
       if (now() >= deadline || (!state && windowEnd >= deadline)) break;
       if (verificationDeadline !== null && (!state || now() >= verificationDeadline))
         throw new Error("No independent verification verdict within 15s of submission");
-      if (state.drift) throw new Error(`Fixture drift: ${state.drift}`);
+      if (state.drift) throw new FixtureDrift(`Fixture drift: ${state.drift}`);
       if (fixture.type === "perimeterx") {
         // Usable results must hold for a few seconds; a challenge or block resets the clock.
         if (state.challenge) row.challenge_seen = true;
@@ -256,6 +260,7 @@ export async function attempt(task, config, deps) {
             throw new Error("No independent verification verdict within 15s of submission");
           if (!row.verification) throw new Error(`Missing ${fixture.type} verification verdict`);
           if (fixture.init && !init) throw new Error("GeeTest init parameters were not observed");
+          if (fixture.init && init.gt !== fixture.gt) throw new FixtureDrift("Fixture drift: GeeTest gt changed");
           row.status = judge(row.verification, fixture, init) ? "verified" : "rejected";
           if (row.status === "verified") row.accepted_ms = verifiedAt - navigationStart;
           if (fixture.init) row.geetest_init = init;
@@ -271,6 +276,7 @@ export async function attempt(task, config, deps) {
     row.elapsed_ms = now() - navigationStart;
   } catch (error) {
     row.status = signal?.aborted ? "interrupted" : deadline !== undefined && now() >= deadline ? "timeout" : "error";
+    if (error instanceof FixtureDrift) row.fixture_drift = true;
     row.error = clean(error);
     if (createStarted && row.stage === "create" && !row.session_id) row.ownership_unknown = true;
   } finally {
@@ -303,7 +309,7 @@ export async function attempt(task, config, deps) {
     }
     row.total_ms = now() - started;
     row.finished_at = new Date().toISOString();
-    row.halt_campaign = !!row.ownership_unknown || !!row.journal_error || !!row.session_id && !row.cleanup.released || !!browser && !row.cleanup.disconnected;
+    row.halt_campaign = !!row.fixture_drift || !!row.ownership_unknown || !!row.journal_error || !!row.session_id && !row.cleanup.released || !!browser && !row.cleanup.disconnected;
   }
   return row;
 }
