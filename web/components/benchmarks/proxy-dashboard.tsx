@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { COUNTRY_NAMES, type PROXY_COUNTRIES } from "@/lib/proxy-get";
-import type { loadProxyGetHistory } from "@/lib/proxy-get-history";
+import { COUNTRY_NAMES, proxyStatsForClient, type PROXY_COUNTRIES } from "@/lib/proxy-get";
+import { compactWorkloadKeys, type loadProxyGetHistory } from "@/lib/proxy-get-history";
 import { ProxyHistoryChart } from "./proxy-history-chart";
 import { BenchmarkLink } from "./benchmark-navigation";
 import { ProxyDailyDistribution } from "./proxy-daily-distribution";
@@ -32,14 +32,15 @@ export function ProxyDashboard({ history, country, preview = false, simulated = 
   const exportQuery = new URLSearchParams(query);
   if (!simulated) exportQuery.set("view", "overview");
   const distributionTimeout = Math.max(0, ...providers.filter(p => p.attempts > 0).flatMap(p => p.samples.map(s => s.timeout_ms))) || 30000;
+  const clientProviders = providers.map(proxyStatsForClient);
 
   return <>
-      <ProxyLeaderboard providers={providers} countryName={COUNTRY_NAMES[country]} dateLabel={dateLabel} simulated={simulated} initialSort={sort} dateControl={date ? <ProxyDayPicker basePath={basePath} sort={sort} dates={history.dates} selectedDate={date} country={country} simulated={simulated} /> : undefined} />
+      <ProxyLeaderboard providers={clientProviders} countryName={COUNTRY_NAMES[country]} dateLabel={dateLabel} simulated={simulated} initialSort={sort} dateControl={date ? <ProxyDayPicker basePath={basePath} sort={sort} dates={history.dates} selectedDate={date} country={country} simulated={simulated} /> : undefined} />
       {date && <div className={styles.charts}>
-        <ProxyHistoryChart days={history.days} dates={history.dates} selectedDate={date} country={country} countryName={COUNTRY_NAMES[country]} workloadChangeDates={history.workloadChangeDates} simulated={simulated} compact rollingWindow={7} basePath={basePath} sort={sort} sectioned />
+        <ProxyHistoryChart days={compactWorkloadKeys(history.days)} dates={history.dates} selectedDate={date} country={country} countryName={COUNTRY_NAMES[country]} workloadChangeDates={history.workloadChangeDates} simulated={simulated} compact rollingWindow={7} basePath={basePath} sort={sort} sectioned />
         <section className="flex min-w-0 flex-col" aria-label="Results">
           <BenchmarkSectionHeader chart title="Results" description="Dots = samples · line = median · shape = estimated density." />
-          <ProxyDailyDistribution providers={providers} dateLabel={dateLabel} timeoutMs={distributionTimeout} />
+          <ProxyDailyDistribution providers={clientProviders} dateLabel={dateLabel} timeoutMs={distributionTimeout} />
         </section>
       </div>}
       <div className="mt-3 flex flex-wrap items-center gap-3">

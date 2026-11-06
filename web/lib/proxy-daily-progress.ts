@@ -1,7 +1,7 @@
-import type { ProxyGetStats } from "./proxy-get";
+import type { ProxyGetClientStats } from "./proxy-get";
 
 // scripts/run-proxy-and-publish.sh publishes cumulative targets 10..50.
-export function proxyRunCountLabel(provider: ProxyGetStats): string {
+export function proxyRunCountLabel(provider: ProxyGetClientStats): string {
   const count = provider.attempts.toLocaleString("en-US");
   // Scheduled IDs keep the start date even if the suite finishes after midnight.
   const runId = provider.samples[0]?.run_id ?? "";

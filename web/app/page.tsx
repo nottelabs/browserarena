@@ -8,6 +8,7 @@ import {
   type SortByType,
 } from "@/lib/data";
 import { BENCHMARK_CACHE_LIFE } from "@/lib/benchmark-cache";
+import { historyChartData } from "@/lib/history-chart-data";
 import { LeaderboardTable } from "@/components/leaderboard-table";
 import { BenchmarkPending, BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
 import { HistoryCharts } from "@/components/history-charts";
@@ -36,7 +37,7 @@ export default function Home({
     date?: string;
   }>;
 }) {
-  return <Suspense fallback={<BenchmarkPending />}>
+  return <Suspense fallback={<BenchmarkPending benchmark="hello-browser" />}>
     <LifecycleContent searchParams={searchParams} />
   </Suspense>;
 }
@@ -131,7 +132,7 @@ async function LifecycleView({
         )}
       </div>
       <HistoryCharts
-        history={history}
+        history={historyChartData(history, percentile, selectedDate)}
         percentile={percentile}
         selectedDate={selectedDate}
         initialProvider={providers[0]?.provider}
