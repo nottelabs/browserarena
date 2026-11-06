@@ -224,7 +224,7 @@ Daily results are produced by `scripts/run-and-publish.sh`, which runs one bench
 0 6 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west --benchmark browser-throughput --concurrency 1
 ```
 
-The CAPTCHA benchmark has its own publisher, `scripts/run-captcha-and-publish.sh`, on the us-west box (315 paid sessions a day, one cron line; see [docs/captcha.md](docs/captcha.md#daily-run)):
+The CAPTCHA benchmark has its own publisher, `scripts/run-captcha-and-publish.sh`, on the us-west box (210 paid sessions a day, one cron line; see [docs/captcha.md](docs/captcha.md#daily-run)):
 
 ```cron
 0 8 * * * /home/ubuntu/browserarena/scripts/run-captcha-and-publish.sh

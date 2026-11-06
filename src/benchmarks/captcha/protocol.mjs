@@ -2,6 +2,14 @@
 // reason, in web/lib/captcha-data.ts and are never run.
 export const PROVIDERS = ["kernel", "browserbase", "browser-use", "steel", "notte",
   "hyperbrowser", "anchorbrowser", "browserless", "tilion"];
+// Run by the daily publisher (scripts/run-captcha-and-publish.sh). Left out until
+// their accounts can serve a daily campaign:
+// - tilion: no TILION_API_KEY on the US West runner, so preflight fails;
+// - hyperbrowser: out of credits ("You have reached your credit limit");
+// - browserless: free-plan usage cap reached (every connect returns 401).
+// They stay benchmarked and keep their "No results yet" row on /captcha.
+export const DAILY_EXCLUDED = ["tilion", "hyperbrowser", "browserless"];
+export const DAILY_PROVIDERS = PROVIDERS.filter(provider => !DAILY_EXCLUDED.includes(provider));
 export const PROTOCOL_VERSION = 4;
 
 // What a success means for a type. The status a success records follows from it,

@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { FIXTURES, PROTOCOL_VERSION, PROVIDERS } from "./protocol.mjs";
+import { DAILY_PROVIDERS, FIXTURES, PROTOCOL_VERSION } from "./protocol.mjs";
 
 const script = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../scripts/run-captcha-and-publish.sh");
 const DATE = "2026-11-05";
@@ -89,7 +89,7 @@ test("the campaign always covers every provider, whatever the runner environment
   const { cliCalls, run } = setup(t);
   const result = run([], { PROVIDER: "notte", RUNS: "1", CONCURRENCY: "1", OUTPUT: "/tmp/elsewhere" });
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.ok(cliCalls()[0].includes(`--provider=${PROVIDERS.join(",")}`), cliCalls()[0]);
+  assert.ok(cliCalls()[0].includes(`--provider=${DAILY_PROVIDERS.join(",")} `), cliCalls()[0]);
   // The published ID names the protocol the campaign ran under.
   assert.match(fs.readFileSync(script, "utf8"), new RegExp(`^PROTOCOL=${PROTOCOL_VERSION}$`, "m"));
   assert.match(cliCalls()[0], /--runs=5 --concurrency=3 --out=\.captcha-runs\//);
@@ -102,7 +102,7 @@ test(".env reaches the campaign but cannot change the publisher's settings", t =
   const probe = path.join(root, "dotenv-probe");
   const result = run([], { FAKE_DOTENV_OUT: probe });
   assert.equal(result.status, 0, result.stdout + result.stderr);
-  assert.ok(cliCalls()[0].includes(`--provider=${PROVIDERS.join(",")}`), cliCalls()[0]);
+  assert.ok(cliCalls()[0].includes(`--provider=${DAILY_PROVIDERS.join(",")} `), cliCalls()[0]);
   assert.match(cliCalls()[0], /--runs=5 --concurrency=3 --out=\.captcha-runs\//);
   assert.ok(published().includes(`results/captcha/${ID}.json`));
   assert.equal(fs.readFileSync(probe, "utf8"), "from-dotenv");
@@ -300,7 +300,7 @@ test("the default time limit covers a campaign where every attempt uses its full
     const result = run([`--runs=${runs}`]);
     const timeout = Number((result.stdout + result.stderr).match(/ timeout=(\d+)s /)[1]);
     // 360 s per attempt, three sessions at a time.
-    const worstCase = Math.ceil(runs * PROVIDERS.length * FIXTURES.length * 360 / 3);
+    const worstCase = Math.ceil(runs * DAILY_PROVIDERS.length * FIXTURES.length * 360 / 3);
     assert.ok(timeout >= worstCase, `${timeout}s < worst case ${worstCase}s at --runs=${runs}`);
   }
   const explicit = run(["--timeout=60", "--date=2026-11-06"]);
