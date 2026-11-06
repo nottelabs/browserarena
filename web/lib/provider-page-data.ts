@@ -16,7 +16,7 @@ import { loadProxyGetHistory } from "./proxy-get-history";
 import type { ProxyGetStats } from "./proxy-get";
 import { PROVIDERS_BY_ID } from "./providers";
 import { PROXY_COUNTRIES } from "../../src/benchmarks/proxy-get/schema";
-import { CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes, loadCaptchaCampaigns } from "./captcha-data";
+import { CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes, loadCaptchaCampaigns, type PublicCampaign } from "./captcha-data";
 import { captchaColumns, captchaLeaderboard, type CaptchaRow, type CaptchaTypeColumn } from "./captcha-leaderboard";
 import { campaignCells } from "../../src/benchmarks/captcha/publication";
 
@@ -134,12 +134,13 @@ function emptyPhases(): PhaseSamples {
   return { total: [], create: [], connect: [], goto: [], release: [] };
 }
 
-async function captchaForProvider(providerId: string): Promise<ProviderCaptcha> {
+/** The provider's results in the newest campaign that ran it; campaigns are newest first. */
+export function captchaForProvider(providerId: string, campaigns: PublicCampaign[]): ProviderCaptcha {
   const id = folderName(providerId);
   const empty = { campaign: null, columns: [], row: null, ranked: 0 };
   if (id in CAPTCHA_UNSUPPORTED_PROVIDERS) return { status: "unsupported", note: CAPTCHA_UNSUPPORTED_PROVIDERS[id], ...empty };
-  const campaigns = await loadCaptchaCampaigns();
-  const campaign = campaigns.find((item) => item.providers.includes(id));
+  // A halted campaign can list a provider it never ran; keep its older results.
+  const campaign = campaigns.find((item) => item.attempts.some((attempt) => attempt.provider === id));
   if (!campaign) return { status: "absent", note: null, ...empty };
   const columns = captchaColumns(campaign);
   const rows = captchaLeaderboard(campaign, campaignCells(campaign), columns, CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes(campaign, campaigns));
@@ -239,7 +240,7 @@ export async function loadProviderPage(providerId: string, options: { date?: str
     loadHistoricalLeaderboard("hello-browser", 1),
     loadBrowserThroughputHistory(1),
     loadProxyGetHistory(country, options.date),
-    captchaForProvider(providerId),
+    loadCaptchaCampaigns().then((campaigns) => captchaForProvider(providerId, campaigns)),
   ]);
   const lifecycleSeries = history.providers.find((series) => series.provider === providerId) ?? null;
   const lifecycleDates = lifecycleSeries?.points.map((point) => point.date) ?? [];
