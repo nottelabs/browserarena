@@ -14,6 +14,8 @@ export type CaptchaRow = {
   provider: string; providerKey: string; name: string; logo?: string;
   rank: number | null; successes: number; attempted: number; medianMs: number | null;
   results: CaptchaTypeResult[]; unsupportedReason?: string;
+  /** Benchmarked provider with no attempts in this run, e.g. "No results yet". */
+  note?: string;
 };
 
 const OUTCOMES: Record<string, string> = { verified: "Accepted", token_delivered: "Token delivered", timeout: "Timed out", rejected: "Rejected", error: "Error", interrupted: "Interrupted" };
@@ -45,9 +47,10 @@ function providerInfo(provider: string) {
 }
 
 // Ranked by success rate across every type, errors included in the denominator,
-// then by the median time of successful attempts. Providers with no attempts and
-// providers without native solving follow, unranked.
-export function captchaLeaderboard(campaign: PublicCampaign, cells: CaptchaCell[], columns: CaptchaTypeColumn[], unsupported: Record<string, string>): CaptchaRow[] {
+// then by the median time of successful attempts. Providers with no attempts,
+// benchmarked providers missing from this run (with their note) and providers
+// without native solving follow, unranked.
+export function captchaLeaderboard(campaign: PublicCampaign, cells: CaptchaCell[], columns: CaptchaTypeColumn[], unsupported: Record<string, string>, notes: Record<string, string> = {}): CaptchaRow[] {
   const rows: CaptchaRow[] = campaign.providers.map(provider => {
     const results = columns.map(column => {
       const cell = cells.find(item => item.provider === provider && item.type === column.id);
@@ -70,9 +73,14 @@ export function captchaLeaderboard(campaign: PublicCampaign, cells: CaptchaCell[
     rate(b) - rate(a) || (a.medianMs ?? Infinity) - (b.medianMs ?? Infinity) || a.name.localeCompare(b.name));
   ranked.forEach((row, index) => { row.rank = index + 1; });
   const shown = new Set(rows.map(row => row.providerKey));
+  const notedRows: CaptchaRow[] = Object.entries(notes)
+    .filter(([provider]) => !shown.has(captchaProviderKey(provider)) && !(provider in unsupported))
+    .map(([provider, note]) => ({ provider, ...providerInfo(provider), rank: null, successes: 0, attempted: 0, medianMs: null, results: [], note }))
+    .sort((a, b) => a.name.localeCompare(b.name));
+  notedRows.forEach(row => shown.add(row.providerKey));
   const unsupportedRows: CaptchaRow[] = Object.entries(unsupported)
     .filter(([provider]) => !shown.has(captchaProviderKey(provider)))
     .map(([provider, reason]) => ({ provider, ...providerInfo(provider), rank: null, successes: 0, attempted: 0, medianMs: null, results: [], unsupportedReason: reason }))
     .sort((a, b) => a.name.localeCompare(b.name));
-  return [...ranked, ...rows.filter(row => row.attempted === 0), ...unsupportedRows];
+  return [...ranked, ...rows.filter(row => row.attempted === 0), ...notedRows, ...unsupportedRows];
 }

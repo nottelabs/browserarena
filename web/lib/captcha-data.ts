@@ -2,6 +2,18 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { getResultsDir } from "./data";
 import { CAMPAIGN_ID, validateCampaign } from "../../src/benchmarks/captcha/publication";
+import { PROVIDERS } from "../../src/benchmarks/captcha/protocol.mjs";
+
+/** Providers the runner benchmarks today; newer ones may be missing from older runs. */
+export const CAPTCHA_PROVIDERS: readonly string[] = PROVIDERS;
+
+/** Notes for benchmarked providers missing from the selected run. */
+export function captchaProviderNotes(selected: { providers: string[] }, campaigns: { providers: string[] }[]): Record<string, string> {
+  return Object.fromEntries(CAPTCHA_PROVIDERS.filter(provider => !selected.providers.includes(provider)).map(provider =>
+    [provider, campaigns.some(campaign => campaign.providers.includes(provider))
+      ? "Not in this run: it was added to the benchmark after this run, or left out of it"
+      : "No results yet: added to the benchmark after the latest published run"]));
+}
 
 // Benchmarked elsewhere on the site but never run here: these providers have no
 // native CAPTCHA solving (sources in docs/captcha.md). Keys are CAPTCHA provider IDs.

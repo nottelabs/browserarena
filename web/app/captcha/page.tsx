@@ -8,7 +8,7 @@ import { BenchmarkSectionHeader } from "@/components/benchmarks/section-header";
 import { RunDatePicker } from "@/components/benchmarks/run-date-picker";
 import { CaptchaLeaderboard, CaptchaRuns } from "@/components/benchmarks/captcha-leaderboard";
 import styles from "@/components/benchmarks/benchmark.module.css";
-import { CAPTCHA_TYPES, CAPTCHA_UNSUPPORTED_PROVIDERS, loadCaptchaCampaigns } from "@/lib/captcha-data";
+import { CAPTCHA_TYPES, CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes, loadCaptchaCampaigns } from "@/lib/captcha-data";
 import { captchaColumns, captchaLeaderboard } from "@/lib/captcha-leaderboard";
 import { BENCHMARK_CACHE_LIFE } from "@/lib/benchmark-cache";
 import { numberToWord } from "@/lib/providers";
@@ -51,7 +51,7 @@ async function CampaignView({ selected }: { selected: string }) {
 
   const cells = campaignCells(campaign);
   const columns = captchaColumns(cells, CAPTCHA_TYPES);
-  const rows = captchaLeaderboard(campaign, cells, columns, CAPTCHA_UNSUPPORTED_PROVIDERS);
+  const rows = captchaLeaderboard(campaign, cells, columns, CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes(campaign, campaigns));
   const latest = campaign.id === campaigns[0].id;
   const runLabel = (item: (typeof campaigns)[number]) => {
     const sameDay = campaigns.filter(other => shortDate(other.started_at) === shortDate(item.started_at)).length > 1;
