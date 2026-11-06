@@ -148,8 +148,7 @@ aws ec2-instance-connect ssh --region us-west-1 --instance-id "$ID" --os-user ub
 ```
 
 The default is 5 attempts per provider per CAPTCHA type: 135 paid sessions and
-about 50 minutes (up to about 100 if every attempt of the four newer providers
-timed out), inside the two-hour limit. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
+about 50 minutes on a normal day. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
 push failed, reports the waiting result without pushing it), and
 `--date YYYY-MM-DD` names the campaign. `--no-reset` keeps the checkout as it is
 and refuses tracked changes. Guards:
@@ -173,8 +172,12 @@ and refuses tracked changes. Guards:
   publisher that is killed mid-run, leaves it behind. Later runs refuse to start
   until someone has reconciled the provider sessions it names and removed it. The
   evidence stays in `.captcha-runs/daily-*`.
-- The campaign has a two-hour limit. At the limit it gets SIGTERM so active
-  attempts can finish cleanup, and SIGKILL only ten minutes later.
+- The campaign's time limit defaults to its worst case: every attempt using its
+  full create, connect, navigation, solve and cleanup limits (360 seconds),
+  three at a time, plus 15 minutes. That is 4 h 45 min for the default 135
+  attempts, so a slow day is published instead of cut off. `--timeout SECONDS`
+  overrides it. At the limit the campaign gets SIGTERM so active attempts can
+  finish cleanup, and SIGKILL only ten minutes later.
 - Private evidence older than two weeks is deleted after a successful push.
 
 ## Export results for review

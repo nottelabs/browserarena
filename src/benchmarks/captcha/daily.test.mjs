@@ -6,7 +6,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { PROVIDERS } from "./protocol.mjs";
+import { FIXTURES, PROVIDERS } from "./protocol.mjs";
 
 const script = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../../../scripts/run-captcha-and-publish.sh");
 const DATE = "2026-11-05";
@@ -288,6 +288,21 @@ test("local commits that are not CAPTCHA results are never pushed or reset away"
   assert.equal(cliCalls().length, 0);
   assert.ok(!published().includes("notes.txt"));
   assert.equal(git(work, "log", "-1", "--format=%s").trim(), "local work");
+});
+
+test("the default time limit covers a campaign where every attempt uses its full limits", t => {
+  const { run } = setup(t);
+  assert.match(fs.readFileSync(script, "utf8"), new RegExp(`^CAPTCHA_TYPES=${FIXTURES.length}$`, "m"),
+    "CAPTCHA_TYPES must match the protocol's fixtures");
+  for (const runs of [5, 20]) {
+    const result = run([`--runs=${runs}`]);
+    const timeout = Number((result.stdout + result.stderr).match(/ timeout=(\d+)s /)[1]);
+    // 360 s per attempt, three sessions at a time.
+    const worstCase = Math.ceil(runs * PROVIDERS.length * FIXTURES.length * 360 / 3);
+    assert.ok(timeout >= worstCase, `${timeout}s < worst case ${worstCase}s at --runs=${runs}`);
+  }
+  const explicit = run(["--timeout=60", "--date=2026-11-06"]);
+  assert.match(explicit.stdout + explicit.stderr, / timeout=60s /);
 });
 
 test("daily CAPTCHA run rejects out-of-range options before doing any work", t => {
