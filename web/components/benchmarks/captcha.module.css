@@ -1,9 +1,9 @@
 /* CAPTCHA-only pieces of the shared benchmark table: per-attempt dots and their labels. */
-.score { display: flex; align-items: center; justify-content: flex-end; gap: 10px; }
+.score { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
 .score strong { font-weight: inherit; }
-.time { min-width: 3.5em; font-size: 0.72rem; font-weight: 400; color: var(--muted-foreground); text-align: right; }
+.time { min-width: 3.2em; font-size: 0.72rem; font-weight: 400; color: var(--muted-foreground); text-align: right; }
 .stat { display: block; font-size: 0.65rem; line-height: 14px; color: var(--muted-foreground); text-align: right; }
-.rounds { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 64px; margin: 0 0 0 auto; padding: 0; list-style: none; cursor: default; }
+.rounds { flex-shrink: 0; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 64px; margin: 0; padding: 0; list-style: none; cursor: default; }
 .rounds li { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--muted-foreground); }
 .rounds li[data-outcome="verified"], .rounds li[data-outcome="token_delivered"], .rounds li[data-outcome="page_passed"], .legend span[data-outcome="succeeded"] { background: oklch(0.55 0.14 150); }
 .rounds li[data-outcome="timeout"], .legend span[data-outcome="timeout"] { background: oklch(0.66 0.14 70); }

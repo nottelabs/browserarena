@@ -15,10 +15,10 @@ import styles from "./benchmark.module.css";
 import captcha from "./captcha.module.css";
 
 // Fixed provider width so added CAPTCHA types get the space, not the provider column.
-// Type columns hold only the attempt dots, so they stay narrow.
-const PROVIDER_WIDTH = 200;
-const OVERALL_WIDTH = 140;
-const TYPE_WIDTH = 96;
+// Type columns hold the attempt dots and the median time only, so they stay narrow.
+const PROVIDER_WIDTH = 180;
+const OVERALL_WIDTH = 110;
+const TYPE_WIDTH = 112;
 const seconds = (ms: number | null) => ms === null ? "" : `${(ms / 1000).toFixed(1)}s`;
 const unsupportedSummary = (reason: string) => reason.split(/[;:]/)[0]?.trim() || reason;
 const SUCCESS = "Share of attempts that succeeded, across all CAPTCHA types. Errors count as failures; attempts not run are left out. Ranked by this rate, then by the median time of successful attempts.";
@@ -29,7 +29,7 @@ const SIGNAL_MEANING: Record<CaptchaTypeColumn["signal"], string> = {
   page_check: "Success means the page's own in-browser check accepted the answer; no server verifies it.",
   page_reached: "Success means the page stayed usable with no challenge shown.",
 };
-const typeDescription = (column: CaptchaTypeColumn) => `${column.signal_label}. ${SIGNAL_MEANING[column.signal]} Errors count as failures. Hover a dot for its round, outcome and time.`;
+const typeDescription = (column: CaptchaTypeColumn) => `${column.signal_label}. ${SIGNAL_MEANING[column.signal]} Errors count as failures. Time is the median of successful attempts; hover a dot for its round, outcome and time.`;
 const LEGEND = [["succeeded", "Succeeded"], ["timeout", "Timed out"], ["failed", "Failed"], ["not_run", "Not run"]] as const;
 
 /** What each dot color means, shown once above the table instead of in every cell. */
@@ -92,12 +92,15 @@ export function CaptchaLeaderboard({ columns, rows, caption, dateControl, summar
                 {row.results.map((result, index) => {
                   const column = columns[index];
                   const summary = cellSummary(result.successes, result.attempted, SUCCESS_WORDS[column.signal], result.medianMs, result.notRun);
-                  // Only the dots are shown; the count, median and not-run total are in the cell title and for screen readers.
+                  // Dots and the median time are shown; the count and not-run total are in the cell title and for screen readers.
                   return <td key={result.type} title={summary}>
                     <span className="sr-only">{`${row.name} ${column.label}: ${summary}`}</span>
-                    {/* Tapping a dot shows its label; it must not open the provider page. */}
-                    <ol className={captcha.rounds} aria-label="Rounds" onClick={event => event.stopPropagation()}>{result.rounds.map(round =>
-                      <li key={round.key} data-outcome={round.outcome} data-label={round.label} aria-label={round.label} tabIndex={0} />)}</ol>
+                    <span className={captcha.score}>
+                      {/* Tapping a dot shows its label; it must not open the provider page. */}
+                      <ol className={captcha.rounds} aria-label="Rounds" onClick={event => event.stopPropagation()}>{result.rounds.map(round =>
+                        <li key={round.key} data-outcome={round.outcome} data-label={round.label} aria-label={round.label} tabIndex={0} />)}</ol>
+                      <span className={captcha.time} aria-hidden="true">{seconds(result.medianMs)}</span>
+                    </span>
                     {result.cleanupErrors > 0 && <span className={captcha.stat}>{result.cleanupErrors} cleanup failure{result.cleanupErrors === 1 ? "" : "s"}</span>}
                   </td>;
                 })}

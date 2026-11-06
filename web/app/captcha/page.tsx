@@ -83,7 +83,7 @@ async function CampaignView({ selected }: { selected: string }) {
     </section>
     <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
       Can a fresh browser session get through the challenge? Compare native provider handling across {numberToWord(columns.length)} public fixtures.
-      {" "}One dot per attempt; hover or tap a dot for its round, outcome and time. The time next to Success is the median of successful attempts.
+      {" "}One dot per attempt; hover or tap a dot for its round, outcome and time. Times are medians of successful attempts.
       {unverified.length > 0 && ` Not checked by a server: ${unverified.join(", ")}.`}
     </p>
   </BenchmarkShell>;

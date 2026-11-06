@@ -131,6 +131,8 @@ test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile ac
   const [leftPage] = await Promise.all([page.waitForURL(/\/provider\//, { timeout: 3000 }).then(() => true, () => false), reason.click()]);
   expect(leftPage).toBe(false);
   await expect(page.getByText("KERNEL hCaptcha: 1 of 1 delivered, median 1.5s", { exact: true })).toHaveCount(1);
+  // Each type cell still shows its median time next to the dots.
+  await expect(table.getByRole("row", { name: /KERNEL/ }).locator("td").nth(4)).toContainText("1.5s");
   await expect(page.locator('li[aria-label="Round 1: Token delivered in 1.5s"]').first()).toBeVisible();
   const dot = page.locator('li[aria-label="Round 1: Token delivered in 1.5s"]').first();
   await dot.focus();
