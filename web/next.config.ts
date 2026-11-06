@@ -34,6 +34,7 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/captcha": ["../results/captcha/*.json"],
     "/api/captcha": ["../results/captcha/*.json"],
+    "/provider/*": ["../results/captcha/*.json"],
   },
   // Proxy loaders fetch published GitHub results on Vercel, so these files
   // only bloat function bundles. Keep lifecycle and throughput files bundled.
