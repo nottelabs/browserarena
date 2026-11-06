@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { campaignCells, type PublicAttempt, type PublicCampaign } from "../../src/benchmarks/captcha/publication";
-import { CAPTCHA_TYPES } from "./captcha-data";
+import { CAPTCHA_PROVIDERS, CAPTCHA_TYPES, captchaProviderNotes } from "./captcha-data";
 import { captchaColumns, captchaLeaderboard } from "./captcha-leaderboard";
 
 const attempt = (provider: string, type: string, status: PublicAttempt["status"], ms: number | null = null): PublicAttempt => ({
@@ -36,6 +36,30 @@ test("CAPTCHA leaderboard ranks by overall success, then median time, keeping er
   assert.deepEqual(unrun.results[0].rounds.map(round => round.label), ["Not run"]);
   assert.equal(rows.at(-1)!.unsupportedReason, "AgentCore has no native solver");
   assert.equal(rows.at(-1)!.name, "AWS AgentCore");
+});
+
+test("benchmarked providers missing from a run get a note row after the ranked ones", () => {
+  const data = campaign([attempt("notte", "turnstile", "verified", 5000)]);
+  const cells = campaignCells(data);
+  const columns = captchaColumns(cells, CAPTCHA_TYPES);
+  const notes = captchaProviderNotes(data, [data]);
+  // Every benchmarked provider outside this run gets a note; run providers never do.
+  assert.deepEqual(Object.keys(notes).sort(), CAPTCHA_PROVIDERS.filter(provider => !data.providers.includes(provider)).sort());
+  const rows = captchaLeaderboard(data, cells, columns, { "aws-agentcore": "AgentCore has no native solver", hyperbrowser: "ignored" },
+    { ...notes, tilion: "No results yet: test", hyperbrowser: "never shown: unsupported wins" });
+  const order = rows.map(row => row.provider);
+  assert.equal(order[0], "notte");
+  const tilion = rows.find(row => row.provider === "tilion")!;
+  assert.equal(tilion.rank, null); assert.equal(tilion.note, "No results yet: test"); assert.equal(tilion.unsupportedReason, undefined);
+  assert.equal(tilion.name, "Tilion");
+  assert.ok(order.indexOf("tilion") > order.indexOf("browser-use"), "after providers of this run");
+  assert.ok(order.indexOf("tilion") < order.indexOf("aws-agentcore"), "before providers without a solver");
+  assert.equal(rows.filter(row => row.provider === "hyperbrowser").length, 1);
+  assert.equal(rows.find(row => row.provider === "hyperbrowser")!.note, undefined);
+  // A provider some other published run includes is "Not in this run", not "No results yet".
+  const later = { providers: ["anchorbrowser"] };
+  assert.match(captchaProviderNotes(data, [data, later]).anchorbrowser, /^Not in this run/);
+  assert.match(captchaProviderNotes(data, [data]).anchorbrowser, /^No results yet/);
 });
 
 test("CAPTCHA columns follow the campaign's types and fall back for types without metadata", () => {

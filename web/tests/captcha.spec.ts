@@ -68,10 +68,13 @@ test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile ac
   await expect(table.locator("tbody tr").first().locator("td").first()).toHaveText("1");
   await expect(table.locator("tbody tr").first()).toHaveAttribute("data-leader", "");
   // Ties on rate and median time fall back to the provider name.
-  // Providers without native solving follow, unranked, by name.
+  // Benchmarked providers missing from the run, then providers without native
+  // solving, follow unranked, each group by name.
   await expect(table.locator("tbody th")).toHaveText(["Browser Use", "KERNEL", "Notte", "Browserbase", "Steel",
+    "Anchor Browser", "Browserless", "Hyperbrowser", "Tilion",
     "AWS AgentCore", "Cloudflare", "Lightpanda", "TinyFish"]);
-  await expect(table.locator("tbody tr td:first-child")).toHaveText(["1", "2", "3", "4", "5", "–", "–", "–", "–"]);
+  await expect(table.locator("tbody tr td:first-child")).toHaveText(["1", "2", "3", "4", "5", "–", "–", "–", "–", "–", "–", "–", "–"]);
+  await expect(page.getByRole("row", { name: /Hyperbrowser.*No results yet/ })).toBeVisible();
   await expect(table.locator("tbody tr").first().locator("img")).toHaveCount(1);
   await page.getByLabel("About hCaptcha").focus();
   await expect(page.getByRole("tooltip")).toContainText("Token delivery only");
