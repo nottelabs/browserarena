@@ -107,6 +107,19 @@ first, so it queues behind the other jobs on the box instead of overlapping them
 0 8 * * * /home/ubuntu/browserarena/scripts/run-captcha-and-publish.sh
 ```
 
+This line is installed in the `ubuntu` crontab on the US West runner, the EC2
+instance tagged `browser-arena-west` in AWS `us-west-1`, after the 04:00 and
+06:00 UTC jobs (the 06:00 one usually ends by 07:35). The script writes its own
+log to `logs/cron-<time>-us-west-captcha.log`. Port 22 is not open to the
+internet; connect through the VPC's EC2 Instance Connect endpoint:
+
+```bash
+ID=$(aws ec2 describe-instances --region us-west-1 \
+  --filters Name=tag:Name,Values=browser-arena-west Name=instance-state-name,Values=running \
+  --query 'Reservations[0].Instances[0].InstanceId' --output text)
+aws ec2-instance-connect ssh --region us-west-1 --instance-id "$ID" --os-user ubuntu --connection-type eice
+```
+
 The default is 5 attempts per provider per CAPTCHA type: 75 paid sessions and
 about 30 minutes. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
 push failed, reports the waiting result without pushing it), and
