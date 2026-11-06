@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Info } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import type { CaptchaRow, CaptchaTypeColumn } from "@/lib/captcha-leaderboard";
+import { SUCCESS_WORDS, type CaptchaRow, type CaptchaTypeColumn } from "@/lib/captcha-leaderboard";
 import { PROVIDERS_BY_ID, providerPath } from "@/lib/providers";
 import { withNotteUtm } from "@/lib/utm";
 import { BENCHMARK_TITLES, BenchmarkTitle } from "./benchmark-title";
@@ -20,9 +20,13 @@ const TYPE_WIDTH = 190;
 const seconds = (ms: number | null) => ms === null ? "" : `${(ms / 1000).toFixed(1)}s`;
 const unsupportedSummary = (reason: string) => reason.split(/[;:]/)[0]?.trim() || reason;
 const OVERALL = "Successful attempts across all CAPTCHA types, out of attempts run. Errors count as failures. Ranked by this rate, then by the median time of successful attempts.";
-const typeDescription = (column: CaptchaTypeColumn) => `${column.signalLabel}. ${column.signal === "delivery"
-  ? "Success means the page reported a delivered token; no server verifier checks it."
-  : "Success means the fixture's server accepted the token."} Errors count as failures. Time is the median of successful attempts.`;
+const SIGNAL_MEANING: Record<CaptchaTypeColumn["signal"], string> = {
+  server_acceptance: "Success means the fixture's server accepted the token.",
+  token_delivery: "Success means the page reported a delivered token; no server verifier checks it.",
+  page_check: "Success means the page's own in-browser check accepted the answer; no server verifies it.",
+  page_reached: "Success means the page stayed usable with no challenge shown.",
+};
+const typeDescription = (column: CaptchaTypeColumn) => `${column.signal_label}. ${SIGNAL_MEANING[column.signal]} Errors count as failures. Time is the median of successful attempts.`;
 
 function HeaderInfo({ label, description }: { label: string; description: string }) {
   return <Tooltip>
@@ -73,13 +77,12 @@ export function CaptchaLeaderboard({ columns, rows, caption, dateControl, summar
                 </td>
                 {row.results.map((result, index) => {
                   const column = columns[index];
-                  const delivery = column.signal === "delivery";
                   return <td key={result.type}>
                     <span className={captcha.score}>
                       {/* Tapping a dot shows its label; it must not open the provider page. */}
                       <ol className={captcha.rounds} aria-label="Rounds" onClick={event => event.stopPropagation()}>{result.rounds.map(round =>
                         <li key={round.key} data-outcome={round.outcome} data-label={round.label} aria-label={round.label} tabIndex={0} />)}</ol>
-                      <strong aria-label={`${row.name} ${column.label}: ${result.successes} of ${result.attempted} ${delivery ? "delivered" : "accepted"}`}>{result.successes} / {result.attempted}</strong>
+                      <strong aria-label={`${row.name} ${column.label}: ${result.successes} of ${result.attempted} ${SUCCESS_WORDS[column.signal]}`}>{result.successes} / {result.attempted}</strong>
                       <span className={captcha.time}>{seconds(result.medianMs)}</span>
                     </span>
                     {result.notRun > 0 && <span className={captcha.stat}>{result.notRun} not run</span>}

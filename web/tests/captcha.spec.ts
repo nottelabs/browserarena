@@ -26,7 +26,9 @@ const newer = { ...fixture, id: newerId, started_at: "2099-01-01T00:00:00Z", fin
 const v4Id = `${campaignId}-v4`;
 const v4File = path.join(directory, `${v4Id}.json`);
 const v4Types = ["turnstile", "recaptcha", "hcaptcha", "recaptcha-v3", "geetest", "text", "perimeterx"];
-const v4 = { ...fixture, protocol_version: 4, id: v4Id, providers: ["kernel"], complete: false, halted: false,
+// Its own day, so the run labels of the other fixtures stay unqualified.
+const v4 = { ...fixture, protocol_version: 4, id: v4Id, started_at: "2026-10-27T00:00:00Z", finished_at: "2026-10-27T00:02:00Z",
+  providers: ["kernel"], complete: false, halted: false,
   attempts: [
     { id: "r01-kernel-text", provider: "kernel", type: "text", round: 1, stage: "verify", status: "page_passed",
       accepted_ms: null, token_ms: 9000, passed_ms: 9500, cleanup_failed: false },
@@ -44,13 +46,18 @@ test.afterAll(async () => { await fs.unlink(file); await fs.unlink(newerFile); a
 
 test("CAPTCHA v4 campaigns show every type with its success signal", async ({ page }) => {
   await page.goto(`/captcha?campaign=${v4Id}`);
-  await expect(page.locator("thead th")).toHaveCount(1 + v4Types.length);
+  const table = page.getByRole("region", { name: "Provider CAPTCHA results" });
+  // #, Provider and Overall, then one column per type.
+  await expect(table.locator("thead th")).toHaveCount(3 + v4Types.length);
   for (const label of ["reCAPTCHA v3", "GeeTest v3", "Text CAPTCHA", "PerimeterX"])
-    await expect(page.locator("thead th", { hasText: label })).toBeVisible();
-  await expect(page.getByText("Page check", { exact: true })).toBeVisible();
-  await expect(page.getByText("Page reached", { exact: true })).toBeVisible();
-  await expect(page.locator('strong[aria-label="Kernel PerimeterX: 1 of 1 reached"]')).toBeVisible();
-  await expect(page.locator('strong[aria-label="Kernel Text CAPTCHA: 1 of 1 passed"]')).toBeVisible();
+    await expect(table.locator("thead th", { hasText: label })).toBeVisible();
+  await page.getByLabel("About Text CAPTCHA").focus();
+  await expect(page.getByRole("tooltip").filter({ hasText: "Page check" })).toBeVisible();
+  await page.getByLabel("About PerimeterX").focus();
+  await expect(page.getByRole("tooltip").filter({ hasText: "Page reached" })).toBeVisible();
+  await expect(page.getByText("Not checked by a server: Text CAPTCHA (page check), PerimeterX (page reached).", { exact: false })).toBeVisible();
+  await expect(page.locator('strong[aria-label="KERNEL PerimeterX: 1 of 1 reached"]')).toBeVisible();
+  await expect(page.locator('strong[aria-label="KERNEL Text CAPTCHA: 1 of 1 passed"]')).toBeVisible();
   await expect(page.locator('li[aria-label="Round 1: Passed"]')).toHaveCount(2);
 });
 

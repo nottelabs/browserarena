@@ -8,7 +8,7 @@ import { BenchmarkSectionHeader } from "@/components/benchmarks/section-header";
 import { RunDatePicker } from "@/components/benchmarks/run-date-picker";
 import { CaptchaLeaderboard, CaptchaRuns } from "@/components/benchmarks/captcha-leaderboard";
 import styles from "@/components/benchmarks/benchmark.module.css";
-import { CAPTCHA_TYPES, CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes, loadCaptchaCampaigns } from "@/lib/captcha-data";
+import { CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes, loadCaptchaCampaigns } from "@/lib/captcha-data";
 import { captchaColumns, captchaLeaderboard } from "@/lib/captcha-leaderboard";
 import { BENCHMARK_CACHE_LIFE } from "@/lib/benchmark-cache";
 import { numberToWord } from "@/lib/providers";
@@ -50,7 +50,7 @@ async function CampaignView({ selected }: { selected: string }) {
   </BenchmarkShell>;
 
   const cells = campaignCells(campaign);
-  const columns = captchaColumns(cells, CAPTCHA_TYPES);
+  const columns = captchaColumns(campaign);
   const rows = captchaLeaderboard(campaign, cells, columns, CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes(campaign, campaigns));
   const latest = campaign.id === campaigns[0].id;
   const runLabel = (item: (typeof campaigns)[number]) => {
@@ -63,7 +63,8 @@ async function CampaignView({ selected }: { selected: string }) {
     status: item.halted ? "Halted" : item.interrupted ? "Interrupted" : item.complete ? "Complete" : "Partial",
     href: item.id === campaigns[0].id ? "/captcha" : `/captcha?campaign=${encodeURIComponent(item.id)}`,
   }));
-  const deliveryTypes = columns.filter(column => column.signal === "delivery").map(column => column.label);
+  // Columns whose success is not a server verdict, named with their own signal.
+  const unverified = columns.filter(column => column.signal !== "server_acceptance").map(column => `${column.label} (${column.signal_label.toLowerCase()})`);
   return <BenchmarkShell benchmark="captcha">
     {(!campaign.complete || campaign.halted || campaign.interrupted) && <p className="mb-4 text-sm text-muted-foreground" role="status">
       {campaign.halted ? "Campaign halted. " : campaign.interrupted ? "Campaign interrupted. " : "Partial campaign. "}
@@ -83,7 +84,7 @@ async function CampaignView({ selected }: { selected: string }) {
     <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
       Can a fresh browser session get through the challenge? Compare native provider handling across {numberToWord(columns.length)} public fixtures.
       {" "}One dot per attempt: green succeeded, amber timed out, red failed. Time is the median of successful attempts.
-      {deliveryTypes.length > 0 && ` ${deliveryTypes.join(", ")} ${deliveryTypes.length === 1 ? "counts" : "count"} token delivery only, not server acceptance.`}
+      {unverified.length > 0 && ` Not checked by a server: ${unverified.join(", ")}.`}
     </p>
   </BenchmarkShell>;
 }
