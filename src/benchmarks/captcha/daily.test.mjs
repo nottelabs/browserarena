@@ -248,6 +248,20 @@ test("an export the publisher did not make is left for PR review, never pushed",
   assert.equal(cliCalls().length, 1);
 });
 
+test("an export someone else left at the daily id is never claimed or pushed", t => {
+  const { work, cliCalls, run, published } = setup(t);
+  fs.mkdirSync(path.join(work, "results/captcha"), { recursive: true });
+  fs.writeFileSync(path.join(work, `results/captcha/${ID}.json`),
+    JSON.stringify({ id: ID, complete: true, halted: false, interrupted: false }) + "\n");
+  for (const attempt of [run([], {}, { reset: true }), run([], {}, { reset: true })]) {
+    assert.equal(attempt.status, 1, attempt.stdout + attempt.stderr);
+    assert.match(attempt.stdout + attempt.stderr, /this publisher did not export it/);
+  }
+  assert.ok(!published().includes(`results/captcha/${ID}.json`));
+  assert.ok(!fs.existsSync(path.join(work, `.captcha-runs/pending/${ID}.exporting`)));
+  assert.equal(cliCalls().length, 0);
+});
+
 test("a dry run leaves a pending result unpushed, in place, and runs no campaign", t => {
   const { work, origin, reject, cliCalls, run, published } = setup(t);
   fs.writeFileSync(reject, "");

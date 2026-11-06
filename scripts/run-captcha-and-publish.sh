@@ -245,6 +245,13 @@ if on_origin "$RESULT"; then
   echo "[INFO] $RESULT is already published; nothing to run"
   exit 0
 fi
+# Anything still at the target now was not exported by this publisher (its own
+# leftovers were recovered above). Stop before paying for a campaign whose
+# export would collide with it, and never claim it.
+if [[ -e "$RESULT" ]]; then
+  echo "[ERROR] $RESULT exists locally but is not on origin/main and this publisher did not export it; move it out of results/captcha (it needs PR review), then rerun" >&2
+  exit 1
+fi
 
 if [[ $NO_INSTALL -eq 0 ]]; then
   echo "[INFO] npm ci"
@@ -290,6 +297,7 @@ CLAIM="$PENDING_DIR/$ID.exporting"
 : > "$CLAIM"
 if ! npm run captcha:export -- "$OUT" "$ID"; then
   echo "[ERROR] export failed; evidence kept at $OUT" >&2
+  rm -f -- "$CLAIM"
   exit 1
 fi
 
