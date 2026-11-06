@@ -31,3 +31,22 @@ export async function loadCaptchaCampaigns(directory = path.join(getResultsDir()
   }));
   return campaigns.sort((a, b) => b.started_at.localeCompare(a.started_at) || a.id.localeCompare(b.id));
 }
+
+export type CaptchaSuccessSignal = "acceptance" | "delivery";
+export type CaptchaTypeInfo = {
+  /** Fixture type as written in campaign attempts (`attempt.type`). */
+  id: string;
+  /** Column title on /captcha. */
+  label: string;
+  /** What counts as a success for this type. */
+  signal: CaptchaSuccessSignal;
+  /** Short label for that signal, shown in the column tooltip. */
+  signalLabel: string;
+};
+
+/** Column order and labels on /captcha. Columns come from the selected campaign; types missing here fall back to their ID. */
+export const CAPTCHA_TYPES: CaptchaTypeInfo[] = [
+  { id: "turnstile", label: "Cloudflare Turnstile", signal: "acceptance", signalLabel: "Server acceptance" },
+  { id: "recaptcha", label: "reCAPTCHA v2", signal: "acceptance", signalLabel: "Server acceptance" },
+  { id: "hcaptcha", label: "hCaptcha", signal: "delivery", signalLabel: "Token delivery only" },
+];

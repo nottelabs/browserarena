@@ -39,19 +39,55 @@ test("CAPTCHA page labels only the newest campaign as the latest run", async ({ 
   await expect(page.getByText("Latest run", { exact: false })).toHaveCount(0);
 });
 
+test("CAPTCHA run picker and run history select campaigns by ID", async ({ page }) => {
+  await page.goto("/captcha");
+  const picker = page.getByRole("combobox", { name: "Run date" });
+  await expect(picker).toHaveValue(newerId);
+  // Options select campaigns by ID; navigation goes through the shared picker used by every benchmark.
+  const options = await picker.locator("option").evaluateAll(items => items.map(item => [(item as HTMLOptionElement).value, item.textContent]));
+  expect(options).toContainEqual([newerId, "Jan 1, 2099 (partial)"]);
+  expect(options).toContainEqual([campaignId, "Oct 28, 2026 (partial)"]);
+  const runs = page.getByRole("region", { name: "Published CAPTCHA campaigns" });
+  // Hrefs, not client navigation: on a cold local server the shell's prefetches delay router pushes.
+  await expect(runs.getByRole("link", { name: "Jan 1, 2099 (partial)" })).toHaveAttribute("href", "/captcha");
+  const older = runs.getByRole("link", { name: "Oct 28, 2026 (partial)" });
+  await expect(older).toHaveAttribute("href", `/captcha?campaign=${campaignId}`);
+  await page.goto((await older.getAttribute("href"))!);
+  await expect(page.getByText("Run on", { exact: false })).toContainText("28 October 2026");
+  await expect(picker).toHaveValue(campaignId);
+  await expect(runs.locator('tr[aria-current="page"]')).toContainText("Oct 28, 2026 (partial)");
+});
+
 test("CAPTCHA campaigns preserve partial coverage, delivery labels and mobile access", async ({ page, request }) => {
   await page.goto(`/captcha?campaign=${campaignId}`);
   await expect(page.getByRole("heading", { name: "CAPTCHA Handling", exact: true })).toBeVisible();
   await expect(page.getByRole("status")).toContainText("Campaign halted");
-  await expect(page.getByText("Token delivery only", { exact: true })).toBeVisible();
+  const table = page.getByRole("region", { name: "Provider CAPTCHA results" });
+  await expect(table.locator("thead th")).toHaveText(["#", "Provider", "Overall", "Cloudflare Turnstile", "reCAPTCHA v2", "hCaptcha"]);
+  // Ranked by overall success with errors and timeouts in the denominator: 2/2 before 1/2.
+  await expect(table.locator("tbody tr").first().locator("td").first()).toHaveText("1");
+  await expect(table.locator("tbody tr").first()).toHaveAttribute("data-leader", "");
+  // Ties on rate and median time fall back to the provider name.
+  // Providers without native solving follow, unranked, by name.
+  await expect(table.locator("tbody th")).toHaveText(["Browser Use", "KERNEL", "Notte", "Browserbase", "Steel",
+    "AWS AgentCore", "Cloudflare", "Lightpanda", "TinyFish"]);
+  await expect(table.locator("tbody tr td:first-child")).toHaveText(["1", "2", "3", "4", "5", "–", "–", "–", "–"]);
+  await expect(table.locator("tbody tr").first().locator("img")).toHaveCount(1);
+  await page.getByLabel("About hCaptcha").focus();
+  await expect(page.getByRole("tooltip")).toContainText("Token delivery only");
   await expect(page.getByText("1 not run", { exact: true })).toHaveCount(5);
   await expect(page.getByText("1 cleanup failure", { exact: true })).toBeVisible();
-  await expect(page.getByRole("row", { name: /Cloudflare Cloudflare Browser Run has no CAPTCHA solving/ })).toBeVisible();
-  await expect(page.locator('strong[aria-label="Kernel hCaptcha: 1 of 1 delivered"]')).toBeVisible();
+  await expect(page.getByRole("row", { name: /Cloudflare Browser Run has no CAPTCHA solving/ })).toBeVisible();
+  await expect(page.locator('strong[aria-label="KERNEL hCaptcha: 1 of 1 delivered"]')).toHaveText("1 / 1");
   await expect(page.locator('li[aria-label="Round 1: Token delivered"]').first()).toBeVisible();
   const dot = page.locator('li[aria-label="Round 1: Token delivered"]').first();
   await dot.focus();
   await expect.poll(() => dot.evaluate(element => { const tip = getComputedStyle(element, "::after"); return `${tip.visibility} ${tip.content}`; })).toBe('visible "Round 1: Token delivered"');
+  // Tapping a dot shows its label instead of opening the provider page.
+  await dot.click();
+  await expect(page).toHaveURL(new RegExp(`/captcha\\?campaign=${campaignId}$`));
+  await expect(page.getByRole("link", { name: "Export results" })).toHaveAttribute("href", `/api/captcha?campaign=${campaignId}`);
+  await expect(page.getByRole("link", { name: "Methodology" })).toHaveAttribute("href", /docs\/captcha\.md$/);
   const response = await request.get(`/api/captcha?campaign=${campaignId}`);
   expect(response.status()).toBe(200);
   expect((await response.json()).attempts).toHaveLength(10);
