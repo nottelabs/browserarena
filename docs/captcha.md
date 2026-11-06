@@ -126,11 +126,17 @@ push failed, reports the waiting result without pushing it), and
 `--date YYYY-MM-DD` names the campaign. `--no-reset` keeps the checkout as it is
 and refuses tracked changes. Guards:
 
-- A date that already has a published campaign is never run again. A result that
-  was committed but not pushed is pushed first on the next run, so a failed push
-  does not cost a second paid campaign.
+- A date whose campaign is already on `origin/main` is never run again. A
+  complete result that was not pushed is pushed first on the next run, so a
+  failed push does not cost a second paid campaign. A copy waits in
+  `.captcha-runs/pending/` until the push succeeds, because the other jobs on the
+  box reset the shared checkout and would drop the unpushed commit. An export
+  left untracked by a publisher that stopped before committing is published the
+  same way if it is complete, and held for review if it is not.
 - All five providers are always passed explicitly, so `PROVIDER`, `RUNS` or
-  `CONCURRENCY` in the runner's environment cannot shrink the campaign.
+  `CONCURRENCY` in the runner's environment cannot shrink the campaign. `.env`
+  is loaded only into the campaign's environment, so it cannot change the
+  publisher's settings either.
 - Only a complete campaign is published, and only its result file is committed.
 - `.captcha-runs/needs-review` is written before the campaign starts and removed
   only once it exits cleanly. A campaign that fails, halts or is incomplete, or a

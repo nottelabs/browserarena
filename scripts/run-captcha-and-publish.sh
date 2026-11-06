@@ -15,10 +15,15 @@
 # only once it has exited cleanly. A campaign that fails, halts, is incomplete,
 # or whose publisher is killed mid-run therefore leaves it behind, and later
 # runs refuse to start until someone has reconciled the provider sessions and
-# removed it, as docs/captcha.md requires. A result already published for the
-# date is never run again, and a result committed but not pushed is pushed
-# before anything else, so a failed push does not cost a second paid campaign.
-# --no-reset keeps the checkout as it is and refuses tracked changes.
+# removed it, as docs/captcha.md requires. A result already on origin/main for
+# the date is never run again. A complete result that was not pushed is kept in
+# .captcha-runs/pending (ignored by git, so it survives the other publishers'
+# resets of this shared checkout) and is pushed before anything else, as is an
+# export left untracked by a publisher that stopped before committing it, so a
+# failed push does not cost a second paid campaign.
+# .env is loaded only into the campaign's environment, so it cannot change
+# these settings. --no-reset keeps the checkout as it is and refuses tracked
+# changes.
 
 set -euo pipefail
 
@@ -47,7 +52,7 @@ while [[ $# -gt 0 ]]; do
     --no-reset)  NO_RESET=1; shift ;;
     --no-install) NO_INSTALL=1; shift ;;
     -h|--help)
-      sed -n '2,21p' "$0"; exit 0 ;;
+      sed -n '2,26p' "$0"; exit 0 ;;
     *) echo "[ERROR] unknown arg: $1" >&2; exit 2 ;;
   esac
 done
@@ -96,7 +101,8 @@ if ! flock -w 7200 8; then
   exit 1
 fi
 
-mkdir -p logs .captcha-runs
+PENDING_DIR=".captcha-runs/pending"
+mkdir -p logs .captcha-runs "$PENDING_DIR"
 LOG_FILE="logs/cron-$(date -u +%Y-%m-%dT%H-%M-%SZ)-${REGION}-captcha.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 
@@ -137,6 +143,19 @@ hold_for_review() {
   exit 1
 }
 
+# Only a complete campaign is published automatically.
+is_complete() {
+  node --input-type=module - "$1" <<'NODE'
+import fs from "node:fs";
+const campaign = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+process.exit(campaign.complete === true && !campaign.halted && !campaign.interrupted ? 0 : 1);
+NODE
+}
+
+on_origin() {
+  git cat-file -e "origin/main:$1" 2>/dev/null
+}
+
 git fetch origin
 if [[ $NO_RESET -eq 0 ]]; then
   git checkout main
@@ -150,7 +169,8 @@ fi
 # Push it before the reset below would discard it.
 pending="$(git rev-list --count origin/main..HEAD)"
 if [[ "$pending" -gt 0 ]]; then
-  unrelated="$(git diff --name-only origin/main..HEAD | grep -v '^results/captcha/' || true)"
+  # Three dots: only what the local commits changed, not what main gained since.
+  unrelated="$(git diff --name-only origin/main...HEAD | grep -v '^results/captcha/' || true)"
   if [[ -n "$unrelated" ]]; then
     echo "[ERROR] local commits ahead of origin/main touch files other than CAPTCHA results; resolve them by hand:" >&2
     echo "$unrelated" >&2
@@ -171,9 +191,45 @@ else
   echo "[INFO] --no-reset: leaving the working tree as it is"
 fi
 
+# Results the reset cannot be trusted to keep: a copy saved in $PENDING_DIR
+# when a push failed (another job's reset may have dropped its commit since),
+# and an export left untracked by a publisher that stopped before committing.
+leftovers=()
+for file in "$PENDING_DIR"/*.json; do
+  [[ -e "$file" ]] && leftovers+=("$file")
+done
+while IFS= read -r file; do
+  [[ -n "$file" ]] && leftovers+=("$file")
+done < <(git ls-files --others --exclude-standard -- 'results/captcha/*.json')
+
+for file in ${leftovers[@]+"${leftovers[@]}"}; do
+  name="$(basename "$file")"
+  target="results/captcha/$name"
+  if on_origin "$target"; then
+    [[ "$file" == "$PENDING_DIR/"* ]] && rm -f -- "$file"
+    continue
+  fi
+  if ! is_complete "$file"; then
+    mv -- "$file" ".captcha-runs/incomplete-$name"
+    hold_for_review "found an unpublished export that is not a complete campaign; moved it to .captcha-runs/incomplete-$name"
+  fi
+  if [[ $DRY_RUN -eq 1 ]]; then
+    echo "[INFO] --dry-run: $target is complete but unpublished; stopping without committing, pushing or running a campaign"
+    exit 0
+  fi
+  echo "[INFO] publishing $target left unpublished by an earlier run"
+  mkdir -p results/captcha
+  [[ "$file" == "$target" ]] || cp -- "$file" "$target"
+  [[ -e "$PENDING_DIR/$name" ]] || cp -- "$target" "$PENDING_DIR/$name"
+  git add -- "$target"
+  git commit -m "results: captcha $REGION ${name:0:10}" -- "$target"
+  push_main || { echo "[ERROR] could not push $target; a copy stays in $PENDING_DIR for the next run" >&2; exit 1; }
+  rm -f -- "$PENDING_DIR/$name"
+done
+
 ID="${DATE}-west-v${PROTOCOL}"
 RESULT="results/captcha/${ID}.json"
-if [[ -e "$RESULT" ]]; then
+if on_origin "$RESULT"; then
   echo "[INFO] $RESULT is already published; nothing to run"
   exit 0
 fi
@@ -184,9 +240,12 @@ if [[ $NO_INSTALL -eq 0 ]]; then
   npm run build
 fi
 
+# .env is loaded in the campaign's own shell, after this script has fixed its
+# arguments, so a RUNS, CONCURRENCY or PROTOCOL there cannot change them.
+load_env=()
 if [[ -f .env ]]; then
-  echo "[INFO] sourcing .env"
-  set -a; . ./.env; set +a
+  echo "[INFO] loading .env into the campaign's environment"
+  load_env=(bash -c 'set -a; . ./.env; set +a; exec "$@"' load-env)
 else
   echo "[WARN] no .env found; provider env vars must already be exported"
 fi
@@ -200,7 +259,7 @@ printf '%s date=%s evidence=%s reason=%s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$D
 # SIGTERM lets active attempts finish cleanup, so the kill comes much later than
 # in the lifecycle publisher. Never skip straight to SIGKILL.
 campaign_status=0
-"$TIMEOUT_BIN" --signal=TERM --kill-after=600s "${TIMEOUT}s" node dist/cli.js \
+"$TIMEOUT_BIN" --signal=TERM --kill-after=600s "${TIMEOUT}s" ${load_env[@]+"${load_env[@]}"} node dist/cli.js \
   --benchmark=captcha \
   --provider="$CAPTCHA_PROVIDERS" \
   --runs="$RUNS" \
@@ -218,13 +277,7 @@ if ! npm run captcha:export -- "$OUT" "$ID"; then
   exit 1
 fi
 
-# Only a complete campaign is published automatically.
-if ! node --input-type=module - "$RESULT" <<'NODE'
-import fs from "node:fs";
-const campaign = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-process.exit(campaign.complete === true && !campaign.halted && !campaign.interrupted ? 0 : 1);
-NODE
-then
+if ! is_complete "$RESULT"; then
   rm -f -- "$RESULT"
   hold_for_review "campaign was not complete"
 fi
@@ -241,15 +294,18 @@ if [[ $DRY_RUN -eq 1 ]]; then
   exit 0
 fi
 
+# Kept until the push succeeds; git ignores it, so no reset can drop it.
+cp -- "$RESULT" "$PENDING_DIR/$ID.json"
 # Only the result: nothing else in the index goes into this commit.
 git commit -m "results: captcha $REGION $DATE" -- "$RESULT"
 
 if push_main; then
+  rm -f -- "$PENDING_DIR/$ID.json"
   # Private evidence is large (screenshots); keep two weeks of it.
   find .captcha-runs -maxdepth 1 -type d -name 'daily-*' -mtime +14 -exec rm -rf -- {} +
   exit 0
 fi
 
-# The commit stays; the next run pushes it before resetting.
-echo "[ERROR] push failed after 5 attempts; $RESULT is committed locally and the next run will retry it. Evidence kept at $OUT" >&2
+# The commit and the copy in $PENDING_DIR stay; the next run pushes it first.
+echo "[ERROR] push failed after 5 attempts; $RESULT is committed locally and copied to $PENDING_DIR, and the next run will retry it. Evidence kept at $OUT" >&2
 exit 1

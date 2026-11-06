@@ -37,6 +37,7 @@ function setup(t) {
   fs.writeFileSync(path.join(work, "dist/cli.js"), `
 import fs from "node:fs";
 fs.appendFileSync(process.env.FAKE_CALLS, "cli " + process.argv.slice(2).join(" ") + "\\n");
+if (process.env.FAKE_DOTENV_OUT) fs.writeFileSync(process.env.FAKE_DOTENV_OUT, process.env.FAKE_DOTENV ?? "");
 const out = process.argv.find(arg => arg.startsWith("--out=")).slice(6);
 fs.mkdirSync(out, { recursive: true });
 if (process.env.FAKE_CLI_HANG) { fs.writeFileSync(process.env.FAKE_CLI_HANG, "started"); setTimeout(() => {}, 4000); }
@@ -90,6 +91,19 @@ test("the campaign always covers every provider, whatever the runner environment
   assert.equal(result.status, 0, result.stdout + result.stderr);
   assert.ok(cliCalls()[0].includes(`--provider=${PROVIDERS.join(",")}`), cliCalls()[0]);
   assert.match(cliCalls()[0], /--runs=5 --concurrency=3 --out=\.captcha-runs\//);
+});
+
+test(".env reaches the campaign but cannot change the publisher's settings", t => {
+  const { root, work, cliCalls, run, published } = setup(t);
+  fs.writeFileSync(path.join(work, ".env"),
+    "RUNS=1\nCONCURRENCY=1\nTIMEOUT=1\nPROTOCOL=9\nCAPTCHA_PROVIDERS=notte\nFAKE_DOTENV=from-dotenv\n");
+  const probe = path.join(root, "dotenv-probe");
+  const result = run([], { FAKE_DOTENV_OUT: probe });
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.ok(cliCalls()[0].includes(`--provider=${PROVIDERS.join(",")}`), cliCalls()[0]);
+  assert.match(cliCalls()[0], /--runs=5 --concurrency=3 --out=\.captcha-runs\//);
+  assert.ok(published().includes(`results/captcha/${ID}.json`));
+  assert.equal(fs.readFileSync(probe, "utf8"), "from-dotenv");
 });
 
 test("a failed campaign is held for review, publishes nothing and blocks the next run", t => {
@@ -156,6 +170,62 @@ test("a result whose push failed is pushed by the next run instead of being rese
   assert.equal(recovered.status, 0, recovered.stdout + recovered.stderr);
   assert.ok(published().includes(`results/captcha/${ID}.json`));
   assert.equal(cliCalls().length, 1);
+});
+
+test("a result whose push failed survives another job resetting the shared checkout", t => {
+  const { work, reject, cliCalls, run, published } = setup(t);
+  fs.writeFileSync(reject, "");
+  assert.equal(run().status, 1);
+  fs.unlinkSync(reject);
+  // The lifecycle publisher shares the checkout and resets it before its own run.
+  git(work, "reset", "--hard", "origin/main");
+  const recovered = run([], {}, { reset: true });
+  assert.equal(recovered.status, 0, recovered.stdout + recovered.stderr);
+  assert.ok(published().includes(`results/captcha/${ID}.json`));
+  assert.equal(cliCalls().length, 1);
+  assert.deepEqual(fs.readdirSync(path.join(work, ".captcha-runs/pending")), []);
+});
+
+test("a result whose push failed is still pushed after main gains other changes", t => {
+  const { root, origin, reject, cliCalls, run, published } = setup(t);
+  fs.writeFileSync(reject, "");
+  assert.equal(run().status, 1);
+  fs.unlinkSync(reject);
+  const other = path.join(root, "other");
+  git(root, "clone", origin, other);
+  fs.writeFileSync(path.join(other, "lifecycle.txt"), "another job's result\n");
+  git(other, "add", "lifecycle.txt");
+  git(other, "commit", "-m", "results: lifecycle");
+  git(other, "push", "origin", "main");
+  const recovered = run([], {}, { reset: true });
+  assert.equal(recovered.status, 0, recovered.stdout + recovered.stderr);
+  assert.ok(published().includes(`results/captcha/${ID}.json`));
+  assert.ok(published().includes("lifecycle.txt"));
+  assert.equal(cliCalls().length, 1);
+});
+
+test("an export left unstaged by an interrupted publisher is published, not skipped", t => {
+  const { work, cliCalls, run, published } = setup(t);
+  fs.mkdirSync(path.join(work, "results/captcha"), { recursive: true });
+  fs.writeFileSync(path.join(work, `results/captcha/${ID}.json`),
+    JSON.stringify({ id: ID, complete: true, halted: false, interrupted: false }) + "\n");
+  const result = run();
+  assert.equal(result.status, 0, result.stdout + result.stderr);
+  assert.ok(published().includes(`results/captcha/${ID}.json`));
+  assert.equal(cliCalls().length, 0);
+});
+
+test("an incomplete export left by an interrupted publisher is held for review", t => {
+  const { work, cliCalls, run, published } = setup(t);
+  fs.mkdirSync(path.join(work, "results/captcha"), { recursive: true });
+  fs.writeFileSync(path.join(work, `results/captcha/${ID}.json`),
+    JSON.stringify({ id: ID, complete: false, halted: false, interrupted: false }) + "\n");
+  const result = run();
+  assert.equal(result.status, 1);
+  assert.ok(!published().includes(`results/captcha/${ID}.json`));
+  assert.ok(!fs.existsSync(path.join(work, `results/captcha/${ID}.json`)));
+  assert.match(fs.readFileSync(path.join(work, ".captcha-runs/needs-review"), "utf8"), /not a complete campaign/);
+  assert.equal(cliCalls().length, 0);
 });
 
 test("a dry run leaves a pending result unpushed, in place, and runs no campaign", t => {
