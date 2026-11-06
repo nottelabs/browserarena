@@ -6,8 +6,8 @@
 #   scripts/run-captcha-and-publish.sh [--runs N] [--timeout SECONDS] [--date YYYY-MM-DD]
 #       [--dry-run] [--no-reset] [--no-install]
 #
-# --runs is attempts per provider per CAPTCHA type (default 5: 280 paid sessions
-# across eight providers and seven types). --timeout defaults to the campaign's
+# --runs is attempts per provider per CAPTCHA type (default 5: 210 paid sessions
+# across six providers and seven types). --timeout defaults to the campaign's
 # worst case: every attempt using its full create, navigation, solve and cleanup
 # limits. The providers are always passed explicitly, so a
 # PROVIDER, RUNS or CONCURRENCY in the runner's environment cannot shrink the
@@ -40,7 +40,7 @@ REGION=us-west
 # Keep in sync with PROTOCOL_VERSION in src/benchmarks/captcha/protocol.mjs (a test checks it).
 PROTOCOL=4
 # Keep in sync with DAILY_PROVIDERS in src/benchmarks/captcha/protocol.mjs (a test checks it).
-CAPTCHA_PROVIDERS="kernel,browserbase,browser-use,steel,notte,hyperbrowser,anchorbrowser,browserless"
+CAPTCHA_PROVIDERS="kernel,browserbase,browser-use,steel,notte,anchorbrowser"
 # Keep in sync with FIXTURES in src/benchmarks/captcha/protocol.mjs (a test checks it).
 CAPTCHA_TYPES=7
 # Longest one attempt can hold a session slot: create 60s, connect 30s,
