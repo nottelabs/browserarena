@@ -9,8 +9,12 @@ import posthog from "posthog-js";
  * PostHog from creating a person profile for every visitor.
  */
 const token = process.env.NEXT_PUBLIC_POSTHOG_PROJECT_TOKEN;
+// The team-only /internal page shows private staging results: never load
+// analytics or session replay there. Its content is also marked
+// `ph-no-capture` in case it is reached by client-side navigation.
+const isInternalPage = /^\/internal(\/|$)/.test(window.location.pathname);
 
-if (token) {
+if (token && !isInternalPage) {
   posthog.init(token, {
     api_host: "/ingest",
     ui_host: process.env.NEXT_PUBLIC_POSTHOG_HOST ?? "https://us.posthog.com",

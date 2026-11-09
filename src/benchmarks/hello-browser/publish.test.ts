@@ -89,7 +89,8 @@ if (p === process.env.STUCK_PROVIDER) {
     execFileSync("flock", ["-n", path.join(repo, ".run-and-publish.lock"), "true"]);
   };
   // Separate private results repo for --region staging, with its own remote.
-  const stagingRemote = path.join(base, "staging-results.git");
+  // The guard checks the repo name, so the bare remote carries the real one.
+  const stagingRemote = path.join(base, "nottelabs", "browserarena-staging-results.git");
   const stagingRepo = path.join(base, "browserarena-staging-results");
   const makeStagingRepo = () => {
     execFileSync("git", ["init", "--bare", stagingRemote]);
@@ -277,7 +278,7 @@ test("staging region publishes Notte staging only to the private results repo", 
   } finally { f.cleanup(); }
 });
 
-test("staging region refuses a missing or public results checkout before any session", () => {
+test("staging region refuses a missing checkout or any public fetch or push URL before any session", () => {
   const f = fixture();
   try {
     const missing = f.run([], {}, "staging");
@@ -286,11 +287,26 @@ test("staging region refuses a missing or public results checkout before any ses
     const self = f.run([], { STAGING_RESULTS_DIR: f.repo }, "staging");
     assert.equal(self.status, 2, self.stdout + self.stderr);
     assert.match(self.stderr, /must be a separate clone/);
-    f.makeStagingRepo();
-    execFileSync("git", ["remote", "set-url", "origin", f.git("remote", "get-url", "origin").trim()], { cwd: f.stagingRepo });
-    const sameOrigin = f.run([], {}, "staging");
-    assert.equal(sameOrigin.status, 2, sameOrigin.stdout + sameOrigin.stderr);
-    assert.match(sameOrigin.stderr, /must be a separate clone/);
+    const sgit = f.makeStagingRepo();
+    const privateUrl = sgit("remote", "get-url", "origin").trim();
+    const publicForms = [
+      f.git("remote", "get-url", "origin").trim(),
+      "git@github.com:nottelabs/browserarena.git",
+      "https://github.com/nottelabs/browserarena",
+      "ssh://git@github.com/NotteLabs/BrowserArena.git/",
+    ];
+    for (const url of publicForms) {
+      sgit("remote", "set-url", "origin", url);
+      const result = f.run([], {}, "staging");
+      assert.equal(result.status, 2, url + result.stdout + result.stderr);
+      assert.match(result.stderr, /must be a separate clone of nottelabs\/browserarena-staging-results/);
+    }
+    // Fetching from the private repo is not enough: pushes must go there too.
+    sgit("remote", "set-url", "origin", privateUrl);
+    sgit("remote", "set-url", "--push", "origin", "git@github.com:nottelabs/browserarena.git");
+    const publicPush = f.run([], {}, "staging");
+    assert.equal(publicPush.status, 2, publicPush.stdout + publicPush.stderr);
+    assert.match(publicPush.stderr, /fetch and push URLs must all point there/);
     assert.equal(fs.existsSync(path.join(f.repo, "logs")), false);
   } finally { f.cleanup(); }
 });

@@ -46,7 +46,8 @@ async function InternalView({ concurrency: requested }: { concurrency: number })
   const latestDate = data.lifecycleHistory.dates.at(-1) ?? "";
 
   return (
-    <main className={`${styles.container} mx-auto max-w-7xl w-full px-4 sm:px-10 pt-6 pb-10`}>
+    // ph-no-capture: PostHog never records or autocaptures private results.
+    <main className={`${styles.container} ph-no-capture mx-auto max-w-7xl w-full px-4 sm:px-10 pt-6 pb-10`}>
       <header className="mb-8">
         <p className="text-xs uppercase tracking-wide text-muted-foreground">Team only</p>
         <h1 className="mt-1 text-2xl sm:text-3xl font-semibold tracking-tight">Notte staging vs production</h1>

@@ -91,7 +91,15 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
 # Where results are written, committed, and pushed. Staging results must never
-# reach the public repo, so refuse a results checkout that shares its origin.
+# reach the public repo: every fetch and push URL of the results checkout's
+# origin must name the private repo, in any URL form (SSH, HTTPS, path).
+STAGING_RESULTS_REPO="nottelabs/browserarena-staging-results"
+repo_slug() {
+  local url="${1%/}"
+  url="${url%.git}"
+  url="${url//:/\/}"
+  echo "$(basename "$(dirname "$url")")/$(basename "$url")" | tr '[:upper:]' '[:lower:]'
+}
 RESULTS_REPO="$REPO_ROOT"
 if [[ "$REGION" == "staging" ]]; then
   RESULTS_REPO="${STAGING_RESULTS_DIR:-$REPO_ROOT/../browserarena-staging-results}"
@@ -100,10 +108,14 @@ if [[ "$REGION" == "staging" ]]; then
     exit 2
   fi
   RESULTS_REPO="$results_top"
-  results_origin="$(git -C "$RESULTS_REPO" remote get-url origin 2>/dev/null || true)"
-  code_origin="$(git remote get-url origin 2>/dev/null || true)"
-  if [[ "$RESULTS_REPO" == "$(git rev-parse --show-toplevel)" || -z "$results_origin" || "$results_origin" == "$code_origin" ]]; then
-    echo "[ERROR] $RESULTS_REPO must be a separate clone of the private staging results repo" >&2
+  results_urls="$( { git -C "$RESULTS_REPO" remote get-url --all origin; git -C "$RESULTS_REPO" remote get-url --push --all origin; } 2>/dev/null || true)"
+  bad_url=0
+  [[ -n "$results_urls" && "$RESULTS_REPO" != "$(git rev-parse --show-toplevel)" ]] || bad_url=1
+  while IFS= read -r url; do
+    [[ -z "$url" || "$(repo_slug "$url")" == "$STAGING_RESULTS_REPO" ]] || bad_url=1
+  done <<< "$results_urls"
+  if [[ $bad_url -ne 0 ]]; then
+    echo "[ERROR] $RESULTS_REPO must be a separate clone of $STAGING_RESULTS_REPO; its origin fetch and push URLs must all point there" >&2
     exit 2
   fi
 fi
