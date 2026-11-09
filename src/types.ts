@@ -6,6 +6,7 @@ export type ProviderName =
   | "KERNEL"
   | "KERNEL_HEADFUL"
   | "NOTTE"
+  | "NOTTE_STAGING"
   | "BROWSER_USE"
   | "TILION"
   | "LIGHTPANDA"

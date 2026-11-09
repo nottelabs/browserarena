@@ -205,9 +205,36 @@ export function getResultsDir(): string {
   return path.join(process.cwd(), "..", "results");
 }
 
-export async function fetchFromGitHub(filePath: string): Promise<string> {
-  const url = `https://raw.githubusercontent.com/${RESULTS_GITHUB_REPO}/${RESULTS_GITHUB_BRANCH}/${filePath}`;
-  const res = await fetch(url, { next: { revalidate: 60 } });
+/**
+ * A GitHub repository of results. The public one is read anonymously. A
+ * private one (the team-only staging results) needs a token, and its
+ * responses are never written to the shared fetch cache.
+ */
+export interface ResultsSource {
+  repo: string;
+  branch: string;
+  token?: string;
+}
+
+export const PUBLIC_RESULTS_SOURCE: ResultsSource = {
+  repo: RESULTS_GITHUB_REPO,
+  branch: RESULTS_GITHUB_BRANCH,
+};
+
+function privateGitHubInit(token: string, accept: string): RequestInit {
+  return {
+    headers: { Authorization: `Bearer ${token}`, Accept: accept, "X-GitHub-Api-Version": "2022-11-28" },
+    cache: "no-store",
+  };
+}
+
+export async function fetchFromGitHub(filePath: string, source: ResultsSource = PUBLIC_RESULTS_SOURCE): Promise<string> {
+  const res = source.token
+    ? await fetch(
+        `https://api.github.com/repos/${source.repo}/contents/${filePath}?ref=${source.branch}`,
+        privateGitHubInit(source.token, "application/vnd.github.raw+json"),
+      )
+    : await fetch(`https://raw.githubusercontent.com/${source.repo}/${source.branch}/${filePath}`, { next: { revalidate: 60 } });
   if (!res.ok) throw new Error(`Failed to fetch ${filePath}: ${res.status}`);
   return res.text();
 }
@@ -218,9 +245,11 @@ interface GitHubContentItem {
   type: "file" | "dir";
 }
 
-export async function listFromGitHub(dirPath: string): Promise<GitHubContentItem[]> {
-  const url = `https://api.github.com/repos/${RESULTS_GITHUB_REPO}/contents/${dirPath}?ref=${RESULTS_GITHUB_BRANCH}`;
-  const res = await fetch(url, { next: { revalidate: 60 } });
+export async function listFromGitHub(dirPath: string, source: ResultsSource = PUBLIC_RESULTS_SOURCE): Promise<GitHubContentItem[]> {
+  const url = `https://api.github.com/repos/${source.repo}/contents/${dirPath}?ref=${source.branch}`;
+  const res = await fetch(url, source.token
+    ? privateGitHubInit(source.token, "application/vnd.github+json")
+    : { next: { revalidate: 60 } });
   if (!res.ok) return [];
   const data = await res.json();
   if (!Array.isArray(data)) return [];
@@ -251,7 +280,8 @@ function parseJsonlLines(content: string): BenchmarkEntry[] {
 
 async function loadEntriesFromGitHub(
   benchmark: "hello-browser" | "v0",
-  date?: string
+  date?: string,
+  source: ResultsSource = PUBLIC_RESULTS_SOURCE
 ): Promise<{
   entries: BenchmarkEntry[];
   dateRange?: { min: string; max: string };
@@ -264,13 +294,13 @@ async function loadEntriesFromGitHub(
   const basePath = `results/${benchmark}`;
 
   // Structure: results/{benchmark}/{provider}/{date}/results.jsonl
-  const providerDirs = await listFromGitHub(basePath);
+  const providerDirs = await listFromGitHub(basePath, source);
   const dirs = providerDirs.filter(
     (e) => e.type === "dir" && !e.name.startsWith("_")
   );
 
   for (const dir of dirs) {
-    const dateDirs = await listFromGitHub(`${basePath}/${dir.name}`);
+    const dateDirs = await listFromGitHub(`${basePath}/${dir.name}`, source);
     const dates = dateDirs
       .filter((e) => e.type === "dir" && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
       .map((e) => e.name)
@@ -284,7 +314,7 @@ async function loadEntriesFromGitHub(
       const latestDate = date && dates.includes(date) ? date : date ? undefined : dates[0];
       if (!latestDate) continue;
 
-      const dateContents = await listFromGitHub(`${basePath}/${dir.name}/${latestDate}`);
+      const dateContents = await listFromGitHub(`${basePath}/${dir.name}/${latestDate}`, source);
       const concDirs = dateContents
         .filter((e) => e.type === "dir" && /^c\d+$/.test(e.name))
         .map((e) => e.name)
@@ -292,7 +322,7 @@ async function loadEntriesFromGitHub(
 
       if (concDirs.length === 0) {
         try {
-          const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/results.jsonl`);
+          const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/results.jsonl`, source);
           const lines = parseJsonlLines(content);
           for (const entry of lines) {
             entry._runDate = latestDate;
@@ -306,7 +336,7 @@ async function loadEntriesFromGitHub(
 
       for (const concDir of concDirs) {
         try {
-          const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/${concDir}/results.jsonl`);
+          const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/${concDir}/results.jsonl`, source);
           const lines = parseJsonlLines(content);
           for (const entry of lines) {
             entry._runDate = latestDate;
@@ -322,7 +352,7 @@ async function loadEntriesFromGitHub(
       if (!latestDate) continue;
 
       try {
-        const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/results.jsonl`);
+        const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/results.jsonl`, source);
         const lines = parseJsonlLines(content);
         for (const entry of lines) {
           const existing = providerMap.get(entry.provider) || [];
@@ -654,20 +684,21 @@ function loadHistoricalLeaderboardFromFs(
 
 async function loadHistoricalLeaderboardFromGitHub(
   benchmark: "hello-browser",
-  concurrency?: number
+  concurrency?: number,
+  source: ResultsSource = PUBLIC_RESULTS_SOURCE
 ): Promise<HistoricalLeaderboardResult> {
   const basePath = `results/${benchmark}`;
   const effectiveConcurrency = concurrency ?? 1;
   const dates = new Set<string>();
   const series: HistoricalLeaderboardResult["providers"] = [];
 
-  const providerDirs = await listFromGitHub(basePath);
+  const providerDirs = await listFromGitHub(basePath, source);
   const dirs = providerDirs.filter(
     (e) => e.type === "dir" && !e.name.startsWith("_")
   );
 
   for (const dir of dirs) {
-    const dateDirs = await listFromGitHub(`${basePath}/${dir.name}`);
+    const dateDirs = await listFromGitHub(`${basePath}/${dir.name}`, source);
     const runDates = dateDirs
       .filter((e) => e.type === "dir" && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
       .map((e) => e.name)
@@ -678,7 +709,7 @@ async function loadHistoricalLeaderboardFromGitHub(
 
     for (const date of runDates) {
       const runPath = `${basePath}/${dir.name}/${date}`;
-      const contents = await listFromGitHub(runPath);
+      const contents = await listFromGitHub(runPath, source);
       const hasConcurrencyDirs = contents.some(
         (e) => e.type === "dir" && /^c\d+$/.test(e.name)
       );
@@ -690,7 +721,7 @@ async function loadHistoricalLeaderboardFromGitHub(
       if (!resultPath) continue;
 
       try {
-        const entries = parseJsonlLines(await fetchFromGitHub(resultPath)).map(
+        const entries = parseJsonlLines(await fetchFromGitHub(resultPath, source)).map(
           (entry) => ({ ...entry, _runDate: date })
         );
         const filtered = entries.filter((entry) => !HIDDEN_PROVIDER_IDS.has(entry.provider));
@@ -735,13 +766,16 @@ const historicalInflight = new Map<string, Promise<HistoricalLeaderboardResult>>
 
 export async function loadHistoricalLeaderboard(
   benchmark: "hello-browser" = "hello-browser",
-  concurrency?: number
+  concurrency?: number,
+  /** Reads this repository instead of the bundled or public results. */
+  source?: ResultsSource
 ): Promise<HistoricalLeaderboardResult> {
   // Provider pages and prefetched routes ask for the same history at once.
-  const key = `${benchmark}:${concurrency ?? ""}`;
+  const key = `${source?.repo ?? ""}:${benchmark}:${concurrency ?? ""}`;
   const pending = historicalInflight.get(key);
   if (pending) return pending;
   const result = (async () => {
+    if (source) return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency, source);
     const resultsDir = getResultsDir();
     if (fs.existsSync(resultsDir)) return loadHistoricalLeaderboardFromFs(benchmark, concurrency);
     return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency);
@@ -790,16 +824,18 @@ export async function loadLeaderboard(
   date?: string,
   _percentile: PercentileType = "median",
   sortBy: SortByType = "latency",
-  concurrency?: number
+  concurrency?: number,
+  /** Reads this repository instead of the bundled or public results. */
+  source?: ResultsSource
 ): Promise<LeaderboardResult> {
   const v0Dates = await listBenchmarkDates("v0");
   const effectiveDate =
     benchmark === "v0" ? date || v0Dates[0] : date;
 
   const resultsDir = getResultsDir();
-  const useFs = fs.existsSync(resultsDir);
+  const useFs = !source && fs.existsSync(resultsDir);
   const fsResult = useFs ? loadEntriesFromFs(benchmark, effectiveDate) : null;
-  const ghResult = !useFs ? await loadEntriesFromGitHub(benchmark, effectiveDate) : null;
+  const ghResult = !useFs ? await loadEntriesFromGitHub(benchmark, effectiveDate, source) : null;
   const allEntries = fsResult?.entries ?? ghResult?.entries ?? [];
   const dateRange = fsResult?.dateRange ?? ghResult?.dateRange;
   const providerMetaMap = fsResult?.providerMetaMap ?? new Map<string, VmMeta>();

@@ -6,7 +6,7 @@
 
 import fs from "fs";
 import path from "path";
-import { fetchFromGitHub, getResultsDir, listFromGitHub } from "./data";
+import { fetchFromGitHub, getResultsDir, listFromGitHub, PUBLIC_RESULTS_SOURCE, type ResultsSource } from "./data";
 import { calendarDates } from "./history-range";
 import { HIDDEN_PROVIDER_IDS, PROVIDERS_BY_ID } from "./providers";
 import { getPricePerHour, getUnitPricing } from "./pricing";
@@ -77,16 +77,16 @@ function loadFromFs(date?: string): { entries: BrowserThroughputEntry[]; dates: 
   return { entries, dates: [...availableDates].sort() };
 }
 
-async function loadFromGitHub(date?: string): Promise<{ entries: BrowserThroughputEntry[]; dates: string[] }> {
+async function loadFromGitHub(date?: string, source: ResultsSource = PUBLIC_RESULTS_SOURCE): Promise<{ entries: BrowserThroughputEntry[]; dates: string[] }> {
   const basePath = `results/${BENCHMARK}`;
   const entries: BrowserThroughputEntry[] = [];
   const availableDates = new Set<string>();
-  const providerDirs = (await listFromGitHub(basePath)).filter(
+  const providerDirs = (await listFromGitHub(basePath, source)).filter(
     (e) => e.type === "dir" && !e.name.startsWith("_")
   );
 
   for (const dir of providerDirs) {
-    const dates = (await listFromGitHub(`${basePath}/${dir.name}`))
+    const dates = (await listFromGitHub(`${basePath}/${dir.name}`, source))
       .filter((e) => e.type === "dir" && DATE_RE.test(e.name))
       .map((e) => e.name)
       .sort()
@@ -95,12 +95,12 @@ async function loadFromGitHub(date?: string): Promise<{ entries: BrowserThroughp
     const latestDate = date && dates.includes(date) ? date : date ? undefined : dates[0];
     if (!latestDate) continue;
 
-    const concDirs = (await listFromGitHub(`${basePath}/${dir.name}/${latestDate}`))
+    const concDirs = (await listFromGitHub(`${basePath}/${dir.name}/${latestDate}`, source))
       .filter((e) => e.type === "dir" && CONC_RE.test(e.name))
       .map((e) => e.name);
     for (const concDir of concDirs) {
       try {
-        const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/${concDir}/results.jsonl`);
+        const content = await fetchFromGitHub(`${basePath}/${dir.name}/${latestDate}/${concDir}/results.jsonl`, source);
         entries.push(...parseLines(content, latestDate));
       } catch {
         // skip
@@ -112,9 +112,13 @@ async function loadFromGitHub(date?: string): Promise<{ entries: BrowserThroughp
 
 export async function loadBrowserThroughputLeaderboard(
   concurrency?: number,
-  date?: string
+  date?: string,
+  /** Reads this repository instead of the bundled or public results. */
+  source?: ResultsSource
 ): Promise<BrowserThroughputLeaderboardResult> {
-  const loaded = fs.existsSync(getResultsDir()) ? loadFromFs(date) : await loadFromGitHub(date);
+  const loaded = source
+    ? await loadFromGitHub(date, source)
+    : fs.existsSync(getResultsDir()) ? loadFromFs(date) : await loadFromGitHub(date);
   const allEntries = loaded.entries;
 
   const measured = allEntries.filter(
@@ -218,17 +222,17 @@ function loadHistoryFromFs(concurrency: number): ThroughputHistory {
   return historyFromDays(days);
 }
 
-async function loadHistoryFromGitHub(concurrency: number): Promise<ThroughputHistory> {
+async function loadHistoryFromGitHub(concurrency: number, source: ResultsSource = PUBLIC_RESULTS_SOURCE): Promise<ThroughputHistory> {
   const basePath = `results/${BENCHMARK}`;
-  const providerDirs = (await listFromGitHub(basePath)).filter((entry) => entry.type === "dir" && !entry.name.startsWith("_"));
+  const providerDirs = (await listFromGitHub(basePath, source)).filter((entry) => entry.type === "dir" && !entry.name.startsWith("_"));
   // Independent providers load together; each provider's archive stays serial
   // so cold loads have at most one file request per provider in flight.
   const days = await Promise.all(providerDirs.map(async (dir) => {
     const providerDays: { provider: string; date: string; entries: BrowserThroughputEntry[] }[] = [];
-    const dates = (await listFromGitHub(`${basePath}/${dir.name}`)).filter((entry) => entry.type === "dir" && DATE_RE.test(entry.name)).map((entry) => entry.name);
+    const dates = (await listFromGitHub(`${basePath}/${dir.name}`, source)).filter((entry) => entry.type === "dir" && DATE_RE.test(entry.name)).map((entry) => entry.name);
     for (const date of dates) {
       try {
-        const content = await fetchFromGitHub(`${basePath}/${dir.name}/${date}/c${concurrency}/results.jsonl`);
+        const content = await fetchFromGitHub(`${basePath}/${dir.name}/${date}/c${concurrency}/results.jsonl`, source);
         const entries = parseLines(content, date);
         providerDays.push({ provider: entries.find((entry) => entry.provider)?.provider ?? dir.name, date, entries });
       } catch {
@@ -247,7 +251,9 @@ const REMOTE_HISTORY_TTL_MS = 60_000;
 const REMOTE_HISTORY_CACHE_LIMIT = 8;
 
 /** Every recorded day at one concurrency, for the throughput history line. */
-export async function loadBrowserThroughputHistory(concurrency = 1): Promise<ThroughputHistory> {
+export async function loadBrowserThroughputHistory(concurrency = 1, source?: ResultsSource): Promise<ThroughputHistory> {
+  // Private results are cached by the caller, never in this shared map.
+  if (source) return loadHistoryFromGitHub(concurrency, source);
   // Local files can change between calls (runner output and local development).
   if (fs.existsSync(getResultsDir())) return loadHistoryFromFs(concurrency);
   const cached = remoteHistoryCache.get(concurrency);

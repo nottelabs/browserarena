@@ -29,7 +29,7 @@ function fixture() {
   git("commit", "-m", "Initial");
   git("remote", "add", "origin", remote);
   git("push", "origin", "main");
-  fs.writeFileSync(path.join(repo, ".env"), "NOTTE_API_KEY=test-only\nSTEEL_API_KEY=test-only\n");
+  fs.writeFileSync(path.join(repo, ".env"), "NOTTE_API_KEY=test-only\nSTEEL_API_KEY=test-only\nNOTTE_STAGING_API_KEY=test-only\n");
   fs.writeFileSync(path.join(repo, "unrelated-private.txt"), "must not publish\n");
 
   fs.mkdirSync(path.join(repo, "dist"));
@@ -39,7 +39,8 @@ import fs from "node:fs";
 import { spawn } from "node:child_process";
 const args = Object.fromEntries(process.argv.slice(2).filter(x => x.startsWith("--")).map(x => x.slice(2).split("=")));
 const p = args.provider;
-fs.appendFileSync("logs/calls.jsonl", JSON.stringify(args) + "\\n");
+// Absolute: staging runs this CLI from the separate results checkout.
+fs.appendFileSync(new URL("../logs/calls.jsonl", import.meta.url), JSON.stringify(args) + "\\n");
 if (p === process.env.EARLY_PROVIDER) {
   if (process.env.EARLY_EXIT_CODE) process.exit(Number(process.env.EARLY_EXIT_CODE));
   await new Promise(() => { setInterval(() => {}, 1000); });
@@ -54,7 +55,7 @@ if (p === process.env.STUCK_PROVIDER) {
     process.on("SIGTERM", () => {});
     const child = spawn(process.execPath, ["--input-type=module", "-e",
       "process.on('SIGTERM', () => {}); setInterval(() => {}, 1000);"], { stdio: "ignore" });
-    fs.writeFileSync("logs/child.pid", String(child.pid));
+    fs.writeFileSync(new URL("../logs/child.pid", import.meta.url), String(child.pid));
   }
   setInterval(() => {}, 1000);
 } else if (p === process.env.FAILED_PROVIDER) {
@@ -68,8 +69,8 @@ if (p === process.env.STUCK_PROVIDER) {
   fs.symlinkSync(process.execPath, path.join(bin, "node"));
   fs.writeFileSync(path.join(bin, "npm"), "#!/bin/sh\nprintf '%s\\n' \"$*\" >> logs/npm.log\n", { mode: 0o755 });
 
-  const run = (args: string[] = [], extra: Record<string, string> = {}) => spawnSync(
-    "bash", ["scripts/run-and-publish.sh", "--region", "us-west", ...args], {
+  const run = (args: string[] = [], extra: Record<string, string> = {}, region = "us-west") => spawnSync(
+    "bash", ["scripts/run-and-publish.sh", "--region", region, ...args], {
       cwd: repo, encoding: "utf8", timeout: 45_000,
       env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, ...extra },
     }
@@ -87,7 +88,24 @@ if (p === process.env.STUCK_PROVIDER) {
     // No descendant may keep the shared checkout locked after a timeout.
     execFileSync("flock", ["-n", path.join(repo, ".run-and-publish.lock"), "true"]);
   };
-  return { repo, git, run, calls, meta, checkPublication, cleanup: () => fs.rmSync(base, { recursive: true, force: true }) };
+  // Separate private results repo for --region staging, with its own remote.
+  const stagingRemote = path.join(base, "staging-results.git");
+  const stagingRepo = path.join(base, "browserarena-staging-results");
+  const makeStagingRepo = () => {
+    execFileSync("git", ["init", "--bare", stagingRemote]);
+    execFileSync("git", ["init", "-b", "main", stagingRepo]);
+    const sgit = (...args: string[]) => execFileSync("git", args, { cwd: stagingRepo, encoding: "utf8", stdio: ["ignore", "pipe", "pipe"] });
+    sgit("config", "user.name", "Test");
+    sgit("config", "user.email", "test@example.test");
+    sgit("config", "commit.gpgsign", "false");
+    fs.writeFileSync(path.join(stagingRepo, "README.md"), "private\n");
+    sgit("add", ".");
+    sgit("commit", "-m", "Initial");
+    sgit("remote", "add", "origin", stagingRemote);
+    sgit("push", "origin", "main");
+    return sgit;
+  };
+  return { repo, git, run, calls, stagingRepo, makeStagingRepo, meta, checkPublication, cleanup: () => fs.rmSync(base, { recursive: true, force: true }) };
 }
 
 test("hung provider is terminated; later providers publish and cron reports failure", () => {
@@ -233,6 +251,46 @@ test("invalid deadlines are rejected before installation or benchmarks", () => {
       assert.equal(result.status, 2, result.stdout + result.stderr);
       assert.match(result.stderr, /--provider-timeout must be a positive integer/);
     }
+    assert.equal(fs.existsSync(path.join(f.repo, "logs")), false);
+  } finally { f.cleanup(); }
+});
+
+test("staging region publishes Notte staging only to the private results repo", () => {
+  const f = fixture();
+  try {
+    const sgit = f.makeStagingRepo();
+    const publicHead = f.git("rev-parse", "origin/main");
+    const result = f.run([], {}, "staging");
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.deepEqual(f.calls().map(c => c.provider), ["notte-staging"]);
+    assert.equal(f.git("rev-parse", "origin/main"), publicHead);
+    assert.equal(fs.existsSync(path.join(f.repo, "results")), false);
+    const date = f.calls()[0]["run-date"];
+    assert.equal(sgit("rev-parse", "HEAD"), sgit("rev-parse", "origin/main"));
+    const paths = sgit("diff-tree", "--no-commit-id", "--name-only", "-r", "HEAD").trim().split("\n");
+    assert.deepEqual(paths.sort(), [
+      `results/hello-browser/notte-staging/${date}/_meta.json`,
+      `results/hello-browser/notte-staging/${date}/c1/results.jsonl`,
+    ]);
+    assert.equal(sgit("log", "-1", "--format=%s").trim(), `results: staging ${date}`);
+    execFileSync("flock", ["-n", path.join(f.repo, ".run-and-publish.lock"), "true"]);
+  } finally { f.cleanup(); }
+});
+
+test("staging region refuses a missing or public results checkout before any session", () => {
+  const f = fixture();
+  try {
+    const missing = f.run([], {}, "staging");
+    assert.equal(missing.status, 2, missing.stdout + missing.stderr);
+    assert.match(missing.stderr, /staging results checkout not found/);
+    const self = f.run([], { STAGING_RESULTS_DIR: f.repo }, "staging");
+    assert.equal(self.status, 2, self.stdout + self.stderr);
+    assert.match(self.stderr, /must be a separate clone/);
+    f.makeStagingRepo();
+    execFileSync("git", ["remote", "set-url", "origin", f.git("remote", "get-url", "origin").trim()], { cwd: f.stagingRepo });
+    const sameOrigin = f.run([], {}, "staging");
+    assert.equal(sameOrigin.status, 2, sameOrigin.stdout + sameOrigin.stderr);
+    assert.match(sameOrigin.stderr, /must be a separate clone/);
     assert.equal(fs.existsSync(path.join(f.repo, "logs")), false);
   } finally { f.cleanup(); }
 });

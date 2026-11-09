@@ -3,7 +3,7 @@
 # results to main. Designed to be invoked from cron on each EC2.
 #
 # Usage:
-#   scripts/run-and-publish.sh --region us-east|us-west [--benchmark hello-browser|browser-throughput]
+#   scripts/run-and-publish.sh --region us-east|us-west|staging [--benchmark hello-browser|browser-throughput]
 #       [--concurrency 1,10] [--runs N] [--loops N] [--provider-timeout SECONDS]
 #       [--dry-run] [--no-reset]
 #
@@ -14,6 +14,10 @@
 # Cron does git pull/reset + npm ci + bench + git commit/push. The two regions
 # write to disjoint provider directories, so simultaneous runs only race on
 # `git push` itself; the retry loop handles that.
+#
+# --region staging runs Notte staging (us-staging.notte.cc) from the us-west
+# box and publishes to the private results repo cloned at STAGING_RESULTS_DIR
+# (default: ../browserarena-staging-results), never to this public repo.
 
 set -euo pipefail
 
@@ -43,7 +47,7 @@ while [[ $# -gt 0 ]]; do
     --dry-run)   DRY_RUN=1; shift ;;
     --no-reset)  NO_RESET=1; shift ;;
     -h|--help)
-      sed -n '2,14p' "$0"; exit 0 ;;
+      sed -n '2,20p' "$0"; exit 0 ;;
     *) echo "[ERROR] unknown arg: $1" >&2; exit 2 ;;
   esac
 done
@@ -51,8 +55,9 @@ done
 case "$REGION" in
   us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion,cloudflare,aws-agentcore" ;;
   us-west) PROVIDERS="notte,lightpanda,browserless,tinyfish" ;;
-  "")      echo "[ERROR] --region us-east|us-west required" >&2; exit 2 ;;
-  *)       echo "[ERROR] invalid --region: $REGION (want us-east or us-west)" >&2; exit 2 ;;
+  staging) PROVIDERS="notte-staging" ;;
+  "")      echo "[ERROR] --region us-east|us-west|staging required" >&2; exit 2 ;;
+  *)       echo "[ERROR] invalid --region: $REGION (want us-east, us-west, or staging)" >&2; exit 2 ;;
 esac
 
 case "$BENCHMARK" in
@@ -85,6 +90,24 @@ done
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
+# Where results are written, committed, and pushed. Staging results must never
+# reach the public repo, so refuse a results checkout that shares its origin.
+RESULTS_REPO="$REPO_ROOT"
+if [[ "$REGION" == "staging" ]]; then
+  RESULTS_REPO="${STAGING_RESULTS_DIR:-$REPO_ROOT/../browserarena-staging-results}"
+  if ! results_top="$(git -C "$RESULTS_REPO" rev-parse --show-toplevel 2>/dev/null)"; then
+    echo "[ERROR] staging results checkout not found at $RESULTS_REPO (set STAGING_RESULTS_DIR)" >&2
+    exit 2
+  fi
+  RESULTS_REPO="$results_top"
+  results_origin="$(git -C "$RESULTS_REPO" remote get-url origin 2>/dev/null || true)"
+  code_origin="$(git remote get-url origin 2>/dev/null || true)"
+  if [[ "$RESULTS_REPO" == "$(git rev-parse --show-toplevel)" || -z "$results_origin" || "$results_origin" == "$code_origin" ]]; then
+    echo "[ERROR] $RESULTS_REPO must be a separate clone of the private staging results repo" >&2
+    exit 2
+  fi
+fi
+
 # One job at a time per checkout. The hello-browser and browser-throughput cron lines
 # share this working tree; without a lock, a long first run and the second
 # run would both reset the tree and fight over the index.
@@ -98,13 +121,19 @@ mkdir -p logs
 LOG_FILE="logs/cron-$(date -u +%Y-%m-%dT%H-%M-%SZ)-${REGION}-${BENCHMARK}.log"
 exec > >(tee -a "$LOG_FILE") 2>&1
 
-echo "[INFO] start region=$REGION benchmark=$BENCHMARK concurrency=$CONCURRENCY runs=$RUNS loops=$LOOPS dry_run=$DRY_RUN no_reset=$NO_RESET repo=$REPO_ROOT"
+echo "[INFO] start region=$REGION benchmark=$BENCHMARK concurrency=$CONCURRENCY runs=$RUNS loops=$LOOPS dry_run=$DRY_RUN no_reset=$NO_RESET repo=$REPO_ROOT results_repo=$RESULTS_REPO"
 
 if [[ $NO_RESET -eq 0 ]]; then
   echo "[INFO] resetting working tree to origin/main"
   git fetch origin
   git checkout main
   git reset --hard origin/main
+  if [[ "$RESULTS_REPO" != "$REPO_ROOT" ]]; then
+    echo "[INFO] resetting results checkout to origin/main"
+    git -C "$RESULTS_REPO" fetch origin
+    git -C "$RESULTS_REPO" checkout main
+    git -C "$RESULTS_REPO" reset --hard origin/main
+  fi
 else
   echo "[INFO] --no-reset: skipping fetch/reset"
 fi
@@ -141,6 +170,7 @@ for p in "${PROV_LIST[@]}"; do
     anchorbrowser)   v="${ANCHORBROWSER_API_KEY:-}" ;;
     browser-use)     v="${BROWSER_USE_API_KEY:-}" ;;
     notte)           v="${NOTTE_API_KEY:-}" ;;
+    notte-staging)   v="${NOTTE_STAGING_API_KEY:-}" ;;
     browserbase)     v="${BROWSERBASE_API_KEY:-}" ;;
     tilion)          v="${TILION_API_KEY:-}" ;;
     lightpanda)      v="${LIGHTPANDA_API_KEY:-}" ;;
@@ -160,6 +190,8 @@ fi
 DATE="$(date -u +%Y-%m-%d)"
 echo "[INFO] running benchmark=$BENCHMARK date=$DATE providers=$PROVIDERS provider_timeout=${PROVIDER_TIMEOUT}s"
 npm run build
+# Everything below writes, stages, and pushes relative to the results checkout.
+cd "$RESULTS_REPO"
 
 result_status=0
 for p in "${PROV_LIST[@]}"; do
@@ -172,7 +204,7 @@ for p in "${PROV_LIST[@]}"; do
   # after 30s if SIGTERM is ignored. Do not use --foreground: it leaves children
   # outside the timeout's process group.
   provider_status=0
-  "$TIMEOUT_BIN" --kill-after=30s "${PROVIDER_TIMEOUT}s" node dist/cli.js \
+  "$TIMEOUT_BIN" --kill-after=30s "${PROVIDER_TIMEOUT}s" node "$REPO_ROOT/dist/cli.js" \
     --benchmark="$BENCHMARK" \
     --provider="$p" \
     --run-date="$DATE" \
