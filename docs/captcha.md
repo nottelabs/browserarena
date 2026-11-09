@@ -265,8 +265,9 @@ and refuses tracked changes. Guards:
   until someone has reconciled the provider sessions it names and removed it. The
   evidence stays in `.captcha-runs/daily-*`.
 - The campaign's time limit defaults to its worst case: every attempt using its
-  full create, connect, navigation, solve and cleanup limits (360 seconds),
-  three at a time, plus 15 minutes. That is 7 h 15 min for the default 210
+  full create, connect, navigation, solve and cleanup limits, including a failed
+  release's recovery (425 seconds), three at a time, plus 15 minutes. That is
+  8 h 31 min for the default 210
   attempts, so a slow day is published instead of cut off. `--timeout SECONDS`
   overrides it. At the limit the campaign gets SIGTERM so active attempts can
   finish cleanup, and SIGKILL only ten minutes later.

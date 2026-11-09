@@ -299,8 +299,8 @@ test("the default time limit covers a campaign where every attempt uses its full
   for (const runs of [5, 20]) {
     const result = run([`--runs=${runs}`]);
     const timeout = Number((result.stdout + result.stderr).match(/ timeout=(\d+)s /)[1]);
-    // 360 s per attempt, three sessions at a time.
-    const worstCase = Math.ceil(runs * DAILY_PROVIDERS.length * FIXTURES.length * 360 / 3);
+    // 425 s per attempt (including a failed release's recovery), three sessions at a time.
+    const worstCase = Math.ceil(runs * DAILY_PROVIDERS.length * FIXTURES.length * 425 / 3);
     assert.ok(timeout >= worstCase, `${timeout}s < worst case ${worstCase}s at --runs=${runs}`);
   }
   const explicit = run(["--timeout=60", "--date=2026-11-06"]);

@@ -314,6 +314,16 @@ test("a failed release is retried once after a pause when the session still runs
   assert.deepEqual(calls, { releases: 2, statuses: 1 });
 });
 
+test("a session the provider reports ended only after the retry failed counts as released", async () => {
+  const { h, calls, slept } = failedRelease({ endedAnswers: [false, true] });
+  const row = await attempt(h.task, config, h.deps);
+  assert.equal(row.cleanup.released, true); assert.equal(row.cleanup.recovered, "status");
+  assert.match(row.cleanup.retry_error, /aborted due to timeout/);
+  assert.equal(row.halt_campaign, false);
+  assert.deepEqual(calls, { releases: 2, statuses: 2 });
+  assert.ok(slept() >= RELEASE_RETRY_DELAY_MS, "the retry waits before releasing again");
+});
+
 test("a session that neither releases nor reports ended still halts the campaign", async () => {
   const { h, calls } = failedRelease({ endedAnswers: [false, false] });
   const row = await attempt(h.task, config, h.deps);
