@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
 import test from "node:test";
 import { acceptedOfficial, acceptedTurnstile, configuration, FIXTURES, interval, schedule, summarize } from "./protocol.mjs";
-import { attempt, installCancellation, refusedCreate, runSuite, submit } from "./run.mjs";
-import { createProviders, REQUIRED_ENV } from "./providers.mjs";
+import { attempt, installCancellation, RELEASE_RETRY_DELAY_MS, refusedCreate, runSuite, submit } from "./run.mjs";
+import { ANCHOR_ENDED_STATUSES, createProviders, REQUIRED_ENV } from "./providers.mjs";
 import { report, sanitizer } from "./main.mjs";
 
 const config = configuration();
@@ -275,6 +275,86 @@ test("cleanup failure remains visible after token acceptance and stops the campa
   assert.equal(row.status, "verified"); assert.equal(row.cleanup.released, false);
   assert.equal(row.cleanup.error, "[redacted]"); assert.equal(row.halt_campaign, true);
   assert.equal(summarize(config, [row]).find(cell => cell.provider === "kernel" && cell.type === "recaptcha").cleanup_errors, 1);
+  // The release was retried once before the session counted as unreleased.
+  assert.equal(h.counts().releases, 2); assert.equal(row.cleanup.retry_error, "[redacted]");
+  assert.equal(row.cleanup.recovered, undefined);
+});
+
+// A release that fails like the 2026-11-07 Anchor DELETE: a slow reply after the session ended.
+function failedRelease({ endedAnswers = [], releaseFailures = Infinity, statusThrows = false } = {}) {
+  const h = harness();
+  const calls = { releases: 0, statuses: 0 };
+  let clock = 0;
+  h.deps.sleep = async ms => { clock += ms; };
+  h.deps.create = async () => ({ id: "owned-id", cdpUrl: "wss://private.example",
+    release: async () => { calls.releases++; if (calls.releases <= releaseFailures) throw new Error("The operation was aborted due to timeout"); },
+    ...(endedAnswers.length || statusThrows ? { ended: async () => {
+      calls.statuses++;
+      if (statusThrows) throw new Error("private-test-value");
+      return endedAnswers.shift() ?? false;
+    } } : {}) });
+  return { h, calls, slept: () => clock };
+}
+
+test("a failed release whose session the provider reports ended counts as released and does not halt", async () => {
+  const { h, calls } = failedRelease({ endedAnswers: [true] });
+  const row = await attempt(h.task, config, h.deps);
+  assert.equal(row.cleanup.released, true); assert.equal(row.cleanup.recovered, "status");
+  assert.match(row.cleanup.error, /aborted due to timeout/);
+  assert.equal(row.halt_campaign, false);
+  assert.deepEqual(calls, { releases: 1, statuses: 1 });
+  assert.equal(summarize(config, [row]).find(cell => cell.provider === "kernel" && cell.type === "recaptcha").cleanup_errors, 0);
+});
+
+test("a failed release is retried once after a pause when the session still runs", async () => {
+  const { h, calls } = failedRelease({ endedAnswers: [false], releaseFailures: 1 });
+  const row = await attempt(h.task, config, h.deps);
+  assert.equal(row.cleanup.released, true); assert.equal(row.cleanup.recovered, "retry");
+  assert.equal(row.halt_campaign, false);
+  assert.deepEqual(calls, { releases: 2, statuses: 1 });
+});
+
+test("a session the provider reports ended only after the retry failed counts as released", async () => {
+  const { h, calls, slept } = failedRelease({ endedAnswers: [false, true] });
+  const row = await attempt(h.task, config, h.deps);
+  assert.equal(row.cleanup.released, true); assert.equal(row.cleanup.recovered, "status");
+  assert.match(row.cleanup.retry_error, /aborted due to timeout/);
+  assert.equal(row.halt_campaign, false);
+  assert.deepEqual(calls, { releases: 2, statuses: 2 });
+  assert.ok(slept() >= RELEASE_RETRY_DELAY_MS, "the retry waits before releasing again");
+});
+
+test("a session that neither releases nor reports ended still halts the campaign", async () => {
+  const { h, calls } = failedRelease({ endedAnswers: [false, false] });
+  const row = await attempt(h.task, config, h.deps);
+  assert.equal(row.cleanup.released, false); assert.equal(row.halt_campaign, true);
+  assert.match(row.cleanup.retry_error, /aborted due to timeout/);
+  assert.deepEqual(calls, { releases: 2, statuses: 2 });
+  // A status read that fails is no answer: it never counts as ended.
+  const unreadable = failedRelease({ statusThrows: true });
+  const halted = await attempt(unreadable.h.task, config, unreadable.h.deps);
+  assert.equal(halted.cleanup.released, false); assert.equal(halted.halt_campaign, true);
+  assert.equal(halted.cleanup.status_error, "[redacted]");
+  assert.equal(RELEASE_RETRY_DELAY_MS, 5_000);
+});
+
+test("Anchor reports a session ended only for its terminal statuses", async () => {
+  const statuses = [];
+  const create = createProviders(() => ({}), { ANCHORBROWSER_API_KEY: "anchor-key" }, async (url, options) => {
+    if (options.method === "POST") return response({ data: { id: "anchor-id", cdp_url: "wss://anchor.example" } });
+    if (options.method === "GET") {
+      statuses.push(url);
+      const status = ["completed", "running", undefined][statuses.length - 1];
+      return response({ data: status === undefined ? {} : { status } });
+    }
+    return new Response(null, { status: 204 });
+  });
+  const anchor = await create("anchorbrowser");
+  assert.equal(await anchor.ended(), true);
+  assert.equal(await anchor.ended(), false);
+  assert.equal(await anchor.ended(), false);
+  assert.ok(statuses.every(url => url === "https://api.anchorbrowser.io/v1/sessions/anchor-id"));
+  assert.ok(ANCHOR_ENDED_STATUSES.has("completed") && !ANCHOR_ENDED_STATUSES.has("running"));
 });
 
 test("timeouts consume an attempt and cooperative cancellation still recovers and releases a create ID", async () => {

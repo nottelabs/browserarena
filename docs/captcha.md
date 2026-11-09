@@ -57,7 +57,12 @@ flock -n .run-and-publish.lock flock -n "$HOME/.browserarena-comparison.lock" \
 
 Run in a persistent terminal if SSH might disconnect. SIGINT, SIGTERM and SIGHUP
 stop new starts and let active attempts finish cleanup. Do not force-kill the
-process. Unknown session ownership or failed release/disconnect halts new work;
+process. When a release fails, the runner asks the provider whether the session
+ended (Anchor; `GET /v1/sessions/{id}`), retries the release once after 5 s and
+asks again; the session counts as released only on a successful release or a
+provider answer that it ended, recorded as `cleanup.recovered` in the private
+evidence. Unknown session ownership or a release that stays failed, or a failed
+disconnect, halts new work;
 inspect and reconcile the owned sessions before a new campaign. A session create
 the provider refuses with an HTTP 4xx (other than 408), such as a quota, credit
 or auth error, created nothing: it counts as an error for that attempt and the
@@ -260,8 +265,9 @@ and refuses tracked changes. Guards:
   until someone has reconciled the provider sessions it names and removed it. The
   evidence stays in `.captcha-runs/daily-*`.
 - The campaign's time limit defaults to its worst case: every attempt using its
-  full create, connect, navigation, solve and cleanup limits (360 seconds),
-  three at a time, plus 15 minutes. That is 7 h 15 min for the default 210
+  full create, connect, navigation, solve and cleanup limits, including a failed
+  release's recovery (425 seconds), three at a time, plus 15 minutes. That is
+  8 h 31 min for the default 210
   attempts, so a slow day is published instead of cut off. `--timeout SECONDS`
   overrides it. At the limit the campaign gets SIGTERM so active attempts can
   finish cleanup, and SIGKILL only ten minutes later.

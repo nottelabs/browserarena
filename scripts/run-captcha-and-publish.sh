@@ -45,8 +45,9 @@ CAPTCHA_PROVIDERS="kernel,browserbase,browser-use,steel,notte,anchorbrowser"
 CAPTCHA_TYPES=7
 # Longest one attempt can hold a session slot: create 60s, connect 30s,
 # navigation 30s, solve 180s, screenshot 10s, release 30s, disconnect 15s,
-# cooldown 5s.
-ATTEMPT_LIMIT_S=360
+# cooldown 5s, and a failed release's recovery 65s (status check 15s, pause 5s,
+# retry 30s, status check 15s; RELEASE_RETRY_DELAY_MS in run.mjs).
+ATTEMPT_LIMIT_S=425
 PUSH_RETRY_DELAY="${CAPTCHA_PUSH_RETRY_DELAY:-10}"
 
 while [[ $# -gt 0 ]]; do
