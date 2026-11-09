@@ -11,18 +11,11 @@
  * only the outcome.
  */
 
-import { loadLeaderboard } from "../lib/data";
-import { loadBrowserThroughputLeaderboard } from "../lib/browser-throughput-data";
-import { PROD_PROVIDER, STAGING_PROVIDER, stagingResultsSource } from "../lib/internal-staging";
-import {
-  stagingSummaryMessage,
-  type LifecycleNumbers,
-  type StagingSummaryInput,
-  type ThroughputNumbers,
-} from "../lib/staging-summary";
+import { stagingResultsSource } from "../lib/internal-staging";
+import { stagingSummaryMessage } from "../lib/staging-summary";
+import { loadStagingSummaryInput } from "../lib/staging-summary-data";
 
 const PAGE_URL = "https://staging-console.notte.cc/api/admin/browserarena-internal";
-const CONCURRENCY = [1, 10];
 
 function fail(message: string): never {
   console.error(`[staging-summary] ${message}`);
@@ -46,43 +39,7 @@ async function main() {
 
   const source = stagingResultsSource();
   if (!source) fail("INTERNAL_RESULTS_GITHUB_TOKEN is not set");
-  // The loaders read an unreachable repo as empty, which would look like a
-  // missed run. Check the token first so an expired one fails loudly.
-  const repo = await fetch(`https://api.github.com/repos/${source.repo}`, {
-    headers: { Authorization: `Bearer ${source.token}`, Accept: "application/vnd.github+json" },
-  });
-  if (!repo.ok) fail(`cannot read ${source.repo} (HTTP ${repo.status}); check the token`);
-
-  const lifecycle: StagingSummaryInput["lifecycle"] = [];
-  for (const concurrency of CONCURRENCY) {
-    const [prod, staging] = await Promise.all([
-      loadLeaderboard("hello-browser", undefined, "median", "latency", concurrency),
-      loadLeaderboard("hello-browser", undefined, "median", "latency", concurrency, source),
-    ]);
-    const pick = (rows: typeof prod.providers, id: string): LifecycleNumbers | null => {
-      const row = rows.find((r) => r.provider === id);
-      return row ? { runDate: row.runDate, totalRuns: row.totalRuns, successRate: row.successRate, totalTimeMs: row.totalTimeMs, p90TotalMs: row.p90TotalMs } : null;
-    };
-    lifecycle.push({ concurrency, prod: pick(prod.providers, PROD_PROVIDER), staging: pick(staging.providers, STAGING_PROVIDER) });
-  }
-
-  const [prodThroughput, stagingThroughput] = await Promise.all([
-    loadBrowserThroughputLeaderboard(1),
-    loadBrowserThroughputLeaderboard(1, undefined, source),
-  ]);
-  const pickThroughput = (rows: typeof prodThroughput.providers, id: string): ThroughputNumbers | null => {
-    const row = rows.find((r) => r.provider === id);
-    return row
-      ? { runDate: row.runDate, totalRuns: row.totalRuns, successRate: row.successRate, actionsPerSecond: row.actionsPerSecond.median, taskMs: row.taskMs.median }
-      : null;
-  };
-
-  const message = stagingSummaryMessage({
-    date,
-    lifecycle,
-    throughput: { prod: pickThroughput(prodThroughput.providers, PROD_PROVIDER), staging: pickThroughput(stagingThroughput.providers, STAGING_PROVIDER) },
-    pageUrl: PAGE_URL,
-  });
+  const message = stagingSummaryMessage(await loadStagingSummaryInput(date, source, PAGE_URL));
 
   if (dryRun) {
     console.log(JSON.stringify(message, null, 2));

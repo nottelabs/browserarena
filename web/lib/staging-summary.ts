@@ -25,8 +25,9 @@ export interface ThroughputNumbers {
 export interface StagingSummaryInput {
   /** UTC day the staging run is expected for. */
   date: string;
-  lifecycle: { concurrency: number; prod: LifecycleNumbers | null; staging: LifecycleNumbers | null }[];
-  throughput: { prod: ThroughputNumbers | null; staging: ThroughputNumbers | null };
+  /** `stagingRan`: the day's run folder exists, even if it holds no samples. */
+  lifecycle: { concurrency: number; prod: LifecycleNumbers | null; staging: LifecycleNumbers | null; stagingRan?: boolean }[];
+  throughput: { prod: ThroughputNumbers | null; staging: ThroughputNumbers | null; stagingRan?: boolean };
   /** Opens the team-only page through the console's superadmin link. */
   pageUrl: string;
 }
@@ -57,14 +58,20 @@ function slowerMs(staging: number, prod: number): boolean {
   return staging - prod > LATENCY_MS && staging > prod * (1 + LATENCY_SHARE);
 }
 
+function missingStaging(date: string, ran: boolean | undefined, latest?: string): string {
+  return ran
+    ? `⚠️ Staging ran on ${date} but recorded no samples here (see its _meta.json run_status).`
+    : `⚠️ No staging run for ${date}${latest ? ` (latest ${latest})` : ""}.`;
+}
+
 function lifecycleLines(row: StagingSummaryInput["lifecycle"][number], date: string): { text: string; flagged: boolean } {
   const { prod, staging, concurrency } = row;
   const head = `*c${concurrency}*`;
   if (!staging || staging.runDate !== date) {
-    return { text: `${head} ⚠️ No staging run for ${date}${staging?.runDate ? ` (latest ${staging.runDate})` : ""}.`, flagged: true };
+    return { text: `${head} ${missingStaging(date, row.stagingRan, staging?.runDate)}`, flagged: true };
   }
   const stagingLine = `staging ${pct(staging.successRate)} ok · ${ms(staging.totalTimeMs)} · p90 ${ms(staging.p90TotalMs)} · ${staging.totalRuns} runs`;
-  if (!prod) return { text: `${head} ${stagingLine}\nNo production run to compare.`, flagged: false };
+  if (!prod) return { text: `${head} ${stagingLine}\nNo production run for ${date} to compare.`, flagged: false };
   const flagged = staging.successRate < prod.successRate || slowerMs(staging.totalTimeMs, prod.totalTimeMs) || slowerMs(staging.p90TotalMs, prod.p90TotalMs);
   return {
     flagged,
@@ -79,11 +86,14 @@ function lifecycleLines(row: StagingSummaryInput["lifecycle"][number], date: str
 function throughputLines(row: StagingSummaryInput["throughput"], date: string): { text: string; flagged: boolean } {
   const { prod, staging } = row;
   if (!staging || staging.runDate !== date) {
-    return { text: `⚠️ No staging run for ${date}${staging?.runDate ? ` (latest ${staging.runDate})` : ""}.`, flagged: true };
+    return { text: missingStaging(date, row.stagingRan, staging?.runDate), flagged: true };
   }
   const stagingLine = `staging ${pct(staging.successRate)} ok · ${staging.actionsPerSecond.toFixed(2)} actions/s · task ${ms(staging.taskMs)} · ${staging.totalRuns} runs`;
-  if (!prod) return { text: `${stagingLine}\nNo production run to compare.`, flagged: false };
-  const flagged = staging.successRate < prod.successRate || staging.actionsPerSecond < prod.actionsPerSecond * (1 - LATENCY_SHARE);
+  if (!prod) return { text: `${stagingLine}\nNo production run for ${date} to compare.`, flagged: false };
+  const flagged =
+    staging.successRate < prod.successRate ||
+    staging.actionsPerSecond < prod.actionsPerSecond * (1 - LATENCY_SHARE) ||
+    slowerMs(staging.taskMs, prod.taskMs);
   return {
     flagged,
     text:

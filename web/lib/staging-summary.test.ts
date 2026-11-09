@@ -59,3 +59,20 @@ test("a missing or stale staging run is called out instead of compared", () => {
   assert.match(body, /Browser Throughput.*No staging run for 2026-11-09\./);
   assert.doesNotMatch(body, /staging vs production:/);
 });
+
+test("a throughput task-time slowdown is flagged even when actions/s rounds just under 10%", () => {
+  const message = stagingSummaryMessage(input({
+    throughput: { prod: thr({ actionsPerSecond: 5, taskMs: 2000 }), staging: thr({ actionsPerSecond: 4.5, taskMs: 2220 }) },
+  }));
+  assert.match(message.text, /^⚠️/);
+  assert.match(text(message), /task \+220 ms \(\+11%\)/);
+});
+
+test("a staging run folder without samples is reported as a failed run, not a missed one", () => {
+  const body = text(stagingSummaryMessage(input({
+    lifecycle: [{ concurrency: 1, prod: life(), staging: null, stagingRan: true }],
+    throughput: { prod: thr(), staging: null, stagingRan: false },
+  })));
+  assert.match(body, /Staging ran on 2026-11-09 but recorded no samples/);
+  assert.match(body, /Browser Throughput.*No staging run for 2026-11-09\./);
+});
