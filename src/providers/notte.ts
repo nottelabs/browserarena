@@ -18,11 +18,29 @@ interface ReplayResponse {
   video_duration_ms: number | null;
 }
 
+/** Production by default. The staging target only differs in URL, key, and name. */
+export interface NotteTarget {
+  name: "NOTTE" | "NOTTE_STAGING";
+  baseUrl: string;
+  apiKeyEnv: string;
+}
+
+export const NOTTE_STAGING_URL = "https://us-staging.notte.cc";
+
+export function notteStagingTarget(): NotteTarget {
+  return {
+    name: "NOTTE_STAGING",
+    baseUrl: process.env.NOTTE_STAGING_API_URL || NOTTE_STAGING_URL,
+    apiKeyEnv: "NOTTE_STAGING_API_KEY",
+  };
+}
+
 export class NotteProvider implements ProviderClient {
-  readonly name = "NOTTE";
+  readonly name: NotteTarget["name"];
   readonly proxyCountries = PROXY_COUNTRIES;
   private apiKey: string | null = null;
   private baseUrl: string;
+  private apiKeyEnv: string;
 
   computeCost(seconds: number): number {
     const perHour = 0.01;
@@ -30,13 +48,15 @@ export class NotteProvider implements ProviderClient {
     return Math.round((billedSeconds / 3600) * perHour * 1e8) / 1e8;
   }
 
-  constructor() {
-    this.baseUrl = process.env.NOTTE_API_URL || "https://api.notte.cc";
+  constructor(target?: NotteTarget) {
+    this.name = target?.name ?? "NOTTE";
+    this.baseUrl = target?.baseUrl ?? (process.env.NOTTE_API_URL || "https://api.notte.cc");
+    this.apiKeyEnv = target?.apiKeyEnv ?? "NOTTE_API_KEY";
   }
 
   private getApiKey(): string {
     if (!this.apiKey) {
-      this.apiKey = requireEnv("NOTTE_API_KEY");
+      this.apiKey = requireEnv(this.apiKeyEnv);
     }
     return this.apiKey;
   }
