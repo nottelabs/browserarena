@@ -141,6 +141,28 @@ export function refusedCreate(error) {
   return Number.isInteger(status) && status >= 400 && status < 500 && status !== 408;
 }
 
+// A release that fails (a slow or lost reply) does not mean the session runs on:
+// on 2026-11-07 Anchor ended a session but answered its DELETE after 30 s, which
+// halted the campaign and blocked the next day. Before counting the session as
+// unreleased, ask the provider whether it ended, retry the release once, and ask
+// again. Only a provider answer that the session ended, or a successful release,
+// counts; anything else still halts.
+export const RELEASE_RETRY_DELAY_MS = 5_000;
+
+async function recoverRelease(session, row, { clean, sleep }) {
+  const ended = async () => {
+    if (!session.ended) return false;
+    try { return await bounded(session.ended(), 15_000) === true; }
+    catch (error) { row.cleanup.status_error = clean(error); return false; }
+  };
+  if (await ended()) { row.cleanup.recovered = "status"; return true; }
+  await sleep(RELEASE_RETRY_DELAY_MS);
+  try { await session.release(); row.cleanup.recovered = "retry"; return true; }
+  catch (error) { row.cleanup.retry_error = clean(error); }
+  if (await ended()) { row.cleanup.recovered = "status"; return true; }
+  return false;
+}
+
 export async function attempt(task, config, deps) {
   const { create, chromium, clean, journal = async () => {}, signal,
     now = () => performance.now(), sleep = ms => new Promise(r => setTimeout(r, ms)),
@@ -314,7 +336,10 @@ export async function attempt(task, config, deps) {
     }
     if (row.session_id) {
       try { await session.release(); row.cleanup.released = true; }
-      catch (error) { row.cleanup.error = clean(error); }
+      catch (error) {
+        row.cleanup.error = clean(error);
+        row.cleanup.released = await recoverRelease(session, row, { clean, sleep });
+      }
     }
     if (browser) {
       try { await bounded(browser.close(), 15_000); row.cleanup.disconnected = true; }

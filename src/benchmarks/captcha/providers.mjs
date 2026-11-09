@@ -1,6 +1,9 @@
 import { randomUUID } from "node:crypto";
 
 // CAPTCHA presets deliberately differ from lifecycle presets: native solvers and proxies, no SDK retries.
+// Anchor session states that mean the session no longer runs (`GET /v1/sessions/{id}`).
+export const ANCHOR_ENDED_STATUSES = new Set(["completed", "failed", "terminated", "stopped", "expired"]);
+
 export function createProviders(load, env = process.env, request = fetch) {
   async function api(url, method, headers, body, signal = AbortSignal.timeout(60_000)) {
     const response = await request(url, { method, headers: { "content-type": "application/json", ...headers },
@@ -81,7 +84,11 @@ export function createProviders(load, env = process.env, request = fetch) {
       const data = response?.data ?? {};
       return { id: data.id, cdpUrl: data.cdp_url,
         configuration: { captcha_solver: true, proxy: "US", adblock: false, popup_blocker: false },
-        release: () => api(`${base}/${encodeURIComponent(data.id)}`, "DELETE", headers, undefined, AbortSignal.timeout(30_000)) };
+        release: () => api(`${base}/${encodeURIComponent(data.id)}`, "DELETE", headers, undefined, AbortSignal.timeout(30_000)),
+        ended: async () => {
+          const state = await api(`${base}/${encodeURIComponent(data.id)}`, "GET", headers, undefined, AbortSignal.timeout(15_000));
+          return ANCHOR_ENDED_STATUSES.has(state?.data?.status);
+        } };
     }
     if (provider === "browserless") {
       // No session API: connecting starts the browser and disconnecting ends it. The ID is
