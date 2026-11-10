@@ -39,8 +39,9 @@ const LATENCY_MS = 100;
 /** Success rate down by at least this many points is red; less is yellow. */
 const SUCCESS_POINTS = 2;
 
-type Level = "good" | "watch" | "bad";
-const DOT: Record<Level, string> = { good: "🟢", watch: "🟡", bad: "🔴" };
+/** "none": nothing to compare against; "info": a plain count with no verdict. */
+type Level = "good" | "watch" | "bad" | "none" | "info";
+const DOT: Record<Level, string> = { good: "🟢", watch: "🟡", bad: "🔴", none: "⚪", info: "" };
 
 interface Row {
   label: string;
@@ -57,27 +58,32 @@ interface Gap {
   name: string;
   prod: string;
   staging: string;
-  /** How much worse staging is, as a ratio (1 = equal). */
+  /** How much worse staging is, as a finite ratio (1 = equal). */
   ratio: number;
 }
 
 const int = (n: number) => Math.round(n).toLocaleString("en-US");
 const msText = (n: number) => `${int(n)} ms`;
 const pctText = (n: number) => `${Number.isInteger(n) ? n : n.toFixed(1)}%`;
+const rateText = (n: number) => n.toFixed(2);
 
 /** "+4%", "−35%", or "5.4×" once staging is more than twice production. */
 function change(staging: number, prod: number): string {
-  if (!prod) return "—";
   const ratio = staging / prod;
   if (ratio >= 2) return `${ratio.toFixed(1)}×`;
   const share = Math.round((ratio - 1) * 100);
   return share === 0 ? "=" : `${share > 0 ? "+" : "−"}${Math.abs(share)}%`;
 }
 
+function successChange(staging: number, prod: number): string {
+  const diff = Math.round((staging - prod) * 10) / 10;
+  return diff === 0 ? "=" : `${diff > 0 ? "+" : "−"}${Math.abs(diff)} pt`;
+}
+
 /** Lower is better (milliseconds). */
 function latencyLevel(staging: number, prod: number): Level {
   const worseMs = staging - prod;
-  const worseShare = prod ? worseMs / prod : 0;
+  const worseShare = worseMs / prod;
   if (worseMs > LATENCY_MS && worseShare > LATENCY_SHARE) return "bad";
   if (worseMs > LATENCY_MS || worseShare > LATENCY_SHARE) return "watch";
   return "good";
@@ -96,21 +102,43 @@ function successLevel(staging: number, prod: number): Level {
   return down > 0 ? "watch" : "good";
 }
 
-function successChange(staging: number, prod: number): string {
-  const diff = Math.round((staging - prod) * 10) / 10;
-  return diff === 0 ? "=" : `${diff > 0 ? "+" : "−"}${Math.abs(diff)} pt`;
+type Kind = "latency" | "rate" | "success";
+
+/**
+ * One table row. Latency and rate are medians of successful samples, so 0
+ * means "nothing measured" (every session failed), never "instant": it shows
+ * as "—", cannot be compared, and never enters the biggest-gap ranking.
+ */
+function metric(label: string, kind: Kind, prod: number | null, staging: number): { row: Row; gap?: Gap } {
+  const fmt = kind === "latency" ? msText : kind === "rate" ? rateText : pctText;
+  const measured = (v: number | null): v is number => v !== null && Number.isFinite(v) && (kind === "success" || v > 0);
+  const row: Row = { label, prod: measured(prod) ? fmt(prod) : "—", staging: measured(staging) ? fmt(staging) : "—", change: "—", level: "none" };
+  if (!measured(prod)) return { row };
+  if (!measured(staging)) return { row: { ...row, level: "bad" } };
+  if (kind === "success") return { row: { ...row, change: successChange(staging, prod), level: successLevel(staging, prod) } };
+  const level = kind === "latency" ? latencyLevel(staging, prod) : rateLevel(staging, prod);
+  const ratio = kind === "latency" ? staging / prod : prod / staging;
+  return {
+    row: { ...row, change: change(staging, prod), level },
+    gap: { name: label, prod: kind === "rate" ? `${fmt(prod)} actions/s` : fmt(prod), staging: kind === "rate" ? `${fmt(staging)} actions/s` : fmt(staging), ratio },
+  };
+}
+
+/** Sample counts: few completed runs make any comparison weaker. */
+function runsRow(label: string, prod: { totalRuns: number } | null, staging: { totalRuns: number }): Row {
+  return { label, prod: prod ? int(prod.totalRuns) : "—", staging: int(staging.totalRuns), change: "", level: "info" };
 }
 
 /** Aligned monospace table. The dot goes last so emoji width cannot skew columns. */
 function table(rows: Row[]): string {
-  const header: Row = { label: "", prod: "Production", staging: "Staging", change: "Change", level: "good" };
+  const header: Row = { label: "", prod: "Production", staging: "Staging", change: "Change", level: "info" };
   const all = [header, ...rows];
   const width = (key: "label" | "prod" | "staging" | "change") => Math.max(...all.map((r) => r[key].length));
   const w = { label: width("label"), prod: width("prod"), staging: width("staging"), change: width("change") };
-  const line = (r: Row, dot: string) =>
-    `${r.label.padEnd(w.label)}  ${r.prod.padStart(w.prod)}  ${r.staging.padStart(w.staging)}  ${r.change.padStart(w.change)}  ${dot}`.trimEnd();
-  const body = rows.map((r, i) => `${r.groupStart && i > 0 ? "\n" : ""}${line(r, DOT[r.level])}`);
-  return "```\n" + [line(header, ""), ...body].join("\n") + "\n```";
+  const line = (r: Row) =>
+    `${r.label.padEnd(w.label)}  ${r.prod.padStart(w.prod)}  ${r.staging.padStart(w.staging)}  ${r.change.padStart(w.change)}  ${DOT[r.level]}`.trimEnd();
+  const body = rows.map((r, i) => `${r.groupStart && i > 0 ? "\n" : ""}${line(r)}`);
+  return "```\n" + [line(header), ...body].join("\n") + "\n```";
 }
 
 function missing(date: string, ran: boolean | undefined, latest?: string): string {
@@ -127,30 +155,32 @@ interface Section {
   missingRun: boolean;
 }
 
+function collect(results: { row: Row; gap?: Gap }[], rows: Row[], gaps: Gap[]) {
+  for (const { row, gap } of results) {
+    rows.push(row);
+    if (gap) gaps.push(gap);
+  }
+}
+
 function lifecycleSection(input: StagingSummaryInput): Section {
   const rows: Row[] = [];
   const gaps: Gap[] = [];
   const notes: string[] = [];
   for (const { concurrency, prod, staging, stagingRan } of input.lifecycle) {
-    const level = `c${concurrency}`;
+    const group = `c${concurrency}`;
     if (!staging || staging.runDate !== input.date) {
-      notes.push(`${level}: ${missing(input.date, stagingRan, staging?.runDate)}`);
+      notes.push(`${group}: ${missing(input.date, stagingRan, staging?.runDate)}`);
       continue;
     }
-    const p = (pick: (n: LifecycleNumbers) => string) => (prod ? pick(prod) : "—");
-    rows.push(
-      { label: `${level} median`, prod: p((n) => msText(n.totalTimeMs)), staging: msText(staging.totalTimeMs), change: prod ? change(staging.totalTimeMs, prod.totalTimeMs) : "—", level: prod ? latencyLevel(staging.totalTimeMs, prod.totalTimeMs) : "good", groupStart: true },
-      { label: `${level} p90`, prod: p((n) => msText(n.p90TotalMs)), staging: msText(staging.p90TotalMs), change: prod ? change(staging.p90TotalMs, prod.p90TotalMs) : "—", level: prod ? latencyLevel(staging.p90TotalMs, prod.p90TotalMs) : "good" },
-      { label: `${level} success`, prod: p((n) => pctText(n.successRate)), staging: pctText(staging.successRate), change: prod ? successChange(staging.successRate, prod.successRate) : "—", level: prod ? successLevel(staging.successRate, prod.successRate) : "good" },
-    );
-    if (prod) {
-      gaps.push(
-        { name: `${level} median`, prod: msText(prod.totalTimeMs), staging: msText(staging.totalTimeMs), ratio: staging.totalTimeMs / prod.totalTimeMs },
-        { name: `${level} p90`, prod: msText(prod.p90TotalMs), staging: msText(staging.p90TotalMs), ratio: staging.p90TotalMs / prod.p90TotalMs },
-      );
-    } else {
-      notes.push(`${level}: no production run for ${input.date} to compare.`);
-    }
+    const start = rows.length;
+    collect([
+      metric(`${group} median`, "latency", prod?.totalTimeMs ?? null, staging.totalTimeMs),
+      metric(`${group} p90`, "latency", prod?.p90TotalMs ?? null, staging.p90TotalMs),
+      metric(`${group} success`, "success", prod?.successRate ?? null, staging.successRate),
+    ], rows, gaps);
+    rows.push(runsRow(`${group} runs`, prod, staging));
+    rows[start]!.groupStart = true;
+    if (!prod) notes.push(`⚪ ${group}: no production run for ${input.date} to compare.`);
   }
   const body = [rows.length ? table(rows) : "", ...notes].filter(Boolean).join("\n");
   return {
@@ -167,33 +197,31 @@ function throughputSection(input: StagingSummaryInput): Section {
   if (!staging || staging.runDate !== input.date) {
     return { text: `${title}\n${missing(input.date, stagingRan, staging?.runDate)}`, rows: [], gaps: [], missingRun: true };
   }
-  const p = (pick: (n: ThroughputNumbers) => string) => (prod ? pick(prod) : "—");
-  const rows: Row[] = [
-    { label: "actions/s", prod: p((n) => n.actionsPerSecond.toFixed(2)), staging: staging.actionsPerSecond.toFixed(2), change: prod ? change(staging.actionsPerSecond, prod.actionsPerSecond) : "—", level: prod ? rateLevel(staging.actionsPerSecond, prod.actionsPerSecond) : "good" },
-    { label: "task time", prod: p((n) => msText(n.taskMs)), staging: msText(staging.taskMs), change: prod ? change(staging.taskMs, prod.taskMs) : "—", level: prod ? latencyLevel(staging.taskMs, prod.taskMs) : "good" },
-    { label: "success", prod: p((n) => pctText(n.successRate)), staging: pctText(staging.successRate), change: prod ? successChange(staging.successRate, prod.successRate) : "—", level: prod ? successLevel(staging.successRate, prod.successRate) : "good" },
-  ];
-  const gaps: Gap[] = prod
-    ? [
-        { name: "throughput", prod: `${prod.actionsPerSecond.toFixed(2)} actions/s`, staging: `${staging.actionsPerSecond.toFixed(2)} actions/s`, ratio: prod.actionsPerSecond / staging.actionsPerSecond },
-        { name: "task time", prod: msText(prod.taskMs), staging: msText(staging.taskMs), ratio: staging.taskMs / prod.taskMs },
-      ]
-    : [];
-  const note = prod ? "" : `\nNo production run for ${input.date} to compare.`;
+  const rows: Row[] = [];
+  const gaps: Gap[] = [];
+  collect([
+    metric("actions/s", "rate", prod?.actionsPerSecond ?? null, staging.actionsPerSecond),
+    metric("task time", "latency", prod?.taskMs ?? null, staging.taskMs),
+    metric("success", "success", prod?.successRate ?? null, staging.successRate),
+  ], rows, gaps);
+  rows.push(runsRow("runs", prod, staging));
+  const note = prod ? "" : `\n⚪ No production run for ${input.date} to compare.`;
   return { text: `${title}\n${table(rows)}${note}`, rows, gaps, missingRun: false };
 }
 
 function headline(sections: Section[]): { emoji: string; text: string } {
-  const rows = sections.flatMap((s) => s.rows);
-  const bad = rows.filter((r) => r.level === "bad").length;
-  const watch = rows.filter((r) => r.level === "watch").length;
+  const rows = sections.flatMap((s) => s.rows).filter((r) => r.level !== "info");
+  const count = (level: Level) => rows.filter((r) => r.level === level).length;
+  const [bad, watch, none] = [count("bad"), count("watch"), count("none")];
   const missingRun = sections.some((s) => s.missingRun);
   const worst = sections.flatMap((s) => s.gaps).sort((a, b) => b.ratio - a.ratio)[0];
   const gap = worst && worst.ratio >= 1 + LATENCY_SHARE
     ? ` Biggest gap: ${worst.name}, ${worst.staging} on staging vs ${worst.prod} on production (${worst.ratio >= 2 ? `${worst.ratio.toFixed(1)}× worse` : `${Math.round((worst.ratio - 1) * 100)}% worse`}).`
     : "";
-  if (missingRun) return { emoji: "🔴", text: `Staging did not run completely.${bad ? ` ${bad} of ${rows.length} metrics are worse than production.` : ""}${gap}` };
-  if (bad) return { emoji: "🔴", text: `Staging is worse than production on ${bad} of ${rows.length} metrics.${gap}` };
+  const incomplete = none ? ` ${none} of ${rows.length} metrics have no production baseline.` : "";
+  if (missingRun) return { emoji: "🔴", text: `Staging did not run completely.${bad ? ` ${bad} of ${rows.length} metrics are worse than production.` : ""}${incomplete}${gap}` };
+  if (bad) return { emoji: "🔴", text: `Staging is worse than production on ${bad} of ${rows.length} metrics.${incomplete}${gap}` };
+  if (none) return { emoji: "⚪", text: `Comparison incomplete:${incomplete}${watch ? ` ${watch} compared metrics are slightly worse.` : ""}${gap}` };
   if (watch) return { emoji: "🟡", text: `Staging is close to production; ${watch} of ${rows.length} metrics are slightly worse.${gap}` };
   return { emoji: "🟢", text: "Staging matches production on every metric." };
 }
@@ -218,7 +246,7 @@ export function stagingSummaryMessage(input: StagingSummaryInput) {
         elements: [{
           type: "mrkdwn",
           text:
-            `🟢 same or better  🟡 slightly worse  🔴 worse by >${LATENCY_SHARE * 100}% and >${LATENCY_MS} ms, success down ≥${SUCCESS_POINTS} pt, or no run · ` +
+            `🟢 same or better  🟡 slightly worse  🔴 worse by >${LATENCY_SHARE * 100}% and >${LATENCY_MS} ms, success down ≥${SUCCESS_POINTS} pt, or no run  ⚪ not compared · ` +
             "median = sum of phase medians (the site's headline) · " +
             "🧪 staging ran 20:00 UTC on us-staging.notte.cc, 🚀 production 04:00 UTC, same us-west-1 runner",
         }],

@@ -78,8 +78,38 @@ test("missed or empty staging runs are red and called out instead of compared", 
   assert.equal(row(m, "c1 median"), "");
 });
 
-test("a missing production run leaves staging numbers with an em dash to compare against", () => {
-  const m = stagingSummaryMessage(input({ lifecycle: [{ concurrency: 1, prod: null, staging: life() }] }));
-  assert.match(row(m, "c1 median"), /^c1 median\s+—\s+300 ms\s+—\s+🟢$/);
-  assert.match(sections(m).join("\n"), /c1: no production run for 2026-11-09 to compare\./);
+test("a missing production run is not compared and never reads as healthy", () => {
+  const m = stagingSummaryMessage(input({
+    lifecycle: [{ concurrency: 1, prod: null, staging: life() }, { concurrency: 10, prod: null, staging: life() }],
+    throughput: { prod: null, staging: thr() },
+  }));
+  assert.match(row(m, "c1 median"), /^c1 median\s+—\s+300 ms\s+—\s+⚪$/);
+  assert.match(row(m, "actions/s"), /—\s+4\.18\s+—\s+⚪$/);
+  assert.match(m.text, /^⚪ .*Comparison incomplete: 9 of 9 metrics have no production baseline\./);
+  assert.doesNotMatch(m.text, /matches production/);
+  const text = sections(m).join("\n");
+  assert.match(text, /⚪ c1: no production run for 2026-11-09 to compare\./);
+  assert.match(text, /⚪ No production run for 2026-11-09 to compare\./);
+});
+
+test("failed runs with no successful samples are shown as unmeasured, never as infinite gaps", () => {
+  // Staging throughput recorded no successful actions; production lifecycle c1 failed entirely.
+  const m = stagingSummaryMessage(input({
+    lifecycle: [{ concurrency: 1, prod: life({ totalTimeMs: 0, p90TotalMs: 0, successRate: 0 }), staging: life() }],
+    throughput: { prod: thr(), staging: thr({ actionsPerSecond: 0, taskMs: 0, successRate: 0 }) },
+  }));
+  const json = JSON.stringify(m);
+  assert.doesNotMatch(json, /Infinity|NaN/);
+  assert.match(row(m, "c1 median"), /^c1 median\s+—\s+300 ms\s+—\s+⚪$/);
+  assert.match(row(m, "actions/s"), /4\.18\s+—\s+—\s+🔴$/);
+  assert.match(row(m, "task time"), /2,400 ms\s+—\s+—\s+🔴$/);
+  assert.match(row(m, "success"), /90%\s+0%\s+−90 pt\s+🔴$/);
+  assert.match(m.text, /^🔴 .*worse than production/);
+  assert.doesNotMatch(m.text, /Biggest gap/);
+});
+
+test("each group shows its sample counts on both targets", () => {
+  const m = stagingSummaryMessage(input({ lifecycle: [{ concurrency: 1, prod: life({ totalRuns: 100 }), staging: life({ totalRuns: 12 }) }] }));
+  assert.match(row(m, "c1 runs"), /^c1 runs\s+100\s+12$/);
+  assert.match(row(m, "runs"), /^runs\s+20\s+20$/);
 });
