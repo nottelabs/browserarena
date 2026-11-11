@@ -38,6 +38,12 @@ const LATENCY_SHARE = 0.1;
 const LATENCY_MS = 100;
 /** Success rate down by at least this many points is red; less is yellow. */
 const SUCCESS_POINTS = 2;
+/**
+ * Concurrency levels whose latency is shown but not compared: staging keeps
+ * fewer warm browsers than this many back-to-back parallel sessions need, so
+ * its starts wait for a free browser and the gap measures pool size, not code.
+ */
+const LATENCY_NOT_COMPARED = new Set([10]);
 
 /** "none": nothing to compare against; "info": a plain count with no verdict. */
 type Level = "good" | "watch" | "bad" | "none" | "info";
@@ -51,6 +57,8 @@ interface Row {
   level: Level;
   /** Starts a new group (another concurrency level): a blank line goes before it. */
   groupStart?: boolean;
+  /** Shown for reference only: left out of the headline's counts. */
+  excluded?: boolean;
 }
 
 /** A compared metric, kept for the headline's "biggest gap". */
@@ -173,9 +181,16 @@ function lifecycleSection(input: StagingSummaryInput): Section {
       continue;
     }
     const start = rows.length;
-    collect([
+    let latency = [
       metric(`${group} median`, "latency", prod?.totalTimeMs ?? null, staging.totalTimeMs),
       metric(`${group} p90`, "latency", prod?.p90TotalMs ?? null, staging.p90TotalMs),
+    ];
+    if (LATENCY_NOT_COMPARED.has(concurrency)) {
+      latency = latency.map(({ row }) => ({ row: { ...row, level: "none", excluded: true } }));
+      notes.push(`⚪ ${group} latency: not compared. Staging keeps fewer warm browsers than ${concurrency} parallel sessions need, so its starts wait for a free one.`);
+    }
+    collect([
+      ...latency,
       metric(`${group} success`, "success", prod?.successRate ?? null, staging.successRate),
     ], rows, gaps);
     rows.push(runsRow(`${group} runs`, prod, staging));
@@ -210,7 +225,7 @@ function throughputSection(input: StagingSummaryInput): Section {
 }
 
 function headline(sections: Section[]): { emoji: string; text: string } {
-  const rows = sections.flatMap((s) => s.rows).filter((r) => r.level !== "info");
+  const rows = sections.flatMap((s) => s.rows).filter((r) => r.level !== "info" && !r.excluded);
   const count = (level: Level) => rows.filter((r) => r.level === level).length;
   const [bad, watch, none] = [count("bad"), count("watch"), count("none")];
   const missingRun = sections.some((s) => s.missingRun);
