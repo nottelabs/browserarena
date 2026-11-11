@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { Plus_Jakarta_Sans, IBM_Plex_Mono, DM_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import {
@@ -9,20 +9,31 @@ import {
   PROVIDER_LIST,
 } from "@/lib/providers";
 
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
+// Self-hosted latin subsets (Fontsource 5.3.0, OFL; licenses next to the
+// files), so builds never depend on reaching Google Fonts. globals.css names
+// Plus Jakarta Sans and IBM Plex Mono directly, so those keep their real family
+// names; DM Sans is only used through --font-dm-sans.
+const plusJakarta = localFont({
+  src: "./fonts/plus-jakarta-sans-latin-wght-normal.woff2",
+  weight: "200 800",
   variable: "--font-sans",
+  declarations: [{ prop: "font-family", value: "Plus Jakarta Sans" }],
 });
 
-const ibmPlexMono = IBM_Plex_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const ibmPlexMono = localFont({
+  src: [
+    { path: "./fonts/ibm-plex-mono-latin-400-normal.woff2", weight: "400" },
+    { path: "./fonts/ibm-plex-mono-latin-500-normal.woff2", weight: "500" },
+    { path: "./fonts/ibm-plex-mono-latin-600-normal.woff2", weight: "600" },
+    { path: "./fonts/ibm-plex-mono-latin-700-normal.woff2", weight: "700" },
+  ],
   variable: "--font-mono",
+  declarations: [{ prop: "font-family", value: "IBM Plex Mono" }],
 });
 
-const dmSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+const dmSans = localFont({
+  src: "./fonts/dm-sans-latin-wght-normal.woff2",
+  weight: "100 1000",
   variable: "--font-dm-sans",
 });
 
