@@ -85,7 +85,7 @@ test("a missing production run is not compared and never reads as healthy", () =
   }));
   assert.match(row(m, "c1 median"), /^c1 median\s+—\s+300 ms\s+—\s+⚪$/);
   assert.match(row(m, "actions/s"), /—\s+4\.18\s+—\s+⚪$/);
-  assert.match(m.text, /^⚪ .*Comparison incomplete: 9 of 9 metrics have no production baseline\./);
+  assert.match(m.text, /^⚪ .*Comparison incomplete: 7 of 7 metrics have no production baseline\./);
   assert.doesNotMatch(m.text, /matches production/);
   const text = sections(m).join("\n");
   assert.match(text, /⚪ c1: no production run for 2026-11-09 to compare\./);
@@ -106,6 +106,22 @@ test("failed runs with no successful samples are shown as unmeasured, never as i
   assert.match(row(m, "success"), /90%\s+0%\s+−90 pt\s+🔴$/);
   assert.match(m.text, /^🔴 .*worse than production/);
   assert.doesNotMatch(m.text, /Biggest gap/);
+});
+
+test("c10 latency is shown but not compared, while c10 success still is", () => {
+  const m = stagingSummaryMessage(input({
+    lifecycle: [
+      { concurrency: 1, prod: life(), staging: life() },
+      { concurrency: 10, prod: life({ totalTimeMs: 457 }), staging: life({ totalTimeMs: 3787, successRate: 95 }) },
+    ],
+  }));
+  assert.match(row(m, "c10 median"), /457 ms\s+3,787 ms\s+8\.3×\s+⚪$/);
+  assert.match(row(m, "c10 success"), /100%\s+95%\s+−5 pt\s+🔴$/);
+  assert.match(m.text, /Staging is worse than production on 1 of 7 metrics\./);
+  assert.doesNotMatch(m.text, /Biggest gap|no production baseline/);
+  assert.match(sections(m).join("\n"), /⚪ c10 latency: not compared\./);
+  const healthy = stagingSummaryMessage(input({ lifecycle: [{ concurrency: 10, prod: life(), staging: life({ totalTimeMs: 3787, p90TotalMs: 5676 }) }] }));
+  assert.match(healthy.text, /^🟢 /);
 });
 
 test("each group shows its sample counts on both targets", () => {
