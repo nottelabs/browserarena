@@ -1,24 +1,29 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Suspense } from "react";
 import { cacheLife } from "next/cache";
 import { notFound } from "next/navigation";
 import { BenchmarkPending, BenchmarkShell } from "@/components/benchmarks/benchmark-shell";
-import { loadCaptchaCampaigns } from "@/lib/captcha-data";
+import { BENCHMARK_TITLES, BenchmarkTitle } from "@/components/benchmarks/benchmark-title";
+import { BenchmarkSectionHeader } from "@/components/benchmarks/section-header";
+import { RunDatePicker } from "@/components/benchmarks/run-date-picker";
+import { CaptchaLeaderboard, CaptchaRuns } from "@/components/benchmarks/captcha-leaderboard";
+import styles from "@/components/benchmarks/benchmark.module.css";
+import { CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes, loadCaptchaCampaigns } from "@/lib/captcha-data";
+import { captchaColumns, captchaLeaderboard } from "@/lib/captcha-leaderboard";
 import { BENCHMARK_CACHE_LIFE } from "@/lib/benchmark-cache";
+import { numberToWord } from "@/lib/providers";
 import { campaignCells } from "../../../src/benchmarks/captcha/publication";
-import styles from "./captcha.module.css";
 
 export const metadata: Metadata = {
   title: "CAPTCHA Handling",
   description: "Fresh-session trials of native CAPTCHA handling across cloud browser providers. Server acceptance and token delivery reported separately.",
   alternates: { canonical: "https://browserarena.ai/captcha" },
 };
-const names: Record<string, string> = { kernel: "Kernel", browserbase: "Browserbase", "browser-use": "Browser Use", steel: "Steel", notte: "Notte" };
-const titles: Record<string, string> = { turnstile: "Cloudflare Turnstile", recaptcha: "reCAPTCHA v2", hcaptcha: "hCaptcha" };
+const METHODOLOGY = "https://github.com/nottelabs/browserarena/blob/main/docs/captcha.md";
 const SOLVE_WINDOW_SECONDS = 180;
 const formatDate = (value: string) => new Intl.DateTimeFormat("en-GB", { timeZone: "UTC", day: "numeric", month: "long", year: "numeric" }).format(new Date(value));
-const outcomes: Record<string, string> = { verified: "Accepted", token_delivered: "Token delivered", timeout: "Timed out", rejected: "Rejected", error: "Error", interrupted: "Interrupted" };
+const shortDate = (value: string) => new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric", timeZone: "UTC" });
+const linkClass = "rounded-[3px] border border-foreground/25 bg-background text-muted-foreground hover:border-foreground/50 hover:text-foreground";
 
 export default function CaptchaPage({ searchParams }: { searchParams: Promise<{ campaign?: string }> }) {
   return <Suspense fallback={<BenchmarkPending />}><Content searchParams={searchParams} /></Suspense>;
@@ -33,57 +38,53 @@ async function CampaignView({ selected }: { selected: string }) {
   const campaigns = await loadCaptchaCampaigns();
   const campaign = selected ? campaigns.find(item => item.id === selected) : campaigns[0];
   if (selected && !campaign) notFound();
-  const cells = campaign ? campaignCells(campaign) : [];
+  if (!campaign) return <BenchmarkShell benchmark="captcha">
+    <div className={styles.tableStage}>
+      <BenchmarkSectionHeader><BenchmarkTitle name={BENCHMARK_TITLES.captcha} /></BenchmarkSectionHeader>
+      <div data-benchmark-panel="empty" className="p-6">
+        <h2 className="text-base font-semibold">No CAPTCHA campaigns published yet</h2>
+        <p className="mt-3 max-w-[72ch] text-sm leading-relaxed text-muted-foreground">The benchmark is ready for opt-in trials of every provider with a native CAPTCHA solver. Results will appear here after a campaign is run and its export is reviewed.</p>
+        <a data-control href={METHODOLOGY} className={`mt-4 ${linkClass}`}>Run a campaign</a>
+      </div>
+    </div>
+  </BenchmarkShell>;
+
+  const cells = campaignCells(campaign);
+  const columns = captchaColumns(campaign);
+  const rows = captchaLeaderboard(campaign, cells, columns, CAPTCHA_UNSUPPORTED_PROVIDERS, captchaProviderNotes(campaign, campaigns));
+  const latest = campaign.id === campaigns[0].id;
+  const runLabel = (item: (typeof campaigns)[number]) => {
+    const sameDay = campaigns.filter(other => shortDate(other.started_at) === shortDate(item.started_at)).length > 1;
+    return `${shortDate(item.started_at)}${sameDay ? ` · ${item.id}` : ""}${item.complete ? "" : " (partial)"}`;
+  };
+  const runs = campaigns.map(item => ({
+    id: item.id, label: runLabel(item), rounds: item.rounds, providers: item.providers.length,
+    attempts: item.attempts.length, planned: campaignCells(item).reduce((sum, cell) => sum + cell.planned, 0),
+    status: item.halted ? "Halted" : item.interrupted ? "Interrupted" : item.complete ? "Complete" : "Partial",
+    href: item.id === campaigns[0].id ? "/captcha" : `/captcha?campaign=${encodeURIComponent(item.id)}`,
+  }));
+  // Columns whose success is not a server verdict, named with their own signal.
+  const unverified = columns.filter(column => column.signal !== "server_acceptance").map(column => `${column.label} (${column.signal_label.toLowerCase()})`);
   return <BenchmarkShell benchmark="captcha">
-    <section className={styles.content} aria-labelledby="captcha-title">
-      <header className={styles.header}>
-        <div><h1 id="captcha-title">CAPTCHA Handling</h1>
-          <p>Can a fresh browser session get through the challenge? Compare native provider handling across three public fixtures.</p></div>
-        <a className={styles.link} href="https://github.com/nottelabs/browserarena/blob/main/docs/captcha.md">Methodology</a>
-      </header>
-      {campaign ? <>
-        <p className={styles.summary}>
-          {campaign.id === campaigns[0].id ? "Latest run" : "Run on"} <strong>{formatDate(campaign.started_at)}</strong> · {campaign.rounds} fresh sessions per provider and CAPTCHA · {SOLVE_WINDOW_SECONDS} seconds to solve each
-        </p>
-        {campaigns.length > 1 && <p className={styles.runs}>Other runs: {campaigns.filter(item => item.id !== campaign.id).map((item, index) => <span key={item.id}>
-          {index > 0 && ", "}<Link href={`/captcha?campaign=${item.id}`}>{formatDate(item.started_at)}{!item.complete ? " (partial)" : ""}</Link></span>)}
-        </p>}
-        {(!campaign.complete || campaign.halted || campaign.interrupted) && <p className={styles.notice} role="status">
-          {campaign.halted ? "Campaign halted. " : campaign.interrupted ? "Campaign interrupted. " : "Partial campaign. "}
-          Unrun attempts stay visible; cleanup failures are reported separately from challenge outcomes.
-        </p>}
-        <div className={styles.tableScroll} role="region" aria-label="Provider CAPTCHA results" tabIndex={0}>
-          <table className={styles.table}>
-            <thead><tr><th scope="col">Provider</th>{Object.entries(titles).map(([type, title]) => <th scope="col" key={type}>{title}<span>{type === "hcaptcha" ? "Token delivery only" : "Server acceptance"}</span></th>)}</tr></thead>
-            <tbody>{campaign.providers.map(provider => <tr key={provider}>
-              <th scope="row">{names[provider]}</th>
-              {cells.filter(cell => cell.provider === provider).map(cell => {
-                const delivery = cell.type === "hcaptcha";
-                const count = delivery ? cell.token_delivered : cell.verified;
-                const median = delivery ? cell.delivered_median_ms : cell.accepted_median_ms;
-                const rows = campaign.attempts.filter(row => row.provider === provider && row.type === cell.type).sort((a, b) => a.round - b.round);
-                return <td key={cell.type}>
-                  <div className={styles.score}>
-                    <strong aria-label={`${names[provider]} ${titles[cell.type]}: ${count} of ${cell.attempted} ${delivery ? "delivered" : "accepted"}`}>{count}/{cell.attempted}</strong>
-                    {median !== null && <span className={styles.time}>{(median / 1000).toFixed(1)}s</span>}
-                  </div>
-                  <ol className={styles.rounds} aria-label="Rounds">{rows.map(row => {
-                    const label = `Round ${row.round}: ${outcomes[row.status]}${row.status === "error" ? ` during ${row.stage}` : ""}${row.cleanup_failed ? "; cleanup failed" : ""}`;
-                    return <li key={row.id} data-outcome={row.status} data-label={label} aria-label={label} tabIndex={0} />;
-                  })}{Array.from({ length: cell.not_run }, (_, index) => <li key={`not-run-${index}`} data-outcome="not_run" data-label="Not run" aria-label="Not run" tabIndex={0} />)}</ol>
-                  {cell.not_run > 0 && <span className={styles.stat}>{cell.not_run} not run</span>}
-                  {cell.cleanup_errors > 0 && <span className={styles.stat}>{cell.cleanup_errors} cleanup failure{cell.cleanup_errors === 1 ? "" : "s"}</span>}
-                </td>;
-              })}
-            </tr>)}</tbody>
-          </table>
-        </div>
-        <p className={styles.legend}>One dot per attempt: green succeeded, amber timed out, red failed. Time is the median of successful attempts.</p>
-      </> : <div className={styles.empty}>
-        <h2>No CAPTCHA campaigns published yet</h2>
-        <p>The benchmark is ready for opt-in trials across Kernel, Browserbase, Browser Use, Steel and Notte. Results will appear here after a campaign is run and its export is reviewed.</p>
-        <a className={styles.link} href="https://github.com/nottelabs/browserarena/blob/main/docs/captcha.md">Run a campaign</a>
-      </div>}
+    {(!campaign.complete || campaign.halted || campaign.interrupted) && <p className="mb-4 text-sm text-muted-foreground" role="status">
+      {campaign.halted ? "Campaign halted. " : campaign.interrupted ? "Campaign interrupted. " : "Partial campaign. "}
+      Unrun attempts stay visible; cleanup failures are reported separately from challenge outcomes.
+    </p>}
+    <CaptchaLeaderboard columns={columns} rows={rows}
+      caption={`CAPTCHA results for the campaign started ${formatDate(campaign.started_at)}. Ranked by overall success rate, then median time of successful attempts.`}
+      dateControl={<RunDatePicker dates={[]} selectedDate={campaign.id} runs={runs.map(run => ({ value: run.id, label: run.label }))} param="campaign" benchmark="captcha-handling" pathname="/captcha" />}
+      summary={<p>{latest ? "Latest run" : "Run on"} <strong className="font-semibold text-foreground">{formatDate(campaign.started_at)}</strong> · {campaign.rounds} fresh sessions per provider and CAPTCHA · {SOLVE_WINDOW_SECONDS} seconds to solve each</p>} />
+    <section aria-label="Runs">
+      <BenchmarkSectionHeader chart title="Runs" description="Published campaigns, newest first." controls={<div className="flex flex-wrap items-center gap-3">
+        <a data-control href={`/api/captcha?campaign=${encodeURIComponent(campaign.id)}`} className={linkClass}>Export results</a>
+        <a data-control href={METHODOLOGY} className={linkClass}>Methodology</a>
+      </div>} />
+      <CaptchaRuns runs={runs} selected={campaign.id} />
     </section>
+    <p className="mt-3 text-xs leading-relaxed text-muted-foreground">
+      Can a fresh browser session get through the challenge? Compare native provider handling across {numberToWord(columns.length)} public fixtures.
+      {" "}One dot per attempt; hover or tap a dot for its round, outcome and time. Times are medians of successful attempts.
+      {unverified.length > 0 && ` Not checked by a server: ${unverified.join(", ")}.`}
+    </p>
   </BenchmarkShell>;
 }

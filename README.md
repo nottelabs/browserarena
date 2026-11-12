@@ -107,10 +107,13 @@ npm run bench -- --benchmark=browser-throughput --provider=notte --runs=25 --loo
 
 ### CAPTCHA handling
 
-The opt-in CAPTCHA benchmark compares native handling of Turnstile, reCAPTCHA v2
-and hCaptcha across Kernel, Browserbase, Browser Use, Steel and Notte. Each attempt
-uses a fresh session with a fixed solve window and no retries. Turnstile and
-reCAPTCHA measure server acceptance; hCaptcha measures token delivery separately.
+The CAPTCHA benchmark compares native handling of Turnstile, reCAPTCHA v2,
+hCaptcha, reCAPTCHA v3, GeeTest v3, a text CAPTCHA and PerimeterX across Kernel,
+Browserbase, Browser Use, Steel, Notte, Hyperbrowser, Anchor Browser, Browserless
+and Tilion. Each attempt uses a fresh session with a fixed solve window and no
+retries. Each type names its success signal: server acceptance for the first
+five, a page-level answer check for the text CAPTCHA, and reaching the protected
+page for PerimeterX.
 
 ```bash
 npm run bench -- --benchmark=captcha --runs=5
@@ -219,6 +222,23 @@ Daily results are produced by `scripts/run-and-publish.sh`, which runs one bench
 # us-west-1 box (Notte, Lightpanda, Browserless, TinyFish), staggered 1h to avoid push races
 0 4 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west
 0 6 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west --benchmark browser-throughput --concurrency 1
+```
+
+Notte staging runs on the us-west box too, with the same script and settings, about eight hours before the production Notte run. `--region staging` runs only `notte-staging` (`https://us-staging.notte.cc`, key `NOTTE_STAGING_API_KEY` in `.env`) and publishes to the private repo [nottelabs/browserarena-staging-results](https://github.com/nottelabs/browserarena-staging-results), cloned next to this checkout (override with `STAGING_RESULTS_DIR`). It refuses to run if that clone is missing or shares this repo's origin, so staging results never reach the public repo. It takes the same checkout lock, so it never overlaps a production run:
+
+```cron
+0 20 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region staging
+0 21 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region staging --benchmark browser-throughput --concurrency 1
+```
+
+The results appear only on the team-only `/internal` page. Its Vercel environment needs `BROWSERARENA_INTERNAL_LINK_SECRET` (at least 32 characters, shared with the Notte console, which links superadmins to it) and `INTERNAL_RESULTS_GITHUB_TOKEN` (read-only access to the private repo). Without a valid session, `/internal` answers 404.
+
+Every day at 22:30 UTC, `.github/workflows/staging-summary.yml` posts staging next to that day's production Notte run (lifecycle c1/c10 and throughput) to the same Slack channel as the regression alerts, and flags a missed staging run. It also runs the regression detector below on staging's own lifecycle history (c1 and c10), so a staging regression shows even while staging and production differ; it reports "not judged yet" until staging has 10 run-days. It reads the private repo with the `STAGING_RESULTS_TOKEN` secret (read-only). This repo's Actions logs are public, so `web/scripts/post-staging-summary.ts` never prints the numbers in CI; use `--dry-run` locally.
+
+The CAPTCHA benchmark has its own publisher, `scripts/run-captcha-and-publish.sh`, on the us-west box (210 paid sessions a day, one cron line; see [docs/captcha.md](docs/captcha.md#daily-run)):
+
+```cron
+0 8 * * * /home/ubuntu/browserarena/scripts/run-captcha-and-publish.sh
 ```
 
 The east Browser Throughput run sits at 21:00 UTC, after the last Proxy Performance batch (01:00 to 17:00, see docs/proxy-get.md), so the two never share the box. `--concurrency 1,10,25,50` and `--loops 5` are accepted on either line; see the plan-cap note above before raising concurrency. The script holds a lock on the checkout, so if the first job overruns its slot the second waits instead of racing it.

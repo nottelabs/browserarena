@@ -1,0 +1,28 @@
+/* CAPTCHA-only pieces of the shared benchmark table: per-attempt dots and their labels. */
+.score { display: flex; align-items: center; justify-content: flex-end; gap: 6px; }
+.score strong { font-weight: inherit; }
+.time { min-width: 3.2em; font-size: 0.72rem; font-weight: 400; color: var(--muted-foreground); text-align: right; }
+.stat { display: block; font-size: 0.65rem; line-height: 14px; color: var(--muted-foreground); text-align: right; }
+.rounds { flex-shrink: 0; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 64px; margin: 0; padding: 0; list-style: none; cursor: default; }
+.rounds li { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--muted-foreground); }
+.rounds li[data-outcome="verified"], .rounds li[data-outcome="token_delivered"], .rounds li[data-outcome="page_passed"], .legend span[data-outcome="succeeded"] { background: oklch(0.55 0.14 150); }
+.rounds li[data-outcome="timeout"], .legend span[data-outcome="timeout"] { background: oklch(0.66 0.14 70); }
+.rounds li[data-outcome="rejected"], .rounds li[data-outcome="error"], .legend span[data-outcome="failed"] { background: oklch(0.58 0.17 25); }
+.rounds li[data-outcome="interrupted"], .rounds li[data-outcome="not_run"], .legend span[data-outcome="not_run"] { background: transparent; box-shadow: inset 0 0 0 1.5px var(--muted-foreground); }
+.rounds li:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
+/* Anchored right so labels in the last column stay inside the table panel. */
+.rounds li::after { content: attr(data-label); position: absolute; right: 0; bottom: calc(100% + 8px); z-index: 2; padding: 4px 8px; border-radius: 3px; background: var(--foreground); color: var(--background); font-family: var(--font-dm-sans), sans-serif; font-size: 0.72rem; line-height: 1.4; white-space: nowrap; pointer-events: none; visibility: hidden; }
+.rounds li:hover::after, .rounds li:focus::after { visibility: visible; }
+.runs tbody tr[aria-current] { background: color-mix(in oklab, var(--foreground) 5%, transparent); }
+/* Positioned so screen-reader-only text in the cells stays inside the scroll area
+   instead of widening the page. */
+.region { position: relative; }
+.region:focus-visible { outline: 2px solid var(--foreground); outline-offset: -2px; }
+/* Dot legend, right-aligned just above the results table. */
+.legend { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px 16px; margin: 0 0 8px; padding: 0; list-style: none; font-size: 0.72rem; color: var(--muted-foreground); }
+.legend li { display: inline-flex; align-items: center; gap: 6px; }
+.legend span { display: inline-block; width: 8px; height: 8px; border-radius: 999px; }
+/* Type headers may wrap to two lines so the dot columns stay narrow. */
+/* Scoped under .region to outrank the shared .tablePanel th nowrap rule. */
+.region th.typeHeader { white-space: normal; text-align: right; line-height: 1.25; }
+.region th.typeHeader > span { display: inline-flex; align-items: flex-end; justify-content: flex-end; }

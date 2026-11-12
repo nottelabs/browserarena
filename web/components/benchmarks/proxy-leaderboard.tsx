@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Info, SquareMinus, SquarePlus } from "lucide-react";
 import { RunInfoIcon } from "@/components/run-info-icon";
-import type { ProxyGetStats } from "@/lib/proxy-get";
+import type { ProxyGetClientStats } from "@/lib/proxy-get";
 import { proxyRunCountLabel } from "@/lib/proxy-daily-progress";
 import { PROVIDERS_BY_ID, providerPath } from "@/lib/providers";
 import { rankProxyValues } from "@/lib/proxy-value-score";
@@ -35,7 +35,7 @@ const HEADERS = [
 ];
 
 export function ProxyLeaderboard({ providers, countryName, dateLabel, simulated, initialSort, dateControl }: {
-  providers: ProxyGetStats[]; countryName: string; dateLabel: string; simulated: boolean; initialSort?: string; dateControl?: ReactNode;
+  providers: ProxyGetClientStats[]; countryName: string; dateLabel: string; simulated: boolean; initialSort?: string; dateControl?: ReactNode;
 }) {
   const cheapest = WEIGHT_PRESETS.find((preset) => preset.label === "Cheapest")?.weights ?? DEFAULT_PRESET_WEIGHTS;
   const router = useRouter();

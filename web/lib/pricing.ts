@@ -7,10 +7,12 @@ interface UnitPricing {
   perSessionCreationFee: number;
 }
 
+const NOTTE_UNIT: UnitPricing = { ratePerHour: 0.01, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 };
+
 const PRICING: Record<string, { unit: UnitPricing }> = {
-  NOTTE: {
-    unit: { ratePerHour: 0.01, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
-  },
+  NOTTE: { unit: NOTTE_UNIT },
+  // Team-only staging rows (/internal) are priced like production Notte.
+  NOTTE_STAGING: { unit: NOTTE_UNIT },
   STEEL: {
     unit: { ratePerHour: 0.1, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
   },

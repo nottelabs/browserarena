@@ -6,7 +6,7 @@ import posthog from "posthog-js";
  * and exceptions are captured automatically; these are the interactions that
  * autocapture cannot name.
  */
-export type Benchmark = "session-performance" | "browser-throughput" | "proxy-performance";
+export type Benchmark = "session-performance" | "browser-throughput" | "proxy-performance" | "captcha-handling";
 
 type Events = {
   leaderboard_sorted: { benchmark: Benchmark; column: string; direction: "asc" | "desc" };

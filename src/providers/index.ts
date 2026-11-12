@@ -4,7 +4,7 @@ import { SteelProvider } from "./steel.js";
 import { AnchorBrowserProvider } from "./anchorbrowser.js";
 import { HyperbrowserProvider } from "./hyperbrowser.js";
 import { KernelProvider, KernelHeadfulProvider } from "./kernel.js";
-import { NotteProvider } from "./notte.js";
+import { NotteProvider, notteStagingTarget } from "./notte.js";
 import { BrowserUseProvider } from "./browser-use.js";
 import { TilionProvider } from "./tilion.js";
 import { LightpandaProvider } from "./lightpanda.js";
@@ -24,6 +24,8 @@ export function getRequiredEnvVarsForProvider(name: string): string[] {
   if (key === "kernel") return ["KERNEL_API_KEY"];
   if (key === "kernel-headed" || key === "kernel-headful") return ["KERNEL_API_KEY"];
   if (key === "notte") return ["NOTTE_API_KEY"];
+  // Notte staging (us-staging.notte.cc). Results go to a private repo only.
+  if (key === "notte-staging") return ["NOTTE_STAGING_API_KEY"];
   if (key === "browser-use" || key === "browseruse" || key === "bu")
     return ["BROWSER_USE_API_KEY"];
   if (key === "tilion") return ["TILION_API_KEY"];
@@ -55,6 +57,7 @@ export function resolveProvider(name: string): ProviderClient {
   if (key === "kernel-headed" || key === "kernel-headful")
     return new KernelHeadfulProvider();
   if (key === "notte") return new NotteProvider();
+  if (key === "notte-staging") return new NotteProvider(notteStagingTarget());
   if (key === "browser-use" || key === "browseruse" || key === "bu")
     return new BrowserUseProvider();
   if (key === "tilion") return new TilionProvider();

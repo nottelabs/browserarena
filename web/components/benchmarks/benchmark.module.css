@@ -124,10 +124,46 @@
 }
 .dashboard [data-badge] { border: 1px solid var(--border); background: var(--background); }
 .dashboard select:disabled { cursor: wait; opacity: 0.65; }
-.dashboard select[data-run-date] { border: 1.5px solid var(--foreground); background: var(--background); color: var(--foreground); }
+.dashboard select[data-run-date] { border: 1.5px solid var(--foreground); background-color: var(--background); color: var(--foreground); }
+.dashboard select:is([data-run-date], [data-chevron]) {
+  /* The native arrow ignores padding-right and sits on the border, so draw our own. */
+  appearance: none;
+  padding-right: 30px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+}
+:global(.dark) .dashboard select:is([data-run-date], [data-chevron]) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23f0f0f0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+@media (forced-colors: active) {
+  /* Forced colors can repaint the background under the fixed-color SVG; keep the native arrow. */
+  .dashboard select:is([data-run-date], [data-chevron]),
+  :global(.dark) .dashboard select:is([data-run-date], [data-chevron]) { appearance: auto; background-image: none; }
+}
 .dashboard :is(button, a, select):focus-visible { outline: 2px solid var(--foreground); outline-offset: 3px; }
 .dashboard [data-benchmark-progress] { position: fixed; top: 69px; inset-inline: 0; height: 2px; overflow: hidden; z-index: 45; pointer-events: none; }
 .dashboard [data-benchmark-progress] span { display: block; width: 35%; height: 100%; background: var(--foreground); animation: progress 1.2s ease-in-out infinite; }
+/* Loading state: the same boxes as the results, so they swap in without a jump. */
+.skeletonHeader { display: flex; flex-direction: column; justify-content: center; min-height: 112px; margin-bottom: calc(var(--spacing) * 4); }
+.skeletonTitle { font-size: 1.25rem; line-height: 1.25; font-weight: 600; letter-spacing: -0.02em; }
+.skeletonControl { display: block; width: 132px; height: var(--control-height); margin-top: 8px; border-radius: 3px; }
+.skeletonTable { overflow: hidden; border: 1.5px solid var(--foreground); border-radius: 3px; background: var(--background); }
+.skeletonTable [data-skeleton-row] { display: grid; grid-template-columns: calc(var(--spacing) * 10) 22% repeat(2, minmax(0, 1fr)); align-items: center; gap: calc(var(--spacing) * 4); height: var(--provider-row-height); padding: 0 calc(var(--spacing) * 2); border-bottom: 1px solid var(--border); }
+.skeletonTable [data-skeleton-row]:first-child { height: var(--table-header-height); border-bottom: 1.5px solid var(--foreground); }
+.skeletonTable [data-skeleton-row]:last-child { border-bottom: 0; }
+.skeletonTable [data-skeleton-row] > :first-child { width: 10px; justify-self: center; }
+.skeletonTable [data-skeleton-row] > :nth-child(2) { width: 70%; }
+.skeletonTable [data-skeleton-row] > :nth-child(n + 3) { width: 45%; justify-self: end; }
+.skeletonChartHeader { display: flex; flex-direction: column; justify-content: center; gap: 8px; height: var(--section-header-height); margin-bottom: calc(var(--spacing) * 4); }
+.skeletonChartHeader > :first-child { width: 72px; }
+.skeletonChartHeader > :last-child { width: 55%; }
+.dashboard [data-skeleton-block] { display: block; height: 10px; border-radius: 2px; background: color-mix(in oklab, var(--foreground) 9%, transparent); animation: skeleton-pulse 1.4s ease-in-out infinite; }
+.dashboard .skeletonControl[data-skeleton-block] { height: var(--control-height); }
+/* Ranking controls sit beside the title on wider screens and below it on phones. */
+.dashboard .skeletonControls[data-skeleton-block] { display: none; }
+@keyframes skeleton-pulse { 50% { opacity: 0.45; } }
 @keyframes dashboard-enter { from { opacity: 0.85; } to { opacity: 1; } }
 @keyframes progress { from { transform: translateX(-100%); } to { transform: translateX(390%); } }
 @media (min-width: 1280px) { .heading { padding-right: 0; } }
@@ -159,6 +195,8 @@
 @media (max-width: 1023px) { .charts { grid-template-columns: minmax(0, 1fr); gap: calc(var(--spacing) * 4); } }
 @media (max-width: 639px) {
   .charts [data-benchmark-panel] { min-height: 480px; }
+  .skeletonHeader { min-height: 0; }
+  .dashboard .skeletonControls[data-skeleton-block] { display: block; height: 62px; margin-top: 12px; }
   .heading { padding-right: 0; }
   .dashboard [data-section-header="benchmark"] { min-height: 0; flex-direction: column; align-items: stretch; justify-content: flex-start; gap: 12px; }
   .dashboard [data-section-header="benchmark"] > [data-section-controls] { margin-top: auto; }

@@ -31,6 +31,17 @@ export interface ProxyGetStats {
   vmMeta?: VmMeta;
 }
 
+/** The sample fields the leaderboard and distribution read in the browser. */
+export type ProxyGetClientSample = Pick<ProxyGetRecord, "run_id" | "status" | "get_ms" | "first_byte_ms" | "error_message">;
+export type ProxyGetClientStats = Omit<ProxyGetStats, "samples"> & { samples: ProxyGetClientSample[] };
+
+// Full records are about 1.5 KB each; fifty per provider made the proxy page
+// payload megabytes. Server-rendered details keep the full records.
+export function proxyStatsForClient(stats: ProxyGetStats): ProxyGetClientStats {
+  return { ...stats, samples: stats.samples.map(({ run_id, status, get_ms, first_byte_ms, error_message }) =>
+    ({ run_id, status, get_ms, first_byte_ms, error_message })) };
+}
+
 function median(values: number[]): number | null {
   if (!values.length) return null;
   values.sort((a, b) => a - b);

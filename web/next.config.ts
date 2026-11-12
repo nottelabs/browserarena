@@ -35,11 +35,13 @@ const nextConfig: NextConfig = {
     "/stealth": ["../results/stealth/*.json"],
     "/captcha": ["../results/captcha/*.json"],
     "/api/captcha": ["../results/captcha/*.json"],
+    "/provider/*": ["../results/captcha/*.json"],
   },
   // Proxy loaders fetch published GitHub results on Vercel, so these files
   // only bloat function bundles. Keep lifecycle and throughput files bundled.
+  // Failure screenshots are never read by the site, only listed by path.
   outputFileTracingExcludes: {
-    "/*": ["../results/proxy-get/**/*"],
+    "/*": ["../results/proxy-get/**/*", "../results/**/screenshots/**/*"],
   },
   // PostHog's API paths end in a slash; do not redirect them.
   skipTrailingSlashRedirect: true,

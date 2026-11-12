@@ -17,6 +17,8 @@ export function RunDatePicker({
   pathname,
   query = {},
   partialDates = [],
+  param = "date",
+  runs,
 }: {
   dates: string[];
   selectedDate: string;
@@ -24,15 +26,20 @@ export function RunDatePicker({
   pathname: string;
   query?: Record<string, string>;
   partialDates?: string[];
+  /** Query parameter that selects a run. */
+  param?: string;
+  /** Runs that are not one per date, newest first; replaces `dates`. */
+  runs?: { value: string; label: string }[];
 }) {
   const { pending, navigate } = useBenchmarkNavigation();
   if (!selectedDate) return null;
-  const options = [...new Set(dates.length ? dates : [selectedDate])].sort().reverse();
-  const label = (date: string) => `${formatDate(date)}${partialDates.includes(date) ? " (partial)" : ""}`;
+  const labels = new Map(runs?.map((run) => [run.value, run.label]));
+  const options = runs ? runs.map((run) => run.value) : [...new Set(dates.length ? dates : [selectedDate])].sort().reverse();
+  const label = (date: string) => labels.get(date) ?? `${formatDate(date)}${partialDates.includes(date) ? " (partial)" : ""}`;
   if (options.length < 2) return <span data-run-date="">{label(selectedDate)}</span>;
   const hrefs = options.filter((date) => date !== selectedDate).slice(0, 8).map((date) => {
     const params = new URLSearchParams(query);
-    params.set("date", date);
+    params.set(param, date);
     return `${pathname}?${params}`;
   });
   return (
@@ -45,7 +52,7 @@ export function RunDatePicker({
       value={options.includes(selectedDate) ? selectedDate : options[0]}
       onChange={(event) => {
         const params = new URLSearchParams(query);
-        params.set("date", event.target.value);
+        params.set(param, event.target.value);
         track("run_day_selected", { benchmark, date: event.target.value });
         navigate(`${pathname}?${params}`);
       }}
