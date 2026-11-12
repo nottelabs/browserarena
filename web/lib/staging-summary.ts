@@ -22,12 +22,26 @@ export interface ThroughputNumbers {
   taskMs: number;
 }
 
+/** Staging against its own earlier runs (production's regression detector rules). */
+export interface BaselineCheck {
+  concurrency: number;
+  /** "unknown": not enough run-days yet to judge. */
+  status: "ok" | "degraded" | "unknown";
+  runDays: number;
+  runDaysNeeded: number;
+  /** Headline latency: baseline vs the median of the last 3 runs. */
+  total: { baseline: number; current: number } | null;
+  breaches: { label: string; unit: "ms" | "percent"; baseline: number; current: number; ratio: number; onsetDate: string | null }[];
+}
+
 export interface StagingSummaryInput {
   /** UTC day the staging run is expected for. */
   date: string;
   /** `stagingRan`: the day's run folder exists, even if it holds no samples. */
   lifecycle: { concurrency: number; prod: LifecycleNumbers | null; staging: LifecycleNumbers | null; stagingRan?: boolean }[];
   throughput: { prod: ThroughputNumbers | null; staging: ThroughputNumbers | null; stagingRan?: boolean };
+  /** One per lifecycle concurrency level staging ran on `date`. */
+  baseline?: BaselineCheck[];
   /** Opens the team-only page through the console's superadmin link. */
   pageUrl: string;
 }
@@ -224,6 +238,28 @@ function throughputSection(input: StagingSummaryInput): Section {
   return { text: `${title}\n${table(rows)}${note}`, rows, gaps, missingRun: false };
 }
 
+function breachText(b: BaselineCheck["breaches"][number]): string {
+  const since = b.onsetDate ? ` since ${b.onsetDate}` : "";
+  if (b.unit === "percent") return `${b.label} ${pctText(b.baseline)} → ${pctText(b.current)}${since}`;
+  return `${b.label} ${msText(b.baseline)} → ${msText(b.current)} (${b.ratio.toFixed(1)}×)${since}`;
+}
+
+/**
+ * Staging against itself, so every concurrency level is fair game here,
+ * including c10, whose gap to production measures pool size.
+ */
+function baselineSection(checks: BaselineCheck[]): string | null {
+  if (!checks.length) return null;
+  const lines = checks.map((c) => {
+    const group = `c${c.concurrency}`;
+    if (c.status === "unknown") return `⚪ ${group}: ${c.runDays} of ${c.runDaysNeeded} run-days so far, not judged yet.`;
+    if (c.status === "degraded") return `🔴 ${group}: ${c.breaches.map(breachText).join("; ")}.`;
+    const total = c.total ? ` (median ${msText(c.total.current)} over the last 3 runs, ${msText(c.total.baseline)} before)` : "";
+    return `🟢 ${group}: within its baseline${total}.`;
+  });
+  return `*📈 Staging vs its own history* — Browser Lifecycle, production's regression-alert rules\n${lines.join("\n")}`;
+}
+
 function headline(sections: Section[]): { emoji: string; text: string } {
   const rows = sections.flatMap((s) => s.rows).filter((r) => r.level !== "info" && !r.excluded);
   const count = (level: Level) => rows.filter((r) => r.level === level).length;
@@ -247,7 +283,16 @@ function prettyDate(date: string): string {
 
 export function stagingSummaryMessage(input: StagingSummaryInput) {
   const sections = [lifecycleSection(input), throughputSection(input)];
-  const verdict = headline(sections);
+  const checks = input.baseline ?? [];
+  const history = baselineSection(checks);
+  const comparison = headline(sections);
+  const regressed = checks.filter((c) => c.status === "degraded");
+  const verdict = regressed.length
+    ? {
+        emoji: "🔴",
+        text: `Staging regressed against its own history on ${regressed.map((c) => `c${c.concurrency} (${c.breaches[0] ? breachText(c.breaches[0]) : "see below"})`).join(", ")}. ${comparison.text}`,
+      }
+    : comparison;
   const title = `${verdict.emoji} Notte staging vs production · ${prettyDate(input.date)}`;
   return {
     text: `${title}: ${verdict.text}`,
@@ -255,7 +300,8 @@ export function stagingSummaryMessage(input: StagingSummaryInput) {
       { type: "header", text: { type: "plain_text", text: title, emoji: true } },
       { type: "section", text: { type: "mrkdwn", text: `*${verdict.text}*` } },
       { type: "divider" },
-      ...sections.map((section) => ({ type: "section", text: { type: "mrkdwn", text: section.text } })),
+      ...[...sections.map((section) => section.text), ...(history ? [history] : [])]
+        .map((text) => ({ type: "section", text: { type: "mrkdwn", text } })),
       {
         type: "context",
         elements: [{
@@ -263,6 +309,7 @@ export function stagingSummaryMessage(input: StagingSummaryInput) {
           text:
             `🟢 same or better  🟡 slightly worse  🔴 worse by >${LATENCY_SHARE * 100}% and >${LATENCY_MS} ms, success down ≥${SUCCESS_POINTS} pt, or no run  ⚪ not compared · ` +
             "median = sum of phase medians (the site's headline) · " +
+            "📈 history: 28-run baseline, red when ≥1.5× and +50 ms (or success −5 pt and <95%) on 2 of the last 3 runs · " +
             "🧪 staging ran 20:00 UTC on us-staging.notte.cc, 🚀 production 04:00 UTC, same us-west-1 runner",
         }],
       },

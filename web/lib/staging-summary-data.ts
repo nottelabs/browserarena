@@ -1,13 +1,16 @@
-import { loadLeaderboard, type ResultsSource } from "./data";
+import { loadHistoricalLeaderboard, loadLeaderboard, type ResultsSource } from "./data";
+import type { HistoricalProviderPoint } from "./data-shared";
 import { loadBrowserThroughputLeaderboard } from "./browser-throughput-data";
 import { PROD_PROVIDER, STAGING_PROVIDER } from "./internal-staging";
-import type { LifecycleNumbers, StagingSummaryInput, ThroughputNumbers } from "./staging-summary";
+import { DEFAULT_CONFIG, evaluateSeries } from "./regression";
+import type { BaselineCheck, LifecycleNumbers, StagingSummaryInput, ThroughputNumbers } from "./staging-summary";
 
 const CONCURRENCY = [1, 10];
 const STAGING_DIR = "notte-staging";
 
 export interface SummaryLoaders {
   loadLeaderboard: typeof loadLeaderboard;
+  loadHistoricalLeaderboard: typeof loadHistoricalLeaderboard;
   loadBrowserThroughputLeaderboard: typeof loadBrowserThroughputLeaderboard;
   /** Status of a GitHub contents request, so a missing run (404) is not confused with a failed read. */
   contentsStatus: (source: ResultsSource, path: string) => Promise<number>;
@@ -15,6 +18,7 @@ export interface SummaryLoaders {
 
 const defaultLoaders: SummaryLoaders = {
   loadLeaderboard,
+  loadHistoricalLeaderboard,
   loadBrowserThroughputLeaderboard,
   async contentsStatus(source, path) {
     const res = await fetch(`https://api.github.com/repos/${source.repo}/contents/${path}?ref=${source.branch}`, {
@@ -35,6 +39,39 @@ async function stagingRanOn(source: ResultsSource, benchmark: string, date: stri
 }
 
 /**
+ * Staging against its own earlier runs, with the production regression
+ * detector's rules (docs/regression-detection.md): a 28 run-day baseline that
+ * ends before the last 3 runs, and a breach on 2 of those 3. Null when staging
+ * has no run on `date`; the summary already reports that run as missed.
+ */
+export function stagingBaselineCheck(points: HistoricalProviderPoint[], date: string, concurrency: number): BaselineCheck | null {
+  const history = points.filter((p) => p.date <= date);
+  if (history.at(-1)?.date !== date) return null;
+  // End of the run day: replaying a past day judges it as it was then.
+  const health = evaluateSeries(
+    history,
+    { provider: STAGING_PROVIDER, displayName: "Notte staging", concurrency },
+    new Date(`${date}T23:59:59.999Z`),
+  );
+  const total = health.metrics.find((m) => m.metric === "total");
+  return {
+    concurrency,
+    status: health.status === "degraded" ? "degraded" : health.status === "ok" ? "ok" : "unknown",
+    runDays: history.length,
+    runDaysNeeded: DEFAULT_CONFIG.minBaselineDays + DEFAULT_CONFIG.recentDays,
+    total: total ? { baseline: total.baseline, current: total.current } : null,
+    breaches: health.breaches.map((b) => ({
+      label: b.label,
+      unit: b.unit,
+      baseline: b.baseline,
+      current: b.current,
+      ratio: b.ratio,
+      onsetDate: b.onsetDate,
+    })),
+  };
+}
+
+/**
  * Both targets on one day: staging's run that day and production's run that
  * day, never each provider's latest. Read failures throw; a run folder with no
  * samples (e.g. a crash before the first session) is reported as such.
@@ -51,11 +88,16 @@ export async function loadStagingSummaryInput(
 
   const lifecycleRan = await stagingRanOn(source, "hello-browser", date, loaders);
   const lifecycle: StagingSummaryInput["lifecycle"] = [];
+  const baseline: BaselineCheck[] = [];
   for (const concurrency of CONCURRENCY) {
-    const [prod, staging] = await Promise.all([
+    const [prod, staging, stagingHistory] = await Promise.all([
       loaders.loadLeaderboard("hello-browser", date, "median", "latency", concurrency),
       lifecycleRan ? loaders.loadLeaderboard("hello-browser", date, "median", "latency", concurrency, source) : null,
+      lifecycleRan ? loaders.loadHistoricalLeaderboard("hello-browser", concurrency, source) : null,
     ]);
+    const series = stagingHistory?.providers.find((p) => p.provider === STAGING_PROVIDER);
+    const check = series ? stagingBaselineCheck(series.points, date, concurrency) : null;
+    if (check) baseline.push(check);
     const pick = (rows: typeof prod.providers, id: string): LifecycleNumbers | null => {
       const row = rows.find((r) => r.provider === id);
       return row ? { runDate: row.runDate, totalRuns: row.totalRuns, successRate: row.successRate, totalTimeMs: row.totalTimeMs, p90TotalMs: row.p90TotalMs } : null;
@@ -83,6 +125,7 @@ export async function loadStagingSummaryInput(
   return {
     date,
     lifecycle,
+    baseline,
     throughput: {
       prod: pickThroughput(prodThroughput.providers, PROD_PROVIDER),
       staging: stagingThroughput ? pickThroughput(stagingThroughput.providers, STAGING_PROVIDER) : null,

@@ -151,6 +151,18 @@ workflow sets `ALERT_REQUIRE_WEBHOOK=true`, so a missing or rotated secret fails
 the run loudly instead of degrading into a green workflow that reaches nobody —
 which would be the same silent failure this system exists to catch.
 
+## Staging
+
+Notte staging (`NOTTE_STAGING`, private results repo) is not in the alert
+workflow above. Instead, the nightly staging summary
+(`.github/workflows/staging-summary.yml`) runs the same `evaluateSeries` on
+staging's own lifecycle history for c1 and c10, with the default thresholds, and
+adds a "Staging vs its own history" section; a breach turns the post red and
+leads its headline. Staleness is not reported there, since the summary already
+flags a missed run. Until staging has `minBaselineDays + recentDays` (10)
+run-days it shows "not judged yet". Throughput is not covered: the detector
+only reads lifecycle history.
+
 ## Running it by hand
 
 ```bash
