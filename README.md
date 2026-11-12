@@ -25,6 +25,9 @@ Create session → Connect via CDP → Navigate page → Release session
 |---|---|---|---|
 | AWS us-east-1 | t3.micro | linux x64 | v20.20.0 |
 | AWS us-west-1 | t3.micro | linux x64 | v18.20.8 |
+| AWS us-east-2 | t3.medium | linux x64 | v22.23.5 |
+
+The us-east-2 runner benchmarks Browser Use from the same region as its browsers. Its results are published under `regions/us-east-2/results/` and are not on the leaderboard yet; Browser Use's leaderboard numbers still come from us-east-1.
 
 ### Providers
 

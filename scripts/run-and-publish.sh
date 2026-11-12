@@ -3,7 +3,7 @@
 # results to main. Designed to be invoked from cron on each EC2.
 #
 # Usage:
-#   scripts/run-and-publish.sh --region us-east|us-west|staging [--benchmark hello-browser|browser-throughput]
+#   scripts/run-and-publish.sh --region us-east|us-east-2|us-west|staging [--benchmark hello-browser|browser-throughput]
 #       [--concurrency 1,10] [--runs N] [--loops N] [--provider-timeout SECONDS]
 #       [--dry-run] [--no-reset]
 #
@@ -18,6 +18,10 @@
 # --region staging runs Notte staging (us-staging.notte.cc) from the us-west
 # box and publishes to the private results repo cloned at STAGING_RESULTS_DIR
 # (default: ../browserarena-staging-results), never to this public repo.
+#
+# --region us-east-2 runs Browser Use from its own EC2 in us-east-2, next to
+# Browser Use's browsers. It writes under regions/us-east-2/results/, which the
+# website does not read, so the leaderboard keeps using the us-east-1 runs.
 
 set -euo pipefail
 
@@ -54,10 +58,11 @@ done
 
 case "$REGION" in
   us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion,cloudflare,aws-agentcore" ;;
+  us-east-2) PROVIDERS="browser-use" ;;
   us-west) PROVIDERS="notte,lightpanda,browserless,tinyfish" ;;
   staging) PROVIDERS="notte-staging" ;;
-  "")      echo "[ERROR] --region us-east|us-west|staging required" >&2; exit 2 ;;
-  *)       echo "[ERROR] invalid --region: $REGION (want us-east, us-west, or staging)" >&2; exit 2 ;;
+  "")      echo "[ERROR] --region us-east|us-east-2|us-west|staging required" >&2; exit 2 ;;
+  *)       echo "[ERROR] invalid --region: $REGION (want us-east, us-east-2, us-west, or staging)" >&2; exit 2 ;;
 esac
 
 case "$BENCHMARK" in
@@ -101,6 +106,9 @@ repo_slug() {
   echo "$(basename "$(dirname "$url")")/$(basename "$url")" | tr '[:upper:]' '[:lower:]'
 }
 RESULTS_REPO="$REPO_ROOT"
+# Directory the CLI writes results/ under, inside RESULTS_REPO.
+RESULTS_ROOT="$REPO_ROOT"
+[[ "$REGION" == "us-east-2" ]] && RESULTS_ROOT="$REPO_ROOT/regions/us-east-2"
 if [[ "$REGION" == "staging" ]]; then
   RESULTS_REPO="${STAGING_RESULTS_DIR:-$REPO_ROOT/../browserarena-staging-results}"
   if ! results_top="$(git -C "$RESULTS_REPO" rev-parse --show-toplevel 2>/dev/null)"; then
@@ -108,6 +116,7 @@ if [[ "$REGION" == "staging" ]]; then
     exit 2
   fi
   RESULTS_REPO="$results_top"
+  RESULTS_ROOT="$RESULTS_REPO"
   results_urls="$( { git -C "$RESULTS_REPO" remote get-url --all origin; git -C "$RESULTS_REPO" remote get-url --push --all origin; } 2>/dev/null || true)"
   bad_url=0
   [[ -n "$results_urls" && "$RESULTS_REPO" != "$(git rev-parse --show-toplevel)" ]] || bad_url=1
@@ -202,8 +211,9 @@ fi
 DATE="$(date -u +%Y-%m-%d)"
 echo "[INFO] running benchmark=$BENCHMARK date=$DATE providers=$PROVIDERS provider_timeout=${PROVIDER_TIMEOUT}s"
 npm run build
-# Everything below writes, stages, and pushes relative to the results checkout.
-cd "$RESULTS_REPO"
+# Everything below writes, stages, and pushes relative to the results root.
+mkdir -p "$RESULTS_ROOT"
+cd "$RESULTS_ROOT"
 
 result_status=0
 for p in "${PROV_LIST[@]}"; do
