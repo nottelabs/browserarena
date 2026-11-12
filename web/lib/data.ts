@@ -228,6 +228,13 @@ function privateGitHubInit(token: string, accept: string): RequestInit {
   };
 }
 
+/** A failed GitHub read, with its HTTP status so callers can tell "not there" (404) from a real failure. */
+export class GitHubReadError extends Error {
+  constructor(readonly path: string, readonly status: number) {
+    super(`Failed to fetch ${path}: ${status}`);
+  }
+}
+
 export async function fetchFromGitHub(filePath: string, source: ResultsSource = PUBLIC_RESULTS_SOURCE): Promise<string> {
   const res = source.token
     ? await fetch(
@@ -235,7 +242,7 @@ export async function fetchFromGitHub(filePath: string, source: ResultsSource = 
         privateGitHubInit(source.token, "application/vnd.github.raw+json"),
       )
     : await fetch(`https://raw.githubusercontent.com/${source.repo}/${source.branch}/${filePath}`, { next: { revalidate: 60 } });
-  if (!res.ok) throw new Error(`Failed to fetch ${filePath}: ${res.status}`);
+  if (!res.ok) throw new GitHubReadError(filePath, res.status);
   return res.text();
 }
 
@@ -245,11 +252,13 @@ interface GitHubContentItem {
   type: "file" | "dir";
 }
 
-export async function listFromGitHub(dirPath: string, source: ResultsSource = PUBLIC_RESULTS_SOURCE): Promise<GitHubContentItem[]> {
+/** `strict`: a failed read other than 404 throws instead of reading as an empty directory. */
+export async function listFromGitHub(dirPath: string, source: ResultsSource = PUBLIC_RESULTS_SOURCE, strict = false): Promise<GitHubContentItem[]> {
   const url = `https://api.github.com/repos/${source.repo}/contents/${dirPath}?ref=${source.branch}`;
   const res = await fetch(url, source.token
     ? privateGitHubInit(source.token, "application/vnd.github+json")
     : { next: { revalidate: 60 } });
+  if (strict && !res.ok && res.status !== 404) throw new GitHubReadError(dirPath, res.status);
   if (!res.ok) return [];
   const data = await res.json();
   if (!Array.isArray(data)) return [];
@@ -685,20 +694,21 @@ function loadHistoricalLeaderboardFromFs(
 async function loadHistoricalLeaderboardFromGitHub(
   benchmark: "hello-browser",
   concurrency?: number,
-  source: ResultsSource = PUBLIC_RESULTS_SOURCE
+  source: ResultsSource = PUBLIC_RESULTS_SOURCE,
+  strict = false
 ): Promise<HistoricalLeaderboardResult> {
   const basePath = `results/${benchmark}`;
   const effectiveConcurrency = concurrency ?? 1;
   const dates = new Set<string>();
   const series: HistoricalLeaderboardResult["providers"] = [];
 
-  const providerDirs = await listFromGitHub(basePath, source);
+  const providerDirs = await listFromGitHub(basePath, source, strict);
   const dirs = providerDirs.filter(
     (e) => e.type === "dir" && !e.name.startsWith("_")
   );
 
   for (const dir of dirs) {
-    const dateDirs = await listFromGitHub(`${basePath}/${dir.name}`, source);
+    const dateDirs = await listFromGitHub(`${basePath}/${dir.name}`, source, strict);
     const runDates = dateDirs
       .filter((e) => e.type === "dir" && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
       .map((e) => e.name)
@@ -709,7 +719,7 @@ async function loadHistoricalLeaderboardFromGitHub(
 
     for (const date of runDates) {
       const runPath = `${basePath}/${dir.name}/${date}`;
-      const contents = await listFromGitHub(runPath, source);
+      const contents = await listFromGitHub(runPath, source, strict);
       const hasConcurrencyDirs = contents.some(
         (e) => e.type === "dir" && /^c\d+$/.test(e.name)
       );
@@ -732,8 +742,10 @@ async function loadHistoricalLeaderboardFromGitHub(
         if (!point) continue;
         dates.add(date);
         points.push(point);
-      } catch {
-        // skip missing concurrency levels and malformed runs
+      } catch (error) {
+        // Skip missing concurrency levels and malformed runs. Strict callers
+        // still fail on a read error, which would otherwise drop a day.
+        if (strict && !(error instanceof GitHubReadError && error.status === 404)) throw error;
       }
     }
 
@@ -768,14 +780,17 @@ export async function loadHistoricalLeaderboard(
   benchmark: "hello-browser" = "hello-browser",
   concurrency?: number,
   /** Reads this repository instead of the bundled or public results. */
-  source?: ResultsSource
+  source?: ResultsSource,
+  /** With `source`: fail on a read error instead of skipping that day. */
+  options: { strict?: boolean } = {}
 ): Promise<HistoricalLeaderboardResult> {
+  const strict = options.strict ?? false;
   // Provider pages and prefetched routes ask for the same history at once.
-  const key = `${source?.repo ?? ""}:${benchmark}:${concurrency ?? ""}`;
+  const key = `${source?.repo ?? ""}:${benchmark}:${concurrency ?? ""}:${strict}`;
   const pending = historicalInflight.get(key);
   if (pending) return pending;
   const result = (async () => {
-    if (source) return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency, source);
+    if (source) return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency, source, strict);
     const resultsDir = getResultsDir();
     if (fs.existsSync(resultsDir)) return loadHistoricalLeaderboardFromFs(benchmark, concurrency);
     return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency);

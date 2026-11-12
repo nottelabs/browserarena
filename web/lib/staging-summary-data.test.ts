@@ -29,7 +29,7 @@ function days(n: number, values: (i: number) => number): HistoricalProviderPoint
 }
 
 /** Two days of results on both targets; day 2026-11-09 is "latest". */
-function fakes(statuses: Record<string, number> = {}) {
+function fakes(statuses: Record<string, number> = {}, history: { days?: string[]; error?: Error } = {}) {
   const calls: string[] = [];
   const stat = (provider: string, date: string, totalTimeMs: number) => ({
     provider, runDate: date, totalRuns: 100, successRate: 100, totalTimeMs, p90TotalMs: totalTimeMs + 50,
@@ -49,9 +49,11 @@ function fakes(statuses: Record<string, number> = {}) {
       const day = date ?? DAYS.at(-1)!;
       return { providers: [thr(source ? "NOTTE_STAGING" : "NOTTE", day, day === DAYS[0] ? 4 : 9)] };
     },
-    async loadHistoricalLeaderboard(_b: string, concurrency: number, source?: ResultsSource) {
-      calls.push(`history c${concurrency} ${source ? "staging" : "prod"}`);
-      return { dates: DAYS, providers: [{ provider: "NOTTE_STAGING", displayName: "Notte staging", points: DAYS.map((d) => point(d, 400)) }] };
+    async loadHistoricalLeaderboard(_b: string, concurrency: number, source?: ResultsSource, options?: { strict?: boolean }) {
+      calls.push(`history c${concurrency} ${source ? "staging" : "prod"}${options?.strict ? " strict" : ""}`);
+      if (history.error) throw history.error;
+      const days = history.days ?? DAYS;
+      return { dates: days, providers: [{ provider: "NOTTE_STAGING", displayName: "Notte staging", points: days.map((d) => point(d, 400)) }] };
     },
     async contentsStatus(_s: ResultsSource, path: string) {
       calls.push(`contents ${path}`);
@@ -98,7 +100,7 @@ test("a token that cannot read contents, or any other read error, fails instead 
 test("staging history loads on each concurrency level staging ran, and too little history is not judged", async () => {
   const { loaders, calls } = fakes();
   const result = await loadStagingSummaryInput("2026-11-09", SOURCE, URL, loaders);
-  assert.ok(calls.includes("history c1 staging") && calls.includes("history c10 staging"), calls.join("\n"));
+  assert.ok(calls.includes("history c1 staging strict") && calls.includes("history c10 staging strict"), calls.join("\n"));
   assert.ok(!calls.some((c) => c.startsWith("history") && c.endsWith("prod")));
   assert.deepEqual(result.baseline!.map((c) => [c.concurrency, c.status, c.runDays, c.runDaysNeeded]), [[1, "unknown", 2, 10], [10, "unknown", 2, 10]]);
 });
@@ -128,4 +130,11 @@ test("replaying a day ignores later runs, and a day with no staging run is not j
   const points = days(23, (i) => (i < 20 ? 200 : 600));
   assert.equal(stagingBaselineCheck(points, "2026-11-27", 1)!.status, "ok");
   assert.equal(stagingBaselineCheck(points.filter((p) => p.date !== "2026-11-29"), "2026-11-29", 1), null);
+});
+
+test("a history read failure, or a history missing the day's run, fails instead of posting without the check", async () => {
+  const failed = fakes({}, { error: new Error("Failed to fetch results/hello-browser/notte-staging: 403") });
+  await assert.rejects(loadStagingSummaryInput("2026-11-09", SOURCE, URL, failed.loaders), /403/);
+  const behind = fakes({}, { days: ["2026-11-08"] });
+  await assert.rejects(loadStagingSummaryInput("2026-11-09", SOURCE, URL, behind.loaders), /staging c1 history has no 2026-11-09 run/);
 });

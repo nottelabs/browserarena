@@ -93,11 +93,17 @@ export async function loadStagingSummaryInput(
     const [prod, staging, stagingHistory] = await Promise.all([
       loaders.loadLeaderboard("hello-browser", date, "median", "latency", concurrency),
       lifecycleRan ? loaders.loadLeaderboard("hello-browser", date, "median", "latency", concurrency, source) : null,
-      lifecycleRan ? loaders.loadHistoricalLeaderboard("hello-browser", concurrency, source) : null,
+      // Strict: a failed read must not drop a day and change the verdict.
+      lifecycleRan ? loaders.loadHistoricalLeaderboard("hello-browser", concurrency, source, { strict: true }) : null,
     ]);
     const series = stagingHistory?.providers.find((p) => p.provider === STAGING_PROVIDER);
     const check = series ? stagingBaselineCheck(series.points, date, concurrency) : null;
     if (check) baseline.push(check);
+    // The day's leaderboard has staging but its history does not: never post without the check.
+    const stagingRow = staging?.providers.find((r) => r.provider === STAGING_PROVIDER);
+    if (stagingRow?.runDate === date && !check) {
+      throw new Error(`staging c${concurrency} history has no ${date} run although that day's results loaded`);
+    }
     const pick = (rows: typeof prod.providers, id: string): LifecycleNumbers | null => {
       const row = rows.find((r) => r.provider === id);
       return row ? { runDate: row.runDate, totalRuns: row.totalRuns, successRate: row.successRate, totalTimeMs: row.totalTimeMs, p90TotalMs: row.p90TotalMs } : null;
