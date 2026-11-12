@@ -18,7 +18,7 @@
     "next": "^16.4.3",
     "posthog-js": "^1.438.13",
     "posthog-node": "^5.61.2",
-    "radix-ui": "^1.7.0",
+    "radix-ui": "^1.8.1",
     "react": "19.3.1",
     "react-dom": "19.3.0",
     "recharts": "^3.10.0",
