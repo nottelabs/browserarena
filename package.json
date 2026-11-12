@@ -33,14 +33,14 @@
     "typescript": "^7.0.2"
   },
   "dependencies": {
-    "@browserbasehq/sdk": "^2.20.0",
+    "@browserbasehq/sdk": "^2.25.0",
     "anchorbrowser": "^1.0.0",
     "steel-sdk": "^0.18.0",
-    "@hyperbrowser/sdk": "^1.2.2",
-    "@onkernel/sdk": "^0.119.0",
+    "@hyperbrowser/sdk": "^1.4.1",
+    "@onkernel/sdk": "^0.140.0",
     "dotenv": "^18.0.6",
     "playwright-core": "^1.64.1",
-    "@aws-sdk/client-bedrock-agentcore": "^3.1152.0",
+    "@aws-sdk/client-bedrock-agentcore": "^3.1162.0",
     "@aws-crypto/sha256-js": "^5.2.0",
     "@smithy/protocol-http": "^5.6.2",
     "@smithy/signature-v4": "^5.7.4"

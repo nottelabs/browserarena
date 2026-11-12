@@ -129,3 +129,30 @@ test("each group shows its sample counts on both targets", () => {
   assert.match(row(m, "c1 runs"), /^c1 runs\s+100\s+12$/);
   assert.match(row(m, "runs"), /^runs\s+20\s+20$/);
 });
+
+test("staging's own history: not judged yet, within baseline, or regressed, and a regression leads the headline", () => {
+  const check = (over: Partial<NonNullable<StagingSummaryInput["baseline"]>[number]>) => ({
+    concurrency: 1, status: "ok" as const, runDays: 30, runDaysNeeded: 10, total: { baseline: 410, current: 425 }, breaches: [], ...over,
+  });
+  const history = (m: Message) => sections(m).find((t) => t.includes("Staging vs its own history")) ?? "";
+
+  assert.equal(history(stagingSummaryMessage(input())), "");
+
+  const early = stagingSummaryMessage(input({ baseline: [check({ status: "unknown", runDays: 3, total: null }), check({ concurrency: 10, status: "unknown", runDays: 3, total: null })] }));
+  assert.match(history(early), /⚪ c1: 3 of 10 run-days so far, not judged yet\.\n⚪ c10: 3 of 10/);
+  assert.match(early.text, /^🟢 /);
+
+  const fine = stagingSummaryMessage(input({ baseline: [check({})] }));
+  assert.match(history(fine), /🟢 c1: within its baseline \(median 425 ms over the last 3 runs, 410 ms before\)\./);
+
+  const bad = stagingSummaryMessage(input({ baseline: [check({}), check({
+    concurrency: 10,
+    status: "degraded",
+    breaches: [
+      { label: "session creation", unit: "ms", baseline: 900, current: 3600, ratio: 4, onsetDate: "2026-11-20" },
+      { label: "success rate", unit: "percent", baseline: 100, current: 90, ratio: 0.9, onsetDate: "2026-11-21" },
+    ],
+  })] }));
+  assert.match(history(bad), /🔴 c10: session creation 900 ms → 3,600 ms \(4\.0×\) since 2026-11-20; success rate 100% → 90% since 2026-11-21\./);
+  assert.match(bad.text, /^🔴 Notte staging vs production · Mon, Nov 9, 2026: Staging regressed against its own history on c10 \(session creation 900 ms → 3,600 ms \(4\.0×\) since 2026-11-20\)\. Staging matches production on every metric\./);
+});
