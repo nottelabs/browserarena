@@ -10,6 +10,9 @@ every day (see [Daily run](#daily-run)). It does not use the lifecycle publisher
 The website at `/captcha` reads campaign exports; `GET /api/captcha` exposes the
 same data.
 
+For why every provider's reCAPTCHA v3 score hovers near 50%, see the
+[reCAPTCHA v3 investigation summary](recaptcha-v3-summary.md).
+
 ## Run a campaign
 
 Install dependencies with `npm ci`. Set the existing provider variables in `.env`:
