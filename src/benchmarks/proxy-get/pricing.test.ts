@@ -17,12 +17,12 @@ test("unknown proxy prices propagate; included proxies have explicit zero price"
   assert.equal(estimateProxyCost(DEFAULT_PROXY_PRICING.KERNEL, 1000, 1000).proxy_cost_usd, 0);
   assert.equal(estimateProxyCost(DEFAULT_PROXY_PRICING.STEEL, null, 1000).cost_usd, null);
 });
-test("Tilion inferred credit rates include traffic rounding and per-session fees", () => {
+test("Tilion bills residential traffic per MB, browser minutes, and per-session fees", () => {
   const pricing = DEFAULT_PROXY_PRICING.TILION;
-  const cost = estimateProxyCost(pricing, 1000, 1_048_576);
-  assert.equal(pricing.proxyPerGbUsd, 0.2);
-  assert.equal(cost.browser_cost_usd, 0.0004 + 0.03 / 3600);
-  assert.equal(cost.proxy_cost_usd, 0.0004);
+  const cost = estimateProxyCost(pricing, 1000, 1_048_577);
+  assert.equal(pricing.proxyPerGbUsd, 5.5);
+  assert.equal(cost.browser_cost_usd, 0.0004 + 60 / 3600 * 0.03);
+  assert.equal(cost.proxy_cost_usd, 2 * 1024 ** 2 / 1024 ** 3 * 5.5);
   assert.equal(cost.cost_usd, cost.browser_cost_usd! + cost.proxy_cost_usd!);
   const failed = { session_wall_ms: null, session_id: null, transfer_bytes: 0, error_stage: "session_create", cleanup_error: null };
   assert.equal(estimateProxyAttemptCost(pricing, failed).cost_usd, 0.0004);

@@ -28,22 +28,26 @@ const PRICING: Record<string, { unit: UnitPricing }> = {
   KERNEL: {
     unit: { ratePerHour: 0.06, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
   },
+  // $0.06/hour, billed by the minute with a 1-minute minimum (browser-use.com/pricing).
   BROWSER_USE: {
-    unit: { ratePerHour: 0.02, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
+    unit: { ratePerHour: 0.06, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
   },
-  // Unrounded duration estimate at $0.002/minute (tinyfish.ai/pricing).
+  // $0.002/minute, billed by the minute (tinyfish.ai/browser).
   TINYFISH: {
-    unit: { ratePerHour: 0.12, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+    unit: { ratePerHour: 0.12, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
   },
+  // $0.03/hour (tilion.com blog); browser time is debited once a minute
+  // (docs.tilion.dev/account/billing).
   TILION: {
-    unit: { ratePerHour: 0.03, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+    unit: { ratePerHour: 0.03, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 },
   },
+  // Builder plan: $19/month for 300 hours, metered by the second (lightpanda.io/pricing).
   LIGHTPANDA: {
-    unit: { ratePerHour: 0.06, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+    unit: { ratePerHour: 19 / 300, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
   },
-  // $25 for 20,000 units of 30 seconds each.
+  // Prototyping plan billed monthly: $35 for 20,000 units of 30 seconds each.
   BROWSERLESS: {
-    unit: { ratePerHour: 0.15, billing: "per_30_seconds", minimumSeconds: 30, perSessionCreationFee: 0 },
+    unit: { ratePerHour: 0.21, billing: "per_30_seconds", minimumSeconds: 30, perSessionCreationFee: 0 },
   },
   CLOUDFLARE: {
     unit: { ratePerHour: 0.09, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },

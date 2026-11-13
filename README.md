@@ -60,8 +60,8 @@ proxy for lifecycle and throughput comparisons, and explicitly terminates each
 session through the API. Country-targeted proxy measurements are not yet verified.
 TinyFish's published account limit is five concurrent browser sessions; confirm
 your account limit before requesting higher concurrency. Its browser region is
-not documented, so no region is assigned here. Cost is an unrounded duration
-estimate at $0.002/minute ($0.12/hour); billing-rounding rules are not published.
+not documented, so no region is assigned here. Cost is estimated
+at $0.002 per started minute ($0.12/hour), which TinyFish bills by the minute.
 See the [Browser API reference](https://docs.tinyfish.ai/browser-api/reference)
 and [pricing](https://www.tinyfish.ai/pricing). The US West schedule includes
 TinyFish. Set its key in the runner's `.env` or a separate `.env.tinyfish` file

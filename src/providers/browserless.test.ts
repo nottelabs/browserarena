@@ -61,11 +61,11 @@ test("releasing is a no-op and cost is billed in 30-second units", async () => {
 
   await provider.release("");
 
-  // $25 for 20,000 units: every started 30 seconds costs $0.00125.
-  assert.equal(provider.computeCost(0), 0.00125);
-  assert.equal(provider.computeCost(30), 0.00125);
-  assert.equal(provider.computeCost(31), 0.0025);
-  assert.equal(provider.computeCost(3600), 0.15);
+  // $35 for 20,000 units: every started 30 seconds costs $0.00175.
+  assert.equal(provider.computeCost(0), 0.00175);
+  assert.equal(provider.computeCost(30), 0.00175);
+  assert.equal(provider.computeCost(31), 0.0035);
+  assert.equal(provider.computeCost(3600), 0.21);
 });
 
 test("a proxied session asks for a residential exit in the requested country", async () => {

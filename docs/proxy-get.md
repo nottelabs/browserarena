@@ -182,21 +182,21 @@ latency estimates. Failures remain in the success counts and raw results.
 ## Cost estimates
 
 List rates and provenance are in `src/benchmarks/proxy-get/pricing.ts`, checked
-October 8, 2026 (Browserbase and Tilion checked October 11). This benchmark deliberately keeps its pricing separate from the
+November 13, 2026 (Tilion's credit model checked October 11). This benchmark deliberately keeps its pricing separate from the
 existing lifecycle leaderboard. Monthly subscriptions, account credits,
 discounts, taxes, and fixed target hosting fees are excluded.
 
 | Provider | Browser $/hour | Proxy $/GB | Assumption |
 | --- | ---: | ---: | --- |
-| Notte | 0 | 10 | Listed usage |
+| Notte | 0.01 | 10 | Listed usage; browser minutes and proxy MB round up |
 | Steel | 0.10 | 10 | Launch; browser minutes round up |
 | Browserbase | 0.12 | 12 | Developer list rates; account plan unconfirmed; Startup overrides are $0.10/hour and $10/GB |
 | Kernel | 0.06 | 0 | Headless; managed proxies unmetered; paid plan required |
 | Kernel headful | 0.48 | 0 | Headful; managed proxies unmetered |
 | Hyperbrowser | 0.10 | 10 | Listed credits |
 | Anchor Browser | 0.05 | 8 | Infrastructure; $0.01 creation fee |
-| Browser Use | 0.02 | 5 | Listed usage; browser minutes round up |
-| Tilion | 0.03 | 0.20 | Inferred $0.0002/credit; $0.0004/session, including failed launches as a budgeting assumption; decimal MB rounded up |
+| Browser Use | 0.06 | 5 | Listed usage; browser minutes round up |
+| Tilion | 0.03 | 5.50 | Browser minutes round up; residential first premium tier, binary MB rounded up; inferred $0.0004/session, including failed launches as a budgeting assumption |
 
 Browser usage is estimated over creation-start through successful release, with
 configured billing increments, minimums, and creation fees. This is a conservative
@@ -214,9 +214,12 @@ Historical costs are therefore explicitly current-rate estimates, not original
 invoices. Cost-cell hover text and raw details explain incomplete estimates.
 Tilion's configured Scale allowance covers current usage, but included-account
 usage is not substituted for the comparative list-price metric. Its pricing
-estimate uses the published $0.03/hour divided by the configured account's 150
-credits/hour, giving $0.0002/credit: $0.20/GB and $0.0004/session. Traffic rounds
-up in decimal MB. Failed launches with no returned session or traffic are
+estimate uses the published $0.03/hour, debited once a minute. Residential
+traffic is billed at Tilion's first premium tier, $5.50 per binary GB, rounded up
+per MB; the datacenter rate of 1 credit/MB does not apply to residential exits.
+The session fee divides $0.03/hour by the configured account's 150 credits/hour,
+giving $0.0002/credit and $0.0004/session. Records priced before November 13,
+2026 used $0.20/GB for residential traffic. Failed launches with no returned session or traffic are
 budgeted as one $0.0004 session fee and no additional unobserved usage. These
 are explicit inferred assumptions, not verified invoice rules. The October 11
 Tilion records also retain originals alongside dated `cost_reconciliation` fields.
