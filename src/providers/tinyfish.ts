@@ -11,8 +11,9 @@ export class TinyFishProvider implements ProviderClient {
   readonly proxyUnsupportedReason = "TinyFish country-targeted residential proxies have not been verified in this integration";
 
   computeCost(seconds: number): number {
-    // Duration estimate at $0.002/minute; billing rounding is not published.
-    return Math.round((seconds / 60) * 0.002 * 1e8) / 1e8;
+    // $0.002/minute, billed by the minute (tinyfish.ai/browser).
+    const minutes = Math.max(1, Math.ceil(seconds / 60));
+    return Math.round(minutes * 0.002 * 1e8) / 1e8;
   }
 
   async create(opts?: SessionOptions): Promise<ProviderSession> {

@@ -14,10 +14,12 @@ export class TilionProvider implements ProviderClient {
   readonly proxyUnsupportedReason = "Tilion's residential US exit is verified; its region option did not verify residential exits in FR, BR, IN, or JP in the October 11 pilot";
   private base = (process.env.TILION_BASE_URL || "https://api.tilion.dev").replace(/\/+$/, "");
 
-  // List price, $0.03/hr per session.
+  // List price, $0.03/hr per session (tilion.com blog). Browser time is
+  // debited once a minute (docs.tilion.dev/account/billing).
   computeCost(seconds: number): number {
     const perHour = 0.03;
-    return Math.round((seconds / 3600) * perHour * 1e8) / 1e8;
+    const billedSeconds = Math.max(60, Math.ceil(seconds / 60) * 60);
+    return Math.round((billedSeconds / 3600) * perHour * 1e8) / 1e8;
   }
 
   private headers() {

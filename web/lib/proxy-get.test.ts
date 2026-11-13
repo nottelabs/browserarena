@@ -60,7 +60,7 @@ test("Tilion inferred pricing is explained in the UI, including the failed-launc
   ], "FR").providers[0];
   assert.equal(summary.totalCostUsd, 0.0014);
   assert.equal(summary.costPerSuccessUsd, 0.0014);
-  assert.match(summary.costExplanation, /\$0\.20\/GB/);
+  assert.match(summary.costExplanation, /\$5\.50\/GB/);
   assert.match(summary.costExplanation, /Failed launches are budgeted/);
   assert.doesNotMatch(summary.costExplanation, /conversion is unverified/);
 });

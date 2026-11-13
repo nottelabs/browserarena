@@ -136,11 +136,11 @@ test("rejects unverified proxy measurements before creating paid sessions", asyn
   await assert.rejects(() => new TinyFishProvider().create({ proxyCountry: "US" }), /not been verified/);
 });
 
-test("estimates duration cost at $0.002 per browser-minute without rounding up", () => {
+test("bills $0.002 per started browser-minute", () => {
   const provider = new TinyFishProvider();
-  assert.equal(provider.computeCost(0), 0);
-  assert.equal(provider.computeCost(30), 0.001);
+  assert.equal(provider.computeCost(0), 0.002);
+  assert.equal(provider.computeCost(30), 0.002);
   assert.equal(provider.computeCost(60), 0.002);
-  assert.equal(provider.computeCost(90), 0.003);
+  assert.equal(provider.computeCost(90), 0.004);
   assert.equal(provider.computeCost(3600), 0.12);
 });

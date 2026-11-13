@@ -9,7 +9,8 @@ export class BrowserUseProvider implements ProviderClient {
   readonly proxyCountries = PROXY_COUNTRIES;
 
   computeCost(seconds: number): number {
-    const perHour = 0.02;
+    // $0.06/hour, billed by the minute, 1-minute minimum (browser-use.com/pricing).
+    const perHour = 0.06;
     const billedSeconds = Math.max(60, Math.ceil(seconds / 60) * 60);
     return Math.round((billedSeconds / 3600) * perHour * 1e8) / 1e8;
   }

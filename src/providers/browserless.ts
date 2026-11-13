@@ -11,10 +11,11 @@ export class BrowserlessProvider implements ProviderClient {
   private cdpUrl: string;
 
   computeCost(seconds: number): number {
-    // Prototyping plan: $25/month, billed annually, for 20,000 units
-    // (browserless.io/pricing).
+    // Prototyping plan: $35/month, billed monthly, for 20,000 units
+    // (browserless.io/pricing). Annual billing ($25/month) needs a year's
+    // prepayment, so the month-to-month price is used.
     // A unit is 30 seconds of an open session, rounded up.
-    const perUnit = 25 / 20_000;
+    const perUnit = 35 / 20_000;
     const units = Math.max(1, Math.ceil(seconds / 30));
     return Math.round(units * perUnit * 1e8) / 1e8;
   }
