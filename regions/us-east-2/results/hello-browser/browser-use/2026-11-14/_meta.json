@@ -1,0 +1,9 @@
+{
+  "region": "us-east-2",
+  "instance_type": "t3.medium",
+  "cloud": "aws",
+  "os": "linux x64",
+  "node_version": "v22.23.5",
+  "started_at": "2026-11-14T02:30:09.077Z",
+  "finished_at": "2026-11-14T02:30:51.242Z"
+}
