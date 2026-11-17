@@ -44,8 +44,8 @@ async function Scores({ searchParams }: { searchParams: Promise<{ week?: string 
       <div className="mt-6 max-w-3xl space-y-3 text-sm leading-relaxed text-muted-foreground">
         <h3 className="font-medium text-foreground">How to read these scores</h3>
         <p>Each provider makes three visits to the same 30 difficult websites, using its defaults, a US proxy and its own CAPTCHA handling. A visit passes when it completes a short journey with no known blocking page remaining. These scores measure access on a deliberately difficult sample and do not represent general browsing reliability.</p>
-        <p>Access rate is passed visits divided by passed plus blocked visits. Errors are reported separately and excluded from that rate. Each provider has 90 planned visits. Results are published weekly after a complete run; the date above identifies the actual measurement. Missing updates leave the last verified run visible.</p>
-        <p>This page publishes aggregate scores only. Website lists, individual visits and recordings are not distributed here. Protocol: site-access-1.</p>
+        <p>Access rate is passed visits divided by all 90 planned visits. Errors stay in the denominator and are shown separately; they are not counted as blocks. Results are published weekly after a complete run; the date above identifies the actual measurement. Missing updates leave the last verified run visible.</p>
+        <p>This page publishes aggregate scores only. Website lists, individual visits and recordings are not distributed here. Protocol: site-access-2.</p>
       </div>
     </div>
   </BenchmarkShell>;

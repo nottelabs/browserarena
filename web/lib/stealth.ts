@@ -4,7 +4,7 @@ import { getResultsDir } from "./data";
 
 export const STEALTH_PROVIDERS = ["BROWSER_USE", "NOTTE", "KERNEL", "BROWSERBASE", "STEEL"] as const;
 export type StealthSummary = {
-  schemaVersion: 1; protocol: "site-access-1"; date: string; weekOf: string;
+  schemaVersion: 1; protocol: "site-access-2"; date: string; weekOf: string;
   siteCount: 30; rounds: 3; proxyCountry: "US";
   providers: { provider: typeof STEALTH_PROVIDERS[number]; accessible: number; blocked: number; errors: number }[];
 };
@@ -16,7 +16,7 @@ function exactKeys(value: unknown, keys: string[]): asserts value is Record<stri
 /** Scores are data: unknown fields and unsupported protocols fail the build. */
 export function parseStealth(value: unknown): StealthSummary {
   exactKeys(value, ["schemaVersion", "protocol", "date", "weekOf", "siteCount", "rounds", "proxyCountry", "providers"]);
-  if (value.schemaVersion !== 1 || value.protocol !== "site-access-1" || value.siteCount !== 30 || value.rounds !== 3 || value.proxyCountry !== "US") throw new Error("Unsupported score protocol");
+  if (value.schemaVersion !== 1 || value.protocol !== "site-access-2" || value.siteCount !== 30 || value.rounds !== 3 || value.proxyCountry !== "US") throw new Error("Unsupported score protocol");
   for (const date of [value.date, value.weekOf]) {
     if (typeof date !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(date) || new Date(date).toISOString().slice(0, 10) !== date) throw new Error("Invalid score date");
   }
@@ -46,6 +46,6 @@ export function loadStealthRuns(directory = join(getResultsDir(), "stealth")): S
 }
 
 export function rankStealth(run: StealthSummary) {
-  return run.providers.map(row => ({ ...row, rate: row.accessible + row.blocked ? row.accessible / (row.accessible + row.blocked) : null }))
+  return run.providers.map(row => ({ ...row, rate: row.accessible / (run.siteCount * run.rounds) }))
     .sort((a, b) => (b.rate ?? -1) - (a.rate ?? -1) || a.provider.localeCompare(b.provider));
 }

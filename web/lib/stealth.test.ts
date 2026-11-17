@@ -8,12 +8,12 @@ import { join } from "node:path";
 import { parseStealth, rankStealth, loadStealthRuns, STEALTH_PROVIDERS } from "./stealth";
 
 function fixture() {
-  return { schemaVersion: 1, protocol: "site-access-1", date: "2026-11-04", weekOf: "2026-11-02", siteCount: 30, rounds: 3, proxyCountry: "US", providers: STEALTH_PROVIDERS.map(provider => ({ provider, accessible: 45, blocked: 40, errors: 5 })) };
+  return { schemaVersion: 1, protocol: "site-access-2", date: "2026-11-04", weekOf: "2026-11-02", siteCount: 30, rounds: 3, proxyCountry: "US", providers: STEALTH_PROVIDERS.map(provider => ({ provider, accessible: 45, blocked: 40, errors: 5 })) };
 }
 
-test("rates retain the error denominator distinction", () => {
+test("rates include every planned attempt and keep errors visible", () => {
   const result = rankStealth(parseStealth(fixture()));
-  assert.equal(result[0].rate, 45 / 85);
+  assert.equal(result[0].rate, 45 / 90);
   assert.equal(result[0].errors, 5);
 });
 test("unknown and private fields are rejected at every level", () => {
@@ -67,4 +67,16 @@ test("the deployment validator rejects malformed committed results", () => {
       assert.doesNotMatch(result.stdout + result.stderr, /PRIVATE_SENTINEL/);
     }
   } finally { rmSync(root, { recursive: true }); }
+});
+
+ test("an all-error provider has zero verified access without being counted as blocked", () => {
+  const value = fixture();
+  Object.assign(value.providers[0], { accessible: 0, blocked: 0, errors: 90 });
+  const row = rankStealth(parseStealth(value)).find(r => r.provider === value.providers[0].provider)!;
+  assert.equal(row.rate, 0);
+  assert.equal(row.blocked, 0);
+  assert.equal(row.errors, 90);
+});
+test("the old protocol cannot be relabelled as the new scoring contract", () => {
+  assert.throws(() => parseStealth({ ...fixture(), protocol: "site-access-1" }));
 });
