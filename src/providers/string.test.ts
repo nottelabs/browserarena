@@ -38,20 +38,19 @@ test("connects to the public endpoint with the key in a header, never the URL", 
   assert.equal(provider.releasesOnDisconnect, true);
 });
 
-test("an unproxied session asks for the standard tier and no country", async () => {
+test("an unproxied session sends no proxy settings", async () => {
   const session = await new StringProvider().create();
   const url = new URL(session.cdpUrl);
-  assert.equal(url.searchParams.get("proxy"), "standard");
-  assert.equal(url.searchParams.get("countryCode"), null);
-  assert.deepEqual(session.configuration, { proxy: "standard" });
+  assert.equal(url.search, "");
+  assert.equal(session.configuration, undefined);
 });
 
-test("a proxied session asks for a residential exit in the requested country", async () => {
+test("a proxied session asks for an exit in the requested country", async () => {
   const session = await new StringProvider().create({ proxyCountry: "FR" });
   const url = new URL(session.cdpUrl);
-  assert.equal(url.searchParams.get("proxy"), "premium");
+  assert.equal(url.searchParams.get("proxy"), null);
   assert.equal(url.searchParams.get("countryCode"), "FR");
-  assert.deepEqual(session.configuration, { proxy: "premium", countryCode: "FR" });
+  assert.deepEqual(session.configuration, { countryCode: "FR" });
 });
 
 test("an endpoint override keeps its own query parameters", async () => {
@@ -62,7 +61,6 @@ test("an endpoint override keeps its own query parameters", async () => {
   const url = new URL(cdpUrl);
   assert.equal(url.host, "localhost:7654");
   assert.equal(url.searchParams.get("record"), "true");
-  assert.equal(url.searchParams.get("proxy"), "standard");
 });
 
 test("a missing API key fails on create, not on construction", async () => {
