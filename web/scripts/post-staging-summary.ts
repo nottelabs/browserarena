@@ -1,6 +1,8 @@
 /**
  * Posts the daily Notte staging vs production summary to the BrowserArena
- * Slack channel. Run by .github/workflows/staging-summary.yml after the
+ * Slack channel when something is red (a missed run, a gross gap to
+ * production, or a regression against staging's own history); a quiet day
+ * posts nothing. Run by .github/workflows/staging-summary.yml after the
  * staging runs (20:00/21:00 UTC), and by hand:
  *
  *   INTERNAL_RESULTS_GITHUB_TOKEN=... npx tsx scripts/post-staging-summary.ts --dry-run
@@ -12,7 +14,7 @@
  */
 
 import { stagingResultsSource } from "../lib/internal-staging";
-import { stagingSummaryMessage } from "../lib/staging-summary";
+import { stagingSummary } from "../lib/staging-summary";
 import { loadStagingSummaryInput } from "../lib/staging-summary-data";
 
 const PAGE_URL = "https://staging-console.notte.cc/api/admin/browserarena-internal";
@@ -39,10 +41,14 @@ async function main() {
 
   const source = stagingResultsSource();
   if (!source) fail("INTERNAL_RESULTS_GITHUB_TOKEN is not set");
-  const message = stagingSummaryMessage(await loadStagingSummaryInput(date, source, PAGE_URL));
+  const { alert, message } = stagingSummary(await loadStagingSummaryInput(date, source, PAGE_URL));
 
   if (dryRun) {
-    console.log(JSON.stringify(message, null, 2));
+    console.log(JSON.stringify({ alert, message }, null, 2));
+    return;
+  }
+  if (!alert) {
+    console.log(`[staging-summary] nothing red on ${date}; not posted`);
     return;
   }
   const res = await fetch(webhook!, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(message) });

@@ -116,6 +116,7 @@ test("hung provider is terminated; later providers publish and cron reports fail
     assert.equal(result.status, 1, result.stdout + result.stderr);
     assert.match(result.stdout, /provider=notte outcome=timed_out/);
     assert.deepEqual(f.calls().map(c => c.provider), ["notte", "lightpanda", "browserless", "tinyfish"]);
+    assert.equal(f.calls().find(c => c.provider === "notte").concurrency, "1,10");
     assert.equal(new Set(f.calls().map(c => c["run-date"])).size, 1);
     assert.equal(f.meta("notte").run_status, "timed_out");
     assert.equal(f.meta("notte").process_exit_code, 124);
@@ -263,7 +264,7 @@ test("staging region publishes Notte staging only to the private results repo", 
     const publicHead = f.git("rev-parse", "origin/main");
     const result = f.run([], {}, "staging");
     assert.equal(result.status, 0, result.stdout + result.stderr);
-    assert.deepEqual(f.calls().map(c => c.provider), ["notte-staging"]);
+    assert.deepEqual(f.calls().map(c => [c.provider, c.concurrency]), [["notte-staging", "1"]]);
     assert.equal(f.git("rev-parse", "origin/main"), publicHead);
     assert.equal(fs.existsSync(path.join(f.repo, "results")), false);
     const date = f.calls()[0]["run-date"];

@@ -1,17 +1,29 @@
 /**
- * Daily Slack summary: Notte staging (us-staging.notte.cc, 20:00/21:00 UTC)
- * next to Notte production (04:00/06:00 UTC). Pure: the script loads the
- * numbers and posts; this only formats them. Staging numbers are private, so
+ * Daily Slack alert: Notte staging (us-staging.notte.cc, 20:00/21:00 UTC)
+ * against its own history and next to Notte production (04:00/06:00 UTC).
+ * Pure: the script loads the numbers and posts; this only formats them and
+ * decides whether anything is worth posting. Staging numbers are private, so
  * the payload must only ever go to the team's Slack webhook.
+ *
+ * Staging keeps far fewer warm browsers than production and runs at a busier
+ * hour, so a small or tail gap to production measures capacity, not code.
+ * Production is therefore compared on step medians only, and only a gross gap
+ * is red; staging's own history is the regression check.
  */
+
+/** Medians of successful sessions, per lifecycle step. */
+export interface LifecycleSteps {
+  creation: number;
+  connect: number;
+  goto: number;
+  release: number;
+}
 
 export interface LifecycleNumbers {
   runDate?: string;
   totalRuns: number;
   successRate: number;
-  /** Sum of phase medians, the site's headline latency. */
-  totalTimeMs: number;
-  p90TotalMs: number;
+  steps: LifecycleSteps;
 }
 
 export interface ThroughputNumbers {
@@ -46,22 +58,26 @@ export interface StagingSummaryInput {
   pageUrl: string;
 }
 
-// Same investigation signals as the monorepo's browserarena-benchmark skill:
-// latency is red only when worse by both a share and an absolute amount.
-const LATENCY_SHARE = 0.1;
-const LATENCY_MS = 100;
-/** Success rate down by at least this many points is red; less is yellow. */
-const SUCCESS_POINTS = 2;
 /**
- * Concurrency levels whose latency is shown but not compared: staging keeps
- * fewer warm browsers than this many back-to-back parallel sessions need, so
- * its starts wait for a free browser and the gap measures pool size, not code.
+ * A gross gap to production: staging at least this many times slower (or
+ * this share of the throughput)...
  */
-const LATENCY_NOT_COMPARED = new Set([10]);
+const GROSS_RATIO = 2;
+/** ...and slower by at least this much, so a 20 ms step doubling to 40 ms stays quiet. */
+const GROSS_MS = 100;
+/** Success rate down by at least this many points. */
+const SUCCESS_POINTS = 10;
+
+const STEPS: { key: keyof LifecycleSteps; label: string }[] = [
+  { key: "creation", label: "create" },
+  { key: "connect", label: "connect" },
+  { key: "goto", label: "navigate" },
+  { key: "release", label: "release" },
+];
 
 /** "none": nothing to compare against; "info": a plain count with no verdict. */
-type Level = "good" | "watch" | "bad" | "none" | "info";
-const DOT: Record<Level, string> = { good: "🟢", watch: "🟡", bad: "🔴", none: "⚪", info: "" };
+type Level = "good" | "bad" | "none" | "info";
+const DOT: Record<Level, string> = { good: "🟢", bad: "🔴", none: "⚪", info: "" };
 
 interface Row {
   label: string;
@@ -71,8 +87,6 @@ interface Row {
   level: Level;
   /** Starts a new group (another concurrency level): a blank line goes before it. */
   groupStart?: boolean;
-  /** Shown for reference only: left out of the headline's counts. */
-  excluded?: boolean;
 }
 
 /** A compared metric, kept for the headline's "biggest gap". */
@@ -104,24 +118,16 @@ function successChange(staging: number, prod: number): string {
 
 /** Lower is better (milliseconds). */
 function latencyLevel(staging: number, prod: number): Level {
-  const worseMs = staging - prod;
-  const worseShare = worseMs / prod;
-  if (worseMs > LATENCY_MS && worseShare > LATENCY_SHARE) return "bad";
-  if (worseMs > LATENCY_MS || worseShare > LATENCY_SHARE) return "watch";
-  return "good";
+  return staging >= prod * GROSS_RATIO && staging - prod >= GROSS_MS ? "bad" : "good";
 }
 
 /** Higher is better (actions per second). */
 function rateLevel(staging: number, prod: number): Level {
-  if (staging < prod * (1 - LATENCY_SHARE)) return "bad";
-  if (staging < prod) return "watch";
-  return "good";
+  return staging * GROSS_RATIO <= prod ? "bad" : "good";
 }
 
 function successLevel(staging: number, prod: number): Level {
-  const down = prod - staging;
-  if (down >= SUCCESS_POINTS) return "bad";
-  return down > 0 ? "watch" : "good";
+  return prod - staging >= SUCCESS_POINTS ? "bad" : "good";
 }
 
 type Kind = "latency" | "rate" | "success";
@@ -195,16 +201,8 @@ function lifecycleSection(input: StagingSummaryInput): Section {
       continue;
     }
     const start = rows.length;
-    let latency = [
-      metric(`${group} median`, "latency", prod?.totalTimeMs ?? null, staging.totalTimeMs),
-      metric(`${group} p90`, "latency", prod?.p90TotalMs ?? null, staging.p90TotalMs),
-    ];
-    if (LATENCY_NOT_COMPARED.has(concurrency)) {
-      latency = latency.map(({ row }) => ({ row: { ...row, level: "none", excluded: true } }));
-      notes.push(`⚪ ${group} latency: not compared. Staging keeps fewer warm browsers than ${concurrency} parallel sessions need, so its starts wait for a free one.`);
-    }
     collect([
-      ...latency,
+      ...STEPS.map(({ key, label }) => metric(`${group} ${label}`, "latency", prod?.steps[key] ?? null, staging.steps[key])),
       metric(`${group} success`, "success", prod?.successRate ?? null, staging.successRate),
     ], rows, gaps);
     rows.push(runsRow(`${group} runs`, prod, staging));
@@ -213,7 +211,7 @@ function lifecycleSection(input: StagingSummaryInput): Section {
   }
   const body = [rows.length ? table(rows) : "", ...notes].filter(Boolean).join("\n");
   return {
-    text: `*⏱️ Browser Lifecycle* — create → connect → navigate → release, lower is better\n${body}`,
+    text: `*⏱️ Browser Lifecycle* — median of each step, lower is better\n${body}`,
     rows,
     gaps,
     missingRun: notes.some((n) => n.includes("🔴")),
@@ -244,10 +242,7 @@ function breachText(b: BaselineCheck["breaches"][number]): string {
   return `${b.label} ${msText(b.baseline)} → ${msText(b.current)} (${b.ratio.toFixed(1)}×)${since}`;
 }
 
-/**
- * Staging against itself, so every concurrency level is fair game here,
- * including c10, whose gap to production measures pool size.
- */
+/** Staging against itself: the check that catches a code regression. */
 function baselineSection(checks: BaselineCheck[]): string | null {
   if (!checks.length) return null;
   const lines = checks.map((c) => {
@@ -260,63 +255,72 @@ function baselineSection(checks: BaselineCheck[]): string | null {
   return `*📈 Staging vs its own history* — Browser Lifecycle, production's regression-alert rules\n${lines.join("\n")}`;
 }
 
-function headline(sections: Section[]): { emoji: string; text: string } {
-  const rows = sections.flatMap((s) => s.rows).filter((r) => r.level !== "info" && !r.excluded);
-  const count = (level: Level) => rows.filter((r) => r.level === level).length;
-  const [bad, watch, none] = [count("bad"), count("watch"), count("none")];
+/** The comparison with production: red only for a missed run or a gross gap. */
+function headline(sections: Section[]): { red: boolean; text: string } {
+  const rows = sections.flatMap((s) => s.rows).filter((r) => r.level !== "info");
+  const bad = rows.filter((r) => r.level === "bad").length;
+  const none = rows.filter((r) => r.level === "none").length;
   const missingRun = sections.some((s) => s.missingRun);
   const worst = sections.flatMap((s) => s.gaps).sort((a, b) => b.ratio - a.ratio)[0];
-  const gap = worst && worst.ratio >= 1 + LATENCY_SHARE
-    ? ` Biggest gap: ${worst.name}, ${worst.staging} on staging vs ${worst.prod} on production (${worst.ratio >= 2 ? `${worst.ratio.toFixed(1)}× worse` : `${Math.round((worst.ratio - 1) * 100)}% worse`}).`
+  const gap = bad && worst && worst.ratio >= GROSS_RATIO
+    ? ` Biggest gap: ${worst.name}, ${worst.staging} on staging vs ${worst.prod} on production (${worst.ratio.toFixed(1)}× worse).`
     : "";
-  const incomplete = none ? ` ${none} of ${rows.length} metrics have no production baseline.` : "";
-  if (missingRun) return { emoji: "🔴", text: `Staging did not run completely.${bad ? ` ${bad} of ${rows.length} metrics are worse than production.` : ""}${incomplete}${gap}` };
-  if (bad) return { emoji: "🔴", text: `Staging is worse than production on ${bad} of ${rows.length} metrics.${incomplete}${gap}` };
-  if (none) return { emoji: "⚪", text: `Comparison incomplete:${incomplete}${watch ? ` ${watch} compared metrics are slightly worse.` : ""}${gap}` };
-  if (watch) return { emoji: "🟡", text: `Staging is close to production; ${watch} of ${rows.length} metrics are slightly worse.${gap}` };
-  return { emoji: "🟢", text: "Staging matches production on every metric." };
+  const far = bad ? ` Staging is far behind production on ${bad} of ${rows.length} metrics.` : "";
+  if (missingRun) return { red: true, text: `Staging did not run completely.${far}${gap}` };
+  if (bad) return { red: true, text: `${far.trim()}${gap}` };
+  if (none) return { red: false, text: `No gross gap to production; ${none} of ${rows.length} metrics have no production run to compare.` };
+  return { red: false, text: `No gross gap to production.` };
 }
 
 function prettyDate(date: string): string {
   return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-US", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 }
 
-export function stagingSummaryMessage(input: StagingSummaryInput) {
+/**
+ * `alert`: whether the day is worth a post (a missed run, a gross gap to
+ * production, or a regression against staging's own history).
+ */
+export function stagingSummary(input: StagingSummaryInput) {
   const sections = [lifecycleSection(input), throughputSection(input)];
   const checks = input.baseline ?? [];
   const history = baselineSection(checks);
   const comparison = headline(sections);
   const regressed = checks.filter((c) => c.status === "degraded");
-  const verdict = regressed.length
-    ? {
-        emoji: "🔴",
-        text: `Staging regressed against its own history on ${regressed.map((c) => `c${c.concurrency} (${c.breaches[0] ? breachText(c.breaches[0]) : "see below"})`).join(", ")}. ${comparison.text}`,
-      }
-    : comparison;
-  const title = `${verdict.emoji} Notte staging vs production · ${prettyDate(input.date)}`;
+  const alert = comparison.red || regressed.length > 0;
+  const text = regressed.length
+    ? `Staging regressed against its own history on ${regressed.map((c) => `c${c.concurrency} (${c.breaches[0] ? breachText(c.breaches[0]) : "see below"})`).join(", ")}. ${comparison.text}`
+    : comparison.text;
+  const title = `${alert ? "🔴" : "🟢"} Notte staging vs production · ${prettyDate(input.date)}`;
   return {
-    text: `${title}: ${verdict.text}`,
-    blocks: [
-      { type: "header", text: { type: "plain_text", text: title, emoji: true } },
-      { type: "section", text: { type: "mrkdwn", text: `*${verdict.text}*` } },
-      { type: "divider" },
-      ...[...sections.map((section) => section.text), ...(history ? [history] : [])]
-        .map((text) => ({ type: "section", text: { type: "mrkdwn", text } })),
-      {
-        type: "context",
-        elements: [{
-          type: "mrkdwn",
-          text:
-            `🟢 same or better  🟡 slightly worse  🔴 worse by >${LATENCY_SHARE * 100}% and >${LATENCY_MS} ms, success down ≥${SUCCESS_POINTS} pt, or no run  ⚪ not compared · ` +
-            "median = sum of phase medians (the site's headline) · " +
-            "📈 history: 28-run baseline, red when ≥1.5× and +50 ms (or success −5 pt and <95%) on 2 of the last 3 runs · " +
-            "🧪 staging ran 20:00 UTC on us-staging.notte.cc, 🚀 production 04:00 UTC, same us-west-1 runner",
-        }],
-      },
-      {
-        type: "actions",
-        elements: [{ type: "button", text: { type: "plain_text", text: "📊 Open comparison (superadmins)" }, url: input.pageUrl }],
-      },
-    ],
+    alert,
+    message: {
+      text: `${title}: ${text}`,
+      blocks: [
+        { type: "header", text: { type: "plain_text", text: title, emoji: true } },
+        { type: "section", text: { type: "mrkdwn", text: `*${text}*` } },
+        { type: "divider" },
+        ...[...sections.map((section) => section.text), ...(history ? [history] : [])]
+          .map((text) => ({ type: "section", text: { type: "mrkdwn", text } })),
+        {
+          type: "context",
+          elements: [{
+            type: "mrkdwn",
+            text:
+              `Posted only when something is red · 🔴 vs production: a step ≥${GROSS_RATIO}× and +${GROSS_MS} ms slower, throughput ≤1/${GROSS_RATIO}, success down ≥${SUCCESS_POINTS} pt, or no run · ⚪ no production run · ` +
+              "smaller and tail gaps are not compared: staging keeps fewer warm browsers and runs at a busier hour · " +
+              "📈 history: 28-run baseline, red when ≥1.5× and +50 ms (or success −5 pt and <95%) on 2 of the last 3 runs · " +
+              "🧪 staging ran 20:00 UTC on us-staging.notte.cc, 🚀 production 04:00 UTC, same us-west-1 runner",
+          }],
+        },
+        {
+          type: "actions",
+          elements: [{ type: "button", text: { type: "plain_text", text: "📊 Open comparison (superadmins)" }, url: input.pageUrl }],
+        },
+      ],
+    },
   };
+}
+
+export function stagingSummaryMessage(input: StagingSummaryInput) {
+  return stagingSummary(input).message;
 }
