@@ -100,6 +100,16 @@ export function createProviders(load, env = process.env, request = fetch) {
         configuration: { route: "stealth", solveCaptchas: true, proxy: "residential US", region: "sfo" },
         release: async () => {} };
     }
+    if (provider === "string") {
+      // No session API: connecting starts the browser and disconnecting ends it. The key
+      // authenticates the WebSocket handshake as a header, so it never appears in the URL.
+      const url = new URL("wss://request.usestring.ai/v1/wss");
+      url.search = new URLSearchParams({ solveCaptcha: "true", countryCode: "US" }).toString();
+      return { id: `string-${randomUUID()}`, cdpUrl: url.toString(),
+        headers: { Authorization: `Bearer ${env.STRING_API_KEY}` },
+        configuration: { solveCaptcha: true, proxy: "default residential", countryCode: "US" },
+        release: async () => {} };
+    }
     if (provider === "tilion") {
       const base = (env.TILION_BASE_URL || "https://api.tilion.dev").replace(/\/+$/, "");
       const headers = { Authorization: `Bearer ${env.TILION_API_KEY}` };
@@ -128,5 +138,5 @@ export const REQUIRED_ENV = {
   kernel: ["KERNEL_API_KEY"], browserbase: ["BROWSERBASE_API_KEY", "BROWSERBASE_PROJECT_ID"],
   "browser-use": ["BROWSER_USE_API_KEY"], steel: ["STEEL_API_KEY"], notte: ["NOTTE_API_KEY"],
   hyperbrowser: ["HYPERBROWSER_API_KEY"], anchorbrowser: ["ANCHORBROWSER_API_KEY"],
-  browserless: ["BROWSERLESS_API_KEY"], tilion: ["TILION_API_KEY"],
+  browserless: ["BROWSERLESS_API_KEY"], tilion: ["TILION_API_KEY"], string: ["STRING_API_KEY"],
 };

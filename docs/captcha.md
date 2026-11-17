@@ -15,7 +15,7 @@ same data.
 Install dependencies with `npm ci`. Set the existing provider variables in `.env`:
 `KERNEL_API_KEY`, `BROWSERBASE_API_KEY` and `BROWSERBASE_PROJECT_ID`,
 `BROWSER_USE_API_KEY`, `STEEL_API_KEY`, `NOTTE_API_KEY`, `HYPERBROWSER_API_KEY`,
-`ANCHORBROWSER_API_KEY`, `BROWSERLESS_API_KEY`, and `TILION_API_KEY` (plus
+`ANCHORBROWSER_API_KEY`, `BROWSERLESS_API_KEY`, `STRING_API_KEY`, and `TILION_API_KEY` (plus
 `TILION_BASE_URL` when the lifecycle benchmark uses one). Only keys for selected
 providers are required. Keep credentials out of results and logs.
 
@@ -90,6 +90,7 @@ benchmark retries are disabled.
 | Hyperbrowser | [Native solving](https://www.hyperbrowser.ai/docs/sessions/captcha-solving), US proxy, US East browser, ad blocking off |
 | Anchor Browser | [Native solving](https://docs.anchorbrowser.io/advanced/captcha-solving), Anchor US proxy (the solver requires one), ad and popup blocking off |
 | Browserless | [Native solving](https://docs.browserless.io/baas/bot-detection/captchas) on the stealth route, residential US proxy, SFO fleet |
+| String | Native solving (`solveCaptcha=true`), default residential proxy with a US exit |
 | Tilion | [Automatic challenge recovery](https://docs.tilion.dev/sessions/sessions) for CDP clients (`cdp_observe`, its default), residential US exit |
 
 Browserless has no session API: connecting starts the browser and disconnecting

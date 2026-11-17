@@ -9,7 +9,7 @@ import { PROVIDERS } from "../../src/benchmarks/captcha/protocol.mjs";
 
 test("every site provider is either benchmarked or listed with a reason", () => {
   const site = ["kernel", "browserbase", "browser-use", "steel", "notte", "hyperbrowser", "anchorbrowser",
-    "browserless", "tilion", "tinyfish", "aws-agentcore", "cloudflare", "lightpanda"];
+    "browserless", "tilion", "string", "tinyfish", "aws-agentcore", "cloudflare", "lightpanda"];
   const unsupported = Object.keys(CAPTCHA_UNSUPPORTED_PROVIDERS);
   assert.deepEqual([...PROVIDERS, ...unsupported].sort(), [...site].sort());
   for (const reason of Object.values(CAPTCHA_UNSUPPORTED_PROVIDERS)) assert.match(reason, /has no CAPTCHA solving/);
