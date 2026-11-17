@@ -4,7 +4,7 @@ import { requireEnv } from "../utils/env.js";
 
 export class StringProvider implements ProviderClient {
   readonly name = "STRING";
-  // String's default residential exits, targeted by ISO country code on the connect URL
+  // Residential exits for Proxy Performance, targeted by ISO country code on the connect URL
   // (portal.usestring.ai/docs).
   readonly proxyCountries = PROXY_COUNTRIES;
   readonly releasesOnDisconnect = true;
@@ -27,12 +27,17 @@ export class StringProvider implements ProviderClient {
   async create(opts?: SessionOptions): Promise<ProviderSession> {
     const apiKey = requireEnv("STRING_API_KEY");
     const url = new URL(this.cdpUrl);
+    // String always egresses through a proxy. Its default is residential; the
+    // lifecycle and throughput benchmarks compare proxy-free sessions, so those
+    // use String's ISP exits (`standard`), the closest to no proxy. Proxy
+    // Performance keeps the residential default in the requested country.
     if (opts?.proxyCountry) url.searchParams.set("countryCode", opts.proxyCountry);
+    else url.searchParams.set("proxy", "standard");
     return {
       id: "",
       cdpUrl: url.toString(),
       headers: { Authorization: `Bearer ${apiKey}` },
-      ...(opts?.proxyCountry && { configuration: { countryCode: opts.proxyCountry } }),
+      configuration: opts?.proxyCountry ? { countryCode: opts.proxyCountry } : { proxy: "standard" },
     };
   }
 

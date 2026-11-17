@@ -38,14 +38,15 @@ test("connects to the public endpoint with the key in a header, never the URL", 
   assert.equal(provider.releasesOnDisconnect, true);
 });
 
-test("an unproxied session sends no proxy settings", async () => {
+test("a session without a proxy country uses String's ISP exits", async () => {
   const session = await new StringProvider().create();
   const url = new URL(session.cdpUrl);
-  assert.equal(url.search, "");
-  assert.equal(session.configuration, undefined);
+  assert.equal(url.searchParams.get("proxy"), "standard");
+  assert.equal(url.searchParams.get("countryCode"), null);
+  assert.deepEqual(session.configuration, { proxy: "standard" });
 });
 
-test("a proxied session asks for an exit in the requested country", async () => {
+test("a proxied session keeps the default residential exits in the requested country", async () => {
   const session = await new StringProvider().create({ proxyCountry: "FR" });
   const url = new URL(session.cdpUrl);
   assert.equal(url.searchParams.get("proxy"), null);
