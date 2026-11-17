@@ -52,6 +52,10 @@ const PRICING: Record<string, { unit: UnitPricing }> = {
   CLOUDFLARE: {
     unit: { ratePerHour: 0.09, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
   },
+  // $0.12/hour of session time, metered continuously with no minimum (usestring.ai/pricing).
+  STRING: {
+    unit: { ratePerHour: 0.12, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+  },
   // Billed on CPU and memory actually used; this is the 1 vCPU / 4 GB ceiling.
   AWS_AGENTCORE: {
     unit: { ratePerHour: 0.1273, billing: "per_second", minimumSeconds: 1, perSessionCreationFee: 0 },

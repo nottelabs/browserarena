@@ -42,6 +42,7 @@ The us-east-2 runner benchmarks Browser Use from the same region as its browsers
 | Anchor Browser | us-east-1 | [anchorbrowser.io](https://www.anchorbrowser.io) |
 | Browser Use | us-east-1 | [browser-use.com](https://www.browser-use.com) |
 | Lightpanda | us-west-1 | [lightpanda.io](https://lightpanda.io) |
+| String | Azure eastus2 | [usestring.ai](https://usestring.ai) |
 
 Missing a provider? [Open a PR](https://github.com/nottelabs/browserarena/pulls).
 

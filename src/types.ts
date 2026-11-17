@@ -12,6 +12,7 @@ export type ProviderName =
   | "LIGHTPANDA"
   | "BROWSERLESS"
   | "TINYFISH"
+  | "STRING"
   | "CLOUDFLARE"
   | "AWS_AGENTCORE";
 
