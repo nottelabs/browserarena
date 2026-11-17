@@ -17,7 +17,9 @@
 #
 # --region staging runs Notte staging (us-staging.notte.cc) from the us-west
 # box and publishes to the private results repo cloned at STAGING_RESULTS_DIR
-# (default: ../browserarena-staging-results), never to this public repo.
+# (default: ../browserarena-staging-results), never to this public repo. It
+# runs c1 only by default: staging keeps fewer warm browsers than c10 needs, so
+# a c10 run there measures its pool size, not the code.
 #
 # --region us-east-2 runs Browser Use from its own EC2 in us-east-2, next to
 # Browser Use's browsers. It writes under regions/us-east-2/results/, which the
@@ -27,7 +29,7 @@ set -euo pipefail
 
 REGION=""
 BENCHMARK="hello-browser"
-CONCURRENCY="1,10"
+CONCURRENCY=""
 RUNS=100
 LOOPS=1
 PROVIDER_TIMEOUT=""
@@ -64,6 +66,10 @@ case "$REGION" in
   "")      echo "[ERROR] --region us-east|us-east-2|us-west|staging required" >&2; exit 2 ;;
   *)       echo "[ERROR] invalid --region: $REGION (want us-east, us-east-2, us-west, or staging)" >&2; exit 2 ;;
 esac
+
+if [[ -z "$CONCURRENCY" ]]; then
+  if [[ "$REGION" == "staging" ]]; then CONCURRENCY="1"; else CONCURRENCY="1,10"; fi
+fi
 
 case "$BENCHMARK" in
   hello-browser|browser-throughput) ;;
