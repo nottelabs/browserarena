@@ -87,6 +87,9 @@ test("v5 exports carry typed columns and keep page checks apart from server acce
   assert.equal(cell("perimeterx").signal, "page_reached");
   assert.equal(cell("geetest").rejected, 1); assert.equal(cells.reduce((sum, c) => sum + c.not_run, 0), 2);
   const swap = (type: string, change: Record<string, unknown>) => rows.map(r => r.type === type ? { ...r, ...change } : r);
+  // An unsubmitted text CAPTCHA whose field stayed empty is published apart from timeouts.
+  const silent = campaignCells(exportCampaign("v5-campaign", summary, swap("text", { status: "no_answer", stage: "solve", passed_ms: null, token_ms: null })));
+  assert.deepEqual([silent.find(c => c.type === "text")!.no_answer, silent.find(c => c.type === "text")!.timeout, silent.find(c => c.type === "text")!.succeeded], [1, 0, 0]);
   for (const [type, change, error] of [
     ["text", { status: "verified", accepted_ms: 12000 }, /interchanged/],
     ["perimeterx", { status: "token_delivered", token_ms: 4000, passed_ms: null }, /interchanged/],
@@ -94,6 +97,9 @@ test("v5 exports carry typed columns and keep page checks apart from server acce
     ["recaptcha-v3", { status: "page_passed", accepted_ms: null, passed_ms: 3000 }, /interchanged/],
     ["text", { passed_ms: null }, /missing its timing/],
     ["geetest", { passed_ms: 7000 }, /page timing/],
+    ["geetest", { status: "no_answer", stage: "solve", token_ms: null }, /no answer/],
+    ["text", { status: "no_answer", stage: "verify", passed_ms: null, token_ms: null }, /no answer/],
+    ["text", { status: "no_answer", stage: "solve", passed_ms: null }, /answer timing/],
   ] as const) assert.throws(() => exportCampaign("v5-campaign", summary, swap(type, change)), error);
 });
 

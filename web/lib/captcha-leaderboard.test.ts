@@ -80,3 +80,13 @@ test("v4 columns come from the campaign and page passes count with their own tim
   assert.deepEqual(perimeterx.rounds.map(round => round.label), ["Round 1: Passed in 4.0s"]);
   assert.equal(rows.find(row => row.provider === "steel")!.rank, 2);
 });
+
+test("a text CAPTCHA with no answer entered is labeled apart from timeouts and counts as a failure", () => {
+  const data = campaign([attempt("notte", "text", "no_answer"), attempt("steel", "text", "timeout")], 4);
+  const columns = captchaColumns(data);
+  const rows = captchaLeaderboard(data, campaignCells(data), columns, {});
+  const text = (provider: string) => rows.find(row => row.provider === provider)!.results[columns.findIndex(column => column.id === "text")];
+  assert.deepEqual(text("notte").rounds.map(round => [round.outcome, round.label]), [["no_answer", "Round 1: No answer entered"]]);
+  assert.deepEqual(text("steel").rounds.map(round => [round.outcome, round.label]), [["timeout", "Round 1: Timed out"]]);
+  assert.deepEqual([text("notte").successes, text("notte").attempted], [0, 1]);
+});

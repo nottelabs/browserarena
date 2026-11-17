@@ -275,6 +275,34 @@ test("text CAPTCHA submits a stable solver answer and reports a page check, neve
   assert.equal(staleRow.halt_campaign, false);
 });
 
+test("text CAPTCHA with a loaded image and an answer field that stays empty records no_answer, not timeout", async () => {
+  const fixture = by("text"), empty = { tokenPresent: false, imageReady: true, answer: "" };
+  const silent = harness(fixture, [empty]);
+  const row = await attempt(silent.task, config, silent.deps);
+  assert.equal(row.status, "no_answer"); assert.equal(row.stage, "solve");
+  assert.equal(row.image_seen, true); assert.equal(row.answer_seen, undefined); assert.equal(row.answer_changes, undefined);
+  assert.equal(row.token_ms, undefined); assert.equal(silent.counts().submissions, 0);
+  const cell = summarize(configuration({ providers: ["kernel"], rounds: 1 }), [row]).find(c => c.type === "text");
+  assert.equal(cell.no_answer, 1); assert.equal(cell.timeout, 0); assert.equal(cell.succeeded, 0);
+  // An answer that never stops changing is a solver that engaged but never finished: a timeout.
+  let n = 0;
+  const flapping = harness(fixture, [empty]);
+  flapping.deps.probe = async () => ({ formPresent: true, rejected: false, tokenPresent: true, imageReady: true, answer: `a${n++}` });
+  const flappingRow = await attempt(flapping.task, config, flapping.deps);
+  assert.equal(flappingRow.status, "timeout"); assert.equal(flappingRow.answer_seen, true); assert.ok(flappingRow.answer_changes > 100);
+  // An answer typed and then cleared still shows the solver engaged.
+  const cleared = harness(fixture, [empty, { tokenPresent: true, imageReady: true, answer: "w9" }, empty]);
+  const clearedRow = await attempt(cleared.task, config, cleared.deps);
+  assert.equal(clearedRow.status, "timeout"); assert.equal(clearedRow.answer_seen, true); assert.equal(clearedRow.answer_changes, 2);
+  // An image that never loaded leaves nothing to solve: the page, not the solver, may be at fault.
+  const blank = harness(fixture, [{ tokenPresent: false, imageReady: false, answer: "" }]);
+  const blankRow = await attempt(blank.task, config, blank.deps);
+  assert.equal(blankRow.status, "timeout"); assert.equal(blankRow.image_seen, undefined);
+  // Other types never record no_answer.
+  const v3 = harness(by("recaptcha-v3"), [{ ready: false }]);
+  assert.equal((await attempt(v3.task, config, v3.deps)).status, "timeout");
+});
+
 test("PerimeterX passes when Walmart results stay usable for five seconds, from the moment they cleared", async () => {
   const fixture = by("perimeterx"), usable = { url: fixture.url, challenge: false, searchReady: true, appId: fixture.appId };
   const blocked = { url: "https://www.walmart.com/blocked?url=x", challenge: true, searchReady: false, appId: fixture.appId };

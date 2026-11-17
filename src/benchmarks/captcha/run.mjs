@@ -222,8 +222,21 @@ export async function attempt(task, config, deps) {
     // A solver may type during navigation; only a verdict before any submission is stale.
     if (fixture.type === "text" && row.initial.passed)
       throw new Error("Text CAPTCHA demo is not a fresh challenge");
+    // Text CAPTCHA engagement, kept privately: whether the image loaded, whether the
+    // answer field ever held anything, and how often its value changed before submission.
+    // Only the no_answer status derived from them is published.
+    let lastAnswer = null;
+    const engagement = state => {
+      if (fixture.type !== "text" || row.stage !== "solve" || !state) return;
+      const answer = typeof state.answer === "string" ? state.answer : "";
+      if (state.imageReady) row.image_seen = true;
+      if (answer) row.answer_seen = true;
+      if (lastAnswer !== null && answer !== lastAnswer) row.answer_changes = (row.answer_changes ?? 0) + 1;
+      lastAnswer = answer;
+    };
     row.stage = "solve";
     row.solve_start_ms = now() - navigationStart;
+    engagement(row.initial);
     deadline = now() + config.solveTimeoutMs;
     let submitted = false, previous = null, clearSince = null;
     while (now() < deadline && !signal?.aborted) {
@@ -237,6 +250,8 @@ export async function attempt(task, config, deps) {
         if (!(error instanceof BoundExceeded) || remaining >= 10_000) throw error;
       }
       if (state) row.final = state;
+      // Before the deadline check, so an answer entered in the last second still counts.
+      engagement(state);
       if (now() >= deadline || (!state && windowEnd >= deadline)) break;
       if (verificationDeadline !== null && (!state || now() >= verificationDeadline))
         throw new Error("No independent verification verdict within 15s of submission");
@@ -303,7 +318,11 @@ export async function attempt(task, config, deps) {
       previous = state;
       await sleep(Math.min(1_000, Math.max(0, deadline - now())));
     }
-    if (!["verified", "token_delivered", "page_passed", "rejected"].includes(row.status)) row.status = signal?.aborted ? "interrupted" : "timeout";
+    // A text CAPTCHA whose image loaded but whose answer field stayed empty for the whole
+    // window: the solver never entered anything. Not a slow solve, so not a timeout.
+    const noAnswer = fixture.type === "text" && row.stage === "solve" && row.image_seen === true && !row.answer_seen;
+    if (!["verified", "token_delivered", "page_passed", "rejected"].includes(row.status))
+      row.status = signal?.aborted ? "interrupted" : noAnswer ? "no_answer" : "timeout";
     row.external_receipt = receipt;
     row.elapsed_ms = now() - navigationStart;
   } catch (error) {

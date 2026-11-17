@@ -9,6 +9,9 @@
 /* Timeouts are half-filled so they differ from passes by shape, not only by hue: green and orange
    look alike under protanopia. The darker red keeps failures apart from passes by lightness. */
 .rounds li[data-outcome="timeout"], .legend span[data-outcome="timeout"] { --dot: oklch(0.66 0.14 70); background: linear-gradient(90deg, var(--dot) 50%, transparent 50%); box-shadow: inset 0 0 0 1.5px var(--dot); }
+/* Text CAPTCHA only: the image loaded but the solver never entered an answer. A ring with a bar
+   (an empty field) keeps it apart from passes, failures and unrun rounds by shape. */
+.rounds li[data-outcome="no_answer"], .legend span[data-outcome="no_answer"] { --dot: var(--muted-foreground); background: linear-gradient(transparent 37.5%, var(--dot) 37.5% 62.5%, transparent 62.5%); box-shadow: inset 0 0 0 1.5px var(--dot); }
 .rounds li[data-outcome="rejected"], .rounds li[data-outcome="error"], .legend span[data-outcome="failed"] { background: oklch(0.47 0.19 25); }
 .rounds li[data-outcome="interrupted"], .rounds li[data-outcome="not_run"], .legend span[data-outcome="not_run"] { background: transparent; box-shadow: inset 0 0 0 1.5px var(--muted-foreground); }
 .rounds li:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
