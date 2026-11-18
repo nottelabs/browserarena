@@ -152,6 +152,7 @@ export interface ProviderCdpEndpointInfo {
 /**
  * TCP+TLS RTT (curl time_appconnect, median of 10) from the benchmark EC2 VMs,
  * 2026-03-26. us-east-1 for most providers, us-west-1 for Browserbase and Notte.
+ * Browser Use from us-east-2, 2026-11-18.
  * For proxied providers this reflects the proxy/CDN edge, not the browser VM.
  * Browser Use used curl -k (cert SAN mismatch).
  */
@@ -162,7 +163,7 @@ export const PROVIDER_CDP_ENDPOINT: Record<string, ProviderCdpEndpointInfo> = {
   KERNEL: { cdpHost: "api.onkernel.com", rttMs: 14, proxied: false },
   ANCHORBROWSER: { cdpHost: "connect.anchorbrowser.io", rttMs: 38, proxied: false },
   HYPERBROWSER: { cdpHost: "connect-us-east-1.hyperbrowser.ai", rttMs: 9, proxied: false },
-  BROWSER_USE: { cdpHost: "cdp.browser-use.com", rttMs: 29, proxied: false },
+  BROWSER_USE: { cdpHost: "cdp.browser-use.com", rttMs: 8, proxied: false },
 };
 
 /** Benchmark runner VM (`_meta.json`): cloud + region when present. */

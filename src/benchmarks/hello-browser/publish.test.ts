@@ -279,7 +279,7 @@ test("staging region publishes Notte staging only to the private results repo", 
   } finally { f.cleanup(); }
 });
 
-test("us-east-2 publishes Browser Use under regions/us-east-2, outside the website's results", () => {
+test("us-east-2 publishes Browser Use to the website's results", () => {
   const f = fixture();
   try {
     for (const benchmark of ["hello-browser", "browser-throughput"]) {
@@ -288,20 +288,31 @@ test("us-east-2 publishes Browser Use under regions/us-east-2, outside the websi
     }
     assert.deepEqual(f.calls().map(c => c.provider), ["browser-use", "browser-use"]);
     assert.equal(f.git("rev-parse", "HEAD"), f.git("rev-parse", "origin/main"));
-    assert.equal(fs.existsSync(path.join(f.repo, "results")), false);
+    assert.equal(fs.existsSync(path.join(f.repo, "regions")), false);
     const date = f.calls()[0]["run-date"];
     const published = f.git("ls-tree", "-r", "--name-only", "origin/main").trim().split("\n")
       .filter(p => p.startsWith("regions/") || p.startsWith("results/"));
     assert.deepEqual(published.sort(), [
-      `regions/us-east-2/results/browser-throughput/browser-use/${date}/_meta.json`,
-      `regions/us-east-2/results/browser-throughput/browser-use/${date}/c1/results.jsonl`,
-      `regions/us-east-2/results/hello-browser/browser-use/${date}/_meta.json`,
-      `regions/us-east-2/results/hello-browser/browser-use/${date}/c1/results.jsonl`,
+      `results/browser-throughput/browser-use/${date}/_meta.json`,
+      `results/browser-throughput/browser-use/${date}/c1/results.jsonl`,
+      `results/hello-browser/browser-use/${date}/_meta.json`,
+      `results/hello-browser/browser-use/${date}/c1/results.jsonl`,
     ]);
     assert.deepEqual(f.git("log", "-2", "--format=%s").trim().split("\n"), [
       `results: browser-throughput us-east-2 ${date}`,
       `results: us-east-2 ${date}`,
     ]);
+  } finally { f.cleanup(); }
+});
+
+test("us-east no longer benchmarks Browser Use, which runs from us-east-2", () => {
+  const f = fixture();
+  try {
+    const result = f.run(["--dry-run"], { BROWSER_USE_API_KEY: "test-only" }, "us-east");
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    const providers = f.calls().map(c => c.provider);
+    assert.ok(providers.length > 0);
+    assert.equal(providers.includes("browser-use"), false);
   } finally { f.cleanup(); }
 });
 

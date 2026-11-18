@@ -90,7 +90,7 @@ export const PROVIDERS: ProviderInfo[] = [
     displayName: "Browser Use",
     url: "https://www.browser-use.com",
     logo: PROVIDER_LOGO_SRC.BROWSER_USE,
-    browserRegion: "us-east-1",
+    browserRegion: "us-east-2",
     description: "Browser automation platform",
     marketed: true,
   },

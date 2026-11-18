@@ -27,7 +27,7 @@ Create session → Connect via CDP → Navigate page → Release session
 | AWS us-west-1 | t3.micro | linux x64 | v18.20.8 |
 | AWS us-east-2 | t3.medium | linux x64 | v22.23.5 |
 
-The us-east-2 runner benchmarks Browser Use from the same region as its browsers. Its results are published under `regions/us-east-2/results/` and are not on the leaderboard yet; Browser Use's leaderboard numbers still come from us-east-1.
+The us-east-2 runner benchmarks Browser Use from the same region as its browsers. Browser Use's results come from us-east-2 since 2026-11-13; earlier days were run from us-east-1.
 
 ### Providers
 
@@ -40,7 +40,7 @@ The us-east-2 runner benchmarks Browser Use from the same region as its browsers
 | Kernel | us-east-1 | [kernel.sh](https://www.kernel.sh) |
 | Hyperbrowser | us-east-1 | [hyperbrowser.ai](https://www.hyperbrowser.ai) |
 | Anchor Browser | us-east-1 | [anchorbrowser.io](https://www.anchorbrowser.io) |
-| Browser Use | us-east-1 | [browser-use.com](https://www.browser-use.com) |
+| Browser Use | us-east-2 | [browser-use.com](https://www.browser-use.com) |
 | Lightpanda | us-west-1 | [lightpanda.io](https://lightpanda.io) |
 
 Missing a provider? [Open a PR](https://github.com/nottelabs/browserarena/pulls).
@@ -162,7 +162,7 @@ All providers tested from the same EC2 instances. TCP+TLS round-trip times measu
 | Hyperbrowser | `connect-us-east-1.hyperbrowser.ai` | 9 ms | us-east-1 |
 | Steel | `connect.steel.dev` | 14 ms | us-east-1 |
 | Kernel | `api.onkernel.com` | 14 ms | us-east-1 |
-| Browser Use | `cdp.browser-use.com` | 29 ms | us-east-1 |
+| Browser Use | `cdp.browser-use.com` | 8 ms | us-east-2 |
 | Anchor Browser | `connect.anchorbrowser.io` | 38 ms | us-east-1 |
 | Browserbase | `connect.usw2.browserbase.com` | 62 ms | us-west-1 |
 
@@ -215,16 +215,20 @@ Or deploy directly on Railway:
 
 ### Automated runs
 
-Daily results are produced by `scripts/run-and-publish.sh`, which runs one benchmark for one region's providers (c1 + c10 by default, except TinyFish at c1; 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`. Two EC2 boxes share the script; the cron lines differ in `--region`, and the browser throughput benchmark is a second invocation offset from the first:
+Daily results are produced by `scripts/run-and-publish.sh`, which runs one benchmark for one region's providers (c1 + c10 by default, except TinyFish at c1; 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`. Three EC2 boxes share the script; the cron lines differ in `--region`, and the browser throughput benchmark is a second invocation offset from the first:
 
 ```cron
-# us-east-1 box (Steel, Kernel, Hyperbrowser, Anchor Browser, Browser Use)
+# us-east-1 box (Steel, Kernel, Hyperbrowser, Anchor Browser)
 0 3 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east
 0 21 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east --benchmark browser-throughput --concurrency 1
 
 # us-west-1 box (Notte, Lightpanda, Browserless, TinyFish), staggered 1h to avoid push races
 0 4 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west
 0 6 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west --benchmark browser-throughput --concurrency 1
+
+# us-east-2 box (Browser Use), offset from the us-east-1 runs
+30 2 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east-2
+30 20 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east-2 --benchmark browser-throughput --concurrency 1
 ```
 
 Notte staging runs on the us-west box too, with the same script, about eight hours before the production Notte run. Its lifecycle run is c1 only: staging keeps fewer warm browsers than c10 needs, so a c10 run there would measure its pool size. `--region staging` runs only `notte-staging` (`https://us-staging.notte.cc`, key `NOTTE_STAGING_API_KEY` in `.env`) and publishes to the private repo [nottelabs/browserarena-staging-results](https://github.com/nottelabs/browserarena-staging-results), cloned next to this checkout (override with `STAGING_RESULTS_DIR`). It refuses to run if that clone is missing or shares this repo's origin, so staging results never reach the public repo. It takes the same checkout lock, so it never overlaps a production run:

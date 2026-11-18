@@ -2,7 +2,6 @@ node_modules/
 dist/
 !results/.gitkeep
 results/**/*.log
-regions/*/results/**/*.log
 logs/
 recordings/
 !web-app/web/public/recordings/
