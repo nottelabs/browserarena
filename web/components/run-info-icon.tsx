@@ -2,7 +2,7 @@
 
 import { Fragment } from "react";
 import { HardDrive } from "lucide-react";
-import { PROVIDER_CDP_ENDPOINT, type VmMeta } from "@/lib/data-shared";
+import { cdpEndpointForRun, type VmMeta } from "@/lib/data-shared";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 const INSTANCE_MEMORY_GB: Record<string, number> = {
@@ -65,7 +65,7 @@ function RunInfoBody({
   const durationMs = meta?.started_at && meta?.finished_at
     ? new Date(meta.finished_at).getTime() - new Date(meta.started_at).getTime()
     : null;
-  const cdpInfo = provider ? PROVIDER_CDP_ENDPOINT[provider] : undefined;
+  const cdpInfo = cdpEndpointForRun(provider, meta?.region);
   const rows: { label: string; value: string }[] = [];
   if (runDate) rows.push({ label: "Run date", value: formatRunDate(runDate) });
   if (meta?.cloud) rows.push({ label: "Cloud", value: cloudLabel(meta.cloud) });
