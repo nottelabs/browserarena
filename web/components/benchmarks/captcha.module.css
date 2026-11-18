@@ -5,9 +5,11 @@
 .stat { display: block; font-size: 0.65rem; line-height: 14px; color: var(--muted-foreground); text-align: right; }
 .rounds { flex-shrink: 0; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 4px; max-width: 64px; margin: 0; padding: 0; list-style: none; cursor: default; }
 .rounds li { position: relative; width: 8px; height: 8px; border-radius: 999px; background: var(--muted-foreground); }
-.rounds li[data-outcome="verified"], .rounds li[data-outcome="token_delivered"], .rounds li[data-outcome="page_passed"], .legend span[data-outcome="succeeded"] { background: oklch(0.55 0.14 150); }
-.rounds li[data-outcome="timeout"], .legend span[data-outcome="timeout"] { background: oklch(0.66 0.14 70); }
-.rounds li[data-outcome="rejected"], .rounds li[data-outcome="error"], .legend span[data-outcome="failed"] { background: oklch(0.58 0.17 25); }
+.rounds li[data-outcome="verified"], .rounds li[data-outcome="token_delivered"], .rounds li[data-outcome="page_passed"], .legend span[data-outcome="succeeded"] { background: oklch(0.55 0.14 145); }
+/* Timeouts are half-filled so they differ from passes by shape, not only by hue: green and orange
+   look alike under protanopia. The darker red keeps failures apart from passes by lightness. */
+.rounds li[data-outcome="timeout"], .legend span[data-outcome="timeout"] { --dot: oklch(0.66 0.14 70); background: linear-gradient(90deg, var(--dot) 50%, transparent 50%); box-shadow: inset 0 0 0 1.5px var(--dot); }
+.rounds li[data-outcome="rejected"], .rounds li[data-outcome="error"], .legend span[data-outcome="failed"] { background: oklch(0.47 0.19 25); }
 .rounds li[data-outcome="interrupted"], .rounds li[data-outcome="not_run"], .legend span[data-outcome="not_run"] { background: transparent; box-shadow: inset 0 0 0 1.5px var(--muted-foreground); }
 .rounds li:focus-visible { outline: 2px solid var(--foreground); outline-offset: 2px; }
 /* Anchored right so labels in the last column stay inside the table panel. */
