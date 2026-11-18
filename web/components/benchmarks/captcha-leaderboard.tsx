@@ -29,12 +29,16 @@ const SIGNAL_MEANING: Record<CaptchaTypeColumn["signal"], string> = {
   page_check: "Success means the page's own in-browser check accepted the answer; no server verifies it.",
   page_reached: "Success means the page stayed usable with no challenge shown.",
 };
-const typeDescription = (column: CaptchaTypeColumn) => `${column.signal_label}. ${SIGNAL_MEANING[column.signal]} Errors count as failures. Time is the median of successful attempts; hover a dot for its round, outcome and time.`;
-const LEGEND = [["succeeded", "Succeeded"], ["timeout", "Timed out"], ["failed", "Failed"], ["not_run", "Not run"]] as const;
+// Only the text CAPTCHA has an answer field the harness can watch stay empty.
+const NO_ANSWER = " A grey ring with a bar means the image loaded but no answer was entered in the solve window; it counts as a failure.";
+const typeDescription = (column: CaptchaTypeColumn) => `${column.signal_label}. ${SIGNAL_MEANING[column.signal]} Errors count as failures.${column.id === "text" ? NO_ANSWER : ""} Time is the median of successful attempts; hover a dot for its round, outcome and time.`;
+const LEGEND = [["succeeded", "Succeeded"], ["timeout", "Timed out"], ["no_answer", "No answer entered"], ["failed", "Failed"], ["not_run", "Not run"]] as const;
 
 /** What each dot color means, shown once above the table instead of in every cell. */
-function DotLegend() {
-  return <ul className={captcha.legend} aria-label="Dot legend">{LEGEND.map(([outcome, label]) =>
+function DotLegend({ rows }: { rows: CaptchaRow[] }) {
+  // "No answer entered" appears only in runs that recorded it, so older runs keep their legend.
+  const noAnswer = rows.some(row => row.results.some(result => result.rounds.some(round => round.outcome === "no_answer")));
+  return <ul className={captcha.legend} aria-label="Dot legend">{LEGEND.filter(([outcome]) => outcome !== "no_answer" || noAnswer).map(([outcome, label]) =>
     <li key={outcome}><span data-outcome={outcome} aria-hidden="true" />{label}</li>)}</ul>;
 }
 const cellSummary = (successes: number, attempted: number, word: string, medianMs: number | null, notRun: number) =>
@@ -61,7 +65,7 @@ export function CaptchaLeaderboard({ columns, rows, caption, dateControl, summar
     <BenchmarkSectionHeader controls={summary}>
       <BenchmarkTitle name={BENCHMARK_TITLES.captcha} date={dateControl} />
     </BenchmarkSectionHeader>
-    <DotLegend />
+    <DotLegend rows={rows} />
     <BenchmarkTablePanel label="CAPTCHA Handling provider results">
       <div className={`${styles.tableScroll} ${captcha.region}`} role="region" aria-label="Provider CAPTCHA results" tabIndex={0}>
         <table className="w-full text-left text-[0.78rem] tabular-nums" style={{ minWidth: Math.max(720, PROVIDER_WIDTH + 40 + OVERALL_WIDTH + columns.length * TYPE_WIDTH) }}>

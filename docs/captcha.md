@@ -163,7 +163,16 @@ Type-specific notes:
   score. The page checks its React state, so an answer written into the field
   without input events is rejected, and the page then clears the field. The
   private evidence keeps the submitted answer (`submitted_answer`) to tell the
-  two apart.
+  two apart. A wrong answer the page refuses is `rejected`. An attempt whose
+  image loaded but whose answer field stayed empty for the whole solve window
+  is `no_answer` ("No answer entered", a grey ring with a bar), not a timeout: the solver
+  never entered anything. A field that held anything, even briefly, or an
+  answer that never stopped changing, is still a `timeout`, as is an image that
+  never loaded. The private evidence records `image_seen`, `answer_seen` and
+  `answer_changes` (how often the field's value changed before submission),
+  never the intermediate answers. `no_answer` counts as a failure, like a
+  timeout, and only this type can record it. Campaigns before this status
+  existed recorded these attempts as timeouts.
 - **PerimeterX:** Walmart challenges some visits and not others. A visit that is
   never challenged also passes, as with Turnstile's automatic clearance, and
   the private evidence records `challenge_seen` when a challenge appeared. The
@@ -297,7 +306,8 @@ silently become successes. Preserve private evidence to investigate errors.
 The page shows one column per type of the campaign's protocol, labelled with its
 success signal, and successes/attempted on that signal, with one dot per round
 and the median time of successful attempts. Hovering, focusing or tapping a dot names its
-round and outcome. Errors remain in the denominator and unrun attempts appear
+round and outcome. The legend shows "No answer entered" only for runs that
+recorded it. Errors remain in the denominator and unrun attempts appear
 separately. Five successes out of five still has a 95% lower bound near 57%;
 small campaigns are exploratory, not reliable speed rankings. Campaigns
 are never pooled across protocols or dates. Synthetic layout fixtures are not

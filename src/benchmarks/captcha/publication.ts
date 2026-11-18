@@ -9,7 +9,7 @@ export type SuccessSignal = "server_acceptance" | "token_delivery" | "page_check
 export type CaptchaType = { id: string; label: string; signal: SuccessSignal; signal_label: string };
 export type PublicAttempt = {
   id: string; provider: string; type: string; round: number;
-  status: "verified" | "token_delivered" | "page_passed" | "rejected" | "timeout" | "error" | "interrupted";
+  status: "verified" | "token_delivered" | "page_passed" | "rejected" | "timeout" | "no_answer" | "error" | "interrupted";
   stage: string; accepted_ms: number | null; token_ms: number | null; passed_ms: number | null;
   cleanup_failed: boolean;
 };
@@ -65,8 +65,11 @@ export function validateCampaign(input: unknown): PublicCampaign {
     if (!task || seen.has(task.id) || row.provider !== task.provider || row.type !== task.fixture.type || row.round !== task.round)
       throw new Error("Duplicate or unplanned attempt");
     seen.add(task.id);
-    const statuses = [...SUCCESS_STATUSES, "rejected", "timeout", "error", "interrupted"];
+    const statuses = [...SUCCESS_STATUSES, "rejected", "timeout", "no_answer", "error", "interrupted"];
     if (typeof row.status !== "string" || !statuses.includes(row.status)) throw new Error("Invalid attempt status");
+    // Only a text CAPTCHA has an answer field to stay empty, and only before submission.
+    if (row.status === "no_answer" && (task.fixture.type !== "text" || row.stage !== "solve"))
+      throw new Error("Only an unsubmitted text CAPTCHA can record no answer");
     // Each type has one success signal; its status is the only success it may record.
     const success = SIGNALS[signalFor(protocol_version, task.fixture.type) as SuccessSignal].status;
     if (SUCCESS_STATUSES.includes(row.status) && row.status !== success)
@@ -77,6 +80,7 @@ export function validateCampaign(input: unknown): PublicCampaign {
       throw new Error("Successful attempt missing its timing");
     if (row.status !== "verified" && timings.accepted_ms !== null) throw new Error("Unaccepted attempt has acceptance timing");
     if (row.status !== "page_passed" && timings.passed_ms !== null) throw new Error("Unpassed attempt has page timing");
+    if (row.status === "no_answer" && timings.token_ms !== null) throw new Error("An attempt with no answer has answer timing");
     return { id: task.id, provider: task.provider, type: task.fixture.type, round: task.round,
       status: row.status as PublicAttempt["status"], stage: row.stage, ...timings,
       cleanup_failed: boolean(row.cleanup_failed) };
@@ -116,7 +120,7 @@ export function exportCampaign(id: string, summaryInput: unknown, rows: unknown[
 export type CaptchaCell = {
   provider: string; type: string; signal: SuccessSignal; planned: number; attempted: number;
   verified: number; token_delivered: number; page_passed: number; succeeded: number;
-  timeout: number; rejected: number; error: number; interrupted: number; cleanup_errors: number; not_run: number;
+  timeout: number; no_answer: number; rejected: number; error: number; interrupted: number; cleanup_errors: number; not_run: number;
   acceptance_interval_95: [number, number] | null; delivery_interval_95: [number, number] | null;
   success_interval_95: [number, number] | null;
   delivered_median_ms: number | null; accepted_median_ms: number | null; success_median_ms: number | null;

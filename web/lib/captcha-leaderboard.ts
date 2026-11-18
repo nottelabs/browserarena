@@ -22,7 +22,7 @@ export type CaptchaRow = {
   note?: string;
 };
 
-const OUTCOMES: Record<string, string> = { verified: "Accepted", token_delivered: "Token delivered", page_passed: "Passed", timeout: "Timed out", rejected: "Rejected", error: "Error", interrupted: "Interrupted" };
+const OUTCOMES: Record<string, string> = { verified: "Accepted", token_delivered: "Token delivered", page_passed: "Passed", timeout: "Timed out", no_answer: "No answer entered", rejected: "Rejected", error: "Error", interrupted: "Interrupted" };
 
 /** "browser-use" -> "BROWSER_USE", the ID used by the shared provider metadata. */
 export const captchaProviderKey = (id: string) => id.toUpperCase().replace(/-/g, "_");

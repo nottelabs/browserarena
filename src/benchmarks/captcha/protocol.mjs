@@ -205,7 +205,7 @@ export function summarize(config, rows) {
     const signal = signalFor(config.version, fixture.type), success = SIGNALS[signal].status;
     return { provider, type: fixture.type, signal, planned: config.rounds, attempted: attempts.length,
       verified: count("verified"), token_delivered: count("token_delivered"), page_passed: count("page_passed"),
-      succeeded: count(success), timeout: count("timeout"), rejected: count("rejected"),
+      succeeded: count(success), timeout: count("timeout"), no_answer: count("no_answer"), rejected: count("rejected"),
       error: count("error"), interrupted: count("interrupted"),
       cleanup_errors: attempts.filter(r => r.session_id && !r.cleanup?.released || r.cleanup?.disconnect_error).length,
       not_run: config.rounds - attempts.length,
