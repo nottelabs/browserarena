@@ -165,7 +165,7 @@ Type-specific notes:
   private evidence keeps the submitted answer (`submitted_answer`) to tell the
   two apart. A wrong answer the page refuses is `rejected`. An attempt whose
   image loaded but whose answer field stayed empty for the whole solve window
-  is `no_answer` ("No answer entered", a grey dot), not a timeout: the solver
+  is `no_answer` ("No answer entered", a grey ring with a bar), not a timeout: the solver
   never entered anything. A field that held anything, even briefly, or an
   answer that never stopped changing, is still a `timeout`, as is an image that
   never loaded. The private evidence records `image_seen`, `answer_seen` and

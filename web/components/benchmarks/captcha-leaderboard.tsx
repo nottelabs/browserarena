@@ -30,7 +30,7 @@ const SIGNAL_MEANING: Record<CaptchaTypeColumn["signal"], string> = {
   page_reached: "Success means the page stayed usable with no challenge shown.",
 };
 // Only the text CAPTCHA has an answer field the harness can watch stay empty.
-const NO_ANSWER = " A grey dot means the image loaded but no answer was entered in the solve window; it counts as a failure.";
+const NO_ANSWER = " A grey ring with a bar means the image loaded but no answer was entered in the solve window; it counts as a failure.";
 const typeDescription = (column: CaptchaTypeColumn) => `${column.signal_label}. ${SIGNAL_MEANING[column.signal]} Errors count as failures.${column.id === "text" ? NO_ANSWER : ""} Time is the median of successful attempts; hover a dot for its round, outcome and time.`;
 const LEGEND = [["succeeded", "Succeeded"], ["timeout", "Timed out"], ["no_answer", "No answer entered"], ["failed", "Failed"], ["not_run", "Not run"]] as const;
 
