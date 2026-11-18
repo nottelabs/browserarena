@@ -31,8 +31,9 @@ function days(n: number, values: (i: number) => number): HistoricalProviderPoint
 /** Two days of results on both targets; day 2026-11-09 is "latest". */
 function fakes(statuses: Record<string, number> = {}, history: { days?: string[]; error?: Error } = {}) {
   const calls: string[] = [];
-  const stat = (provider: string, date: string, totalTimeMs: number) => ({
-    provider, runDate: date, totalRuns: 100, successRate: 100, totalTimeMs, p90TotalMs: totalTimeMs + 50,
+  const stat = (provider: string, date: string, creation: number) => ({
+    provider, runDate: date, totalRuns: 100, successRate: 100,
+    medianCreationMs: creation, medianConnectMs: 30, medianGotoMs: 80, medianReleaseMs: 40, totalTimeMs: creation + 150,
   });
   const thr = (provider: string, date: string, aps: number) => ({
     provider, runDate: date, totalRuns: 20, successRate: 90, actionsPerSecond: { median: aps }, taskMs: { median: 2000 },
@@ -67,8 +68,8 @@ test("replaying an older day loads that day on both targets, not the latest", as
   const { loaders, calls } = fakes();
   const result = await loadStagingSummaryInput("2026-11-08", SOURCE, URL, loaders);
   assert.ok(calls.filter((c) => c.startsWith("lifecycle") || c.startsWith("throughput")).every((c) => c.endsWith(" 2026-11-08")), calls.join("\n"));
-  assert.equal(result.lifecycle[0]!.prod!.totalTimeMs, 300);
-  assert.equal(result.lifecycle[0]!.staging!.totalTimeMs, 400);
+  assert.deepEqual(result.lifecycle[0]!.prod!.steps, { creation: 300, connect: 30, goto: 80, release: 40 });
+  assert.equal(result.lifecycle[0]!.staging!.steps.creation, 400);
   assert.equal(result.lifecycle[0]!.staging!.runDate, "2026-11-08");
   assert.equal(result.throughput.staging!.actionsPerSecond, 4);
   assert.ok(calls.includes("contents results/hello-browser/notte-staging/2026-11-08"));
@@ -97,12 +98,14 @@ test("a token that cannot read contents, or any other read error, fails instead 
   }
 });
 
-test("staging history loads on each concurrency level staging ran, and too little history is not judged", async () => {
+test("staging loads c1 only, with its history, and too little history is not judged", async () => {
   const { loaders, calls } = fakes();
   const result = await loadStagingSummaryInput("2026-11-09", SOURCE, URL, loaders);
-  assert.ok(calls.includes("history c1 staging strict") && calls.includes("history c10 staging strict"), calls.join("\n"));
+  assert.ok(calls.includes("history c1 staging strict"), calls.join("\n"));
+  assert.ok(!calls.some((c) => c.includes("c10")), calls.join("\n"));
   assert.ok(!calls.some((c) => c.startsWith("history") && c.endsWith("prod")));
-  assert.deepEqual(result.baseline!.map((c) => [c.concurrency, c.status, c.runDays, c.runDaysNeeded]), [[1, "unknown", 2, 10], [10, "unknown", 2, 10]]);
+  assert.deepEqual(result.lifecycle.map((l) => l.concurrency), [1]);
+  assert.deepEqual(result.baseline!.map((c) => [c.concurrency, c.status, c.runDays, c.runDaysNeeded]), [[1, "unknown", 2, 10]]);
 });
 
 test("no staging lifecycle run skips the history load", async () => {

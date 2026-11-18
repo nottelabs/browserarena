@@ -5,7 +5,9 @@ import { PROD_PROVIDER, STAGING_PROVIDER } from "./internal-staging";
 import { DEFAULT_CONFIG, evaluateSeries } from "./regression";
 import type { BaselineCheck, LifecycleNumbers, StagingSummaryInput, ThroughputNumbers } from "./staging-summary";
 
-const CONCURRENCY = [1, 10];
+// Staging runs c1 only: it keeps fewer warm browsers than c10 needs, so a c10
+// run there measures its pool size, not the code.
+const CONCURRENCY = [1];
 const STAGING_DIR = "notte-staging";
 
 export interface SummaryLoaders {
@@ -106,7 +108,14 @@ export async function loadStagingSummaryInput(
     }
     const pick = (rows: typeof prod.providers, id: string): LifecycleNumbers | null => {
       const row = rows.find((r) => r.provider === id);
-      return row ? { runDate: row.runDate, totalRuns: row.totalRuns, successRate: row.successRate, totalTimeMs: row.totalTimeMs, p90TotalMs: row.p90TotalMs } : null;
+      return row
+        ? {
+            runDate: row.runDate,
+            totalRuns: row.totalRuns,
+            successRate: row.successRate,
+            steps: { creation: row.medianCreationMs, connect: row.medianConnectMs, goto: row.medianGotoMs, release: row.medianReleaseMs },
+          }
+        : null;
     };
     lifecycle.push({
       concurrency,

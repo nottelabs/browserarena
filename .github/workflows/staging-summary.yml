@@ -1,7 +1,8 @@
 name: Staging Summary
 
-# Daily Slack post: Notte staging (us-staging.notte.cc, 20:00/21:00 UTC runs)
-# next to Notte production (04:00/06:00 UTC), in the regression-alert channel.
+# Daily check of Notte staging (us-staging.notte.cc, 20:00/21:00 UTC runs)
+# against its own history and Notte production (04:00/06:00 UTC). Posts to the
+# regression-alert channel only when something is red.
 # Staging results live in the private nottelabs/browserarena-staging-results
 # repo. This repo's Actions logs are public, so the script never prints them.
 

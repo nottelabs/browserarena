@@ -8,6 +8,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://browserarena.ai";
 
   return [
+    { url: `${baseUrl}/stealth`, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/proxies`, changeFrequency: "daily", priority: 0.9 },
     {
       url: baseUrl,

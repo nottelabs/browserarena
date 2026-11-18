@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T15:41:14.385728+00:00",
+  "title": "Design System: BrowserArena Bot Detection — /stealth only",
+  "extensions": {
+    "motion": [
+      {
+        "name": "dashboard-enter",
+        "value": "160ms ease-out",
+        "purpose": "Inherited opacity entrance from 0.85 to 1; disabled for reduced motion."
+      },
+      {
+        "name": "score-row-hover",
+        "value": "background-color 160ms ease",
+        "purpose": "Inherited subtle row tint; rows remain informational."
+      },
+      {
+        "name": "drawer-enter",
+        "value": "180ms ease-out",
+        "purpose": "Inherited mobile drawer entrance from translateX(-24px), opacity 0; disabled for reduced motion."
+      }
+    ],
+    "shadows": [
+      {
+        "name": "mobile-drawer",
+        "value": "0 8px 32px rgb(0 0 0 / 15%)",
+        "purpose": "Shared navigation drawer only; score panel has no shadow."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "stacked-benchmark-header",
+        "value": "639px",
+        "purpose": "Maximum width for the shared stacked benchmark header."
+      },
+      {
+        "name": "desktop-navigation",
+        "value": "1280px",
+        "purpose": "Minimum width for the shared desktop sidebar."
+      },
+      {
+        "name": "wide-shell",
+        "value": "1800px",
+        "purpose": "Minimum width for the wider shared sidebar placement."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "History select",
+      "kind": "input",
+      "refersTo": "history-select",
+      "description": "Route-local specimen of the labelled native select. Labels are placeholders, not published measurements; submission belongs to the surrounding GET form.",
+      "html": "<label class=\"ds-history-label\" for=\"ds-score-week\">Run history</label> <select id=\"ds-score-week\" class=\"ds-history-select\" name=\"week\"><option value=\"\">Measurement date</option></select>",
+      "css": ".ds-history-label{font-family:var(--font-sans,\"Plus Jakarta Sans\"),sans-serif;color:var(--foreground);font-size:.875rem}.ds-history-select{font-family:var(--font-sans,\"Plus Jakarta Sans\"),sans-serif;color:var(--foreground);height:calc(1.02rem + var(--spacing,.27rem)*3 + 2px);padding:0 10px;border:1px solid var(--border);border-radius:3px;background:var(--background);font-size:.68rem;font-weight:500;line-height:16px;white-space:nowrap;transition:color 160ms ease,background-color 160ms ease,border-color 160ms ease}.ds-history-select:focus-visible{outline:2px solid var(--foreground);outline-offset:3px;}@media(prefers-reduced-motion:reduce){.ds-history-select{transition:none}}"
+    },
+    {
+      "name": "View run button",
+      "kind": "button",
+      "description": "Explicit submit control for the history GET form; no automatic selection navigation.",
+      "html": "<button class=\"ds-view-run\" type=\"submit\">View run</button>",
+      "css": ".ds-view-run{font-family:var(--font-sans,\"Plus Jakarta Sans\"),sans-serif;color:var(--foreground);font-size:.875rem;line-height:1.428571;border:1px solid var(--border);border-radius:.25rem;padding:calc(var(--spacing,.27rem)*1.5) calc(var(--spacing,.27rem)*3);background:transparent}.ds-view-run:hover{background:var(--muted)}.ds-view-run:focus-visible{outline:2px solid var(--foreground);outline-offset:3px;}"
+    },
+    {
+      "name": "Active benchmark navigation",
+      "kind": "nav",
+      "description": "Shared sidebar styling as used by this route; this specimen does not replace the shell drawer.",
+      "html": "<nav aria-label=\"Choose benchmark\"><a class=\"ds-benchmark-active\" href=\"/stealth\" aria-current=\"page\">Bot Detection</a></nav>",
+      "css": ".ds-benchmark-active{font-family:var(--font-sans,\"Plus Jakarta Sans\"),sans-serif;color:var(--foreground);display:flex;align-items:center;min-height:44px;padding:12px 16px;border:1px solid var(--foreground);border-radius:3px;background:var(--foreground);color:var(--background);font-size:13px;line-height:1.5;text-decoration:none;transition:background 150ms,border-color 150ms,color 150ms}.ds-benchmark-active:hover{border-color:color-mix(in oklab,var(--foreground) 50%,transparent);color:var(--foreground)}.ds-benchmark-active:focus-visible{outline:2px solid var(--foreground);outline-offset:3px;}@media(min-width:1280px) and (max-width:1799px){.ds-benchmark-active{padding-inline:12px}}@media(prefers-reduced-motion:reduce){.ds-benchmark-active{transition:none}}"
+    },
+    {
+      "name": "Score panel and scroll region",
+      "kind": "custom",
+      "refersTo": "scores-panel",
+      "description": "Header-only specimen, deliberately without fabricated scores. The implementation adds semantic row headers and aggregate counts.",
+      "html": "<div class=\"ds-score-panel\"><div class=\"ds-score-scroll\" tabindex=\"0\" role=\"region\" aria-label=\"Provider scores; scroll horizontally for all counts\"><table class=\"ds-score-table\"><caption class=\"ds-sr-only\">Aggregate provider access scores</caption><thead><tr><th scope=\"col\">Provider</th><th scope=\"col\" aria-sort=\"descending\">Access rate</th><th scope=\"col\">Passed</th><th scope=\"col\">Blocked</th><th scope=\"col\">Errors</th></tr></thead></table></div></div>",
+      "css": ".ds-score-panel{font-family:var(--font-sans,\"Plus Jakarta Sans\"),sans-serif;color:var(--foreground);min-width:0;overflow:hidden;border:1.5px solid var(--foreground);border-radius:3px;background:var(--background)}.ds-score-scroll{overflow-x:auto}.ds-score-scroll:focus-visible{outline:2px solid var(--ring);outline-offset:-2px}.ds-score-table{width:100%;min-width:640px;table-layout:fixed;border-collapse:separate;border-spacing:0}.ds-score-table th{height:40px;padding:2px calc(var(--spacing,.27rem)*2);border-bottom:1.5px solid var(--foreground);font-size:.6rem;line-height:16px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted-foreground);text-align:right;white-space:nowrap}.ds-score-table th:first-child{width:180px;position:sticky;left:0;z-index:1;text-align:left;color:var(--foreground);background:var(--background);border-right:1px solid var(--border)}.ds-score-table th:nth-child(2){width:120px}.ds-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}"
+    },
+    {
+      "name": "First-run pending message",
+      "kind": "custom",
+      "description": "Non-interactive in-flow message, not a card or simulated table.",
+      "html": "<div class=\"ds-pending\"><h3>First verified run pending</h3><p>Provider scores will appear after the first complete weekly benchmark is verified. No scores have been published yet.</p></div>",
+      "css": ".ds-pending{font-family:var(--font-sans,\"Plus Jakarta Sans\"),sans-serif;color:var(--foreground);max-width:42rem;padding-block:calc(var(--spacing,.27rem)*8)}.ds-pending h3{margin:0;font-size:1.125rem;line-height:1.555556;font-weight:500}.ds-pending p{margin:calc(var(--spacing,.27rem)*2) 0 0;font-size:.875rem;line-height:1.428571;color:var(--muted-foreground)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The existing benchmark shell",
+    "overview": "Mode: Read. The route is a compact comparison surface for weekly aggregate access scores. Preserve the existing typography, navigation, ruled table, striped page background, warm header and wordmark. Keep the scores and their interpretation legible without introducing another visual identity, decorative assets or promotional claims.",
+    "keyCharacteristics": [
+      "Restrained, mostly neutral score presentation inside the incumbent branded shell.",
+      "Explicit measurement date, weekly history and visible score denominators.",
+      "Stable provider labels beside horizontally scrollable counts on narrow screens.",
+      "Honest pending and unavailable-run states with interpretation text retained."
+    ],
+    "rules": [
+      {
+        "name": "The Aggregate Rule",
+        "body": "Color must not imply a benchmark result that has not been published. An empty publication state stays empty.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stable Column Rule",
+        "body": "Keep provider names and the access-rate column in separate fixed-width tracks. Preserve the explicit route override rather than inheriting the shared table's different column assumptions.",
+        "section": "layout"
+      }
+    ],
+    "dos": [
+      "Do preserve the existing benchmark shell and restrict this document's authority to `/stealth`.",
+      "Do keep provider names readable while the score region scrolls horizontally.",
+      "Do distinguish measurement date, week, access-rate denominator and planned-visit count.",
+      "Do retain an honest pending state and a visible history-based recovery for unavailable weeks.",
+      "Do identify populated captures as temporary synthetic-fixture QA and keep release verification limits explicit."
+    ],
+    "donts": [
+      "Don't publish illustrative scores or treat fixture screenshots as measured results.",
+      "Don't infer general browsing reliability from this fixed difficult sample.",
+      "Don't imply the closed two-finding design review verifies a live campaign or deployment.",
+      "Don't expose targets, individual outcomes, private execution details or raw evidence.",
+      "Don't add a new visual identity, promotional claims, score charts or provider drill-downs to this scoped page."
+    ]
+  }
+}
