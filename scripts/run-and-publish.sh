@@ -22,8 +22,7 @@
 # a c10 run there measures its pool size, not the code.
 #
 # --region us-east-2 runs Browser Use from its own EC2 in us-east-2, next to
-# Browser Use's browsers. It writes under regions/us-east-2/results/, which the
-# website does not read, so the leaderboard keeps using the us-east-1 runs.
+# Browser Use's browsers. It is the only region that benchmarks Browser Use.
 
 set -euo pipefail
 
@@ -59,7 +58,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$REGION" in
-  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browser-use,browserbase,tilion,cloudflare,aws-agentcore" ;;
+  us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browserbase,tilion,cloudflare,aws-agentcore" ;;
   us-east-2) PROVIDERS="browser-use" ;;
   us-west) PROVIDERS="notte,lightpanda,browserless,tinyfish" ;;
   staging) PROVIDERS="notte-staging" ;;
@@ -114,7 +113,6 @@ repo_slug() {
 RESULTS_REPO="$REPO_ROOT"
 # Directory the CLI writes results/ under, inside RESULTS_REPO.
 RESULTS_ROOT="$REPO_ROOT"
-[[ "$REGION" == "us-east-2" ]] && RESULTS_ROOT="$REPO_ROOT/regions/us-east-2"
 if [[ "$REGION" == "staging" ]]; then
   RESULTS_REPO="${STAGING_RESULTS_DIR:-$REPO_ROOT/../browserarena-staging-results}"
   if ! results_top="$(git -C "$RESULTS_REPO" rev-parse --show-toplevel 2>/dev/null)"; then

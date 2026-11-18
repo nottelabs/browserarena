@@ -146,24 +146,41 @@ export interface HistoricalLeaderboardResult {
 export interface ProviderCdpEndpointInfo {
   cdpHost: string;
   rttMs: number;
+  /** Runner region the RTT was measured from. */
+  rttRegion: string;
   proxied: boolean;
 }
 
 /**
  * TCP+TLS RTT (curl time_appconnect, median of 10) from the benchmark EC2 VMs,
  * 2026-03-26. us-east-1 for most providers, us-west-1 for Browserbase and Notte.
+ * Browser Use from us-east-2, 2026-11-18.
  * For proxied providers this reflects the proxy/CDN edge, not the browser VM.
  * Browser Use used curl -k (cert SAN mismatch).
  */
 export const PROVIDER_CDP_ENDPOINT: Record<string, ProviderCdpEndpointInfo> = {
-  BROWSERBASE: { cdpHost: "connect.usw2.browserbase.com", rttMs: 62, proxied: false },
-  STEEL: { cdpHost: "connect.steel.dev", rttMs: 14, proxied: true },
-  NOTTE: { cdpHost: "api.notte.cc", rttMs: 12, proxied: true },
-  KERNEL: { cdpHost: "api.onkernel.com", rttMs: 14, proxied: false },
-  ANCHORBROWSER: { cdpHost: "connect.anchorbrowser.io", rttMs: 38, proxied: false },
-  HYPERBROWSER: { cdpHost: "connect-us-east-1.hyperbrowser.ai", rttMs: 9, proxied: false },
-  BROWSER_USE: { cdpHost: "cdp.browser-use.com", rttMs: 29, proxied: false },
+  BROWSERBASE: { cdpHost: "connect.usw2.browserbase.com", rttMs: 62, rttRegion: "us-west-1", proxied: false },
+  STEEL: { cdpHost: "connect.steel.dev", rttMs: 14, rttRegion: "us-east-1", proxied: true },
+  NOTTE: { cdpHost: "api.notte.cc", rttMs: 12, rttRegion: "us-west-1", proxied: true },
+  KERNEL: { cdpHost: "api.onkernel.com", rttMs: 14, rttRegion: "us-east-1", proxied: false },
+  ANCHORBROWSER: { cdpHost: "connect.anchorbrowser.io", rttMs: 38, rttRegion: "us-east-1", proxied: false },
+  HYPERBROWSER: { cdpHost: "connect-us-east-1.hyperbrowser.ai", rttMs: 9, rttRegion: "us-east-1", proxied: false },
+  BROWSER_USE: { cdpHost: "cdp.browser-use.com", rttMs: 8, rttRegion: "us-east-2", proxied: false },
 };
+
+/**
+ * CDP endpoint info for a run, or undefined when the run's region differs from
+ * the region the RTT was measured from (the RTT would not describe that run).
+ */
+export function cdpEndpointForRun(
+  provider: string | undefined,
+  runRegion: string | undefined,
+): ProviderCdpEndpointInfo | undefined {
+  const info = provider ? PROVIDER_CDP_ENDPOINT[provider] : undefined;
+  if (!info) return undefined;
+  if (runRegion && runRegion !== info.rttRegion) return undefined;
+  return info;
+}
 
 /** Benchmark runner VM (`_meta.json`): cloud + region when present. */
 export function vmMetaRegionLabel(vmMeta?: VmMeta): string | null {
