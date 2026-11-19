@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "protocol": "site-access-2",
+  "date": "2026-11-18",
+  "weekOf": "2026-11-16",
+  "siteCount": 30,
+  "rounds": 3,
+  "proxyCountry": "US",
+  "providers": [
+    {
+      "provider": "BROWSER_USE",
+      "accessible": 79,
+      "blocked": 8,
+      "errors": 3
+    },
+    {
+      "provider": "NOTTE",
+      "accessible": 62,
+      "blocked": 24,
+      "errors": 4
+    },
+    {
+      "provider": "KERNEL",
+      "accessible": 41,
+      "blocked": 47,
+      "errors": 2
+    },
+    {
+      "provider": "BROWSERBASE",
+      "accessible": 39,
+      "blocked": 49,
+      "errors": 2
+    },
+    {
+      "provider": "STEEL",
+      "accessible": 37,
+      "blocked": 52,
+      "errors": 1
+    }
+  ]
+}
