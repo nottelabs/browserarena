@@ -1,0 +1,1016 @@
+[LOG] Saving logs to results/hello-browser/browser-use/2026-11-19/results.log
+
+[CONFIG] provider=BROWSER_USE concurrency=1 runs=100
+[WARMUP] 1/10
+[Session created] provider=BROWSER_USE id=4d86d72d-8592-4153-b1ed-3a3e2b7bd6c9 186ms
+[Browser connected] 117ms
+[Page loaded] 79ms
+[Session released] 23ms
+[WARMUP] 2/10
+[Session created] provider=BROWSER_USE id=0a7a9e14-c8ab-43ee-83d7-cb87cb0c6596 141ms
+[Browser connected] 100ms
+[Page loaded] 82ms
+[Session released] 10ms
+[WARMUP] 3/10
+[Session created] provider=BROWSER_USE id=c85bcf8f-eb38-4b08-95f2-b3143d2e03a9 140ms
+[Browser connected] 114ms
+[Page loaded] 149ms
+[Session released] 29ms
+[WARMUP] 4/10
+[Session created] provider=BROWSER_USE id=a15ac1f7-4130-4be7-bf8c-48999d0ed95e 145ms
+[Browser connected] 165ms
+[Page loaded] 109ms
+[Session released] 13ms
+[WARMUP] 5/10
+[Session created] provider=BROWSER_USE id=10794b46-fa66-4cb2-893d-551f0c09a903 133ms
+[Browser connected] 96ms
+[Page loaded] 70ms
+[Session released] 13ms
+[WARMUP] 6/10
+[Session created] provider=BROWSER_USE id=711994f0-f9f9-404a-a2bf-1f197f4d24e1 138ms
+[Browser connected] 101ms
+[Page loaded] 75ms
+[Session released] 21ms
+[WARMUP] 7/10
+[Session created] provider=BROWSER_USE id=835a43ec-473f-46cb-b1b2-c57fd446de17 127ms
+[Browser connected] 102ms
+[Page loaded] 85ms
+[Session released] 19ms
+[WARMUP] 8/10
+[Session created] provider=BROWSER_USE id=38088e64-98b4-4f5d-a3b7-f61964c02db9 137ms
+[Browser connected] 99ms
+[Page loaded] 69ms
+[Session released] 10ms
+[WARMUP] 9/10
+[Session created] provider=BROWSER_USE id=86e65106-1b29-43cf-9306-a40a852c0a2b 143ms
+[Browser connected] 88ms
+[Page loaded] 125ms
+[Session released] 26ms
+[WARMUP] 10/10
+[Session created] provider=BROWSER_USE id=877be8a9-7f30-4777-82c1-f767bf15d4f0 116ms
+[Browser connected] 118ms
+[Page loaded] 70ms
+[Session released] 10ms
+[RUN] 1/100 (c=1)
+[Session created] provider=BROWSER_USE id=40ff2a3b-9df1-4156-898e-7710cb609ca0 121ms
+[Browser connected] 102ms
+[Page loaded] 71ms
+[Session released] 8ms
+[RUN] 2/100 (c=1)
+[Session created] provider=BROWSER_USE id=bc31476b-6f6a-49ce-bcde-9728cf41208e 152ms
+[Browser connected] 101ms
+[Page loaded] 88ms
+[Session released] 20ms
+[RUN] 3/100 (c=1)
+[Session created] provider=BROWSER_USE id=29ab29cb-4764-45a0-9cf1-36498e2a72e6 148ms
+[Browser connected] 102ms
+[Page loaded] 92ms
+[Session released] 19ms
+[RUN] 4/100 (c=1)
+[Session created] provider=BROWSER_USE id=4a82fe26-cc20-4d38-b37e-14ba49c37318 146ms
+[Browser connected] 94ms
+[Page loaded] 114ms
+[Session released] 13ms
+[RUN] 5/100 (c=1)
+[Session created] provider=BROWSER_USE id=e932f2a0-6c27-46fe-aca5-7a066bf39914 128ms
+[Browser connected] 103ms
+[Page loaded] 105ms
+[Session released] 8ms
+[RUN] 6/100 (c=1)
+[Session created] provider=BROWSER_USE id=37680239-e7ae-4540-a830-bed88daea2b4 141ms
+[Browser connected] 107ms
+[Page loaded] 66ms
+[Session released] 20ms
+[RUN] 7/100 (c=1)
+[Session created] provider=BROWSER_USE id=28f9ddf8-2001-440a-aa7b-2ad4cbddf9c7 149ms
+[Browser connected] 106ms
+[Page loaded] 65ms
+[Session released] 20ms
+[RUN] 8/100 (c=1)
+[Session created] provider=BROWSER_USE id=eb884103-1d80-4301-a263-34d3ae038bf6 137ms
+[Browser connected] 115ms
+[Page loaded] 111ms
+[Session released] 25ms
+[RUN] 9/100 (c=1)
+[Session created] provider=BROWSER_USE id=ec0672b5-9947-486e-bfbf-7f80472417a8 150ms
+[Browser connected] 97ms
+[Page loaded] 69ms
+[Session released] 12ms
+[RUN] 10/100 (c=1)
+[Session created] provider=BROWSER_USE id=8aee996b-a0fe-421f-98d9-9878533100ab 120ms
+[Browser connected] 93ms
+[Page loaded] 75ms
+[Session released] 20ms
+[RUN] 11/100 (c=1)
+[Session created] provider=BROWSER_USE id=1753aa9a-92a5-4e07-95cf-041119e9ceaa 182ms
+[Browser connected] 119ms
+[Page loaded] 103ms
+[Session released] 17ms
+[RUN] 12/100 (c=1)
+[Session created] provider=BROWSER_USE id=b6e78126-2473-4f8b-8ae0-e185be14223a 127ms
+[Browser connected] 72ms
+[Page loaded] 98ms
+[Session released] 8ms
+[RUN] 13/100 (c=1)
+[Session created] provider=BROWSER_USE id=849f2327-37e9-43e8-b882-f3c0003a38cc 137ms
+[Browser connected] 94ms
+[Page loaded] 107ms
+[Session released] 8ms
+[RUN] 14/100 (c=1)
+[Session created] provider=BROWSER_USE id=0b1e2f2c-9534-458e-b9bd-7dc4947b3c93 130ms
+[Browser connected] 93ms
+[Page loaded] 95ms
+[Session released] 19ms
+[RUN] 15/100 (c=1)
+[Session created] provider=BROWSER_USE id=4d134b20-0a18-40b8-9e9c-fc8d90736a5c 141ms
+[Browser connected] 105ms
+[Page loaded] 67ms
+[Session released] 20ms
+[RUN] 16/100 (c=1)
+[Session created] provider=BROWSER_USE id=9fbe1140-d235-4d48-bc9e-212ac10103ea 140ms
+[Browser connected] 89ms
+[Page loaded] 92ms
+[Session released] 7ms
+[RUN] 17/100 (c=1)
+[Session created] provider=BROWSER_USE id=e6e04064-4fe7-45b0-85a3-c645292092d9 131ms
+[Browser connected] 101ms
+[Page loaded] 118ms
+[Session released] 20ms
+[RUN] 18/100 (c=1)
+[Session created] provider=BROWSER_USE id=ad163ca3-2a49-428c-bea8-09e17dcd87a1 139ms
+[Browser connected] 81ms
+[Page loaded] 74ms
+[Session released] 8ms
+[RUN] 19/100 (c=1)
+[Session created] provider=BROWSER_USE id=dfa80c43-da14-40eb-a842-ef4b81fa5f15 125ms
+[Browser connected] 100ms
+[Page loaded] 70ms
+[Session released] 19ms
+[RUN] 20/100 (c=1)
+[Session created] provider=BROWSER_USE id=4a0d5d75-2cd5-4e36-9d31-1e20f2f08e1a 134ms
+[Browser connected] 108ms
+[Page loaded] 71ms
+[Session released] 7ms
+[RUN] 21/100 (c=1)
+[Session created] provider=BROWSER_USE id=e075e496-9054-42fd-9b56-baeefca8ea6a 140ms
+[Browser connected] 79ms
+[Page loaded] 70ms
+[Session released] 24ms
+[RUN] 22/100 (c=1)
+[Session created] provider=BROWSER_USE id=e116623b-825a-49e1-838f-531b2befd606 112ms
+[Browser connected] 127ms
+[Page loaded] 92ms
+[Session released] 12ms
+[RUN] 23/100 (c=1)
+[Session created] provider=BROWSER_USE id=ac8df303-0eea-43dc-9b29-0f080e9cdf2e 150ms
+[Browser connected] 103ms
+[Page loaded] 75ms
+[Session released] 19ms
+[RUN] 24/100 (c=1)
+[Session created] provider=BROWSER_USE id=4ff2ba04-2242-49d3-9c5c-7edc2a98baa1 133ms
+[Browser connected] 99ms
+[Page loaded] 70ms
+[Session released] 20ms
+[RUN] 25/100 (c=1)
+[Session created] provider=BROWSER_USE id=b3212610-f8e1-42a1-993f-9a625087bc66 134ms
+[Browser connected] 92ms
+[Page loaded] 65ms
+[Session released] 9ms
+[RUN] 26/100 (c=1)
+[Session created] provider=BROWSER_USE id=6e49e630-03f0-4537-8375-32a04e735682 134ms
+[Browser connected] 98ms
+[Page loaded] 87ms
+[Session released] 8ms
+[RUN] 27/100 (c=1)
+[Session created] provider=BROWSER_USE id=a5618540-bf24-4e90-a05f-7f8ccaeef103 138ms
+[Browser connected] 82ms
+[Page loaded] 126ms
+[Session released] 7ms
+[RUN] 28/100 (c=1)
+[Session created] provider=BROWSER_USE id=eb781ffa-d17a-4f0c-8580-a2cc0ff7d450 140ms
+[Browser connected] 95ms
+[Page loaded] 63ms
+[Session released] 12ms
+[RUN] 29/100 (c=1)
+[Session created] provider=BROWSER_USE id=3d806329-0406-4e0e-9607-e8a2550994db 129ms
+[Browser connected] 102ms
+[Page loaded] 100ms
+[Session released] 6ms
+[RUN] 30/100 (c=1)
+[Session created] provider=BROWSER_USE id=db1157c1-5042-44c9-a631-ab68ec632fc5 135ms
+[Browser connected] 76ms
+[Page loaded] 72ms
+[Session released] 9ms
+[RUN] 31/100 (c=1)
+[Session created] provider=BROWSER_USE id=81d42fff-b4b9-45c7-b0b1-ce024fdae27e 127ms
+[Browser connected] 113ms
+[Page loaded] 110ms
+[Session released] 19ms
+[RUN] 32/100 (c=1)
+[Session created] provider=BROWSER_USE id=b5db7db4-22ca-4143-84dd-b35cf4e7c5c1 127ms
+[Browser connected] 111ms
+[Page loaded] 78ms
+[Session released] 8ms
+[RUN] 33/100 (c=1)
+[Session created] provider=BROWSER_USE id=e93511e6-dbba-48aa-8061-4fcc5ce5dd93 127ms
+[Browser connected] 82ms
+[Page loaded] 68ms
+[Session released] 9ms
+[RUN] 34/100 (c=1)
+[Session created] provider=BROWSER_USE id=05fe126b-22a9-42b4-a01f-424edcaafb6e 139ms
+[Browser connected] 96ms
+[Page loaded] 83ms
+[Session released] 24ms
+[RUN] 35/100 (c=1)
+[Session created] provider=BROWSER_USE id=49be40fd-5f0b-49b1-96c8-7919768efad8 159ms
+[Browser connected] 99ms
+[Page loaded] 75ms
+[Session released] 11ms
+[RUN] 36/100 (c=1)
+[Session created] provider=BROWSER_USE id=1413ae9e-f564-4562-87db-aa1729d188b9 142ms
+[Browser connected] 104ms
+[Page loaded] 68ms
+[Session released] 7ms
+[RUN] 37/100 (c=1)
+[Session created] provider=BROWSER_USE id=6ff08bca-434d-4f7c-9f90-e0f6b2ba9149 141ms
+[Browser connected] 114ms
+[Page loaded] 71ms
+[Session released] 14ms
+[RUN] 38/100 (c=1)
+[Session created] provider=BROWSER_USE id=6027360d-3b1a-434b-977c-1d5328d896ae 124ms
+[Browser connected] 107ms
+[Page loaded] 77ms
+[Session released] 8ms
+[RUN] 39/100 (c=1)
+[Session created] provider=BROWSER_USE id=d2a104b0-d13f-4e32-beb0-d60d87762d26 147ms
+[Browser connected] 88ms
+[Page loaded] 94ms
+[Session released] 10ms
+[RUN] 40/100 (c=1)
+[Session created] provider=BROWSER_USE id=dad37165-9c46-4135-8f96-7a3a527ba8d2 142ms
+[Browser connected] 96ms
+[Page loaded] 65ms
+[Session released] 10ms
+[RUN] 41/100 (c=1)
+[Session created] provider=BROWSER_USE id=506fccc4-e355-4b0e-ab86-d4384d92e54d 186ms
+[Browser connected] 103ms
+[Page loaded] 74ms
+[Session released] 22ms
+[RUN] 42/100 (c=1)
+[Session created] provider=BROWSER_USE id=5b04925b-4432-445d-a7b1-fae0a1f7c0be 133ms
+[Browser connected] 114ms
+[Page loaded] 77ms
+[Session released] 8ms
+[RUN] 43/100 (c=1)
+[Session created] provider=BROWSER_USE id=7ae1edfc-cd4a-4d88-b9a9-5682f4d60110 135ms
+[Browser connected] 88ms
+[Page loaded] 101ms
+[Session released] 9ms
+[RUN] 44/100 (c=1)
+[Session created] provider=BROWSER_USE id=1f287549-df5f-4afa-8c39-b3502d261ac7 146ms
+[Browser connected] 87ms
+[Page loaded] 73ms
+[Session released] 20ms
+[RUN] 45/100 (c=1)
+[Session created] provider=BROWSER_USE id=f91c0adf-1a12-469c-bc73-4c223cca2b7d 141ms
+[Browser connected] 87ms
+[Page loaded] 65ms
+[Session released] 18ms
+[RUN] 46/100 (c=1)
+[Session created] provider=BROWSER_USE id=1f6a8f6e-0ef6-4b19-97d9-ac8501bf205f 143ms
+[Browser connected] 79ms
+[Page loaded] 88ms
+[Session released] 21ms
+[RUN] 47/100 (c=1)
+[Session created] provider=BROWSER_USE id=1ce274ae-93e8-4ed1-8a62-68e367bdacfe 138ms
+[Browser connected] 85ms
+[Page loaded] 75ms
+[Session released] 9ms
+[RUN] 48/100 (c=1)
+[Session created] provider=BROWSER_USE id=12b0c5c1-52bd-4d04-94a1-2b60995b8681 129ms
+[Browser connected] 131ms
+[Page loaded] 69ms
+[Session released] 7ms
+[RUN] 49/100 (c=1)
+[Session created] provider=BROWSER_USE id=040c29f3-8d5d-472a-ab4f-b611fa5e6e42 130ms
+[Browser connected] 85ms
+[Page loaded] 89ms
+[Session released] 9ms
+[RUN] 50/100 (c=1)
+[Session created] provider=BROWSER_USE id=21d95217-6ff9-4b1e-9089-2c0a6ab4d5de 171ms
+[Browser connected] 108ms
+[Page loaded] 72ms
+[Session released] 8ms
+[RUN] 51/100 (c=1)
+[Session created] provider=BROWSER_USE id=8a24c17a-9054-47ed-8f67-1473e8658f44 138ms
+[Browser connected] 105ms
+[Page loaded] 64ms
+[Session released] 10ms
+[RUN] 52/100 (c=1)
+[Session created] provider=BROWSER_USE id=bd998c39-ee77-4be5-8514-c9c0ddd3ce83 115ms
+[Browser connected] 89ms
+[Page loaded] 91ms
+[Session released] 9ms
+[RUN] 53/100 (c=1)
+[Session created] provider=BROWSER_USE id=49464d72-facc-40e5-87fc-b22be348bc25 176ms
+[Browser connected] 88ms
+[Page loaded] 74ms
+[Session released] 10ms
+[RUN] 54/100 (c=1)
+[Session created] provider=BROWSER_USE id=73a48696-85b8-476a-95b0-e8d4728c30a1 173ms
+[Browser connected] 111ms
+[Page loaded] 71ms
+[Session released] 18ms
+[RUN] 55/100 (c=1)
+[Session created] provider=BROWSER_USE id=01df938c-e685-4b01-91ec-2a3510539acb 129ms
+[Browser connected] 82ms
+[Page loaded] 85ms
+[Session released] 6ms
+[RUN] 56/100 (c=1)
+[Session created] provider=BROWSER_USE id=32029259-9f34-49fd-b65b-8c4cf3642101 154ms
+[Browser connected] 114ms
+[Page loaded] 79ms
+[Session released] 21ms
+[RUN] 57/100 (c=1)
+[Session created] provider=BROWSER_USE id=e52cf3da-3f58-402d-ab5b-83f42aed5983 133ms
+[Browser connected] 116ms
+[Page loaded] 67ms
+[Session released] 8ms
+[RUN] 58/100 (c=1)
+[Session created] provider=BROWSER_USE id=44562b58-a63b-4009-8bb1-a8070bfd9af1 148ms
+[Browser connected] 85ms
+[Page loaded] 80ms
+[Session released] 20ms
+[RUN] 59/100 (c=1)
+[Session created] provider=BROWSER_USE id=b94bd0f7-c166-4189-8c2b-3f38c86aff7d 143ms
+[Browser connected] 100ms
+[Page loaded] 60ms
+[Session released] 20ms
+[RUN] 60/100 (c=1)
+[Session created] provider=BROWSER_USE id=6e84aa77-8919-4df2-baa9-0d509371256f 130ms
+[Browser connected] 78ms
+[Page loaded] 71ms
+[Session released] 20ms
+[RUN] 61/100 (c=1)
+[Session created] provider=BROWSER_USE id=397d892c-3712-448f-ab39-0b22ed71c5f2 127ms
+[Browser connected] 92ms
+[Page loaded] 60ms
+[Session released] 23ms
+[RUN] 62/100 (c=1)
+[Session created] provider=BROWSER_USE id=e86b5900-584a-4fa6-89a4-4f7e0fac93f7 144ms
+[Browser connected] 112ms
+[Page loaded] 110ms
+[Session released] 10ms
+[RUN] 63/100 (c=1)
+[Session created] provider=BROWSER_USE id=5ff2b630-aa49-49fd-84aa-58291f809d2f 139ms
+[Browser connected] 98ms
+[Page loaded] 110ms
+[Session released] 20ms
+[RUN] 64/100 (c=1)
+[Session created] provider=BROWSER_USE id=0d8703ff-785f-4d50-b719-58c00c07b58a 129ms
+[Browser connected] 90ms
+[Page loaded] 89ms
+[Session released] 20ms
+[RUN] 65/100 (c=1)
+[Session created] provider=BROWSER_USE id=9ba7c477-ee41-48ab-87e9-7fd7d42003cd 151ms
+[Browser connected] 92ms
+[Page loaded] 80ms
+[Session released] 24ms
+[RUN] 66/100 (c=1)
+[Session created] provider=BROWSER_USE id=eb225f42-8fda-4526-a3f2-b5e84613e848 151ms
+[Browser connected] 96ms
+[Page loaded] 56ms
+[Session released] 20ms
+[RUN] 67/100 (c=1)
+[Session created] provider=BROWSER_USE id=6dcd1f6b-96f7-4189-a75f-a7ce0f43472f 125ms
+[Browser connected] 107ms
+[Page loaded] 135ms
+[Session released] 21ms
+[RUN] 68/100 (c=1)
+[Session created] provider=BROWSER_USE id=b668b9b0-24f3-4003-b114-f82cf1d8338b 149ms
+[Browser connected] 94ms
+[Page loaded] 106ms
+[Session released] 20ms
+[RUN] 69/100 (c=1)
+[Session created] provider=BROWSER_USE id=1551cd46-bdf1-4286-bf69-590abd650643 163ms
+[Browser connected] 96ms
+[Page loaded] 59ms
+[Session released] 20ms
+[RUN] 70/100 (c=1)
+[Session created] provider=BROWSER_USE id=e7c493be-85dc-4608-a9b4-e6dca790254b 131ms
+[Browser connected] 115ms
+[Page loaded] 83ms
+[Session released] 8ms
+[RUN] 71/100 (c=1)
+[Session created] provider=BROWSER_USE id=a2d45dd9-c3c3-470c-a7ff-3e9f4220e8ae 149ms
+[Browser connected] 85ms
+[Page loaded] 71ms
+[Session released] 19ms
+[RUN] 72/100 (c=1)
+[Session created] provider=BROWSER_USE id=e5729627-72c4-45b4-93c0-109db69d82d6 131ms
+[Browser connected] 105ms
+[Page loaded] 69ms
+[Session released] 18ms
+[RUN] 73/100 (c=1)
+[Session created] provider=BROWSER_USE id=79aa65fe-0272-4f11-87de-ee7e14a0cd9b 140ms
+[Browser connected] 91ms
+[Page loaded] 72ms
+[Session released] 33ms
+[RUN] 74/100 (c=1)
+[Session created] provider=BROWSER_USE id=5dbf4518-bd2c-4ea0-88c3-17e12a071131 130ms
+[Browser connected] 87ms
+[Page loaded] 70ms
+[Session released] 8ms
+[RUN] 75/100 (c=1)
+[Session created] provider=BROWSER_USE id=fbda6d53-1ace-4133-bb33-c549c350d13f 157ms
+[Browser connected] 95ms
+[Page loaded] 59ms
+[Session released] 10ms
+[RUN] 76/100 (c=1)
+[Session created] provider=BROWSER_USE id=de46d885-7024-482b-a7bb-2b4186f76a12 126ms
+[Browser connected] 105ms
+[Page loaded] 118ms
+[Session released] 19ms
+[RUN] 77/100 (c=1)
+[Session created] provider=BROWSER_USE id=75b3b4b8-dcd2-4d15-8021-15142d593a43 129ms
+[Browser connected] 94ms
+[Page loaded] 71ms
+[Session released] 20ms
+[RUN] 78/100 (c=1)
+[Session created] provider=BROWSER_USE id=9f8eb27f-f75c-4646-b934-2fdf85c80cc9 129ms
+[Browser connected] 95ms
+[Page loaded] 83ms
+[Session released] 7ms
+[RUN] 79/100 (c=1)
+[Session created] provider=BROWSER_USE id=576acd67-c29f-4002-ac73-49eceb207950 129ms
+[Browser connected] 107ms
+[Page loaded] 83ms
+[Session released] 10ms
+[RUN] 80/100 (c=1)
+[Session created] provider=BROWSER_USE id=083675c1-abb0-4d20-bb38-5905521ccafb 140ms
+[Browser connected] 100ms
+[Page loaded] 91ms
+[Session released] 11ms
+[RUN] 81/100 (c=1)
+[Session created] provider=BROWSER_USE id=13a8eafe-a187-40a2-94cb-d437cc91fcb8 137ms
+[Browser connected] 111ms
+[Page loaded] 100ms
+[Session released] 23ms
+[RUN] 82/100 (c=1)
+[Session created] provider=BROWSER_USE id=a83f6de2-4f54-402b-ad41-9e37d130acec 145ms
+[Browser connected] 89ms
+[Page loaded] 82ms
+[Session released] 21ms
+[RUN] 83/100 (c=1)
+[Session created] provider=BROWSER_USE id=6593b0d9-652f-4483-85e0-829dbbd22b8e 162ms
+[Browser connected] 71ms
+[Page loaded] 93ms
+[Session released] 19ms
+[RUN] 84/100 (c=1)
+[Session created] provider=BROWSER_USE id=adbe0fda-c8e8-4b11-9ef8-6e5d4cb89072 190ms
+[Browser connected] 82ms
+[Page loaded] 72ms
+[Session released] 24ms
+[RUN] 85/100 (c=1)
+[Session created] provider=BROWSER_USE id=735d1238-cba3-4f95-b19f-abdf63a2adda 135ms
+[Browser connected] 103ms
+[Page loaded] 73ms
+[Session released] 8ms
+[RUN] 86/100 (c=1)
+[Session created] provider=BROWSER_USE id=e021f29a-3368-4047-b089-2f96ba84b586 140ms
+[Browser connected] 104ms
+[Page loaded] 76ms
+[Session released] 9ms
+[RUN] 87/100 (c=1)
+[Session created] provider=BROWSER_USE id=5c06fd4e-11cc-4860-b542-c26712643aa3 144ms
+[Browser connected] 107ms
+[Page loaded] 119ms
+[Session released] 9ms
+[RUN] 88/100 (c=1)
+[Session created] provider=BROWSER_USE id=6f74f463-a668-4e03-b7f7-20d56230222f 150ms
+[Browser connected] 92ms
+[Page loaded] 81ms
+[Session released] 54ms
+[RUN] 89/100 (c=1)
+[Session created] provider=BROWSER_USE id=9f218a9d-881c-4bd9-82e1-c46572606f01 158ms
+[Browser connected] 82ms
+[Page loaded] 79ms
+[Session released] 21ms
+[RUN] 90/100 (c=1)
+[Session created] provider=BROWSER_USE id=51fd98b0-c4ec-41c9-adca-111106502e76 141ms
+[Browser connected] 112ms
+[Page loaded] 83ms
+[Session released] 19ms
+[RUN] 91/100 (c=1)
+[Session created] provider=BROWSER_USE id=a8b89543-ca71-44a6-b81b-eedf094071d1 149ms
+[Browser connected] 109ms
+[Page loaded] 72ms
+[Session released] 10ms
+[RUN] 92/100 (c=1)
+[Session created] provider=BROWSER_USE id=0c0b9928-f367-4340-926d-71bb21366d99 124ms
+[Browser connected] 116ms
+[Page loaded] 71ms
+[Session released] 9ms
+[RUN] 93/100 (c=1)
+[Session created] provider=BROWSER_USE id=21a8440e-2eae-4ebd-b125-caa211a02802 161ms
+[Browser connected] 112ms
+[Page loaded] 115ms
+[Session released] 20ms
+[RUN] 94/100 (c=1)
+[Session created] provider=BROWSER_USE id=2b9de5d3-94eb-489c-a046-cb7154b08971 142ms
+[Browser connected] 98ms
+[Page loaded] 90ms
+[Session released] 24ms
+[RUN] 95/100 (c=1)
+[Session created] provider=BROWSER_USE id=fcaddfe2-723b-414e-98de-43c2417bbb3c 124ms
+[Browser connected] 77ms
+[Page loaded] 96ms
+[Session released] 20ms
+[RUN] 96/100 (c=1)
+[Session created] provider=BROWSER_USE id=6f619574-a298-4efa-bc00-43e964c34964 142ms
+[Browser connected] 110ms
+[Page loaded] 111ms
+[Session released] 19ms
+[RUN] 97/100 (c=1)
+[Session created] provider=BROWSER_USE id=33d4c2d9-928b-4b15-b09b-96e89e693912 161ms
+[Browser connected] 86ms
+[Page loaded] 74ms
+[Session released] 30ms
+[RUN] 98/100 (c=1)
+[Session created] provider=BROWSER_USE id=a4e0e396-d967-4f43-8135-f446e2d1e74d 272ms
+[Browser connected] 37ms
+[Page loaded] 65ms
+[Session released] 20ms
+[RUN] 99/100 (c=1)
+[Session created] provider=BROWSER_USE id=d31c764a-1598-4dd6-942d-86294b529ccc 150ms
+[Browser connected] 96ms
+[Page loaded] 64ms
+[Session released] 7ms
+[RUN] 100/100 (c=1)
+[Session created] provider=BROWSER_USE id=48e78861-aa08-46e5-938c-5c3d3cf4222c 125ms
+[Browser connected] 105ms
+[Page loaded] 67ms
+[Session released] 19ms
+[DONE] c=1 success=100 failure=0
+
+[CONFIG] provider=BROWSER_USE concurrency=10 runs=10
+[WARMUP] 1/10
+[Session created] provider=BROWSER_USE id=5331d846-412f-4540-952e-ebf32f53d087 143ms
+[Browser connected] 81ms
+[Page loaded] 69ms
+[Session released] 21ms
+[WARMUP] 2/10
+[Session created] provider=BROWSER_USE id=26f0f669-67a3-4c21-811b-03b0a3bb9681 144ms
+[Browser connected] 113ms
+[Page loaded] 88ms
+[Session released] 19ms
+[WARMUP] 3/10
+[Session created] provider=BROWSER_USE id=be0bc121-8d01-4bd2-96b7-d9d31d7face5 131ms
+[Browser connected] 113ms
+[Page loaded] 70ms
+[Session released] 8ms
+[WARMUP] 4/10
+[Session created] provider=BROWSER_USE id=a428e428-f484-400e-b3d6-48b75e44fc78 215ms
+[Browser connected] 101ms
+[Page loaded] 108ms
+[Session released] 20ms
+[WARMUP] 5/10
+[Session created] provider=BROWSER_USE id=30ed26fc-4673-4cce-ba4d-58b940326d04 149ms
+[Browser connected] 98ms
+[Page loaded] 116ms
+[Session released] 8ms
+[WARMUP] 6/10
+[Session created] provider=BROWSER_USE id=f3842da2-ac20-448e-9931-4e0b073cd527 127ms
+[Browser connected] 83ms
+[Page loaded] 120ms
+[Session released] 8ms
+[WARMUP] 7/10
+[Session created] provider=BROWSER_USE id=7835e07e-add6-4e5b-9112-d545fee256e6 137ms
+[Browser connected] 109ms
+[Page loaded] 112ms
+[Session released] 10ms
+[WARMUP] 8/10
+[Session created] provider=BROWSER_USE id=c0919144-a3a8-423a-85e8-397456e0ae1a 125ms
+[Browser connected] 101ms
+[Page loaded] 69ms
+[Session released] 8ms
+[WARMUP] 9/10
+[Session created] provider=BROWSER_USE id=c502eacb-77e5-4547-85b8-0ba65625164c 143ms
+[Browser connected] 94ms
+[Page loaded] 56ms
+[Session released] 19ms
+[WARMUP] 10/10
+[Session created] provider=BROWSER_USE id=220b1a02-d37e-4ca1-80b1-5e030d28e96d 147ms
+[Browser connected] 91ms
+[Page loaded] 82ms
+[Session released] 19ms
+[RUN] 1/10 (c=10)
+[Session created] provider=BROWSER_USE id=1b806e8a-bc28-43be-8c87-9bf13f703b02 146ms
+[Session created] provider=BROWSER_USE id=ece96d32-1ad2-426b-bc8f-f84a17e333a8 153ms
+[Session created] provider=BROWSER_USE id=9ca1b254-c4df-4942-a5d1-d69a5b18898e 153ms
+[Session created] provider=BROWSER_USE id=36330b58-7624-4a9a-8519-5bbb9f53dbf6 156ms
+[Session created] provider=BROWSER_USE id=185d6779-009d-4d53-84fe-2fead22d2165 159ms
+[Session created] provider=BROWSER_USE id=1f637a56-8361-49d8-be69-beb4e7b53b1a 159ms
+[Session created] provider=BROWSER_USE id=7c0c03f1-02cd-4e50-851b-ffac56072d54 161ms
+[Session created] provider=BROWSER_USE id=68ae1bd3-961b-4bab-bfe9-9b46bbe7a776 165ms
+[Session created] provider=BROWSER_USE id=439b1d11-d9c8-40ee-a7e8-c87453fa7618 164ms
+[Session created] provider=BROWSER_USE id=8f000760-c455-425a-9926-5ace34f5005f 168ms
+[Browser connected] 85ms
+[Browser connected] 88ms
+[Browser connected] 83ms
+[Browser connected] 98ms
+[Browser connected] 89ms
+[Browser connected] 93ms
+[Browser connected] 108ms
+[Browser connected] 103ms
+[Browser connected] 104ms
+[Browser connected] 110ms
+[Page loaded] 65ms
+[Page loaded] 77ms
+[Session released] 16ms
+[Page loaded] 78ms
+[Page loaded] 67ms
+[Page loaded] 64ms
+[Page loaded] 93ms
+[Page loaded] 101ms
+[Session released] 11ms
+[Page loaded] 81ms
+[Session released] 22ms
+[Session released] 19ms
+[Page loaded] 73ms
+[Session released] 15ms
+[Session released] 10ms
+[Session released] 20ms
+[Session released] 9ms
+[Session released] 19ms
+[Page loaded] 103ms
+[Session released] 19ms
+[RUN] 2/10 (c=10)
+[Session created] provider=BROWSER_USE id=23526639-a5ae-4481-b38d-27fc20db4c4c 123ms
+[Session created] provider=BROWSER_USE id=d8fa2d00-1a3a-44d2-8e7e-b3ff9c47a3e1 126ms
+[Session created] provider=BROWSER_USE id=77c3e84c-4d44-4d7b-8cdf-20a76407c15f 128ms
+[Session created] provider=BROWSER_USE id=5ffb7b4a-53b8-4ca1-98e7-b63f1166bf0a 130ms
+[Session created] provider=BROWSER_USE id=ac980657-98d2-4733-8a35-27f750ecc01d 130ms
+[Session created] provider=BROWSER_USE id=aae07596-a532-4af5-b00a-33212db7cc69 135ms
+[Session created] provider=BROWSER_USE id=09ea058c-5cf8-4694-9dc4-7e28e00e53fe 139ms
+[Session created] provider=BROWSER_USE id=c3395c2c-470e-42bf-ba5b-292d0bbf724f 144ms
+[Session created] provider=BROWSER_USE id=cdade251-bf3d-43ee-b38b-459d0a5d45c2 149ms
+[Session created] provider=BROWSER_USE id=a60d8b67-7190-4c36-9e10-94713d6af9b6 151ms
+[Browser connected] 67ms
+[Browser connected] 87ms
+[Browser connected] 88ms
+[Browser connected] 113ms
+[Browser connected] 118ms
+[Browser connected] 123ms
+[Browser connected] 118ms
+[Browser connected] 122ms
+[Browser connected] 103ms
+[Browser connected] 107ms
+[Page loaded] 70ms
+[Page loaded] 56ms
+[Session released] 9ms
+[Page loaded] 74ms
+[Session released] 18ms
+[Page loaded] 59ms
+[Session released] 9ms
+[Page loaded] 68ms
+[Page loaded] 80ms
+[Session released] 26ms
+[Page loaded] 93ms
+[Session released] 29ms
+[Page loaded] 99ms
+[Page loaded] 89ms
+[Session released] 24ms
+[Session released] 20ms
+[Page loaded] 106ms
+[Session released] 22ms
+[Session released] 26ms
+[Session released] 17ms
+[RUN] 3/10 (c=10)
+[Session created] provider=BROWSER_USE id=d9d0be50-18a3-40f5-851f-cd93e2a7da70 126ms
+[Session created] provider=BROWSER_USE id=ff22478d-3b90-4362-bfa7-e9768d9b174a 130ms
+[Session created] provider=BROWSER_USE id=1c1a9f04-d954-487e-83c0-ffc83ef2ae56 131ms
+[Session created] provider=BROWSER_USE id=b54b9517-07cf-477b-8fcb-80e67805eb76 136ms
+[Session created] provider=BROWSER_USE id=f7130f03-5735-450e-8ab3-ae503f30db08 137ms
+[Session created] provider=BROWSER_USE id=fd9feb52-7874-4ea2-a408-0a2e523b24d0 137ms
+[Session created] provider=BROWSER_USE id=65fc65f9-b062-4d22-b42b-67dea223ba40 145ms
+[Session created] provider=BROWSER_USE id=2501cc13-4b14-43f5-9ffa-f5901619b3b9 144ms
+[Session created] provider=BROWSER_USE id=57af45d8-8cac-48b4-8adf-778387c46446 150ms
+[Session created] provider=BROWSER_USE id=bc7ccaec-7e0d-47a9-b9bb-5fa03012280f 155ms
+[Browser connected] 83ms
+[Browser connected] 90ms
+[Browser connected] 84ms
+[Browser connected] 86ms
+[Browser connected] 93ms
+[Browser connected] 81ms
+[Browser connected] 90ms
+[Browser connected] 107ms
+[Browser connected] 109ms
+[Browser connected] 106ms
+[Page loaded] 65ms
+[Page loaded] 73ms
+[Page loaded] 69ms
+[Page loaded] 80ms
+[Session released] 19ms
+[Session released] 10ms
+[Session released] 10ms
+[Page loaded] 71ms
+[Page loaded] 71ms
+[Session released] 20ms
+[Page loaded] 85ms
+[Session released] 12ms
+[Page loaded] 66ms
+[Session released] 18ms
+[Session released] 21ms
+[Page loaded] 79ms
+[Session released] 10ms
+[Session released] 9ms
+[Page loaded] 117ms
+[Session released] 26ms
+[RUN] 4/10 (c=10)
+[Session created] provider=BROWSER_USE id=02d2b361-13ff-4e3e-9ae0-c7a529aa42a3 124ms
+[Session created] provider=BROWSER_USE id=7522767e-83df-44a2-b24c-5517b7f6a809 125ms
+[Session created] provider=BROWSER_USE id=281344f5-8c6c-4e3e-9dd7-d251801890a0 134ms
+[Session created] provider=BROWSER_USE id=131e699f-4dba-4f9b-9e1d-a293c3d1814a 137ms
+[Session created] provider=BROWSER_USE id=6ee57c86-e5e9-4b97-b05b-8d62a719cce8 144ms
+[Session created] provider=BROWSER_USE id=cf6cf9c0-5409-42a7-84c7-3a774b02de21 147ms
+[Session created] provider=BROWSER_USE id=ebbae539-3b9e-4e19-90d3-64874413c4ca 149ms
+[Session created] provider=BROWSER_USE id=fdae0378-3254-4637-8746-58d60aa51d54 150ms
+[Session created] provider=BROWSER_USE id=7aae190f-6b45-478a-9c1c-fed306428b33 152ms
+[Session created] provider=BROWSER_USE id=15ffdb91-f0d6-44fd-a850-34241cb2b876 152ms
+[Browser connected] 84ms
+[Browser connected] 77ms
+[Browser connected] 79ms
+[Browser connected] 108ms
+[Browser connected] 108ms
+[Browser connected] 97ms
+[Browser connected] 90ms
+[Browser connected] 92ms
+[Browser connected] 96ms
+[Browser connected] 115ms
+[Page loaded] 61ms
+[Page loaded] 66ms
+[Page loaded] 82ms
+[Page loaded] 63ms
+[Page loaded] 67ms
+[Page loaded] 73ms
+[Page loaded] 66ms
+[Session released] 8ms
+[Session released] 11ms
+[Session released] 19ms
+[Session released] 10ms
+[Page loaded] 68ms
+[Session released] 18ms
+[Page loaded] 99ms
+[Session released] 18ms
+[Session released] 9ms
+[Session released] 19ms
+[Session released] 20ms
+[Page loaded] 79ms
+[Session released] 21ms
+[RUN] 5/10 (c=10)
+[Session created] provider=BROWSER_USE id=bc47fcfa-a7fa-419a-bc03-dcee466b5659 116ms
+[Session created] provider=BROWSER_USE id=7046289a-b1cc-4fa6-9a07-bbd40166e6d5 121ms
+[Session created] provider=BROWSER_USE id=0dc3e5ed-7a4f-40c5-b336-d87a25b7e661 126ms
+[Session created] provider=BROWSER_USE id=4a945828-f0f1-4af4-b7dd-5b039432d442 128ms
+[Session created] provider=BROWSER_USE id=041dc2f0-ae60-4089-a06b-1eff7177f607 131ms
+[Session created] provider=BROWSER_USE id=50473b41-b60a-479b-8cce-3036fab191b5 135ms
+[Session created] provider=BROWSER_USE id=8990fe2b-346f-4de0-9242-3e00c0bc1dda 138ms
+[Session created] provider=BROWSER_USE id=c4fc5056-02a5-4648-a3bf-6f4503759958 146ms
+[Session created] provider=BROWSER_USE id=3c1211ea-fa54-4756-9ca0-5274922fa046 152ms
+[Session created] provider=BROWSER_USE id=bef0c8fb-bd96-4cc0-ab9c-14ba0d428bdb 154ms
+[Browser connected] 80ms
+[Browser connected] 83ms
+[Browser connected] 81ms
+[Browser connected] 77ms
+[Browser connected] 124ms
+[Browser connected] 99ms
+[Browser connected] 90ms
+[Browser connected] 121ms
+[Browser connected] 109ms
+[Page loaded] 63ms
+[Browser connected] 151ms
+[Page loaded] 65ms
+[Page loaded] 83ms
+[Session released] 22ms
+[Session released] 20ms
+[Session released] 19ms
+[Page loaded] 96ms
+[Page loaded] 68ms
+[Session released] 12ms
+[Page loaded] 75ms
+[Session released] 10ms
+[Page loaded] 70ms
+[Session released] 29ms
+[Page loaded] 74ms
+[Page loaded] 101ms
+[Page loaded] 120ms
+[Session released] 34ms
+[Session released] 13ms
+[Session released] 22ms
+[Session released] 21ms
+[RUN] 6/10 (c=10)
+[Session created] provider=BROWSER_USE id=4238bbee-4058-4b74-b2d1-a2e64189d7eb 120ms
+[Session created] provider=BROWSER_USE id=4f0511b4-c92b-4c16-b5b1-2e297111441d 122ms
+[Session created] provider=BROWSER_USE id=f2500f82-44a4-48d9-858f-525cd9be6a44 123ms
+[Session created] provider=BROWSER_USE id=f7d95e43-15da-45fb-8d24-9bebb250fec3 125ms
+[Session created] provider=BROWSER_USE id=e383d5ad-784f-4727-9d5a-ac0f80222d6e 127ms
+[Session created] provider=BROWSER_USE id=d32a41fb-cf74-4625-9bbb-4621f020fdca 131ms
+[Session created] provider=BROWSER_USE id=0e85a3d0-4769-4ff8-ac6b-d4a76a7b0294 134ms
+[Session created] provider=BROWSER_USE id=07d92237-88e0-4e1e-a8bb-843f38ed4eea 135ms
+[Session created] provider=BROWSER_USE id=b6ca5fbd-36de-4c2e-a927-1b4c41fad739 138ms
+[Session created] provider=BROWSER_USE id=a49e86db-40f7-4fd6-a554-6c7f467bb5ba 142ms
+[Browser connected] 92ms
+[Browser connected] 81ms
+[Browser connected] 80ms
+[Browser connected] 93ms
+[Browser connected] 102ms
+[Browser connected] 111ms
+[Browser connected] 99ms
+[Browser connected] 96ms
+[Browser connected] 127ms
+[Browser connected] 122ms
+[Page loaded] 63ms
+[Page loaded] 72ms
+[Page loaded] 70ms
+[Page loaded] 74ms
+[Page loaded] 72ms
+[Session released] 9ms
+[Page loaded] 67ms
+[Page loaded] 71ms
+[Session released] 18ms
+[Session released] 29ms
+[Page loaded] 86ms
+[Page loaded] 73ms
+[Session released] 37ms
+[Session released] 45ms
+[Session released] 22ms
+[Session released] 58ms
+[Page loaded] 100ms
+[Session released] 55ms
+[Session released] 12ms
+[Session released] 54ms
+[RUN] 7/10 (c=10)
+[Session created] provider=BROWSER_USE id=da43b8cc-663d-4034-918c-e13af663a087 132ms
+[Session created] provider=BROWSER_USE id=4ea4392e-9459-4319-a1b7-ea72d05a5cd0 134ms
+[Session created] provider=BROWSER_USE id=080d4f15-5a13-4807-a20b-345a65b708e2 138ms
+[Session created] provider=BROWSER_USE id=649b651f-b310-4f2e-9826-213589aaf086 147ms
+[Session created] provider=BROWSER_USE id=11b0ffd3-aa19-45ba-9ab0-3d024013a9a1 163ms
+[Session created] provider=BROWSER_USE id=59cf33a3-d8b4-458e-82ee-f09707b0cfac 166ms
+[Session created] provider=BROWSER_USE id=725f9c2d-2c58-4842-8656-344374a5e158 177ms
+[Session created] provider=BROWSER_USE id=53d02422-4c67-4eb8-bf85-de9cbab86b55 193ms
+[Session created] provider=BROWSER_USE id=5b8bdb22-5454-47b6-bdf2-6ac2605b5d2f 218ms
+[Session created] provider=BROWSER_USE id=b7147ef9-c815-4052-860e-c7841424daa9 223ms
+[Browser connected] 89ms
+[Browser connected] 104ms
+[Browser connected] 106ms
+[Browser connected] 83ms
+[Browser connected] 105ms
+[Browser connected] 78ms
+[Browser connected] 99ms
+[Browser connected] 74ms
+[Browser connected] 79ms
+[Page loaded] 83ms
+[Browser connected] 122ms
+[Page loaded] 80ms
+[Session released] 12ms
+[Page loaded] 74ms
+[Page loaded] 73ms
+[Page loaded] 82ms
+[Page loaded] 94ms
+[Page loaded] 75ms
+[Session released] 40ms
+[Session released] 39ms
+[Session released] 22ms
+[Session released] 20ms
+[Session released] 41ms
+[Session released] 40ms
+[Page loaded] 86ms
+[Page loaded] 78ms
+[Session released] 11ms
+[Page loaded] 105ms
+[Session released] 18ms
+[Session released] 22ms
+[RUN] 8/10 (c=10)
+[Session created] provider=BROWSER_USE id=ec037a22-9af3-461a-af6e-4f44e666152d 126ms
+[Session created] provider=BROWSER_USE id=6da7553a-5c2f-4e05-b14a-bceffedcf17e 127ms
+[Session created] provider=BROWSER_USE id=56622377-77be-4f5a-85d2-117709456726 129ms
+[Session created] provider=BROWSER_USE id=eacda49c-e4e1-4c32-addd-513e98beba67 141ms
+[Session created] provider=BROWSER_USE id=513c7151-3c74-493b-b61a-73b6f6ceacb5 142ms
+[Session created] provider=BROWSER_USE id=4b8bea9a-44fd-4b48-bd23-85f9bb489b41 144ms
+[Session created] provider=BROWSER_USE id=c7c409be-de56-4cab-9458-5ca25bde46bc 146ms
+[Session created] provider=BROWSER_USE id=3a0f1059-8144-4f41-afde-aea218ed2443 155ms
+[Session created] provider=BROWSER_USE id=60f8d826-f7ce-4b50-a4cc-41458ef68414 160ms
+[Session created] provider=BROWSER_USE id=0ac40603-e56c-432f-9d32-4929f8ed19f5 161ms
+[Browser connected] 81ms
+[Browser connected] 92ms
+[Browser connected] 97ms
+[Browser connected] 73ms
+[Browser connected] 97ms
+[Browser connected] 94ms
+[Browser connected] 97ms
+[Browser connected] 90ms
+[Browser connected] 106ms
+[Browser connected] 106ms
+[Page loaded] 73ms
+[Page loaded] 67ms
+[Session released] 13ms
+[Session released] 14ms
+[Page loaded] 72ms
+[Page loaded] 65ms
+[Page loaded] 65ms
+[Page loaded] 73ms
+[Page loaded] 75ms
+[Page loaded] 70ms
+[Session released] 18ms
+[Session released] 13ms
+[Session released] 25ms
+[Session released] 15ms
+[Session released] 21ms
+[Session released] 22ms
+[Page loaded] 88ms
+[Session released] 9ms
+[Page loaded] 127ms
+[Session released] 20ms
+[RUN] 9/10 (c=10)
+[Session created] provider=BROWSER_USE id=d4225413-cdb2-406d-8f11-53f3a39fbd17 123ms
+[Session created] provider=BROWSER_USE id=eda967c5-c4e9-4f84-ae53-de40a5dca486 129ms
+[Session created] provider=BROWSER_USE id=d5295b8a-ec20-4334-a91d-632ef2382a6f 130ms
+[Session created] provider=BROWSER_USE id=342eef5f-1308-4422-896a-d76882eac13c 137ms
+[Session created] provider=BROWSER_USE id=482605ac-895e-4d35-8890-d6c56eb2eecf 142ms
+[Session created] provider=BROWSER_USE id=cd4b852b-1b7e-4e9e-a1af-1d1b98054c41 143ms
+[Session created] provider=BROWSER_USE id=e0040a6c-6c16-4dc8-a74a-7125202f8291 152ms
+[Session created] provider=BROWSER_USE id=3a7a15c2-66a2-416e-992d-ed268a6b0f51 159ms
+[Session created] provider=BROWSER_USE id=79f16bbe-0455-4c4d-bc2e-6c18678d4e5a 184ms
+[Session created] provider=BROWSER_USE id=dca54da2-1882-48e9-9c96-41660bb0338b 200ms
+[Browser connected] 83ms
+[Browser connected] 95ms
+[Browser connected] 106ms
+[Browser connected] 87ms
+[Browser connected] 96ms
+[Browser connected] 89ms
+[Browser connected] 104ms
+[Browser connected] 97ms
+[Browser connected] 76ms
+[Browser connected] 72ms
+[Page loaded] 81ms
+[Page loaded] 70ms
+[Page loaded] 68ms
+[Session released] 10ms
+[Page loaded] 77ms
+[Page loaded] 67ms
+[Page loaded] 66ms
+[Session released] 24ms
+[Session released] 24ms
+[Session released] 16ms
+[Session released] 20ms
+[Session released] 24ms
+[Page loaded] 74ms
+[Page loaded] 119ms
+[Page loaded] 83ms
+[Session released] 28ms
+[Page loaded] 106ms
+[Session released] 27ms
+[Session released] 32ms
+[Session released] 27ms
+[RUN] 10/10 (c=10)
+[Session created] provider=BROWSER_USE id=cc6fb9d8-7bda-40f7-8ace-d80f2d045ce1 125ms
+[Session created] provider=BROWSER_USE id=f845f476-22c5-4327-9530-a0f905c7a0a1 132ms
+[Session created] provider=BROWSER_USE id=b6a342f3-3b4a-4374-9754-e467a9e4d5e4 134ms
+[Session created] provider=BROWSER_USE id=276f00b8-192f-4eed-847a-6cfb9d76b652 138ms
+[Session created] provider=BROWSER_USE id=0b677b06-05ca-4e86-8d99-a16369d15680 139ms
+[Session created] provider=BROWSER_USE id=5acf0150-5dfd-40e6-9ea8-7a2be173af48 145ms
+[Session created] provider=BROWSER_USE id=8800632b-c670-4c8e-a727-638aeafb6340 145ms
+[Session created] provider=BROWSER_USE id=1af87a10-2f46-492a-9db4-268d7aeda6f9 149ms
+[Session created] provider=BROWSER_USE id=81545e5d-f4c0-469c-9a0b-08e6afd2f832 153ms
+[Session created] provider=BROWSER_USE id=501c7100-bc87-4d76-9953-f0f1dceceeb3 150ms
+[Browser connected] 82ms
+[Browser connected] 87ms
+[Browser connected] 107ms
+[Browser connected] 89ms
+[Browser connected] 102ms
+[Browser connected] 101ms
+[Browser connected] 90ms
+[Browser connected] 96ms
+[Browser connected] 99ms
+[Browser connected] 106ms
+[Page loaded] 62ms
+[Page loaded] 59ms
+[Session released] 19ms
+[Page loaded] 73ms
+[Page loaded] 69ms
+[Page loaded] 73ms
+[Session released] 25ms
+[Page loaded] 80ms
+[Page loaded] 76ms
+[Session released] 8ms
+[Page loaded] 75ms
+[Session released] 19ms
+[Session released] 17ms
+[Session released] 20ms
+[Page loaded] 80ms
+[Session released] 27ms
+[Page loaded] 112ms
+[Session released] 22ms
+[Session released] 18ms
+[Session released] 31ms
