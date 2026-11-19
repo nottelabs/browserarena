@@ -22,7 +22,11 @@ import {
   type MetricVerdict,
   type SeriesHealth,
 } from "../lib/regression";
+import fs from "node:fs";
+import path from "node:path";
+
 import { loadHistoricalLeaderboard } from "../lib/data";
+import { newRunDays, runDayKey } from "../lib/new-run-days";
 import type { HistoricalProviderPoint } from "../lib/data-shared";
 
 type Mode = "edge" | "staleness" | "digest";
@@ -274,6 +278,21 @@ async function main(): Promise<number> {
   return options.strict && events > 0 ? 1 : 0;
 }
 
+/**
+ * The run-days the triggering push added, from CHANGED_RESULT_FILES (set by
+ * the workflow on push events). Null when unset, as on a manual or scheduled
+ * run, which then reports every edge as before.
+ */
+function pushedRunDays(): Set<string> | null {
+  const changed = process.env.CHANGED_RESULT_FILES;
+  if (changed === undefined) return null;
+  return newRunDays(changed, (file) => {
+    const full = path.join(process.cwd(), "..", file);
+    if (!fs.existsSync(full)) return null;
+    return fs.readFileSync(full, "utf8").split("\n").find((l) => l.trim()) ?? null;
+  });
+}
+
 async function runOne(
   options: Options,
   scope: Set<string> | null,
@@ -293,7 +312,8 @@ async function runOne(
   let events = 0;
   const healthy: string[] = [];
   const staleSeries: SeriesHealth[] = [];
-  const pending: { series: SeriesHealth; opened: MetricVerdict[]; closed: MetricKey[] }[] = [];
+  const pending: { series: SeriesHealth; opened: MetricVerdict[]; closed: MetricKey[]; repeat?: boolean }[] = [];
+  const pushed = options.mode === "edge" && !options.asOf ? pushedRunDays() : null;
 
   for (const provider of history.providers) {
     const points = truncate(provider.points);
@@ -316,6 +336,13 @@ async function runOne(
     const today = breachingMetricsAt(points, n - 1);
     const yesterday = breachingMetricsAt(points, n - 2);
     if (today === null) continue;
+
+    // A push that did not add this series' latest run-day already had its
+    // open/close events posted by the push that did.
+    if (pushed && !pushed.has(runDayKey(provider.provider, points[n - 1].date, concurrency))) {
+      pending.push({ series, opened: [], closed: [], repeat: true });
+      continue;
+    }
 
     const opened = [...today].filter((m) => !yesterday?.has(m));
     const closed = yesterday ? [...yesterday].filter((m) => !today.has(m)) : [];
@@ -377,7 +404,8 @@ async function runOne(
         p.opened.length ? `opened=${p.opened.map((m) => m.metric).join(",")}` : null,
         p.closed.length ? `closed=${p.closed.join(",")}` : null,
       ].filter(Boolean);
-      return `${p.series.provider}: ${parts.length ? parts.join(" ") : "no change"} (${p.series.status})`;
+      const change = p.repeat ? "no new run-day in this push" : parts.length ? parts.join(" ") : "no change";
+      return `${p.series.provider}: ${change} (${p.series.status})`;
     })
     .join("\n");
   console.error(

@@ -129,6 +129,14 @@ breaching yesterday" yields exact open/close events. No state file, no
 commit-back to `main` (which would race the runners' push-retry loop), nothing
 to evict. The five-day Notte incident produces exactly one message.
 
+Several pushes land under `results/` each day (proxy-get batches, throughput
+runs, the second region), and each one re-runs the detector on the same latest
+run-day. On a push, the workflow lists the files it changed
+(`CHANGED_RESULT_FILES`), and a provider's events are posted only by the push
+that added its latest hello-browser run-day (`web/lib/new-run-days.ts`).
+Manual and scheduled runs report every edge, so `--as-of` replays are
+unchanged.
+
 | Trigger | Mode | Purpose |
 |---|---|---|
 | push to `main` touching `results/**` | `edge` | new regressions and recoveries |
