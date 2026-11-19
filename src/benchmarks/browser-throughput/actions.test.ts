@@ -14,7 +14,7 @@ import type { AddressInfo } from "node:net";
 import { chromium } from "playwright-core";
 import type { Browser } from "playwright-core";
 
-import { ARTICLE_POOL, fixedArticleUrl, resolveArticleUrls } from "./articles.js";
+import { ARTICLE_POOL, fixedArticleUrl, randomArticleUrls, resolveArticleUrls } from "./articles.js";
 import {
   ACTIONS_PER_LOOP,
   MAX_CONSECUTIVE_FAILURES,
@@ -63,8 +63,14 @@ test("fixedArticleUrl: same inputs give the same page, and loops within a sessio
   assert.equal(fixedArticleUrl(day, 3, 0, 5), fixedArticleUrl(day, 3, 0, 5));
   assert.notEqual(fixedArticleUrl(day, 3, 0, 5), fixedArticleUrl(day, 3, 1, 5));
   assert.notEqual(fixedArticleUrl(day, 0, 0, 1), fixedArticleUrl(new Date("2026-10-13T04:00:00Z"), 0, 0, 1));
-  assert.match(fixedArticleUrl(day, 0, 0, 1), /^https:\/\/en\.wikipedia\.org\/wiki\//);
+  assert.match(fixedArticleUrl(day, 0, 0, 1), /^https:\/\/docs\.python\.org\/3\.12\/[a-z]+\/[\w.]+\.html$/);
   assert.ok(new Set(ARTICLE_POOL).size === ARTICLE_POOL.length, "pool has duplicates");
+});
+
+test("randomArticleUrls: every page of the pool comes up before any repeats", () => {
+  const urls = randomArticleUrls(ARTICLE_POOL.length + 5);
+  assert.equal(urls.length, ARTICLE_POOL.length + 5);
+  assert.equal(new Set(urls.slice(0, ARTICLE_POOL.length)).size, ARTICLE_POOL.length);
 });
 
 test("resolveArticleUrls: a fixed assignment is a pure function of its inputs, so every provider shares it", async () => {

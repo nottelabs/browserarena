@@ -324,10 +324,10 @@ export function BrowserThroughputTable({
 }
 
 const ACTION_TOOLTIPS: Record<AgentActionType, string> = {
-  navigate: "goto(article), domcontentloaded. Full page transition.",
-  waitForSelector: "waitForSelector(#firstHeading). DOM polling and CDP round trips.",
+  navigate: "goto(page), domcontentloaded. Full page transition.",
+  waitForSelector: "waitForSelector(h1). DOM polling and CDP round trips.",
   screenshot: "Viewport PNG at 1920x1080. What a vision agent pays on every turn.",
-  textContent: "textContent(#firstHeading). The cheapest action: raw CDP round-trip cost.",
-  click: "Click the first visible article link in the body text and wait for the navigation it triggers.",
+  textContent: "textContent(h1). The cheapest action: raw CDP round-trip cost.",
+  click: "Click the first visible cross-reference in the body text and wait for the navigation it triggers.",
   goBack: "History navigation, waitUntil commit.",
 };

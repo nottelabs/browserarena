@@ -14,15 +14,16 @@ screenshot, every time.
 ## What runs
 
 Each session connects once, sets a 1920x1080 viewport, then runs `--loops`
-loops of ten actions against Wikipedia:
+loops of ten actions against the Python 3.12 documentation
+(`docs.python.org/3.12`):
 
 ```
- 1. navigate         goto(<article>, domcontentloaded)
- 2. waitForSelector  #firstHeading
+ 1. navigate         goto(<page>, domcontentloaded)
+ 2. waitForSelector  h1
  3. screenshot       viewport PNG
- 4. textContent      #firstHeading
- 5. click            first visible article link in the body text
- 6. waitForSelector  #firstHeading
+ 4. textContent      h1
+ 5. click            first visible cross-reference in the body text
+ 6. waitForSelector  h1
  7. screenshot
  8. textContent
  9. goBack           waitUntil: commit (bfcache restores never fire load)
@@ -42,12 +43,10 @@ per-action breakdown always adds up to the session number.
 | `click` | Synthetic input plus the navigation it triggers |
 | `goBack` | History navigation, back-forward cache behaviour |
 
-The click target is the first visible article link inside a paragraph of
-`#mw-content-text`. Wikipedia serves article links as absolute URLs, so the
-selector matches `/wiki/` anywhere in the href and excludes namespaced pages
-(`File:`, `Category:`, `Help:` and friends) by name. Paragraph links only:
-infobox and hatnote links are often collapsed, and a collapsed link makes
-Playwright wait out the whole timeout.
+The click target is the first visible cross-reference inside a paragraph of
+the main content (`[role="main"] p a.reference.internal`). Same-page anchors
+are excluded, so the click always loads another documentation page, which has
+an `h1` of its own.
 
 Lightpanda has no layout engine: every element reports a placeholder box, so a
 mouse click can never target it. For providers flagged `domClicksOnly` the
@@ -57,11 +56,30 @@ is `"mouse"`.
 
 ### Start pages
 
-A fixed pool of 100 broad, link-rich articles (`src/benchmarks/browser-throughput/articles.ts`),
-not `Special:Random`. The pool rotates by date, and session N loop M on a given
-day lands on the same article for every provider in both regions. Day-to-day
-differences are then the provider's, which is what the regression detector
-needs. `--articles=random` uses the Wikipedia random API for ad-hoc runs.
+A fixed pool of 100 pages (`src/benchmarks/browser-throughput/articles.ts`):
+the largest pages of the library reference, language reference, tutorial and
+HOWTOs that have one `h1` and at least five cross-references in their body
+text. The pool rotates by date, and session N loop M on a given day lands on
+the same page for every provider in both regions. Day-to-day differences are
+then the provider's, which is what the regression detector needs.
+`--articles=random` shuffles the pool for ad-hoc runs.
+
+### Why the Python documentation
+
+The pages are static HTML behind a CDN, and 3.12 only receives security
+fixes, so the content barely changes.
+
+The benchmark first ran on Wikipedia. Wikipedia rate limits addresses that
+many clients share, which is what a hosted browser's egress is: a
+navigation can come back as HTTP 429 with an error page instead of the
+article. The loop then spends four action timeouts on a page that has no
+heading, and the session counts as a provider failure. That measures the
+site's rate limit, not the browser.
+
+Results recorded before the switch stay in `results/browser-throughput`;
+`article_urls` in each record names the site a session ran on. The Python
+pages are lighter than Wikipedia articles, so timings from before and after
+the switch are not comparable with each other. Rankings within one day are.
 
 ### Failure handling
 
@@ -161,9 +179,13 @@ show up at `/throughput` and `GET /api/browser-throughput?concurrency=1`.
 
 ## Limitations
 
-- Wikipedia's CDN is close to everyone. A provider near Wikipedia's edge gets
-  a small edge on `navigate`. The relative comparison holds; absolute numbers
-  do not transfer to arbitrary sites.
+- The documentation is served from a CDN. A provider near one of its edges
+  gets a small edge on `navigate`. The relative comparison holds; absolute
+  numbers do not transfer to arbitrary sites.
+- The pages are mostly text. A screenshot of an image-heavy page costs more
+  than the ones measured here.
+- The target is a third-party site. If it starts refusing requests, that shows
+  up as failed actions, as it did on Wikipedia.
 - Ten actions is short. Drift needs `--loops=5` or more, and even fifty actions
   will not show a leak that takes an hour to matter.
 - The same per-provider rate limits and plan caps as hello-browser apply, and

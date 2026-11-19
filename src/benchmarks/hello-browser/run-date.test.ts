@@ -100,7 +100,7 @@ test("production CLI keeps explicit output date and article assignments across U
   assert.equal(right[0].created_at, "2026-10-26T00:00:01.000Z");
   assert.deepEqual(left.map(row => row.article_urls), right.map(row => row.article_urls));
   assert.deepEqual(right[0].article_urls, [
-    "https://en.wikipedia.org/wiki/Computer", "https://en.wikipedia.org/wiki/Python_(programming_language)",
+    "https://docs.python.org/3.12/library/pathlib.html", "https://docs.python.org/3.12/library/pdb.html",
   ]);
   assert.deepEqual(fs.readdirSync(path.join(after.cwd, "results/browser-throughput/notte")), [date]);
 });
@@ -110,6 +110,6 @@ test("production CLI defaults the output date and article rotation to the curren
   const result = await f.invoke("2026-10-26T00:00:01Z");
   assert.equal(result.status, 0, result.stderr);
   assert.deepEqual(f.rows(result.cwd, "2026-10-26")[0].article_urls, [
-    "https://en.wikipedia.org/wiki/Python_(programming_language)", "https://en.wikipedia.org/wiki/Linux",
+    "https://docs.python.org/3.12/library/pdb.html", "https://docs.python.org/3.12/library/pickle.html",
   ]);
 });

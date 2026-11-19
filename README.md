@@ -94,7 +94,7 @@ Two modes:
 
 ### Browser throughput
 
-`hello-browser` measures how fast you get a browser. The browser throughput benchmark measures what a long-running agent pays once it has one: every session connects, sets a 1920x1080 viewport, and runs loops of ten actions on Wikipedia, each timed on its own.
+`hello-browser` measures how fast you get a browser. The browser throughput benchmark measures what a long-running agent pays once it has one: every session connects, sets a 1920x1080 viewport, and runs loops of ten actions on the Python documentation, each timed on its own.
 
 ```
 navigate → waitForSelector → screenshot → textContent → click
