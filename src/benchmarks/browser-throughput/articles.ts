@@ -1,41 +1,53 @@
 /**
  * Start pages for the browser throughput benchmark.
  *
- * A fixed pool rather than Special:Random: every provider, both regions, and
- * every day walk the same pages in the same order, so day-to-day differences
- * are the provider's and not Wikipedia's. The pool rotates by date so one
- * day's run does not hammer the same first article from every provider at
- * once. `--articles=random` swaps in the Wikipedia random API for ad-hoc runs.
+ * A fixed pool: every provider, both regions, and every day walk the same
+ * pages in the same order, so day-to-day differences are the provider's and
+ * not the site's. The pool rotates by date so one day's run does not request
+ * the same first page from every provider at once. `--articles=random`
+ * shuffles the pool for ad-hoc runs.
+ *
+ * The pages are the Python 3.12 documentation: static HTML behind a CDN, in a
+ * release that only receives security fixes, so the content barely changes.
  */
 
-const WIKI = "https://en.wikipedia.org/wiki/";
+const DOCS = "https://docs.python.org/3.12/";
 
-/** Broad, stable, link-rich articles that all carry an infobox and a long body. */
+/**
+ * The 100 largest pages of the library reference, language reference,
+ * tutorial and HOWTOs that have one `h1` and at least five cross-references
+ * in their body text. Paths are relative to the version root, without `.html`.
+ */
 export const ARTICLE_POOL: string[] = [
-  "Albert_Einstein", "Ada_Lovelace", "Marie_Curie", "Isaac_Newton", "Alan_Turing",
-  "Leonardo_da_Vinci", "Charles_Darwin", "Nikola_Tesla", "Galileo_Galilei", "Aristotle",
-  "Tokyo", "Paris", "London", "New_York_City", "Berlin",
-  "Cairo", "Mumbai", "Sydney", "Toronto", "Mexico_City",
-  "Japan", "Brazil", "Canada", "Germany", "India",
-  "Kenya", "Norway", "Argentina", "Vietnam", "Morocco",
-  "Photosynthesis", "Plate_tectonics", "Black_hole", "DNA", "Evolution",
-  "Quantum_mechanics", "Periodic_table", "Volcano", "Electricity", "Gravity",
-  "Jazz", "Impressionism", "Renaissance", "Baroque_music", "Hip_hop_music",
-  "Chess", "Association_football", "Basketball", "Cricket", "Tennis",
-  "Internet", "Computer", "Python_(programming_language)", "Linux", "World_Wide_Web",
-  "Coffee", "Chocolate", "Bread", "Rice", "Tea",
-  "Amazon_rainforest", "Sahara", "Himalayas", "Great_Barrier_Reef", "Antarctica",
-  "Roman_Empire", "French_Revolution", "World_War_II", "Industrial_Revolution", "Silk_Road",
-  "Moon", "Mars", "Jupiter", "Sun", "Milky_Way",
-  "Elephant", "Honey_bee", "Blue_whale", "Octopus", "Bald_eagle",
-  "William_Shakespeare", "Jane_Austen", "Homer", "Gabriel_García_Márquez", "Haruki_Murakami",
-  "Bicycle", "Airplane", "Railway", "Automobile", "Ship",
-  "Mathematics", "Philosophy", "Economics", "Psychology", "Linguistics",
-  "Mount_Everest", "Nile", "Lake_Baikal", "Grand_Canyon", "Iceland",
+  "howto/argparse", "howto/descriptor", "howto/enum", "howto/functional",
+  "howto/logging", "howto/regex", "howto/unicode", "library/argparse",
+  "library/ast", "library/calendar", "library/codecs", "library/collections",
+  "library/collections.abc", "library/concurrent.futures", "library/configparser", "library/contextlib",
+  "library/csv", "library/ctypes", "library/dataclasses", "library/datetime",
+  "library/decimal", "library/difflib", "library/dis", "library/doctest",
+  "library/enum", "library/ftplib", "library/functools", "library/gettext",
+  "library/hashlib", "library/http.client", "library/http.cookiejar", "library/http.server",
+  "library/idle", "library/imaplib", "library/importlib", "library/inspect",
+  "library/io", "library/ipaddress", "library/itertools", "library/json",
+  "library/locale", "library/logging", "library/logging.config", "library/logging.handlers",
+  "library/mailbox", "library/math", "library/multiprocessing", "library/nntplib",
+  "library/operator", "library/optparse", "library/os", "library/pathlib",
+  "library/pdb", "library/pickle", "library/profile", "library/pyexpat",
+  "library/random", "library/re", "library/select", "library/shutil",
+  "library/signal", "library/smtplib", "library/socket", "library/socketserver",
+  "library/sqlite3", "library/ssl", "library/statistics", "library/string",
+  "library/subprocess", "library/sys", "library/tarfile", "library/threading",
+  "library/time", "library/tkinter", "library/traceback", "library/tracemalloc",
+  "library/typing", "library/unittest", "library/unittest.mock", "library/unittest.mock-examples",
+  "library/urllib.parse", "library/venv", "library/warnings", "library/weakref",
+  "library/winreg", "library/wsgiref", "library/xml.dom", "library/xml.etree.elementtree",
+  "library/xmlrpc.client", "library/zipfile", "reference/compound_stmts", "reference/datamodel",
+  "reference/expressions", "reference/import", "reference/lexical_analysis", "reference/simple_stmts",
+  "tutorial/classes", "tutorial/controlflow", "tutorial/datastructures", "tutorial/errors",
 ];
 
-export function articleUrl(title: string): string {
-  return `${WIKI}${encodeURIComponent(title).replace(/%2F/g, "/")}`;
+export function articleUrl(path: string): string {
+  return `${DOCS}${path}.html`;
 }
 
 /** Days since the Unix epoch, in UTC, for the daily rotation offset. */
@@ -59,29 +71,16 @@ export function fixedArticleUrl(
   return articleUrl(pool[slot]!);
 }
 
-interface RandomResponse {
-  query?: { random?: { title: string }[] };
-}
-
-/** Wikipedia's random-article API, for ad-hoc runs that want fresh pages. */
-export async function fetchRandomArticleUrls(
-  count: number,
-  fetchImpl: typeof fetch = fetch
-): Promise<string[]> {
+/** A shuffled copy of the pool, repeated as needed, for ad-hoc runs that should not follow the daily order. */
+export function randomArticleUrls(count: number, random: () => number = Math.random, pool: string[] = ARTICLE_POOL): string[] {
   const urls: string[] = [];
   while (urls.length < count) {
-    const limit = Math.min(count - urls.length, 500);
-    const api =
-      "https://en.wikipedia.org/w/api.php?action=query&format=json&list=random" +
-      `&rnnamespace=0&rnfilterredir=nonredirects&rnlimit=${limit}`;
-    const res = await fetchImpl(api, {
-      headers: { "User-Agent": "browserarena-browser-throughput (https://browserarena.ai)" },
-    });
-    if (!res.ok) throw new Error(`Wikipedia random API failed: HTTP ${res.status}`);
-    const body = (await res.json()) as RandomResponse;
-    const titles = body.query?.random?.map((r) => r.title) ?? [];
-    if (titles.length === 0) throw new Error("Wikipedia random API returned no titles");
-    for (const t of titles) urls.push(articleUrl(t.replace(/ /g, "_")));
+    const shuffled = [...pool];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!];
+    }
+    for (const path of shuffled) urls.push(articleUrl(path));
   }
   return urls.slice(0, count);
 }
@@ -99,7 +98,7 @@ export async function resolveArticleUrls(
   date: Date = new Date()
 ): Promise<UrlForSlot> {
   if (source === "random") {
-    const pool = await fetchRandomArticleUrls(Math.min(sessions * loops, 500));
+    const pool = randomArticleUrls(sessions * loops);
     return (session, loop) => pool[(session * loops + loop) % pool.length]!;
   }
   return (session, loop) => fixedArticleUrl(date, session, loop, loops);

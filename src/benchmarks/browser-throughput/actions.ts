@@ -14,23 +14,15 @@ export interface LoopSelectors {
   link: string;
 }
 
-/** Namespaced pages (files, categories, help) are not articles and are excluded from the click target. */
-const WIKIPEDIA_NAMESPACES = [
-  "File", "Help", "Wikipedia", "Special", "Category", "Template", "Portal", "Talk", "Draft", "Module", "MediaWiki", "User",
-];
-
 /**
- * Wikipedia article pages. Links are matched by `/wiki/` anywhere in the href
- * because Wikipedia serves them absolute (`https://en.wikipedia.org/wiki/X`),
- * and older renderings used `/wiki/X` or `./X`. Namespaces are excluded by
- * name, since a `:` test would also match the URL scheme. Paragraph links
- * only: infobox and hatnote links are often collapsed or hidden.
+ * Python documentation pages. Every page has one `h1`. The link is a
+ * cross-reference inside a paragraph of the main content; same-page anchors
+ * are excluded so the click always navigates, and the page it leads to has an
+ * `h1` too.
  */
-export const WIKIPEDIA_SELECTORS: LoopSelectors = {
-  heading: "#firstHeading",
-  link:
-    '#mw-content-text p a:is([href*="/wiki/"], [href^="./"])' +
-    WIKIPEDIA_NAMESPACES.map((ns) => `:not([href*="${ns}:"])`).join(""),
+export const PYTHON_DOCS_SELECTORS: LoopSelectors = {
+  heading: "h1",
+  link: '[role="main"] p a.reference.internal:not([href^="#"])',
 };
 
 interface Step {
@@ -105,7 +97,7 @@ export async function runActionLoops(
   loops: number,
   options: { selectors?: LoopSelectors; timeoutMs?: number; clickMode?: ClickMode; log?: (line: string) => void } = {}
 ): Promise<AgentActionRecord[]> {
-  const sel = options.selectors ?? WIKIPEDIA_SELECTORS;
+  const sel = options.selectors ?? PYTHON_DOCS_SELECTORS;
   const timeout = options.timeoutMs ?? DEFAULT_ACTION_TIMEOUT_MS;
   const log = options.log ?? (() => {});
   const records: AgentActionRecord[] = [];
