@@ -84,9 +84,30 @@ jobs:
           esac
           echo "mode=$MODE" >> "$GITHUB_OUTPUT"
 
+      # Several pushes land under results/ each day. Only the one that adds a
+      # provider's run-day may post that day's open/close events for it.
+      - name: List the result files this push changed
+        id: changed
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          files=$(gh api "repos/$REPO/compare/$BEFORE...$AFTER" --jq '.files[].filename')
+          {
+            echo "files<<CHANGED_FILES_EOF"
+            printf '%s\n' "$files"
+            echo "CHANGED_FILES_EOF"
+          } >> "$GITHUB_OUTPUT"
+
       - name: Check for regressions
         working-directory: web
         env:
+          EVENT_NAME: ${{ github.event_name }}
+          CHANGED_RESULT_FILES: ${{ steps.changed.outputs.files }}
           # Absent on forks and on dry runs — the script then prints the
           # payload instead of posting.
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -99,6 +120,9 @@ jobs:
           DRY_RUN: ${{ github.event.inputs.dry_run }}
         run: |
           set -euo pipefail
+          # Unset outside pushes: the script then reports every edge, as a
+          # manual replay expects.
+          if [ "$EVENT_NAME" != "push" ]; then unset CHANGED_RESULT_FILES; fi
           args=(--mode "$MODE" --concurrency 1,10)
           if [ -n "${AS_OF:-}" ]; then
             if ! printf '%s' "$AS_OF" | grep -qE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'; then
