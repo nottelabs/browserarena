@@ -87,7 +87,7 @@ The supplied fixture-QA record reports history selection, keyboard horizontal sc
 
 ### Primary
 
-Warm amber belongs to the inherited brand shell and the scroll region's focus ring. The header mixes the shared primary with background; the footer wordmark uses primary directly. The route does not add score-dependent colors, medals or a highlighted winning row.
+Warm amber belongs to the inherited brand shell and the scroll region's focus ring. The header mixes the shared primary with background; the footer wordmark uses primary directly. The top-ranked row takes the shared leader tint used by the other benchmark tables. Outcome bars and the header keys use the CAPTCHA page's green for passed visits and red for blocked ones; errors are a hatched neutral, so they differ from blocks by pattern as well as hue. No medals.
 
 ### Neutral
 
@@ -109,21 +109,21 @@ The route uses the shared maximum-width main container (80rem), existing top nav
 
 At desktop widths from 1280px, benchmark navigation remains beside the content. Between 1280px and 1799px, the main container reserves 208px on the left and the sidebar is 184px wide. Below 1280px, navigation becomes the existing “Benchmark & setup” drawer. Below 640px, the shared benchmark header stacks without its desktop minimum height. These are inherited shell behaviors, not route-specific redesign decisions.
 
-The content sequence is title and date, history controls when available, score table or pending/unavailable message, then “How to read these scores.” History controls wrap with a two-unit gap. The empty message has a constrained width (42rem); interpretation copy is constrained to 48rem with a six-unit top margin.
+The content sequence is title with the run picker, a one-line run summary on the right, score table or pending/unavailable panel, then “How to read these scores.” The interpretation is three ruled columns (one below 900px) followed by a single limitation line.
 
-The score table is full-width with a minimum width of 640px and fixed layout. Provider occupies 180px; access rate occupies 120px. Rows and header are 40px high. Cell padding is 2px vertically and two spacing units horizontally. On narrow screens, scroll the table inside its panel rather than widening the document. The first provider column remains sticky at the left edge with an opaque background and a divider. Other columns may be clipped behind it while scrolling; provider labels must remain readable.
+The score table is full-width with a minimum width of 720px and fixed layout. Rank occupies 40px, provider 176px, access rate 104px and each count 92px; the outcome bar takes the remaining width. Rows and header are 40px high. Cell padding is 2px vertically and two spacing units horizontally. On narrow screens, scroll the table inside its panel rather than widening the document. The rank and provider columns remain sticky at the left edge with an opaque background and a divider. Other columns may be clipped behind it while scrolling; provider labels must remain readable.
 
 **The Stable Column Rule.** Keep provider names and the access-rate column in separate fixed-width tracks. Preserve the explicit route override rather than inheriting the shared table's different column assumptions.
 
 ## Elevation & Depth
 
-The score panel is flat: its foreground frame and subtle row rules provide structure without a card shadow. The sticky provider column uses stacking order (z-index 1), an opaque surface and a right divider, not translucency. Row hover uses the inherited faint foreground tint and does not indicate an action.
+The score panel is flat: its foreground frame and subtle row rules provide structure without a card shadow. The sticky provider column uses stacking order (z-index 1), an opaque surface and a right divider, not translucency. Row hover uses the inherited faint foreground tint, mixed opaque so sticky cells stay solid; only the provider name is a link.
 
 The shared mobile drawer alone introduces an overlay and shadow. Its exact shadow, motion and responsive thresholds are recorded in the route-scoped sidecar. The dashboard inherits a brief entrance fade and row/control transitions; no new route animation is introduced. Shared reduced-motion rules remove these animations and transitions.
 
 ## Shapes
 
-Use the inherited small, nearly square corners for the table panel, navigation choices and select. The table frame is a foreground border (1.5px); internal row and sticky-column dividers are finer (1px). Keep the table dense and rectangular. The pending state is ordinary text in the page flow, without an illustration, empty table or replacement card.
+Use the inherited small, nearly square corners for the table panel, navigation choices and select. The table frame is a foreground border (1.5px); internal row and sticky-column dividers are finer (1px). Keep the table dense and rectangular. The pending and unavailable states use the shared empty panel, without an illustration or placeholder rows.
 
 ## Components
 
@@ -133,15 +133,15 @@ Reuse the existing top navigation, sidebar, responsive drawer and footer wordmar
 
 ### Run title and history
 
-The title is “Bot Detection.” With a selected run, the date line reads `Run <date> · Week of <weekOf>`; otherwise it reads “Weekly scores.” Show history only when at least one aggregate exists. Use the associated “Run history” label, native select and explicit “View run” submit button. The GET form submits to `/stealth` with the `week` parameter; selection alone does not submit. Options show measurement dates, and runs are ordered newest week first.
+The title is “Bot Detection.” Without a selected run, the line under the title reads “Weekly scores.” The title carries the shared run picker used by the other benchmarks: a static date pill with one published run, a native select once there are several. Choosing a run navigates to `/stealth?week=<weekOf>`. Options show measurement dates, and runs are ordered newest week first. The summary line beside the title reads `Latest run <date> · week of <weekOf> · 30 difficult websites · 3 visits each · US proxy`.
 
-Without a week parameter, show the latest available run. An unavailable week must display “This run is unavailable” and direct the reader to choose an available date; keep history visible and default its select to the latest option. With no aggregates at all, even a dated link shows the first-run pending state and hides history. Missing a new weekly publication leaves the last available run visible by default; it does not invent a fresh measurement.
+Without a week parameter, show the latest available run. An unavailable week must display “This run is unavailable” with a “View the latest run” link back to `/stealth`. With no aggregates at all, even a dated link shows the first-run pending state and hides history. Missing a new weekly publication leaves the last available run visible by default; it does not invent a fresh measurement.
 
-Controls inherit visible keyboard outlines from the shared dashboard. Preserve the native select and form semantics rather than replacing them with a custom picker.
+Controls inherit visible keyboard outlines from the shared dashboard. Preserve the native select rather than replacing it with a custom picker.
 
 ### Provider scores
 
-Use a semantic table with a visually hidden caption describing sample size, rounds and measurement date. Column headers are Provider, Access rate, Passed, Blocked and Errors. Provider names are row headers. Access rate carries `aria-sort="descending"`; the header is not an interactive sort control. Rows are informational and use a default cursor, with no drill-down or evidence links.
+Use a semantic table with a visually hidden caption describing sample size, rounds and measurement date. Column headers are #, Provider, Access rate, the planned-visit bar, Passed, Blocked and Errors. Provider names are row headers with the provider logo, linked to the provider page. Each row has one stacked bar of all planned visits split into passed, blocked and errors; it repeats the three counts beside it and is hidden from assistive technology. The count headers carry the bar's color keys. Access rate carries `aria-sort="descending"`; the header is not an interactive sort control. Rows use a default cursor and carry no evidence links.
 
 Rank by unrounded access rate descending, breaking ties by provider identifier. Display rates rounded to whole percentages. For protocol site-access-2, access rate is passed divided by all 90 planned attempts. Errors remain in the denominator and are shown separately. An all-error provider has zero verified access and zero blocks. Passed shows a count out of 90 planned visits; blocked and errors show counts. The supported aggregate represents 30 difficult websites and three rounds per provider. This fixed difficult sample does not represent general browsing reliability.
 
@@ -149,7 +149,7 @@ The scroll wrapper is a keyboard-focusable labelled region (`tabIndex=0`) with a
 
 ### Pending and unavailable states
 
-The initial state says “First verified run pending” and explains that no scores have been published. Retain methodology and interpretation beneath it. Do not insert illustrative rows, zeros, progress percentages or an estimated publication date. For an unavailable selected run, the visible recovery is the existing history form whenever aggregates exist.
+The initial state says “First verified run pending” and explains that no scores have been published. Retain methodology and interpretation beneath it. Do not insert illustrative rows, zeros, progress percentages or an estimated publication date. For an unavailable selected run, the visible recovery is the link to the latest run.
 
 ### Interpretation and publication boundary
 
@@ -162,7 +162,7 @@ Keep the rate denominator, error treatment, planned visits, measurement date and
 - **Do** preserve the existing benchmark shell and restrict this document's authority to `/stealth`.
 - **Do** keep provider names readable while the score region scrolls horizontally.
 - **Do** distinguish measurement date, week, access-rate denominator and planned-visit count.
-- **Do** retain an honest pending state and a visible history-based recovery for unavailable weeks.
+- **Do** retain an honest pending state and a visible recovery link for unavailable weeks.
 - **Do** identify populated captures as temporary synthetic-fixture QA and keep release verification limits explicit.
 
 ### Don't:
@@ -171,4 +171,4 @@ Keep the rate denominator, error treatment, planned visits, measurement date and
 - **Don't** infer general browsing reliability from this fixed difficult sample.
 - **Don't** imply the closed two-finding design review verifies a live campaign or deployment.
 - **Don't** expose targets, individual outcomes, private execution details or raw evidence.
-- **Don't** add a new visual identity, promotional claims, score charts or provider drill-downs to this scoped page.
+- **Don't** add a new visual identity, promotional claims or evidence drill-downs to this scoped page.
