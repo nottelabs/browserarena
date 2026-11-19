@@ -4,8 +4,8 @@
   "cloud": "aws",
   "os": "linux x64",
   "node_version": "v22.23.2",
-  "started_at": "2026-11-19T05:00:18.873Z",
-  "finished_at": "2026-11-19T05:42:52.933Z",
+  "started_at": "2026-11-19T09:00:18.427Z",
+  "finished_at": "2026-11-19T09:42:03.800Z",
   "benchmark": "proxy-get",
   "run_id": "daily-proxy-2026-11-19",
   "url": "https://www.browserarena.ai/api/proxy-get/payload",
@@ -21,7 +21,7 @@
     "IN",
     "JP"
   ],
-  "runs": 20,
+  "runs": 30,
   "rate": 10,
   "runId": "daily-proxy-2026-11-19"
 }
