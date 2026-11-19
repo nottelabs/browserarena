@@ -91,7 +91,7 @@ async function Scores({ searchParams }: { searchParams: Promise<{ week?: string 
           <dd>Results are published weekly after a complete run; the run date identifies the actual measurement. Missing updates leave the last verified run visible. This page publishes aggregate scores only: website lists, individual visits and recordings are not distributed here.</dd>
         </div>
       </dl>
-      <p className={pageStyles.note}>These scores measure access on a deliberately difficult sample and do not represent general browsing reliability. Protocol: site-access-2.</p>
+      <p className={pageStyles.note}>These scores measure access on a deliberately difficult sample and do not represent general browsing reliability.</p>
     </section>
   </BenchmarkShell>;
 }
