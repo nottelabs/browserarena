@@ -1,0 +1,46 @@
+import type { ProviderClient, ProviderSession, SessionOptions } from "../types.js";
+import { PROXY_COUNTRIES } from "../benchmarks/proxy-get/schema.js";
+import { requireEnv } from "../utils/env.js";
+
+export class StringProvider implements ProviderClient {
+  readonly name = "STRING";
+  // Residential exits for Proxy Performance, targeted by ISO country code on the connect URL
+  // (portal.usestring.ai/docs).
+  readonly proxyCountries = PROXY_COUNTRIES;
+  readonly releasesOnDisconnect = true;
+  private cdpUrl: string;
+
+  computeCost(seconds: number): number {
+    // $0.12 per hour of session time on every plan, metered continuously with
+    // no minimum (usestring.ai/pricing). Bandwidth is billed per GiB on top
+    // ($5 standard, $10 premium) and is not part of this estimate.
+    return Math.round((seconds / 3600) * 0.12 * 1e8) / 1e8;
+  }
+
+  constructor() {
+    this.cdpUrl = process.env.STRING_CDP_URL || "wss://request.usestring.ai/v1/wss";
+  }
+
+  // No session API call: connecting to the CDP URL starts a browser, and
+  // closing the connection ends it. The key travels as a header so it never
+  // appears in a URL that might be logged.
+  async create(opts?: SessionOptions): Promise<ProviderSession> {
+    const apiKey = requireEnv("STRING_API_KEY");
+    const url = new URL(this.cdpUrl);
+    // String always egresses through a proxy. Its default is residential; the
+    // lifecycle and throughput benchmarks compare proxy-free sessions, so those
+    // use String's ISP exits (`standard`), the closest to no proxy. Proxy
+    // Performance keeps the residential default in the requested country.
+    if (opts?.proxyCountry) url.searchParams.set("countryCode", opts.proxyCountry);
+    else url.searchParams.set("proxy", "standard");
+    return {
+      id: "",
+      cdpUrl: url.toString(),
+      headers: { Authorization: `Bearer ${apiKey}` },
+      configuration: opts?.proxyCountry ? { countryCode: opts.proxyCountry } : { proxy: "standard" },
+    };
+  }
+
+  // No release API: the runners end the session with browser.close().
+  async release(_id: string): Promise<void> {}
+}

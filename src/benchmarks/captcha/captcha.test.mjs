@@ -22,7 +22,7 @@ test("protocol fixes the declared workload and rejects ignored settings", () => 
 
 test("unique attempts rotate provider and fixture order with five attempts per cell", () => {
   const rounds = schedule(config), tasks = rounds.flat(), total = config.providers.length * FIXTURES.length * 5;
-  assert.equal(config.providers.length, 9);
+  assert.equal(config.providers.length, 10);
   assert.equal(tasks.length, total);
   assert.equal(new Set(tasks.map(task => task.id)).size, total);
   assert.deepEqual(rounds.map(round => round[0].provider), config.providers.slice(0, config.rounds));
@@ -403,7 +403,7 @@ test("five provider presets explicitly enable native solving and disable SDK req
   assert.equal(JSON.parse(requests.find(r => r.url.endsWith("/browsers")).options.body).proxyCountryCode, "us");
 });
 
-test("Hyperbrowser, Anchor, Browserless and Tilion presets use native solving and a US proxy", async () => {
+test("Hyperbrowser, Anchor, Browserless, String and Tilion presets use native solving and a US proxy", async () => {
   const requests = [], creations = [], stopped = [];
   class Hyperbrowser {
     constructor(options) {
@@ -412,7 +412,7 @@ test("Hyperbrowser, Anchor, Browserless and Tilion presets use native solving an
         stop: async id => { stopped.push(id); } };
     }
   }
-  const env = { HYPERBROWSER_API_KEY: "hb-key", ANCHORBROWSER_API_KEY: "anchor-key", BROWSERLESS_API_KEY: "bl-key", TILION_API_KEY: "tilion-key" };
+  const env = { HYPERBROWSER_API_KEY: "hb-key", ANCHORBROWSER_API_KEY: "anchor-key", BROWSERLESS_API_KEY: "bl-key", TILION_API_KEY: "tilion-key", STRING_API_KEY: "string-key" };
   let tilionRegion = "us";
   const create = createProviders(() => ({ Hyperbrowser }), env, async (url, options) => {
     requests.push({ url, options, body: options.body && JSON.parse(options.body) });
@@ -443,6 +443,13 @@ test("Hyperbrowser, Anchor, Browserless and Tilion presets use native solving an
   assert.notEqual((await create("browserless")).id, browserless.id);
   assert.doesNotMatch(JSON.stringify(browserless.configuration), /bl-key/);
   await browserless.release();
+
+  const stringSession = await create("string");
+  assert.equal(stringSession.cdpUrl, "wss://request.usestring.ai/v1/wss?solveCaptcha=true&countryCode=US");
+  assert.deepEqual(stringSession.headers, { Authorization: "Bearer string-key" });
+  assert.match(stringSession.id, /^string-[0-9a-f-]{36}$/);
+  assert.doesNotMatch(JSON.stringify(stringSession.configuration), /string-key/);
+  await stringSession.release();
 
   const tilion = await create("tilion");
   assert.deepEqual([tilion.id, tilion.cdpUrl], ["tilion-id", "wss://tilion.example/cdp?token=t"]);

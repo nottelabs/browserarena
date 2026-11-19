@@ -202,7 +202,7 @@ export async function attempt(task, config, deps) {
       throw new Error("Create returned an invalid session ID or CDP URL");
     signal?.throwIfAborted();
     row.stage = "connect";
-    browser = await chromium.connectOverCDP(session.cdpUrl, { timeout: 30_000 });
+    browser = await chromium.connectOverCDP(session.cdpUrl, { timeout: 30_000, ...(session.headers && { headers: session.headers }) });
     const context = browser.contexts()[0];
     if (!context) throw new Error("Provider supplied no browser context");
     page = context.pages()[0] ?? await context.newPage();

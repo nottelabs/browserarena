@@ -12,6 +12,7 @@ import { BrowserlessProvider } from "./browserless.js";
 import { CloudflareProvider } from "./cloudflare.js";
 import { AwsAgentCoreProvider } from "./aws-agentcore.js";
 import { TinyFishProvider } from "./tinyfish.js";
+import { StringProvider } from "./string.js";
 
 export function getRequiredEnvVarsForProvider(name: string): string[] {
   const key = name.trim().toLowerCase();
@@ -33,6 +34,7 @@ export function getRequiredEnvVarsForProvider(name: string): string[] {
     return ["LIGHTPANDA_API_KEY"];
   if (key === "browserless") return ["BROWSERLESS_API_KEY"];
   if (key === "tinyfish") return ["TINYFISH_API_KEY"];
+  if (key === "string") return ["STRING_API_KEY"];
   if (key === "cloudflare" || key === "cf")
     return ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"];
   // Credentials come from the standard AWS chain, which may not use env vars.
@@ -64,6 +66,7 @@ export function resolveProvider(name: string): ProviderClient {
   if (key === "lightpanda" || key === "lp") return new LightpandaProvider();
   if (key === "browserless") return new BrowserlessProvider();
   if (key === "tinyfish") return new TinyFishProvider();
+  if (key === "string") return new StringProvider();
   if (key === "cloudflare" || key === "cf") return new CloudflareProvider();
   if (key === "aws-agentcore" || key === "agentcore")
     return new AwsAgentCoreProvider();

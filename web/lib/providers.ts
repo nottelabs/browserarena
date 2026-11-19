@@ -123,6 +123,14 @@ export const PROVIDERS: ProviderInfo[] = [
     marketed: false,
   },
   {
+    id: "STRING",
+    displayName: "String",
+    url: "https://usestring.ai",
+    logo: "/logos/string.png",
+    browserRegion: "eastus2",
+    marketed: false,
+  },
+  {
     id: "BROWSERLESS",
     displayName: "Browserless",
     url: "https://www.browserless.io",
