@@ -3,6 +3,18 @@ import { join } from "node:path";
 import { getResultsDir } from "./data";
 
 export const STEALTH_PROVIDERS = ["BROWSER_USE", "NOTTE", "KERNEL", "BROWSERBASE", "STEEL"] as const;
+/** The fixed site-access-2 sample, alphabetical. */
+export const STEALTH_SITES: readonly (readonly [name: string, domain: string])[] = [
+  ["adidas", "adidas.com"], ["Allegro", "allegro.pl"], ["Best Buy", "bestbuy.com"], ["Bloomingdale's", "bloomingdales.com"],
+  ["Celine", "celine.com"], ["Douglas", "douglas.de"], ["easyJet", "easyjet.com"], ["Edina Realty", "edinarealty.com"],
+  ["FedEx", "fedex.com"], ["FLO", "flo.com.tr"], ["G2", "g2.com"], ["GameStop", "gamestop.com"],
+  ["Hotels.com", "hotels.com"], ["idealista", "idealista.com"], ["KAYAK", "kayak.com"], ["Long Realty", "longrealty.com"],
+  ["LoopNet", "loopnet.com"], ["Marriott", "marriott.com"], ["Mouser", "mouser.com"], ["Realtor.com", "realtor.com"],
+  ["RealtySouth", "realtysouth.com"], ["Reddit", "reddit.com"], ["StockX", "stockx.com"], ["Target", "target.com"],
+  ["Temu", "temu.com"], ["Uber Eats", "ubereats.com"], ["UPS", "ups.com"], ["Walmart", "walmart.com"],
+  ["Yelp", "yelp.com"], ["Zillow", "zillow.com"],
+];
+
 export type StealthSummary = {
   schemaVersion: 1; protocol: "site-access-2"; date: string; weekOf: string;
   siteCount: 30; rounds: 3; proxyCountry: "US";

@@ -97,7 +97,7 @@ Near-white background supports the table and opaque sticky provider cells. Black
 
 ## Typography
 
-The shell and route prose use Plus Jakarta Sans with a sans-serif fallback. Provider names use DM Sans; passed, blocked and error counts use IBM Plex Mono with tabular numerals. Access-rate values retain the inherited sans-serif table text, aligned right.
+The shell and route prose use Plus Jakarta Sans with a sans-serif fallback. Provider names use DM Sans; blocked and error rates use IBM Plex Mono with tabular numerals. Access-rate values retain the inherited sans-serif table text, aligned right.
 
 Use the frontmatter hierarchy for the title, measurement line, table labels, provider names and counts. Table labels are uppercase; the page title keeps normal title capitalization. The pending heading is medium-weight text (1.125rem). History labels and the submit button use compact body-sized text (0.875rem); the shared shell makes the native select smaller (0.68rem, weight 500, line height 16px).
 
@@ -109,9 +109,9 @@ The route uses the shared maximum-width main container (80rem), existing top nav
 
 At desktop widths from 1280px, benchmark navigation remains beside the content. Between 1280px and 1799px, the main container reserves 208px on the left and the sidebar is 184px wide. Below 1280px, navigation becomes the existing “Benchmark & setup” drawer. Below 640px, the shared benchmark header stacks without its desktop minimum height. These are inherited shell behaviors, not route-specific redesign decisions.
 
-The content sequence is title with the run picker, a one-line run summary on the right, score table or pending/unavailable panel, then “How to read these scores.” The interpretation is three ruled columns (one below 900px) followed by a single limitation line.
+The content sequence is title with the run picker, a one-line run summary on the right, score table or pending/unavailable panel, “How to read these scores,” then “The 30 websites.” The interpretation is three ruled columns (one below 900px) followed by a single limitation line. The website list is one alphabetical list in three columns on the same tracks (two below 900px, one below 560px), under the same heavy rule.
 
-The score table is full-width with a minimum width of 720px and fixed layout. Rank occupies 40px, provider 176px, access rate 104px and each count 92px; the outcome bar takes the remaining width. Rows and header are 40px high. Cell padding is 2px vertically and two spacing units horizontally. On narrow screens, scroll the table inside its panel rather than widening the document. The rank and provider columns remain sticky at the left edge with an opaque background and a divider. Other columns may be clipped behind it while scrolling; provider labels must remain readable.
+The score table is full-width with a minimum width of 720px and fixed layout. Rank occupies 40px, provider 176px, access rate 104px and each other rate 92px; the outcome bar takes the remaining width. Rows and header are 40px high. Cell padding is 2px vertically and two spacing units horizontally. On narrow screens, scroll the table inside its panel rather than widening the document. The rank and provider columns remain sticky at the left edge with an opaque background and a divider. Other columns may be clipped behind it while scrolling; provider labels must remain readable.
 
 **The Stable Column Rule.** Keep provider names and the access-rate column in separate fixed-width tracks. Preserve the explicit route override rather than inheriting the shared table's different column assumptions.
 
@@ -141,9 +141,9 @@ Controls inherit visible keyboard outlines from the shared dashboard. Preserve t
 
 ### Provider scores
 
-Use a semantic table with a visually hidden caption describing sample size, rounds and measurement date. Column headers are #, Provider, Access rate, the planned-visit bar, Passed, Blocked and Errors. Provider names are row headers with the provider logo, linked to the provider page. Each row has one stacked bar of all planned visits split into passed, blocked and errors; it repeats the three counts beside it and is hidden from assistive technology. The count headers carry the bar's color keys. Access rate carries `aria-sort="descending"`; the header is not an interactive sort control. Rows use a default cursor and carry no evidence links.
+Use a semantic table with a visually hidden caption describing sample size and measurement date. Column headers are #, Provider, Access rate, the visits bar, Blocked and Errors. Access rate carries the green key, Blocked the red key and Errors the hatched key. Provider names are row headers with the provider logo, linked to the provider page. Each row has one stacked bar of all planned visits split into passed, blocked and errors; the rates beside it carry the same split, so it is hidden from assistive technology. The count headers carry the bar's color keys. Access rate carries `aria-sort="descending"`; the header is not an interactive sort control. Rows use a default cursor and carry no evidence links.
 
-Rank by unrounded access rate descending, breaking ties by provider identifier. Display rates rounded to whole percentages. For protocol site-access-2, access rate is passed divided by all 90 planned attempts. Errors remain in the denominator and are shown separately. An all-error provider has zero verified access and zero blocks. Passed shows a count out of 90 planned visits; blocked and errors show counts. The supported aggregate represents 30 difficult websites and three rounds per provider. This fixed difficult sample does not represent general browsing reliability.
+Rank by unrounded access rate descending, breaking ties by provider identifier. Display rates rounded to whole percentages. Access, block and error rates are each a share of all planned visits, rounded to whole percentages. An all-error provider has zero access and zero blocks. The page describes the method at a high level; visit counts per site, rounds and journey types are not spelled out in the copy. This fixed difficult sample does not represent general browsing reliability.
 
 The scroll wrapper is a keyboard-focusable labelled region (`tabIndex=0`) with an inset focus outline (2px, using ring). Preserve column scopes, row scopes, the caption and the region's horizontal-scroll label.
 
@@ -153,7 +153,11 @@ The initial state says “First verified run pending” and explains that no sco
 
 ### Interpretation and publication boundary
 
-Keep the rate denominator, error treatment, planned visits, measurement date and difficult-sample limitation visible in “How to read these scores.” Describe weekly publication as the protocol's intended cadence, not evidence that a campaign has already run. The public surface contains aggregate scores only; execution source, target lists, individual outcomes, raw evidence and recordings stay private elsewhere. Do not add target names, evidence links, credentials or private operational metadata to this route or its documentation.
+Keep the error treatment, measurement date and difficult-sample limitation visible in “How to read these scores.” Describe weekly publication as the protocol's intended cadence, not evidence that a campaign has already run. The public surface contains aggregate scores and the names and domains of the 30 websites as one alphabetical list (`STEALTH_SITES` in `web/lib/stealth.ts`, mirrored from the private runner). Execution source, target URLs, journey definitions and types, per-site outcomes, raw evidence and recordings stay private elsewhere. Do not add per-site results, evidence links, credentials or private operational metadata to this route or its documentation.
+
+### Website list
+
+Each entry shows the site's favicon (20px, 3px corners, on the page background like the provider logos), its name (DM Sans, medium) and its domain (IBM Plex Mono, muted) on one ruled row. Favicons are 48px WebP files in `web/public/site-icons/<domain>.webp`, lazy-loaded because the list sits below the fold. Domains are plain text, not links. The list is not grouped or ordered by journey. Keep the list in sync with the runner whenever the sample changes; a different sample is a new protocol.
 
 ## Do's and Don'ts
 
@@ -161,7 +165,7 @@ Keep the rate denominator, error treatment, planned visits, measurement date and
 
 - **Do** preserve the existing benchmark shell and restrict this document's authority to `/stealth`.
 - **Do** keep provider names readable while the score region scrolls horizontally.
-- **Do** distinguish measurement date, week, access-rate denominator and planned-visit count.
+- **Do** distinguish measurement date and week.
 - **Do** retain an honest pending state and a visible recovery link for unavailable weeks.
 - **Do** identify populated captures as temporary synthetic-fixture QA and keep release verification limits explicit.
 
@@ -170,5 +174,5 @@ Keep the rate denominator, error treatment, planned visits, measurement date and
 - **Don't** publish illustrative scores or treat fixture screenshots as measured results.
 - **Don't** infer general browsing reliability from this fixed difficult sample.
 - **Don't** imply the closed two-finding design review verifies a live campaign or deployment.
-- **Don't** expose targets, individual outcomes, private execution details or raw evidence.
+- **Don't** expose target URLs, journey definitions, per-site outcomes, private execution details or raw evidence.
 - **Don't** add a new visual identity, promotional claims or evidence drill-downs to this scoped page.

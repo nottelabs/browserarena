@@ -44,8 +44,6 @@
 .scores.scores tbody tr[data-leader] { background: color-mix(in oklab, var(--primary) 46%, var(--background)); }
 .scores.scores tbody tr[data-leader]:hover { background: color-mix(in oklab, var(--primary) 58%, var(--background)); }
 
-.of { color: var(--muted-foreground); }
-
 /* One bar per provider: every planned visit, split by outcome. */
 .bar {
   display: flex;
@@ -84,8 +82,44 @@
 .method dd { margin-top: calc(var(--spacing) * 2); font-size: 0.78rem; line-height: 1.6; color: var(--muted-foreground); }
 .note { margin-top: calc(var(--spacing) * 6); font-size: 0.72rem; line-height: 1.6; color: var(--muted-foreground); }
 
+.siteSection { margin-top: var(--section-gap); }
+
+/* Three columns on the reading guide's tracks, under the same heavy rule. */
+.sites {
+  columns: 3;
+  column-gap: calc(var(--spacing) * 8);
+  margin-top: calc(var(--spacing) * 4);
+  border-top: 1.5px solid var(--foreground);
+  padding-top: calc(var(--spacing) * 1);
+}
+
+.sites li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: calc(var(--spacing) * 3);
+  padding: 5px 0;
+  border-bottom: 1px solid var(--border);
+  break-inside: avoid;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 20px;
+}
+
+/* Favicons sit on the page background, like the provider logos in the table. */
+.site { display: flex; align-items: center; gap: calc(var(--spacing) * 2); min-width: 0; }
+.site img { flex-shrink: 0; width: 20px; height: 20px; border-radius: 3px; object-fit: contain; }
+
+.domain { font-family: var(--font-mono); font-size: 0.72rem; font-weight: 400; color: var(--muted-foreground); }
+
 @media (max-width: 899px) {
   .method { grid-template-columns: minmax(0, 1fr); gap: calc(var(--spacing) * 5); }
+  .sites { columns: 2; }
+}
+
+@media (max-width: 559px) {
+  .sites { columns: 1; }
 }
 
 @media (forced-colors: active) {
