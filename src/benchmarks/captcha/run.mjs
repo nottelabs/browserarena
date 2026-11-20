@@ -366,7 +366,11 @@ export async function attempt(task, config, deps) {
     }
     row.total_ms = now() - started;
     row.finished_at = new Date().toISOString();
-    row.halt_campaign = !!row.fixture_drift || !!row.ownership_unknown || !!row.journal_error || !!row.session_id && !row.cleanup.released || !!browser && !row.cleanup.disconnected;
+    // A hung disconnect only matters when it is the release: for a session the
+    // provider confirmed ended, closing our CDP connection frees nothing on its
+    // side. On 2026-11-13 one Kernel close timing out halted a day's campaign.
+    const disconnectReleases = !row.session_id || session?.endsOnDisconnect === true;
+    row.halt_campaign = !!row.fixture_drift || !!row.ownership_unknown || !!row.journal_error || !!row.session_id && !row.cleanup.released || !!browser && !row.cleanup.disconnected && disconnectReleases;
   }
   return row;
 }

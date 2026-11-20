@@ -98,7 +98,7 @@ export function createProviders(load, env = process.env, request = fetch) {
         solveCaptchas: "true", timeout: "300000" }).toString();
       return { id: `browserless-${randomUUID()}`, cdpUrl: url.toString(),
         configuration: { route: "stealth", solveCaptchas: true, proxy: "residential US", region: "sfo" },
-        release: async () => {} };
+        endsOnDisconnect: true, release: async () => {} };
     }
     if (provider === "tilion") {
       const base = (env.TILION_BASE_URL || "https://api.tilion.dev").replace(/\/+$/, "");

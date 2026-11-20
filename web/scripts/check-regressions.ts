@@ -25,6 +25,8 @@ import {
 import fs from "node:fs";
 import path from "node:path";
 
+import { loadCaptchaCampaigns } from "../lib/captcha-data";
+import { captchaStaleness, CAPTCHA_STALENESS_HOURS } from "../lib/captcha-staleness";
 import { loadHistoricalLeaderboard } from "../lib/data";
 import { newRunDays, runDayKey } from "../lib/new-run-days";
 import type { HistoricalProviderPoint } from "../lib/data-shared";
@@ -235,6 +237,44 @@ function staleMessage(series: SeriesHealth, healthy: string[]) {
   };
 }
 
+function captchaStaleMessage(latest: string, ageHours: number) {
+  const hours = Math.round(ageHours);
+  return {
+    text: `No CAPTCHA results in ${hours}h`,
+    blocks: [
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text:
+            `⚠️ *No CAPTCHA results in ${hours}h*\n` +
+            `Last campaign finished \`${latest}\` (expected daily). ` +
+            "A halted campaign leaves `.captcha-runs/needs-review` on the US West runner, " +
+            "and later runs refuse to start until it is reconciled and removed. " +
+            "See `docs/captcha.md` (Daily run) and `logs/cron-*-us-west-captcha.log`.",
+        },
+      },
+    ],
+  };
+}
+
+/**
+ * The CAPTCHA campaign publishes once a day from the US West runner, so it is
+ * checked once, on the scheduled staleness run, and repeats daily until fixed.
+ */
+async function checkCaptcha(options: Options): Promise<number> {
+  if (options.mode !== "staleness") return 0;
+  const now = options.asOf ? new Date(`${options.asOf}T23:59:59.000Z`) : new Date();
+  const result = captchaStaleness(await loadCaptchaCampaigns(), now);
+  console.error(
+    `[check-regressions] captcha latest=${result?.latest ?? "none"} ` +
+      `age=${result ? Math.round(result.ageHours) : "n/a"}h limit=${CAPTCHA_STALENESS_HOURS}h`
+  );
+  if (!result?.stale) return 0;
+  await post(captchaStaleMessage(result.latest, result.ageHours), options);
+  return 1;
+}
+
 async function post(payload: unknown, options: Options): Promise<void> {
   if (options.dryRun) {
     console.log(JSON.stringify(payload, null, 2));
@@ -275,6 +315,7 @@ async function main(): Promise<number> {
   for (const [i, concurrency] of options.concurrency.entries()) {
     events += await runOne(options, scope, concurrency, i === 0);
   }
+  events += await checkCaptcha(options);
   return options.strict && events > 0 ? 1 : 0;
 }
 

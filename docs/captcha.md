@@ -61,8 +61,10 @@ process. When a release fails, the runner asks the provider whether the session
 ended (Anchor; `GET /v1/sessions/{id}`), retries the release once after 5 s and
 asks again; the session counts as released only on a successful release or a
 provider answer that it ended, recorded as `cleanup.recovered` in the private
-evidence. Unknown session ownership or a release that stays failed, or a failed
-disconnect, halts new work;
+evidence. Unknown session ownership or a release that stays failed halts new
+work, and so does a failed disconnect from Browserless, whose disconnect is the
+release. A failed disconnect from a session the provider released is recorded as
+a cleanup error and the campaign continues;
 inspect and reconcile the owned sessions before a new campaign. A session create
 the provider refuses with an HTTP 4xx (other than 408), such as a quota, credit
 or auth error, created nothing: it counts as an error for that attempt and the
@@ -272,7 +274,10 @@ and refuses tracked changes. Guards:
   only once it exits cleanly. A campaign that fails, halts or is incomplete, or a
   publisher that is killed mid-run, leaves it behind. Later runs refuse to start
   until someone has reconciled the provider sessions it names and removed it. The
-  evidence stays in `.captcha-runs/daily-*`.
+  evidence stays in `.captcha-runs/daily-*`. Nothing is committed while the
+  marker blocks the run, so the 12:00 UTC staleness check in
+  [regression alerting](regression-detection.md) posts to Slack every day the
+  newest campaign is more than 36 hours old.
 - The campaign's time limit defaults to its worst case: every attempt using its
   full create, connect, navigation, solve and cleanup limits, including a failed
   release's recovery (425 seconds), three at a time, plus 15 minutes. That is
