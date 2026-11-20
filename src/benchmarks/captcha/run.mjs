@@ -1,5 +1,5 @@
-import { acceptedGeetest, acceptedOfficial, acceptedRecaptchaV3, acceptedTurnstile, passedText,
-  reachedPerimeterX, schedule, siteverifyFromHtml } from "./protocol.mjs";
+import { acceptedGeetest, acceptedHcaptcha, acceptedOfficial, acceptedRecaptchaV3, acceptedTurnstile, passedText,
+  reachedPerimeterX, receiptUrl, schedule, siteverifyFromHtml } from "./protocol.mjs";
 
 class BoundExceeded extends Error {}
 // A fixture that no longer matches its pinned contract. It stops the campaign so a
@@ -21,9 +21,33 @@ export function installCancellation(controller, source = process) {
   return () => { for (const signal of ["SIGINT", "SIGTERM", "SIGHUP"]) source.off(signal, stop); };
 }
 
+// The hCaptcha demo navigates on its own once its callback has a verdict. A probe that
+// lands in that navigation reads the page that follows instead of failing the attempt.
+const NAVIGATING = /Execution context was destroyed|Cannot find context with specified id/i;
+async function settled(page, read) {
+  try { return await read(); }
+  catch (error) {
+    if (!NAVIGATING.test(String(error?.message))) throw error;
+    await page.waitForLoadState("domcontentloaded", { timeout: 5_000 }).catch(() => {});
+    return read();
+  }
+}
+
 // Read-only page facts. Probes never click a widget, read a solution or write an answer.
 export async function observe(page, fixture) {
-  const state = await bounded(page.evaluate(fixture => {
+  const callback = fixture.type === "hcaptcha" && fixture.success;
+  const state = await bounded(callback ? settled(page, () => read(page, fixture)) : read(page, fixture));
+  if (fixture.type === "hcaptcha" && !callback) {
+    const verdict = siteverifyFromHtml(state.siteverifyHtml);
+    delete state.siteverifyHtml;
+    if (verdict) state.siteverify = verdict.invalid ? verdict
+      : { success: verdict.success, hostname: verdict.hostname, errorCodes: verdict["error-codes"] };
+    state.rejected = !!state.siteverify && !(state.siteverify.success === true && state.siteverify.hostname === fixture.hostname);
+  }
+  return state;
+}
+function read(page, fixture) {
+  return page.evaluate(fixture => {
     const text = document.body?.innerText ?? "";
     const visible = element => {
       const box = element.getBoundingClientRect();
@@ -38,12 +62,20 @@ export async function observe(page, fixture) {
       rejected: /Verification Failed|Your response was invalid/i.test(text),
       tokens, tokenPresent: tokens.some(t => t.length > 20 && !t.dummy),
       sitekeys: [...document.querySelectorAll("[data-sitekey]")].map(e => e.getAttribute("data-sitekey")), drift: null };
-    if (fixture.type === "hcaptcha") {
-      // Parsed outside the page, so the probe and preflight read the verdict the same way.
-      const pre = document.querySelector("pre.hcaptcha-success");
-      state.siteverifyHtml = pre ? pre.outerHTML : null;
+    if (fixture.type === "hcaptcha" && !fixture.success) {
+      state.siteverifyHtml = document.querySelector("pre.hcaptcha-success")?.outerHTML ?? null;
       if ([...document.querySelectorAll(".h-captcha[data-sitekey]")].some(e => e.getAttribute("data-sitekey") !== fixture.sitekey))
         state.drift = "hCaptcha sitekey changed";
+    } else if (fixture.type === "hcaptcha") {
+      // The script opens ?page=<success> after an "ok" verdict and reloads the form with fail=1 otherwise.
+      const target = new URL(fixture.url), params = new URLSearchParams(location.search);
+      const demo = location.origin + location.pathname === target.origin + target.pathname;
+      state.successPage = demo && params.get("page") === fixture.success;
+      state.rejected = demo && params.get("page") === target.searchParams.get("page") && params.get("fail") === "1";
+      // Rendered explicitly, so the sitekey shows only in the widget frames' URLs.
+      const keys = [...document.querySelectorAll('iframe[src*="hcaptcha"]')]
+        .map(frame => /[#&?]sitekey=([^&]+)/.exec(frame.src)?.[1]).filter(Boolean);
+      if (keys.some(key => key !== fixture.sitekey)) state.drift = "hCaptcha sitekey changed";
     } else if (fixture.type === "recaptcha-v3") {
       const scripts = [...document.scripts].map(script => script.src).filter(src => /\/recaptcha\/(api|enterprise)\.js/.test(src));
       const pinned = scripts.some(src => new URL(src).searchParams.get("render") === fixture.sitekey);
@@ -72,24 +104,29 @@ export async function observe(page, fixture) {
       state.rejected = false;
     }
     return state;
-  }, fixture));
-  if (fixture.type === "hcaptcha") {
-    const verdict = siteverifyFromHtml(state.siteverifyHtml);
-    delete state.siteverifyHtml;
-    if (verdict) state.siteverify = verdict.invalid ? verdict
-      : { success: verdict.success, hostname: verdict.hostname, errorCodes: verdict["error-codes"] };
-    state.rejected = !!state.siteverify && !(state.siteverify.success === true && state.siteverify.hostname === fixture.hostname);
-  }
-  return state;
+  }, fixture);
 }
 
 const submitForm = (page, fixture, timeout) => bounded(page.locator(fixture.form).evaluate(form => form.requestSubmit()), timeout);
 
 export async function submit(page, fixture, timeout = 15_000) {
   if (fixture.type === "perimeterx") throw new Error("PerimeterX has no submission; observe the page instead");
-  if (fixture.type === "recaptcha" || fixture.type === "hcaptcha") {
+  if (fixture.type === "recaptcha" || fixture.type === "hcaptcha" && !fixture.success) {
     await Promise.all([page.waitForEvent("domcontentloaded", { timeout }), submitForm(page, fixture, timeout)]);
     return null;
+  }
+  if (fixture.type === "hcaptcha") {
+    // The solver filled the widget without calling the page's callback: post the token
+    // the way the callback would. Only the verdict leaves the page, never the token.
+    return bounded(page.evaluate(async ({ fixture, verifier, timeout }) => {
+      const hash = document.querySelector(fixture.token)?.value ?? "";
+      const response = await fetch(verifier, { method: "POST", headers: {
+        "content-type": "application/x-www-form-urlencoded; charset=UTF-8", "x-requested-with": "XMLHttpRequest" },
+      body: new URLSearchParams({ hash, login: "", pass: "" }), signal: AbortSignal.timeout(timeout), redirect: "error" });
+      const result = await response.json();
+      return { httpStatus: response.status, result: result.result, success: result.recoded?.success,
+        hostname: result.recoded?.hostname, errorCodes: result.recoded?.["error-codes"] };
+    }, { fixture, verifier: receiptUrl(fixture), timeout }), timeout);
   }
   if (fixture.type === "text") { await submitForm(page, fixture, timeout); return null; }
   if (fixture.type === "recaptcha-v3") {
@@ -124,6 +161,9 @@ export async function submit(page, fixture, timeout = 15_000) {
       hostname: result.hostname, widget: result.widget, errorCodes: result.errorCodes };
   }, { fixture, timeout }), timeout);
 }
+
+// How long an hCaptcha token may sit in the widget before the harness posts it itself.
+export const HCAPTCHA_CALLBACK_GRACE_MS = 3_000;
 
 // Types whose verifier returns its verdict directly to the harness.
 const VERDICTS = {
@@ -174,15 +214,21 @@ export async function attempt(task, config, deps) {
     url: task.fixture.url, started_at: new Date().toISOString(), status: "error", stage: "create",
     session_id: null, accepted_ms: null, passed_ms: null, cleanup: { released: false, disconnected: false } };
   let session, browser, page, navigationStart, deadline, verificationDeadline = null, createStarted = false;
-  let receipt = null, init = null;
-  const fixture = task.fixture, judge = VERDICTS[fixture.type];
+  let receipt = null, init = null, callbackStartedAt = null;
+  const fixture = task.fixture;
+  const callback = fixture.type === "hcaptcha" && fixture.success;
+  const judge = callback ? acceptedHcaptcha : VERDICTS[fixture.type];
+  const verifierUrl = receiptUrl(fixture);
   const progress = async event => {
     try { await journal(event); }
     catch (error) { row.journal_error = clean(error); throw error; }
   };
+  const onRequest = request => {
+    if (request.url() === verifierUrl && request.method() === "POST") callbackStartedAt ??= now();
+  };
   const onResponse = response => {
-    if (response.url() === fixture.url && response.request().method() === "POST")
-      receipt = { method: "POST", url: fixture.url, httpStatus: response.status() };
+    if (response.url() === verifierUrl && response.request().method() === "POST")
+      receipt = { method: "POST", url: verifierUrl, httpStatus: response.status() };
     // GeeTest's offline mode validates locally; only an online init counts.
     if (fixture.init && response.url().startsWith(new URL(fixture.init, fixture.url).href))
       response.json().then(body => { init = { online: body?.success === 1, gt: body?.gt ?? null }; },
@@ -210,6 +256,7 @@ export async function attempt(task, config, deps) {
     page = context.pages()[0] ?? await context.newPage();
     page.setDefaultTimeout(10_000);
     await page.setViewportSize(config.viewport);
+    if (callback) page.on("request", onRequest);
     page.on("response", onResponse);
     signal?.throwIfAborted();
     row.stage = "navigate";
@@ -240,7 +287,7 @@ export async function attempt(task, config, deps) {
     row.solve_start_ms = now() - navigationStart;
     engagement(row.initial);
     deadline = now() + config.solveTimeoutMs;
-    let submitted = false, previous = null, clearSince = null;
+    let submitted = false, previous = null, clearSince = null, tokenSince = null;
     while (now() < deadline && !signal?.aborted) {
       const windowEnd = Math.min(deadline, verificationDeadline ?? deadline);
       const remaining = windowEnd - now();
@@ -272,6 +319,14 @@ export async function attempt(task, config, deps) {
         await sleep(Math.min(1_000, Math.max(0, deadline - now())));
         continue;
       }
+      // Once the page starts posting, let its request finish without reusing the token.
+      if (callbackStartedAt !== null && !submitted) {
+        submitted = true;
+        row.stage = "verify";
+        row.token_ms = (tokenSince ?? callbackStartedAt) - navigationStart;
+        row.submitted_by = "page";
+        verificationDeadline = Math.min(deadline, callbackStartedAt + 15_000);
+      }
       if (fixture.type === "text" && submitted && passedText(state)) {
         row.status = "page_passed";
         row.passed_ms = now() - navigationStart;
@@ -288,11 +343,15 @@ export async function attempt(task, config, deps) {
         break;
       }
       // reCAPTCHA v3 has no widget output before submission; the text answer must stop changing.
+      // An hCaptcha token gets a grace period for the page's own callback to post it.
+      if (callback) tokenSince = state.tokenPresent ? tokenSince ?? now() : null;
       const ready = fixture.type === "recaptcha-v3" ? state.ready === true
         : fixture.type === "text" ? state.tokenPresent && state.imageReady && previous?.answer === state.answer
-          : state.tokenPresent;
+          : callback ? tokenSince !== null && now() - tokenSince >= HCAPTCHA_CALLBACK_GRACE_MS
+            : state.tokenPresent;
       if (ready && !submitted) {
-        if (fixture.type !== "recaptcha-v3") row.token_ms = now() - navigationStart;
+        if (fixture.type !== "recaptcha-v3") row.token_ms = (callback ? tokenSince : now()) - navigationStart;
+        if (callback) row.submitted_by = "harness";
         // A public demo's fixed answer; kept privately to tell a wrong answer from one the page never registered.
         if (fixture.type === "text") row.submitted_answer = state.answer;
         submitted = true;
@@ -340,6 +399,7 @@ export async function attempt(task, config, deps) {
     if (page) {
       try { await screenshot(page, task, row); }
       catch (error) { row.screenshot_error = clean(error); }
+      if (callback) page.off("request", onRequest);
       page.off("response", onResponse);
     }
     if (session?.diagnostics && row.status !== "verified") {

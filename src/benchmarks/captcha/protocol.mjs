@@ -10,7 +10,7 @@ export const PROVIDERS = ["kernel", "browserbase", "browser-use", "steel", "nott
 // They stay benchmarked and keep their "No results yet" row on /captcha.
 export const DAILY_EXCLUDED = ["tilion", "hyperbrowser", "browserless"];
 export const DAILY_PROVIDERS = PROVIDERS.filter(provider => !DAILY_EXCLUDED.includes(provider));
-export const PROTOCOL_VERSION = 6;
+export const PROTOCOL_VERSION = 7;
 
 // What a success means for a type. The status a success records follows from it,
 // so a page-level pass or token delivery can never be shown as server acceptance.
@@ -89,16 +89,29 @@ export const V5_FIXTURES = [
   ...V4_ADDED_TYPES,
 ];
 
-// Protocol v6 returns to v4's fixtures: hCaptcha on hCaptcha's own demo, the only
-// public hCaptcha page with a real secret not run by a solver vendor. Anti-Captcha's
-// refusal of hcaptcha.com, which moved v4 to v5, was gone by 2026-11-20: Notte passed there.
-export const FIXTURES = V4_FIXTURES.map(fixture => ({ ...fixture }));
+// v6 reused the v4 fixtures, including hCaptcha's official demo.
+const V6_FIXTURES = V4_FIXTURES.map(fixture => ({ ...fixture }));
+
+export const FIXTURES = [
+  { ...TURNSTILE, signal: "server_acceptance" },
+  { ...RECAPTCHA, signal: "server_acceptance" },
+  // Anti-Captcha's own demo renders hCaptcha explicitly from its script. The widget's
+  // callback POSTs the token to a same-origin verifier, which answers {"result":"ok"} or
+  // "fail" with hCaptcha's siteverify response, and the script then opens the success
+  // page or reloads the form with fail=1. Its secret is real: the test token fails.
+  { type: "hcaptcha", url: "https://anti-captcha.com/demo/?page=hcaptcha_callback", form: "#h-recaptcha",
+    token: 'textarea[name="h-captcha-response"]', sitekey: "e1264df2-1116-41ba-8d10-d08453ea8130",
+    script: "/demo/hcaptcha_callback.js", verifier: "/demo/submit_hcaptcha.php", success: "hcaptcha_success_page",
+    signal: "server_acceptance" },
+  ...V4_ADDED_TYPES,
+];
 
 export function fixturesFor(version) {
   if (version === 3) return V3_FIXTURES;
   if (version === 4) return V4_FIXTURES;
   if (version === 5) return V5_FIXTURES;
-  if (version === 6) return FIXTURES;
+  if (version === 6) return V6_FIXTURES;
+  if (version === 7) return FIXTURES;
   throw new Error(`Unsupported CAPTCHA protocol version: ${version}`);
 }
 export function signalFor(version, type) {
@@ -153,15 +166,29 @@ export function acceptedTurnstile(verdict) {
     verdict.testSecret === false && verdict.hostname === "zerocaptcha.io" && verdict.widget === "managed";
 }
 
-// The reCAPTCHA v2 and hCaptcha demos POST the form to their own URL. reCAPTCHA v2
-// replaces the form with a success page; hCaptcha's demo prints its siteverify JSON.
-// A query string can switch hCaptcha's demo to its dummy secret, so the receipt URL must match exactly.
+// The URL whose POST response is the page's own verdict: reCAPTCHA v2 posts its form to
+// the demo itself, the hCaptcha demo's callback posts to its verifier. A query string could
+// switch a demo's secret, so the receipt URL must match exactly.
+export function receiptUrl(fixture) {
+  return fixture.type === "hcaptcha" && fixture.success ? new URL(fixture.verifier, fixture.url).href : fixture.url;
+}
+
+// reCAPTCHA v2 replaces the form with a success page. The hCaptcha demo's script opens
+// its success page only when the verifier answered {"result":"ok"}; preflight pins that script.
 export function acceptedOfficial(state, receipt, fixture) {
-  const posted = receipt?.httpStatus === 200 && receipt.method === "POST" && receipt.url === fixture.url;
+  const posted = receipt?.httpStatus === 200 && receipt.method === "POST" && receipt.url === receiptUrl(fixture);
   if (fixture.type === "recaptcha") return posted && state?.accepted === true && state.formPresent === false;
-  if (fixture.type === "hcaptcha") return posted && state?.siteverify?.success === true &&
-    state.siteverify.hostname === fixture.hostname;
+  if (fixture.type === "hcaptcha") {
+    if (fixture.success) return posted && state?.successPage === true;
+    return posted && state?.siteverify?.success === true && state.siteverify.hostname === fixture.hostname;
+  }
   return false;
+}
+
+// The verdict the hCaptcha verifier returns when the harness posts a token itself,
+// because the solver filled the widget without calling the page's callback.
+export function acceptedHcaptcha(verdict) {
+  return verdict?.httpStatus === 200 && verdict.result === "ok";
 }
 
 // Google's documented default threshold is 0.5; the demo itself accepts any score.
@@ -239,28 +266,33 @@ async function post(request, url, body, headers = { "content-type": "application
   return request(target, { method: "POST", headers: { ...headers, origin: target.origin }, body,
     signal: AbortSignal.timeout(20_000), redirect: "error" });
 }
-// hCaptcha's demo prints siteverify's JSON answer in <pre class="hcaptcha-success">.
-// Null when the page holds no verdict; a verdict that is not JSON is invalid.
+
+// The official hCaptcha demo used by v4 and v6 prints its siteverify response.
 export function siteverifyFromHtml(html) {
   const match = /<pre class="hcaptcha-success"[^>]*>([\s\S]*?)<\/pre>/.exec(html ?? "");
   if (!match) return null;
   const text = match[1].replace(/&#34;|&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
   try { return JSON.parse(text); } catch { return { success: false, invalid: true }; }
 }
-
 // Plain HTTP checks of every fixture contract; no browser session is created.
 export async function preflight(request = fetch) {
   const observations = [];
-  const page = async (fixture, marker) => {
+  const page = async (fixture, ...markers) => {
     const { response, text } = await get(request, fixture.url);
     if (!response.ok) throw new Error(`${fixture.type} fixture HTTP ${response.status}`);
-    if (!text.includes(marker)) throw new Error(`${fixture.type} fixture sitekey or markup changed`);
+    if (!markers.every(marker => text.includes(marker))) throw new Error(`${fixture.type} fixture sitekey or markup changed`);
     observations.push({ type: fixture.type, httpStatus: response.status });
   };
   const byType = Object.fromEntries(FIXTURES.map(f => [f.type, f]));
   await page(byType.turnstile, byType.turnstile.sitekey);
   await page(byType.recaptcha, byType.recaptcha.sitekey);
-  await page(byType.hcaptcha, byType.hcaptcha.sitekey);
+  const hcaptchaFixture = byType.hcaptcha;
+  await page(hcaptchaFixture, `src="${hcaptchaFixture.script}"`, 'id="h-recaptcha"');
+  // The script holds the sitekey and the rule that opens the success page only on "ok".
+  const script = await get(request, new URL(hcaptchaFixture.script, hcaptchaFixture.url).href);
+  if (!script.response.ok || ![hcaptchaFixture.sitekey, hcaptchaFixture.verifier, "data.result === 'ok'",
+    `page=${hcaptchaFixture.success}`].every(marker => script.text.includes(marker)))
+    throw new Error("hcaptcha fixture sitekey or markup changed");
   await page(byType["recaptcha-v3"], 'data-action="demo_action"');
   await page(byType.geetest, "geetest-demo-form");
   await page(byType.text, "simple-captcha-field");
@@ -273,10 +305,11 @@ export async function preflight(request = fetch) {
     throw new Error("Turnstile verifier did not reject an invalid token using a real secret");
 
   // hCaptcha's published test token passes only under the dummy secret.
-  const hcaptcha = await post(request, byType.hcaptcha.url, new URLSearchParams({
-    "h-captcha-response": "10000000-aaaa-bbbb-cccc-000000000001" }).toString(),
-  { "content-type": "application/x-www-form-urlencoded" });
-  const siteverify = hcaptcha.ok ? siteverifyFromHtml(await hcaptcha.text()) : null;
+  const hcaptcha = await post(request, receiptUrl(hcaptchaFixture), new URLSearchParams({
+    hash: "10000000-aaaa-bbbb-cccc-000000000001", login: "", pass: "" }).toString(),
+  { "content-type": "application/x-www-form-urlencoded; charset=UTF-8", "x-requested-with": "XMLHttpRequest" });
+  const answer = hcaptcha.ok ? await hcaptcha.json().catch(() => null) : null;
+  const siteverify = answer?.result === "fail" ? answer.recoded : null;
   if (siteverify?.success !== false || !siteverify["error-codes"]?.includes("not-using-dummy-secret"))
     throw new Error("hCaptcha demo did not reject the test token using a real secret");
 

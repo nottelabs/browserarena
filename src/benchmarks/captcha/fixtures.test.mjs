@@ -1,34 +1,43 @@
 import assert from "node:assert/strict";
 import { EventEmitter } from "node:events";
 import test from "node:test";
-import { acceptedGeetest, acceptedOfficial, acceptedRecaptchaV3, captchaTypes, configuration, FIXTURES, passedText,
-  preflight, reachedPerimeterX, schedule, siteverifyFromHtml, summarize, V3_FIXTURES, V4_FIXTURES, V5_FIXTURES } from "./protocol.mjs";
-import { attempt, submit } from "./run.mjs";
+import { acceptedGeetest, acceptedHcaptcha, acceptedOfficial, acceptedRecaptchaV3, captchaTypes, configuration, FIXTURES,
+  passedText, preflight, reachedPerimeterX, receiptUrl, schedule, summarize, V3_FIXTURES, V4_FIXTURES, V5_FIXTURES } from "./protocol.mjs";
+import { attempt, HCAPTCHA_CALLBACK_GRACE_MS, submit } from "./run.mjs";
 
 const config = configuration();
 const by = type => FIXTURES.find(f => f.type === type);
 const response = (data, status = 200) => new Response(JSON.stringify(data), { status });
-// A siteverify answer as hCaptcha's demo prints it: entity-escaped JSON in <pre class="hcaptcha-success">.
-const printed = verdict => `<pre class="hcaptcha-success">${JSON.stringify(verdict, null, 4).replaceAll('"', "&#34;")}</pre>`;
+// anti-captcha.com/demo/hcaptcha_callback.js as served on 2026-11-20, abridged to the parts preflight pins.
+const HCAPTCHA_SCRIPT = `function checkCaptcha(hash) {
+    $.ajax({ url: '/demo/submit_hcaptcha.php', type: 'POST', data: { hash: hash, login: $("#login").val(), pass: $("#pass").val() },
+        success : function(data) {
+            if (data.result && data.result === 'ok') {
+                document.location = '/demo/?page=hcaptcha_success_page&login='+$("#login").val()+'&pass='+$("#pass").val()
+            } else { document.location = '/demo/?page=hcaptcha_callback&fail=1'; }
+        } });
+}
+function renderHcaptcha() { hcaptcha.render('h-recaptcha', { sitekey: 'e1264df2-1116-41ba-8d10-d08453ea8130', callback: checkCaptcha }); }`;
 
 // A fake of every public fixture, with one switch per contract the preflight checks.
 function fixtureServer(change = {}) {
   const calls = [];
-  const html = { turnstile: by("turnstile").sitekey, recaptcha: by("recaptcha").sitekey, hcaptcha: by("hcaptcha").sitekey,
+  const html = { turnstile: by("turnstile").sitekey, recaptcha: by("recaptcha").sitekey,
+    hcaptcha: `<script type="application/javascript" src="${by("hcaptcha").script}"></script><div id="h-recaptcha"></div>`,
     "recaptcha-v3": '<button data-action="demo_action">', geetest: '<form id="geetest-demo-form">', text: '<input id="simple-captcha-field">' };
   const request = async (url, options = {}) => {
     const target = String(url); calls.push({ url: target, options });
     if (change.status?.[target]) return new Response("blocked", { status: change.status[target] });
     if (target === by("perimeterx").url) return change.walmart ?? new Response(null, { status: 307, headers: { location: "/blocked?url=x" } });
+    if (target === new URL(by("hcaptcha").script, by("hcaptcha").url).href)
+      return new Response(change.hcaptchaScript ?? HCAPTCHA_SCRIPT, { status: change.hcaptchaScriptStatus ?? 200 });
     if (target.startsWith(new URL(by("geetest").init, by("geetest").url).href))
       return response(change.geetestInit ?? { success: 1, gt: by("geetest").gt, challenge: "c".repeat(32) });
     if (options.method === "POST") {
       if (target === new URL(by("turnstile").verifier, by("turnstile").url).href)
         return response(change.turnstile ?? { success: false, testSecret: false, widget: "managed" });
-      if (target === by("hcaptcha").url) {
-        const verdict = change.hcaptcha ?? { success: false, credit: false, hostname: "dummy-key-pass", "error-codes": ["not-using-dummy-secret"] };
-        return new Response(printed(verdict));
-      }
+      if (target === receiptUrl(by("hcaptcha"))) return response(change.hcaptcha ?? { result: "fail",
+        recoded: { success: false, credit: false, hostname: "dummy-key-pass", "error-codes": ["not-using-dummy-secret"] } });
       if (target === new URL(by("recaptcha-v3").verifier, by("recaptcha-v3").url).href) return response(change.v3 ?? { success: false });
       if (target === new URL(by("geetest").verifier, by("geetest").url).href) return response(change.geetest ?? { success: false });
       throw new Error(`Unexpected POST ${target}`);
@@ -40,23 +49,28 @@ function fixtureServer(change = {}) {
   return { request, calls };
 }
 
-test("preflight checks every v6 contract and real-secret rejection without opening sessions", async () => {
+test("preflight checks every v7 contract and real-secret rejection without opening sessions", async () => {
   const server = fixtureServer();
   const result = await preflight(server.request);
   assert.deepEqual(result.observations.map(o => o.type), FIXTURES.map(f => f.type));
   assert.equal(result.observations.at(-1).blocked, true);
-  assert.ok(server.calls.every(call => !/nopecha/.test(call.url)), "NopeCHA blocks every visitor; v6 never calls it");
-  assert.ok(server.calls.every(call => !/democaptcha/.test(new URL(call.url).hostname)), "v6 never calls democaptcha.com");
+  assert.ok(server.calls.every(call => !/nopecha|hcaptcha\.com|democaptcha/.test(new URL(call.url).hostname)));
+  const posted = server.calls.find(call => call.url === receiptUrl(by("hcaptcha")));
+  assert.equal(new URLSearchParams(posted.options.body).get("hash"), "10000000-aaaa-bbbb-cccc-000000000001");
   assert.deepEqual(result.hcaptcha_test_token, { success: false, errorCodes: ["not-using-dummy-secret"] });
   const walmartPage = new Response(`<script>window._pxAppId = '${by("perimeterx").appId}';</script>`);
   assert.equal((await preflight(fixtureServer({ walmart: walmartPage }).request)).observations.at(-1).httpStatus, 200);
   for (const [change, error] of [
-    [{ markup: { hcaptcha: "other sitekey" } }, /hcaptcha fixture sitekey or markup changed/],
+    [{ markup: { hcaptcha: '<div id="h-recaptcha"></div>' } }, /hcaptcha fixture sitekey or markup changed/],
+    // democaptcha.com's failure on 2026-11-19: the widget kept an unfilled template sitekey.
+    [{ hcaptchaScript: HCAPTCHA_SCRIPT.replace(by("hcaptcha").sitekey, "{{ hcaptcha_sitekey }}") }, /hcaptcha fixture sitekey or markup changed/],
+    [{ hcaptchaScript: HCAPTCHA_SCRIPT.replace("data.result === 'ok'", "true") }, /hcaptcha fixture sitekey or markup changed/],
+    [{ hcaptchaScriptStatus: 404 }, /hcaptcha fixture sitekey or markup changed/],
     [{ markup: { text: "<p>redesigned</p>" } }, /text fixture/],
     [{ status: { [by("recaptcha-v3").url]: 403 } }, /recaptcha-v3 fixture HTTP 403/],
     [{ turnstile: { success: true, testSecret: true, widget: "managed" } }, /Turnstile verifier/],
-    [{ hcaptcha: { success: true, hostname: "dummy-key-pass" } }, /hCaptcha demo did not reject the test token/],
-    [{ hcaptcha: { success: false, "error-codes": ["invalid-input-response"] } }, /real secret/],
+    [{ hcaptcha: { result: "ok" } }, /hCaptcha demo did not reject the test token/],
+    [{ hcaptcha: { result: "fail", recoded: { success: false, "error-codes": ["invalid-input-response"] } } }, /real secret/],
     [{ v3: { success: true, score: 0.9 } }, /reCAPTCHA v3 verifier/],
     [{ geetestInit: { success: 0, gt: by("geetest").gt } }, /GeeTest demo is offline/],
     [{ geetestInit: { success: 1, gt: "other" } }, /gt changed/],
@@ -66,13 +80,13 @@ test("preflight checks every v6 contract and real-secret rejection without openi
   ]) await assert.rejects(() => preflight(fixtureServer(change).request), error);
 });
 
-test("protocol v3 keeps its three fixtures and labels; v4 to v6 declare seven typed columns", () => {
+test("protocol v3 keeps its three fixtures and labels; v4 to v7 declare seven typed columns", () => {
   const v3 = configuration({ version: 3 });
   assert.deepEqual(v3.fixtures, V3_FIXTURES);
   assert.equal(v3.fixtures[2].url, "https://nopecha.com/captcha/hcaptcha#enterprise");
   assert.equal(schedule(v3).flat().length, v3.providers.length * 3 * 5);
   assert.deepEqual(captchaTypes(3).map(t => t.signal_label), ["Server acceptance", "Server acceptance", "Token delivery only"]);
-  for (const version of [4, 5, 6]) assert.deepEqual(captchaTypes(version).map(t => [t.id, t.label, t.signal_label]), [
+  for (const version of [4, 5, 6, 7]) assert.deepEqual(captchaTypes(version).map(t => [t.id, t.label, t.signal_label]), [
     ["turnstile", "Cloudflare Turnstile", "Server acceptance"], ["recaptcha", "reCAPTCHA v2", "Server acceptance"],
     ["hcaptcha", "hCaptcha", "Server acceptance"], ["recaptcha-v3", "reCAPTCHA v3", "Server acceptance"],
     ["geetest", "GeeTest v3", "Server acceptance"], ["text", "Text CAPTCHA", "Page check"], ["perimeterx", "PerimeterX", "Page reached"]]);
@@ -81,23 +95,29 @@ test("protocol v3 keeps its three fixtures and labels; v4 to v6 declare seven ty
   assert.equal(V4_FIXTURES[2].url, "https://accounts.hcaptcha.com/demo");
   assert.deepEqual(configuration({ version: 5 }).fixtures, V5_FIXTURES);
   assert.equal(V5_FIXTURES[2].url, "https://democaptcha.com/demo-form-eng/hcaptcha.html");
+  assert.deepEqual(configuration({ version: 6 }).fixtures, V4_FIXTURES);
+  assert.equal(config.version, 7);
+  assert.equal(by("hcaptcha").url, "https://anti-captcha.com/demo/?page=hcaptcha_callback");
+  assert.deepEqual(FIXTURES.filter(f => f.type !== "hcaptcha"), V4_FIXTURES.filter(f => f.type !== "hcaptcha"));
   assert.deepEqual(V5_FIXTURES.filter(f => f.type !== "hcaptcha"), V4_FIXTURES.filter(f => f.type !== "hcaptcha"));
-  // v6 returns to v4's fixtures exactly, after democaptcha.com broke its hCaptcha page.
-  assert.deepEqual(FIXTURES, V4_FIXTURES);
-  assert.equal(by("hcaptcha").url, "https://accounts.hcaptcha.com/demo");
   // Turnstile and reCAPTCHA v2 are unchanged apart from naming their signal.
   assert.deepEqual(FIXTURES.slice(0, 2).map(({ signal, ...fixture }) => fixture), V3_FIXTURES.slice(0, 2));
 });
 
 test("verdict rules reject dummy secrets, low scores, offline GeeTest and pages that never cleared", () => {
-  const hcaptcha = by("hcaptcha"), receipt = { method: "POST", url: hcaptcha.url, httpStatus: 200 };
-  const state = { siteverify: { success: true, hostname: "hcaptcha.com" } };
+  const hcaptcha = by("hcaptcha"), receipt = { method: "POST", url: "https://anti-captcha.com/demo/submit_hcaptcha.php", httpStatus: 200 };
+  const state = { successPage: true };
   assert.equal(acceptedOfficial(state, receipt, hcaptcha), true);
-  assert.equal(acceptedOfficial({ siteverify: { success: true, hostname: "democaptcha.com" } }, receipt, hcaptcha), false);
-  assert.equal(acceptedOfficial({ siteverify: { success: true, hostname: "dummy-key-pass" } }, receipt, hcaptcha), false);
-  assert.equal(acceptedOfficial(state, { ...receipt, url: `${hcaptcha.url}?secret=0x0` }, hcaptcha), false);
+  assert.equal(acceptedOfficial({ successPage: false }, receipt, hcaptcha), false);
+  // The success page alone is a URL anyone can open: the verifier POST must have been seen.
   assert.equal(acceptedOfficial(state, null, hcaptcha), false);
-  assert.equal(acceptedOfficial({ siteverify: { success: "true", hostname: "hcaptcha.com" } }, receipt, hcaptcha), false);
+  assert.equal(acceptedOfficial(state, { ...receipt, url: `${receipt.url}?secret=0x0` }, hcaptcha), false);
+  assert.equal(acceptedOfficial(state, { ...receipt, url: hcaptcha.url }, hcaptcha), false);
+  assert.equal(acceptedOfficial(state, { ...receipt, httpStatus: 500 }, hcaptcha), false);
+  assert.equal(acceptedOfficial(state, { ...receipt, method: "GET" }, hcaptcha), false);
+  assert.equal(acceptedHcaptcha({ httpStatus: 200, result: "ok" }), true);
+  for (const change of [{ result: "fail" }, { result: "OK" }, { result: undefined }, { httpStatus: 500 }])
+    assert.equal(acceptedHcaptcha({ httpStatus: 200, result: "ok", ...change }), false);
 
   const v3 = by("recaptcha-v3"), verdict = { httpStatus: 200, success: true, hostname: "2captcha.com", action: "demo_action", score: 0.5 };
   assert.equal(acceptedRecaptchaV3(verdict, v3), true);
@@ -144,42 +164,63 @@ function harness(fixture, states, { verify = async () => null, navigation = 200,
 const jsonResponse = (url, body) => ({ url: () => url, status: () => 200,
   request: () => ({ method: () => "GET" }), json: async () => body });
 
-// The rejection hCaptcha's demo printed for its test token on 2026-11-20, verbatim apart from the timestamp.
-const HCAPTCHA_REJECTION = `<div aria-hidden="true" class="hcaptcha-success wrap">
-<pre class="hcaptcha-success">{
-    &#34;success&#34;: false,
-    &#34;credit&#34;: false,
-    &#34;hostname&#34;: &#34;dummy-key-pass&#34;,
-    &#34;error-codes&#34;: [
-        &#34;not-using-dummy-secret&#34;
-    ],
-    &#34;challenge_ts&#34;: &#34;2026-11-20T02:17:31.500Z&#34;
-}</pre>
-<button id="copy-token" data-text="10000000-aaaa-bbbb-cccc-000000000001">`;
-
-test("hCaptcha's printed siteverify JSON parses, and anything else is no verdict or an invalid one", () => {
-  assert.deepEqual(siteverifyFromHtml(HCAPTCHA_REJECTION), { success: false, credit: false, hostname: "dummy-key-pass",
-    "error-codes": ["not-using-dummy-secret"], challenge_ts: "2026-11-20T02:17:31.500Z" });
-  assert.deepEqual(siteverifyFromHtml(printed({ success: true, hostname: "hcaptcha.com" })), { success: true, hostname: "hcaptcha.com" });
-  assert.deepEqual(siteverifyFromHtml('<pre class="hcaptcha-success">not json</pre>'), { success: false, invalid: true });
-  for (const html of [null, "", '<form id="hcaptcha-demo-form"></form>']) assert.equal(siteverifyFromHtml(html), null);
+test("hCaptcha waits for a slow page callback without posting the same token again", async () => {
+  const fixture = by("hcaptcha");
+  for (const status of ["verified", "rejected"]) {
+    const h = harness(fixture, [{ tokenPresent: false }, { tokenPresent: true }]);
+    const request = { url: () => receiptUrl(fixture), method: () => "POST" };
+    const probe = h.deps.probe;
+    let sentAt;
+    h.deps.probe = async (...args) => {
+      const state = await probe(...args);
+      if (!state.tokenPresent) return state;
+      if (sentAt === undefined) {
+        sentAt = h.at();
+        h.page.emit("request", request);
+      }
+      if (h.at() - sentAt <= HCAPTCHA_CALLBACK_GRACE_MS) return state;
+      h.page.emit("response", { url: request.url, status: () => 200, request: () => request });
+      return status === "verified" ? { formPresent: false, successPage: true } : { rejected: true };
+    };
+    const row = await attempt(h.task, config, h.deps);
+    assert.equal(row.status, status);
+    assert.equal(row.submitted_by, "page");
+    assert.equal(h.counts().submissions, 0);
+    assert.equal(h.counts().releases, 1);
+    if (status === "verified") assert.ok(row.accepted_ms > row.token_ms + HCAPTCHA_CALLBACK_GRACE_MS);
+  }
 });
 
-test("hCaptcha v6 counts only the demo's own siteverify success after an observed POST", async () => {
-  const fixture = by("hcaptcha"), accepted = { siteverify: { success: true, hostname: fixture.hostname } };
-  const h = harness(fixture, [{ tokenPresent: false }, { tokenPresent: true }, accepted], {
-    verify: async page => { page.emit("response", { url: () => fixture.url, status: () => 200, request: () => ({ method: () => "POST" }) }); return null; } });
-  const row = await attempt(h.task, config, h.deps);
-  assert.equal(row.status, "verified"); assert.ok(row.accepted_ms > row.token_ms);
-  assert.equal(h.counts().submissions, 1); assert.equal(h.counts().releases, 1);
-  const rejected = harness(fixture, [{ tokenPresent: false }, { tokenPresent: true }, { siteverify: { success: false }, rejected: true }]);
-  assert.equal((await attempt(rejected.task, config, rejected.deps)).status, "rejected");
+test("hCaptcha rejects a success page without a verifier POST and stops on fixture drift", async () => {
+  const fixture = by("hcaptcha");
+  // A success page reached without any observed verifier POST is not acceptance.
+  const unposted = harness(fixture, [{ formPresent: true }, { formPresent: false, successPage: true }]);
+  const late = await attempt(unposted.task, config, unposted.deps);
+  assert.equal(late.status, "timeout");
+
   const drift = harness(fixture, [{ drift: "hCaptcha sitekey changed" }]);
   const driftRow = await attempt(drift.task, config, drift.deps);
   assert.equal(driftRow.status, "error"); assert.match(driftRow.error, /Fixture drift/);
   // Drift stops the campaign, so an incomplete run is never published; cleanup still ran.
   assert.equal(driftRow.fixture_drift, true); assert.equal(driftRow.halt_campaign, true);
   assert.equal(drift.counts().releases, 1);
+});
+
+test("an hCaptcha token the page never posts is posted by the harness after the grace period", async () => {
+  const fixture = by("hcaptcha");
+  for (const [result, status] of [["ok", "verified"], ["fail", "rejected"]]) {
+    const h = harness(fixture, [{ tokenPresent: false }, { tokenPresent: true }], {
+      verify: async () => ({ httpStatus: 200, result }) });
+    const row = await attempt(h.task, config, h.deps);
+    assert.equal(row.status, status); assert.equal(row.submitted_by, "harness");
+    assert.equal(h.counts().submissions, 1);
+    // The token appeared on the second probe and waited out the grace period first.
+    assert.ok(row.verification && row.token_ms < h.at() - HCAPTCHA_CALLBACK_GRACE_MS);
+  }
+  // A token the widget withdraws restarts the grace period, so nothing is posted.
+  const flicker = harness(fixture, [{ tokenPresent: true }, { tokenPresent: false }]);
+  assert.equal((await attempt(flicker.task, config, flicker.deps)).status, "timeout");
+  assert.equal(flicker.counts().submissions, 0);
 });
 
 test("reCAPTCHA v3 submits once the page's own script is ready and needs the score threshold", async () => {

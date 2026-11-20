@@ -72,7 +72,7 @@ campaign continues. Nothing resumes
 or retries automatically. A completed campaign may contain rejected tokens,
 timeouts and setup errors; a zero exit code does not mean every challenge passed.
 
-## Protocol v6
+## Protocol v7
 
 Each session uses a 1920 × 1080 viewport, a 30-second navigation limit and a
 180-second solve window after navigation. Timing starts at navigation and ends
@@ -134,7 +134,7 @@ recorded as another:
 | --- | --- | --- | --- |
 | Cloudflare Turnstile | [ZeroCaptcha managed widget](https://zerocaptcha.io/captcha-test/cloudflare-turnstile-managed) | Server acceptance | Same-origin verifier returns HTTP 200, `success=true`, `testSecret=false`, hostname `zerocaptcha.io` and widget `managed`. No ZeroCaptcha solver is used. |
 | reCAPTCHA v2 | [Google's demo](https://www.google.com/recaptcha/api2/demo) | Server acceptance | A POST response at the exact demo URL and Google's "Verification Success" page. |
-| hCaptcha | [hCaptcha's own demo](https://accounts.hcaptcha.com/demo) | Server acceptance | The form is posted to the exact demo URL and the siteverify JSON it prints reports `success: true` and hostname `hcaptcha.com`. |
+| hCaptcha | [Anti-Captcha's callback demo](https://anti-captcha.com/demo/?page=hcaptcha_callback) | Server acceptance | The widget's callback posts to the demo's verifier. A pass requires HTTP 200 on that exact POST and the page's success redirect. If the solver fills the widget without starting the callback POST, the harness can submit the token after three seconds and requires the verifier to return `result: "ok"`. |
 | reCAPTCHA v3 | [2Captcha demo](https://2captcha.com/demo/recaptcha-v3) | Server acceptance | The page's own Check runs `grecaptcha.execute` and its verifier returns Google's siteverify result: HTTP 200, `success=true`, hostname `2captcha.com`, action `demo_action` and **score ≥ 0.5**. |
 | GeeTest v3 | [2Captcha demo](https://2captcha.com/demo/geetest) | Server acceptance | The solver fills the three hidden `geetest_*` inputs; the same-origin verifier returns HTTP 200 and `success=true`, and the page's init call reported online mode (`success: 1`) with the pinned `gt`. |
 | Text CAPTCHA | [2Captcha normal CAPTCHA](https://2captcha.com/demo/normal) | Page check | The solver types the answer; once it has stopped changing for one probe the form is submitted and the page shows "Captcha is passed successfully!". |
@@ -144,13 +144,12 @@ Type-specific notes:
 
 - **Forms** are submitted with `requestSubmit()`, so pointer overlays cannot block
   verification. The harness only submits; it never fills an answer.
-- **hCaptcha:** the page is run by Anti-Captcha, which advertises its solver
-  plugin there; the widget, its sitekey and siteverify are hCaptcha's own. Both
-  the exact URL and the hostname are required, and preflight checks that the
-  published test token is rejected with `not-using-dummy-secret`, so the page
-  uses a real secret. The page echoes the submitted token above the verdict:
-  the probe parses the verdict outside the page and keeps the text out of the
-  evidence, and screenshots mask it.
+- **hCaptcha** uses a demo hosted by solver vendor Anti-Captcha. Preflight
+  checks the widget sitekey, verifier path, and the script's success condition.
+  The verifier rejects hCaptcha's public test token with
+  `not-using-dummy-secret`, confirming it uses a real secret. Once the page
+  starts a verifier POST, the harness waits for it to finish. Only token
+  lengths and verification results are recorded.
 - **reCAPTCHA v3** has no challenge: the score reflects how Google rates the
   browser, and a solver can only change it by its own means. The demo accepts any
   score; 0.5 is Google's documented default threshold. The score of each attempt
@@ -193,6 +192,14 @@ difficulty varies per visit and automatic clearance can count as success. This
 is neither a visual-puzzle accuracy benchmark nor a test of Cloudflare's full
 interstitial.
 
+### Protocol v6
+
+v6 used the same fixtures as v4, including the official hCaptcha demo.
+Steel, Anchor Browser, Browser Use and Notte each verified one trial there
+on 2026-11-20. In the Notte trial, 2Captcha supplied the accepted token
+as a fallback. v7 changes the hCaptcha fixture to a page that Anti-Captcha
+can solve and keeps the same other six fixtures.
+
 ### Protocol v5
 
 Campaigns from 2026-11-06 to 2026-11-12 used protocol v5: the same seven types,
@@ -201,13 +208,8 @@ Success was the form posted to the exact demo URL and the siteverify response it
 printed (a PHP `var_dump`) reporting `success` `bool(true)` and hostname
 `democaptcha.com`. By 2026-11-19 that page served its widget with an unfilled
 template (`data-sitekey="{{ hcaptcha_sitekey }}"`), so no solver could pass it and
-preflight refused every run. democaptcha.com is run by Anti-Captcha, a solver
-vendor, and so is the only other working hCaptcha demo found, Anti-Captcha's own.
-v6 therefore returns to v4's fixtures exactly: hCaptcha on hCaptcha's own demo,
-the one neutral page with a real secret. Anti-Captcha's refusal of `hcaptcha.com`,
-the reason v4 was left, no longer applied on 2026-11-20: single trials on this
-page passed for Steel, Anchor Browser, Browser Use and Notte, with siteverify
-reporting `success: true` for `hcaptcha.com`. The validator still accepts v5.
+preflight refused every run. democaptcha.com is also run by Anti-Captcha.
+The validator still accepts v5.
 
 ### Protocol v4
 
@@ -239,7 +241,7 @@ so v3 can no longer run and later protocols use no NopeCHA page.
 ## Daily run
 
 `scripts/run-captcha-and-publish.sh` runs one campaign from the US West runner,
-exports it as `results/captcha/<date>-west-v6.json` and pushes that file to
+exports it as `results/captcha/<date>-west-v7.json` and pushes that file to
 `main` as `browserarena-bot (us-west)`. It resets the checkout to `origin/main`,
 reuses the runner's `.env`, and takes the checkout lock and the comparison lock
 first, so it queues behind the other jobs on the box instead of overlapping them.
@@ -310,7 +312,7 @@ and refuses tracked changes. Guards:
 ## Export results for review
 
 ```bash
-npm run captcha:export -- .captcha-runs/repeated-campaign 2026-11-20-west-v6
+npm run captcha:export -- .captcha-runs/repeated-campaign 2026-11-20-west-v7
 ```
 
 This writes one new `results/captcha/<id>.json` locally. It never pushes or
