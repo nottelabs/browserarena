@@ -61,8 +61,8 @@ test("export writes a separate public file and never overwrites an earlier campa
   } finally { await fs.rm(directory, { recursive: true, force: true }); }
 });
 
-// A protocol v5 campaign covering one attempt of each success signal.
-function v5Evidence() {
+// A protocol v6 campaign covering one attempt of each success signal.
+function v6Evidence() {
   const config = configuration({ providers: ["kernel"], rounds: 1 });
   const row = (type: string, status: string, timings: Record<string, number | null>) => ({ id: `r01-kernel-${type}`, provider: "kernel",
     type, round: 1, stage: "verify", status, accepted_ms: null, token_ms: null, passed_ms: null, ...timings,
@@ -74,10 +74,10 @@ function v5Evidence() {
     row("geetest", "rejected", { token_ms: 7000 })] };
 }
 
-test("v5 exports carry typed columns and keep page checks apart from server acceptance", () => {
-  const { summary, rows } = v5Evidence();
-  const result = exportCampaign("v5-campaign", summary, rows);
-  assert.equal(result.protocol_version, 5);
+test("v6 exports carry typed columns and keep page checks apart from server acceptance", () => {
+  const { summary, rows } = v6Evidence();
+  const result = exportCampaign("v6-campaign", summary, rows);
+  assert.equal(result.protocol_version, 6);
   assert.deepEqual(result.types.map(type => `${type.id}:${type.signal_label}`), ["turnstile:Server acceptance", "recaptcha:Server acceptance",
     "hcaptcha:Server acceptance", "recaptcha-v3:Server acceptance", "geetest:Server acceptance", "text:Page check", "perimeterx:Page reached"]);
   assert.doesNotMatch(JSON.stringify(result), /private|score/);
@@ -88,7 +88,7 @@ test("v5 exports carry typed columns and keep page checks apart from server acce
   assert.equal(cell("geetest").rejected, 1); assert.equal(cells.reduce((sum, c) => sum + c.not_run, 0), 2);
   const swap = (type: string, change: Record<string, unknown>) => rows.map(r => r.type === type ? { ...r, ...change } : r);
   // An unsubmitted text CAPTCHA whose field stayed empty is published apart from timeouts.
-  const silent = campaignCells(exportCampaign("v5-campaign", summary, swap("text", { status: "no_answer", stage: "solve", passed_ms: null, token_ms: null })));
+  const silent = campaignCells(exportCampaign("v6-campaign", summary, swap("text", { status: "no_answer", stage: "solve", passed_ms: null, token_ms: null })));
   assert.deepEqual([silent.find(c => c.type === "text")!.no_answer, silent.find(c => c.type === "text")!.timeout, silent.find(c => c.type === "text")!.succeeded], [1, 0, 0]);
   for (const [type, change, error] of [
     ["text", { status: "verified", accepted_ms: 12000 }, /interchanged/],
@@ -100,7 +100,7 @@ test("v5 exports carry typed columns and keep page checks apart from server acce
     ["geetest", { status: "no_answer", stage: "solve", token_ms: null }, /no answer/],
     ["text", { status: "no_answer", stage: "verify", passed_ms: null, token_ms: null }, /no answer/],
     ["text", { status: "no_answer", stage: "solve", passed_ms: null }, /answer timing/],
-  ] as const) assert.throws(() => exportCampaign("v5-campaign", summary, swap(type, change)), error);
+  ] as const) assert.throws(() => exportCampaign("v6-campaign", summary, swap(type, change)), error);
 });
 
 test("the 2026-11-06 campaign validates as v5 with hCaptcha re-run on democaptcha.com", async () => {
