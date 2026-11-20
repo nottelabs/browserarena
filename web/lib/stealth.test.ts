@@ -1,11 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { mkdirSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
+import { existsSync, mkdirSync, mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { parseStealth, rankStealth, loadStealthRuns, STEALTH_PROVIDERS } from "./stealth";
+import { parseStealth, rankStealth, loadStealthRuns, STEALTH_PROVIDERS, STEALTH_SITES } from "./stealth";
 
 function fixture() {
   return { schemaVersion: 1, protocol: "site-access-2", date: "2026-11-04", weekOf: "2026-11-02", siteCount: 30, rounds: 3, proxyCountry: "US", providers: STEALTH_PROVIDERS.map(provider => ({ provider, accessible: 45, blocked: 40, errors: 5 })) };
@@ -76,6 +76,12 @@ test("the deployment validator rejects malformed committed results", () => {
   assert.equal(row.rate, 0);
   assert.equal(row.blocked, 0);
   assert.equal(row.errors, 90);
+});
+test("the published website list matches the 30-site protocol", () => {
+  const domains = STEALTH_SITES.map(([, domain]) => domain);
+  assert.equal(domains.length, parseStealth(fixture()).siteCount);
+  assert.equal(new Set(domains).size, domains.length);
+  for (const domain of domains) assert.ok(existsSync(join(__dirname, "../public/site-icons", `${domain}.webp`)), `missing icon for ${domain}`);
 });
 test("the old protocol cannot be relabelled as the new scoring contract", () => {
   assert.throws(() => parseStealth({ ...fixture(), protocol: "site-access-1" }));

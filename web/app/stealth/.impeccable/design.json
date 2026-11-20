@@ -73,7 +73,7 @@
       "kind": "custom",
       "refersTo": "scores-panel",
       "description": "Header-only specimen, deliberately without fabricated scores. The implementation adds semantic row headers and aggregate counts.",
-      "html": "<div class=\"ds-score-panel\"><div class=\"ds-score-scroll\" tabindex=\"0\" role=\"region\" aria-label=\"Provider scores; scroll horizontally for all counts\"><table class=\"ds-score-table\"><caption class=\"ds-sr-only\">Aggregate provider access scores</caption><thead><tr><th scope=\"col\">Provider</th><th scope=\"col\" aria-sort=\"descending\">Access rate</th><th scope=\"col\">Passed</th><th scope=\"col\">Blocked</th><th scope=\"col\">Errors</th></tr></thead></table></div></div>",
+      "html": "<div class=\"ds-score-panel\"><div class=\"ds-score-scroll\" tabindex=\"0\" role=\"region\" aria-label=\"Provider scores; scroll horizontally for all counts\"><table class=\"ds-score-table\"><caption class=\"ds-sr-only\">Aggregate provider access scores</caption><thead><tr><th scope=\"col\">Provider</th><th scope=\"col\" aria-sort=\"descending\">Access rate</th><th scope=\"col\">Blocked</th><th scope=\"col\">Errors</th></tr></thead></table></div></div>",
       "css": ".ds-score-panel{font-family:var(--font-sans,\"Plus Jakarta Sans\"),sans-serif;color:var(--foreground);min-width:0;overflow:hidden;border:1.5px solid var(--foreground);border-radius:3px;background:var(--background)}.ds-score-scroll{overflow-x:auto}.ds-score-scroll:focus-visible{outline:2px solid var(--ring);outline-offset:-2px}.ds-score-table{width:100%;min-width:640px;table-layout:fixed;border-collapse:separate;border-spacing:0}.ds-score-table th{height:40px;padding:2px calc(var(--spacing,.27rem)*2);border-bottom:1.5px solid var(--foreground);font-size:.6rem;line-height:16px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--muted-foreground);text-align:right;white-space:nowrap}.ds-score-table th:first-child{width:180px;position:sticky;left:0;z-index:1;text-align:left;color:var(--foreground);background:var(--background);border-right:1px solid var(--border)}.ds-score-table th:nth-child(2){width:120px}.ds-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}"
     },
     {
@@ -108,7 +108,7 @@
     "dos": [
       "Do preserve the existing benchmark shell and restrict this document's authority to `/stealth`.",
       "Do keep provider names readable while the score region scrolls horizontally.",
-      "Do distinguish measurement date, week, access-rate denominator and planned-visit count.",
+      "Do distinguish measurement date and week.",
       "Do retain an honest pending state and a visible history-based recovery for unavailable weeks.",
       "Do identify populated captures as temporary synthetic-fixture QA and keep release verification limits explicit."
     ],
@@ -116,7 +116,7 @@
       "Don't publish illustrative scores or treat fixture screenshots as measured results.",
       "Don't infer general browsing reliability from this fixed difficult sample.",
       "Don't imply the closed two-finding design review verifies a live campaign or deployment.",
-      "Don't expose targets, individual outcomes, private execution details or raw evidence.",
+      "Don't expose target URLs, journey definitions or types, individual outcomes, private execution details or raw evidence. The site names and domains are public, as one ungrouped list.",
       "Don't add a new visual identity, promotional claims, score charts or provider drill-downs to this scoped page."
     ]
   }

@@ -2,6 +2,7 @@
 
 This directory accepts aggregate result JSON only. No website list, target URL,
 journey definition, individual visit, screenshot or recording belongs here.
+The public site names and domains live in `web/lib/stealth.ts`.
 
 One file per UTC week: `YYYY-MM-DD.json`, named for its Monday `weekOf`.
 `date` records the actual measurement date. The page validates every file and
