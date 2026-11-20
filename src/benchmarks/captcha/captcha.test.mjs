@@ -12,11 +12,11 @@ const response = (data, status = 200) => new Response(JSON.stringify(data), { st
 
 test("protocol fixes the declared workload and rejects ignored settings", () => {
   assert.equal(config.rounds, 5);
-  assert.equal(config.version, 6);
+  assert.equal(config.version, 7);
   assert.equal(config.solveTimeoutMs, 180_000);
   assert.deepEqual(config.viewport, { width: 1920, height: 1080 });
   for (const input of [{ rounds: 0 }, { rounds: 1.5 }, { concurrency: 4 }, { providers: ["kernel", "kernel"] },
-    { providers: ["unknown"] }, { solveTimeoutMs: 999 }, { cooldownMs: 0 }, { retries: 1 }, { fixtures: [] }, { version: 7 }])
+    { providers: ["unknown"] }, { solveTimeoutMs: 999 }, { cooldownMs: 0 }, { retries: 1 }, { fixtures: [] }, { version: 8 }])
     assert.throws(() => configuration(input));
 });
 

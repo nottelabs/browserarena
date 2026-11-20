@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { chromium } from "playwright-core";
-import { FIXTURES } from "./protocol.mjs";
+import { FIXTURES, fixturesFor, receiptUrl } from "./protocol.mjs";
 import { observe, submit } from "./run.mjs";
 
 const by = type => FIXTURES.find(f => f.type === type);
@@ -17,11 +17,11 @@ async function launch() {
 // Markup shaped like each live page on 2026-11-06, served at the fixture's own URL.
 const IMAGE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
 const pages = {
-  // hCaptcha's demo keeps its form and prints siteverify's JSON below it, entity-escaped.
-  hcaptcha: verdict => `<form id="hcaptcha-demo-form" method="POST"><div class="h-captcha" data-sitekey="${by("hcaptcha").sitekey}">
-    <textarea name="h-captcha-response">${"P1_" + "x".repeat(40)}</textarea></div></form>
-    ${verdict ? `<div aria-hidden="true" class="hcaptcha-success wrap"><pre class="hcaptcha-success">${verdict.replaceAll('"', "&#34;")}</pre>
-    <button id="copy-token" data-text="P1_echoed-token"></button></div>` : ""}`,
+  // anti-captcha.com renders the widget explicitly into #h-recaptcha: frames whose URL names the
+  // sitekey, and the response textarea. The success page and the fail=1 reload are their own URLs.
+  hcaptcha: ({ sitekey = by("hcaptcha").sitekey, token = "" } = {}) => `<div id="h-recaptcha">
+    <iframe src="https://newassets.hcaptcha.com/captcha/v1/static/hcaptcha.html#frame=checkbox&host=anti-captcha.com&sitekey=${sitekey}"></iframe>
+    <textarea name="h-captcha-response">${token}</textarea></div>`,
   "recaptcha-v3": sitekey => `<form><button data-action="demo_action" type="submit">Check</button></form>
     <script src="https://www.google.com/recaptcha/api.js?render=${sitekey}"></script>
     <script>window.grecaptcha = { execute: () => Promise.resolve("token") };</script>`,
@@ -40,35 +40,70 @@ const pages = {
     ${challenge ? `<div id="px-captcha" style="width:300px;height:100px">Press & Hold</div>` : ""}`,
 };
 
-test("page probes read each v6 fixture's real signals in a browser", async t => {
+test("hCaptcha retries a probe interrupted by callback navigation", async () => {
+  const fixture = by("hcaptcha"), expected = { successPage: true, formPresent: false };
+  let reads = 0, waited = false;
+  const page = {
+    evaluate: async () => {
+      if (reads++ === 0) throw new Error("Execution context was destroyed, most likely because of a navigation");
+      assert.equal(waited, true);
+      return expected;
+    },
+    waitForLoadState: async state => {
+      assert.equal(state, "domcontentloaded");
+      waited = true;
+    },
+  };
+  assert.deepEqual(await observe(page, fixture), expected);
+  assert.equal(reads, 2);
+});
+
+test("page probes read each v7 fixture's real signals in a browser", async t => {
   const browser = await launch();
   if (!browser) { t.skip("No Chromium installed"); return; }
   try {
     const page = await browser.newPage();
     let body = "";
+    let verifierAnswer = "ok", posted = null;
     await page.route("**/*", route => {
       const url = route.request().url();
+      if (url.startsWith("https://newassets.hcaptcha.com/")) return route.fulfill({ body: "", contentType: "text/html" });
+      if (url === receiptUrl(by("hcaptcha"))) {
+        posted = new URLSearchParams(route.request().postData() ?? "");
+        return route.fulfill({ body: JSON.stringify({ result: verifierAnswer }), contentType: "application/json" });
+      }
       if (url.startsWith("https://www.google.com/recaptcha/")) return route.fulfill({ body: "", contentType: "text/javascript" });
       return route.fulfill({ body: `<!doctype html><html><body>${body}</body></html>`, contentType: "text/html" });
     });
     const show = async (fixture, html, url = fixture.url) => { body = html; await page.goto(url); return observe(page, fixture); };
 
-    const hcaptcha = by("hcaptcha");
-    let state = await show(hcaptcha, pages.hcaptcha(""));
-    assert.equal(state.formPresent, true); assert.equal(state.tokenPresent, true); assert.equal(state.rejected, false);
-    state = await show(hcaptcha, pages.hcaptcha('{\n "success": true,\n "hostname": "hcaptcha.com"\n}'));
-    assert.deepEqual(state.siteverify, { success: true, hostname: "hcaptcha.com", errorCodes: undefined });
-    assert.equal(state.rejected, false);
-    // The token the page echoes on its copy button stays out of the recorded state.
-    assert.doesNotMatch(JSON.stringify(state), /echoed-token/);
-    state = await show(hcaptcha, pages.hcaptcha('{"success": true, "hostname": "dummy-key-pass"}'));
-    assert.equal(state.rejected, true);
-    state = await show(hcaptcha, pages.hcaptcha('{"success": false, "hostname": "hcaptcha.com"}'));
-    assert.equal(state.rejected, true);
-    state = await show(hcaptcha, pages.hcaptcha("not json"));
-    assert.deepEqual(state.siteverify, { success: false, invalid: true }); assert.equal(state.rejected, true);
-    state = await show(hcaptcha, pages.hcaptcha("").replace(hcaptcha.sitekey, "10000000-ffff-ffff-ffff-000000000001"));
+    const hcaptcha = by("hcaptcha"), token = "P1_" + "x".repeat(40);
+    let state = await show(hcaptcha, pages.hcaptcha());
+    assert.equal(state.formPresent, true); assert.equal(state.tokenPresent, false);
+    assert.equal(state.successPage, false); assert.equal(state.rejected, false); assert.equal(state.drift, null);
+    state = await show(hcaptcha, pages.hcaptcha({ token }));
+    assert.equal(state.tokenPresent, true);
+    // A solver that skips the callback: the harness posts the token as the callback would.
+    assert.deepEqual(await submit(page, hcaptcha), { httpStatus: 200, result: "ok", success: undefined, hostname: undefined, errorCodes: undefined });
+    assert.equal(posted.get("hash"), token);
+    verifierAnswer = "fail";
+    assert.equal((await submit(page, hcaptcha)).result, "fail");
+    state = await show(hcaptcha, "<p>Success</p>", "https://anti-captcha.com/demo/?page=hcaptcha_success_page&login=&pass=");
+    assert.equal(state.successPage, true); assert.equal(state.formPresent, false); assert.equal(state.rejected, false);
+    state = await show(hcaptcha, pages.hcaptcha(), "https://anti-captcha.com/demo/?page=hcaptcha_callback&fail=1");
+    assert.equal(state.rejected, true); assert.equal(state.successPage, false);
+    // The same page name on another site is neither.
+    state = await show(hcaptcha, "<p>Success</p>", "https://evil.example/demo/?page=hcaptcha_success_page");
+    assert.equal(state.successPage, false);
+    state = await show(hcaptcha, pages.hcaptcha({ sitekey: "10000000-ffff-ffff-ffff-000000000001" }));
     assert.equal(state.drift, "hCaptcha sitekey changed");
+
+    const official = fixturesFor(6).find(fixture => fixture.type === "hcaptcha");
+    state = await show(official, '<pre class="hcaptcha-success">{&quot;success&quot;:true,&quot;hostname&quot;:&quot;hcaptcha.com&quot;}</pre>' +
+      '<button id="copy-token" data-text="P1_echoed-token">Copy</button>');
+    assert.equal(state.siteverify.success, true);
+    assert.equal(state.siteverify.hostname, official.hostname);
+    assert.doesNotMatch(JSON.stringify(state), /echoed-token/);
 
     const v3 = by("recaptcha-v3");
     state = await show(v3, pages["recaptcha-v3"](v3.sitekey));
