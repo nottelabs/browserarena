@@ -286,6 +286,25 @@ else
   echo "[WARN] no .env found; provider env vars must already be exported"
 fi
 
+# Preflight creates no sessions, so a failure there (a demo page whose sitekey or
+# markup changed, a missing key) leaves nothing to reconcile. Exit without the
+# review marker so the next day retries on its own; the regression alert's
+# staleness check reports a run of such days.
+PREFLIGHT_OUT=".captcha-runs/preflight-${DATE}-$(date -u +%H%M%S)"
+echo "[INFO] preflight out=$PREFLIGHT_OUT"
+preflight_status=0
+"$TIMEOUT_BIN" --signal=TERM --kill-after=30s 300s ${load_env[@]+"${load_env[@]}"} node dist/cli.js \
+  --benchmark=captcha \
+  --provider="$CAPTCHA_PROVIDERS" \
+  --runs="$RUNS" \
+  --concurrency="$CONCURRENCY" \
+  --out="$PREFLIGHT_OUT" \
+  --preflight || preflight_status=$?
+if [[ $preflight_status -ne 0 ]]; then
+  echo "[ERROR] preflight exited with status $preflight_status; no session was created, so nothing is held for review and the next run tries again. Details in $PREFLIGHT_OUT" >&2
+  exit 1
+fi
+
 OUT=".captcha-runs/daily-${DATE}-$(date -u +%H%M%S)"
 echo "[INFO] running campaign id=$ID out=$OUT"
 # Written before the first session starts. If this script or the box dies during
@@ -346,7 +365,7 @@ git commit -m "results: captcha $REGION $DATE" -- "$RESULT"
 if push_main; then
   rm -f -- "$PENDING_DIR/$ID.json"
   # Private evidence is large (screenshots); keep two weeks of it.
-  find .captcha-runs -maxdepth 1 -type d -name 'daily-*' -mtime +14 -exec rm -rf -- {} +
+  find .captcha-runs -maxdepth 1 -type d \( -name 'daily-*' -o -name 'preflight-*' \) -mtime +14 -exec rm -rf -- {} +
   exit 0
 fi
 

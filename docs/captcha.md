@@ -249,7 +249,7 @@ The default is 5 attempts per provider per CAPTCHA type: 210 paid sessions for
 the six daily providers. `DAILY_EXCLUDED` in `protocol.mjs` leaves out Tilion
 (no `TILION_API_KEY` on the runner), Hyperbrowser (out of credits) and
 Browserless (free-plan usage cap) until their accounts can serve a daily
-campaign; a missing key fails preflight and holds every later run for review. A
+campaign; a missing key fails preflight. A
 35-session protocol v4 campaign (five providers, one round) took 22 minutes on
 2026-11-06, so expect roughly 3 to 4 hours on a normal day. `--runs N` changes it, `--dry-run` stops before the commit (and, if an earlier
 push failed, reports the waiting result without pushing it), and
@@ -270,6 +270,10 @@ and refuses tracked changes. Guards:
   is loaded only into the campaign's environment, so it cannot change the
   publisher's settings either.
 - Only a complete campaign is published, and only its result file is committed.
+- Preflight runs first, on its own, and creates no sessions. If it fails (a
+  missing key, or a demo page whose sitekey or markup changed) the run exits
+  without publishing or holding anything, and the next day tries again. Its
+  output stays in `.captcha-runs/preflight-*`.
 - `.captcha-runs/needs-review` is written before the campaign starts and removed
   only once it exits cleanly. A campaign that fails, halts or is incomplete, or a
   publisher that is killed mid-run, leaves it behind. Later runs refuse to start

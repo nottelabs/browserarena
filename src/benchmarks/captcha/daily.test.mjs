@@ -36,10 +36,12 @@ function setup(t) {
   fs.writeFileSync(path.join(work, "package.json"), JSON.stringify({ scripts: { "captcha:export": "node fake-export.mjs" } }));
   fs.writeFileSync(path.join(work, "dist/cli.js"), `
 import fs from "node:fs";
-fs.appendFileSync(process.env.FAKE_CALLS, "cli " + process.argv.slice(2).join(" ") + "\\n");
+const preflight = process.argv.includes("--preflight");
+fs.appendFileSync(process.env.FAKE_CALLS, (preflight ? "preflight " : "cli ") + process.argv.slice(2).join(" ") + "\\n");
 if (process.env.FAKE_DOTENV_OUT) fs.writeFileSync(process.env.FAKE_DOTENV_OUT, process.env.FAKE_DOTENV ?? "");
 const out = process.argv.find(arg => arg.startsWith("--out=")).slice(6);
 fs.mkdirSync(out, { recursive: true });
+if (preflight) process.exit(Number(process.env.FAKE_PREFLIGHT_EXIT ?? 0));
 if (process.env.FAKE_CLI_HANG) { fs.writeFileSync(process.env.FAKE_CLI_HANG, "started"); setTimeout(() => {}, 4000); }
 else process.exit(Number(process.env.FAKE_CLI_EXIT ?? 0));
 `);
@@ -63,7 +65,8 @@ fs.writeFileSync(path.join("results/captcha", id + ".json"),
     root, origin, work, calls, reject,
     run: (extra = [], env = {}, { reset = false } = {}) => spawnSync("bash", args(extra, reset), { cwd: work, encoding: "utf8", env: environment(env) }),
     start: (extra = [], env = {}) => spawn("bash", args(extra, false), { cwd: work, env: environment(env), detached: true, stdio: "ignore" }),
-    cliCalls: () => fs.readFileSync(calls, "utf8").split("\n").filter(Boolean),
+    cliCalls: () => fs.readFileSync(calls, "utf8").split("\n").filter(line => line.startsWith("cli ")),
+    preflightCalls: () => fs.readFileSync(calls, "utf8").split("\n").filter(line => line.startsWith("preflight ")),
     published: () => git(root, "--git-dir", origin, "ls-tree", "-r", "--name-only", "main").split("\n"),
   };
 }
@@ -118,6 +121,22 @@ test("a failed campaign is held for review, publishes nothing and blocks the nex
   assert.equal(blocked.status, 1);
   assert.match(blocked.stdout + blocked.stderr, /needs-review exists/);
   assert.equal(cliCalls().length, 1);
+});
+
+test("a failed preflight creates no hold, publishes nothing and lets the next run try again", t => {
+  const { work, cliCalls, preflightCalls, run, published } = setup(t);
+  const failed = run([], { FAKE_PREFLIGHT_EXIT: "1" });
+  assert.equal(failed.status, 1);
+  assert.match(failed.stdout + failed.stderr, /preflight exited with status 1; no session was created/);
+  assert.equal(cliCalls().length, 0);
+  assert.ok(!fs.existsSync(path.join(work, ".captcha-runs/needs-review")));
+  assert.ok(!published().includes(`results/captcha/${ID}.json`));
+  const retried = run();
+  assert.equal(retried.status, 0, retried.stdout + retried.stderr);
+  assert.equal(cliCalls().length, 1);
+  assert.equal(preflightCalls().length, 2);
+  assert.match(preflightCalls()[1], new RegExp(`--provider=${DAILY_PROVIDERS.join(",")} --runs=5 --concurrency=3 --out=\\.captcha-runs/preflight-${DATE}-\\d{6} --preflight`));
+  assert.ok(published().includes(`results/captcha/${ID}.json`));
 });
 
 test("a publisher killed mid-campaign still blocks the next run", async t => {
