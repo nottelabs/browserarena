@@ -153,6 +153,14 @@ one box dying entirely.
 Both concurrency levels (c1 and c10) are checked. Staleness is reported once
 rather than per level, since a dead cron is a property of the runner.
 
+The `staleness` run also checks the daily CAPTCHA campaign (`results/captcha/`):
+when the newest campaign finished more than 36 hours earlier it posts one
+message, whatever the provider scope, and repeats it daily until a campaign
+lands. A halted campaign leaves `.captcha-runs/needs-review` on the US West
+runner and blocks later runs until it is cleared (see
+[CAPTCHA daily run](captcha.md#daily-run)); from 2026-11-13 to 2026-11-19 that
+happened with no alert.
+
 Set the `SLACK_WEBHOOK_URL` repo secret to enable posting. In a fork, or with
 `--dry-run`, the script prints the payload instead. In the upstream repo the
 workflow sets `ALERT_REQUIRE_WEBHOOK=true`, so a missing or rotated secret fails

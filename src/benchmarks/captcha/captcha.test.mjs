@@ -324,6 +324,33 @@ test("a session the provider reports ended only after the retry failed counts as
   assert.ok(slept() >= RELEASE_RETRY_DELAY_MS, "the retry waits before releasing again");
 });
 
+// Like r02-kernel-geetest on 2026-11-13: the page hung, Kernel released the
+// session, and browser.close() then ran past its 15 s limit.
+function hungClose({ endsOnDisconnect = false } = {}) {
+  const h = harness();
+  h.deps.create = async () => ({ id: "owned-id", cdpUrl: "wss://private.example", release: async () => {},
+    ...(endsOnDisconnect && { endsOnDisconnect: true }) });
+  h.deps.chromium = { connectOverCDP: async () => ({ contexts: () => [{ pages: () => [new EventEmitter()] }],
+    close: async () => { throw new Error("Operation exceeded 15000ms"); } }) };
+  return h;
+}
+
+test("a failed disconnect after the provider released the session is a cleanup error, not a halt", async () => {
+  const h = hungClose();
+  const row = await attempt(h.task, config, h.deps);
+  assert.equal(row.cleanup.released, true); assert.equal(row.cleanup.disconnected, false);
+  assert.match(row.cleanup.disconnect_error, /exceeded 15000ms/);
+  assert.equal(row.halt_campaign, false);
+  assert.equal(summarize(config, [row]).find(cell => cell.provider === "kernel" && cell.type === "recaptcha").cleanup_errors, 1);
+});
+
+test("a failed disconnect still halts when disconnecting is the release", async () => {
+  const h = hungClose({ endsOnDisconnect: true });
+  const row = await attempt(h.task, config, h.deps);
+  assert.equal(row.cleanup.released, true); assert.equal(row.cleanup.disconnected, false);
+  assert.equal(row.halt_campaign, true);
+});
+
 test("a session that neither releases nor reports ended still halts the campaign", async () => {
   const { h, calls } = failedRelease({ endedAnswers: [false, false] });
   const row = await attempt(h.task, config, h.deps);
@@ -442,6 +469,7 @@ test("Hyperbrowser, Anchor, Browserless and Tilion presets use native solving an
   assert.match(browserless.id, /^browserless-[0-9a-f-]{36}$/);
   assert.notEqual((await create("browserless")).id, browserless.id);
   assert.doesNotMatch(JSON.stringify(browserless.configuration), /bl-key/);
+  assert.equal(browserless.endsOnDisconnect, true);
   await browserless.release();
 
   const tilion = await create("tilion");
