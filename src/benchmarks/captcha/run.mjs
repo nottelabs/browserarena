@@ -1,5 +1,5 @@
-import { acceptedGeetest, acceptedOfficial, acceptedRecaptchaV3, acceptedTurnstile, parseSiteverifyDump, passedText,
-  reachedPerimeterX, schedule } from "./protocol.mjs";
+import { acceptedGeetest, acceptedOfficial, acceptedRecaptchaV3, acceptedTurnstile, passedText,
+  reachedPerimeterX, schedule, siteverifyFromHtml } from "./protocol.mjs";
 
 class BoundExceeded extends Error {}
 // A fixture that no longer matches its pinned contract. It stops the campaign so a
@@ -39,8 +39,9 @@ export async function observe(page, fixture) {
       tokens, tokenPresent: tokens.some(t => t.length > 20 && !t.dummy),
       sitekeys: [...document.querySelectorAll("[data-sitekey]")].map(e => e.getAttribute("data-sitekey")), drift: null };
     if (fixture.type === "hcaptcha") {
-      // Parsed outside the page; the printed text also echoes the submitted token.
-      state.siteverifyText = (document.body?.textContent ?? "").includes('["success"]=>') ? document.body.textContent : null;
+      // Parsed outside the page, so the probe and preflight read the verdict the same way.
+      const pre = document.querySelector("pre.hcaptcha-success");
+      state.siteverifyHtml = pre ? pre.outerHTML : null;
       if ([...document.querySelectorAll(".h-captcha[data-sitekey]")].some(e => e.getAttribute("data-sitekey") !== fixture.sitekey))
         state.drift = "hCaptcha sitekey changed";
     } else if (fixture.type === "recaptcha-v3") {
@@ -73,10 +74,11 @@ export async function observe(page, fixture) {
     return state;
   }, fixture));
   if (fixture.type === "hcaptcha") {
-    const siteverify = parseSiteverifyDump(state.siteverifyText);
-    delete state.siteverifyText;
-    if (siteverify) state.siteverify = siteverify;
-    state.rejected = !!siteverify && !(siteverify.success === true && siteverify.hostname === fixture.hostname);
+    const verdict = siteverifyFromHtml(state.siteverifyHtml);
+    delete state.siteverifyHtml;
+    if (verdict) state.siteverify = verdict.invalid ? verdict
+      : { success: verdict.success, hostname: verdict.hostname, errorCodes: verdict["error-codes"] };
+    state.rejected = !!state.siteverify && !(state.siteverify.success === true && state.siteverify.hostname === fixture.hostname);
   }
   return state;
 }
