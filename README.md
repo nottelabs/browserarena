@@ -35,7 +35,7 @@ A us-west-2 runner benchmarks Lightpanda from the same region as its browsers (`
 
 | Provider | Region | Website |
 |---|---|---|
-| Notte | us-west-2 | [notte.cc](https://www.notte.cc) |
+| Notte | us-west-1 | [notte.cc](https://www.notte.cc) |
 | Tilion (beta) | us-east-1 | [tilion.dev](https://tilion.dev) |
 | Browserbase | us-west-2 | [browserbase.com](https://www.browserbase.com) |
 | Steel | us-east-1 | [steel.dev](https://www.steel.dev) |
