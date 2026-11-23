@@ -124,7 +124,9 @@ let cachedIndex: ResultsIndex | null | undefined;
 function loadIndex(): ResultsIndex | null {
   if (cachedIndex !== undefined) return cachedIndex;
   const file = path.join(process.cwd(), RESULTS_INDEX_FILENAME);
-  cachedIndex = fs.existsSync(file) ? (JSON.parse(fs.readFileSync(file, "utf-8")) as ResultsIndex) : null;
+  const index = fs.existsSync(file) ? (JSON.parse(fs.readFileSync(file, "utf-8")) as ResultsIndex) : null;
+  // An empty index would hide every result; without one, loaders fall back to GitHub's API.
+  cachedIndex = index && index.files.length > 0 ? index : null;
   return cachedIndex;
 }
 

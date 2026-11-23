@@ -33,6 +33,14 @@ for (const benchmark of REMOTE_BENCHMARKS) {
 }
 files.sort();
 
+const indexFile = path.join(webDir, RESULTS_INDEX_FILENAME);
+if (files.length === 0) {
+  // No results in this checkout: write no index, so loaders keep their GitHub fallback.
+  fs.rmSync(indexFile, { force: true });
+  console.log("[results-index] no lifecycle or throughput results; no index written");
+  process.exit(0);
+}
+
 const commit = process.env.VERCEL_GIT_COMMIT_SHA
   || execFileSync("git", ["rev-parse", "HEAD"], { cwd: webDir, encoding: "utf-8" }).trim();
 const repo = process.env.RESULTS_GITHUB_REPO
@@ -41,5 +49,5 @@ const repo = process.env.RESULTS_GITHUB_REPO
     : "nottelabs/browserarena");
 
 const index: ResultsIndex = { repo, commit, files };
-fs.writeFileSync(path.join(webDir, RESULTS_INDEX_FILENAME), JSON.stringify(index) + "\n");
+fs.writeFileSync(indexFile, JSON.stringify(index) + "\n");
 console.log(`[results-index] ${files.length} files at ${repo}@${commit.slice(0, 12)}`);

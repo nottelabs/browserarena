@@ -631,6 +631,7 @@ async function loadHistoricalLeaderboardFromStore(
       .sort();
 
     // Every day of this provider at once; the store bounds remote requests.
+    // Each day is summarized as soon as it is read, so its sessions can be freed.
     const days = await Promise.all(dateDirs.map(async (date) => {
       const runDir = `${providerPath}/${date}`;
       const hasConcDir = (await store.list(runDir)).some((e) => e.isDirectory && e.name === `c${effectiveConcurrency}`);
@@ -639,21 +640,20 @@ async function loadHistoricalLeaderboardFromStore(
         : effectiveConcurrency === 1
           ? await readEntriesFromStore(store, `${runDir}/results.jsonl`, date)
           : [];
-      return { date, entries };
+      const filtered = entries.filter((entry) => !HIDDEN_PROVIDER_IDS.has(entry.provider));
+      if (filtered.length === 0) return null;
+      return { date, provider: filtered[0]!.provider, point: summarizeHistoricalPoint(filtered, date) };
     }));
 
     const points: HistoricalProviderPoint[] = [];
     let providerName: string | undefined;
 
-    for (const { date, entries } of days) {
-      const filtered = entries.filter((entry) => !HIDDEN_PROVIDER_IDS.has(entry.provider));
-      if (filtered.length === 0) continue;
-
-      providerName = filtered[0]?.provider;
-      const point = summarizeHistoricalPoint(filtered, date);
-      if (!point) continue;
-      dates.add(date);
-      points.push(point);
+    for (const day of days) {
+      if (!day) continue;
+      providerName = day.provider;
+      if (!day.point) continue;
+      dates.add(day.date);
+      points.push(day.point);
     }
     return { providerName, points };
   }));

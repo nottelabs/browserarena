@@ -21,7 +21,12 @@ async function tracedFiles(tracePath: string): Promise<string[]> {
 
 test("every function fits Vercel's uncompressed function size limit", async () => {
   for (const tracePath of await traces()) {
-    const sizes = await Promise.all((await tracedFiles(tracePath)).map(async (file) => (await stat(file)).size));
+    // A local build can trace Playwright output that this run has since replaced.
+    const sizes = await Promise.all((await tracedFiles(tracePath)).map(async (file) =>
+      (await stat(file).catch((error: NodeJS.ErrnoException) => {
+        if (error.code === "ENOENT") return { size: 0 };
+        throw error;
+      })).size));
     const megabytes = sizes.reduce((total, size) => total + size, 0) / 1024 / 1024;
     const route = path.relative(APP_DIR, tracePath);
     // Leave room below Vercel's 250 MB cap for its generated function wrapper.
