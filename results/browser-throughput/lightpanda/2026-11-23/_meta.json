@@ -1,0 +1,11 @@
+{
+  "region": "us-west-1",
+  "instance_type": "t3.small",
+  "cloud": "aws",
+  "os": "linux x64",
+  "node_version": "v22.22.2",
+  "started_at": "2026-11-23T06:03:05.744Z",
+  "finished_at": "2026-11-23T07:03:04.137Z",
+  "run_status": "timed_out",
+  "process_exit_code": 124
+}
