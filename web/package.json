@@ -17,7 +17,7 @@
     "lucide-react": "^1.68.0",
     "next": "^16.4.6",
     "posthog-js": "^1.447.12",
-    "posthog-node": "^5.61.2",
+    "posthog-node": "^5.74.0",
     "radix-ui": "^1.8.1",
     "react": "19.3.1",
     "react-dom": "19.3.0",
