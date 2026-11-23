@@ -2,6 +2,7 @@ import fs from "fs";
 import path from "path";
 import { getMedianCostUsd, getPricePerHour, getPerSessionFee } from "./pricing";
 import { HIDDEN_PROVIDER_IDS, PROVIDERS_BY_ID } from "./providers";
+import { fsResultsStore, resultsStoreFor, type ResultsStore } from "./results-store";
 
 export type {
   PercentileType,
@@ -384,17 +385,35 @@ async function loadEntriesFromGitHub(
   return { entries, dateRange, providerRunDateMap, availableDates: [...availableDateSet].sort() };
 }
 
-function loadEntriesFromFs(
+/** Bundled or deployed results: files on disk, or the build's index and GitHub (lib/results-store.ts). */
+function localResultsStore(benchmark: "hello-browser" | "v0"): ResultsStore | null {
+  const resultsDir = getResultsDir();
+  // v0 is small and stays bundled.
+  if (benchmark === "v0") return fs.existsSync(resultsDir) ? fsResultsStore(resultsDir) : null;
+  return resultsStoreFor(benchmark, resultsDir);
+}
+
+function pushEntries(content: string, runDate: string, into: BenchmarkEntry[]): void {
+  for (const line of content.trim().split("\n")) {
+    try {
+      const entry: BenchmarkEntry = JSON.parse(line);
+      entry._runDate = runDate;
+      into.push(entry);
+    } catch { /* skip */ }
+  }
+}
+
+async function loadEntriesFromStore(
+  store: ResultsStore,
   benchmark: "hello-browser" | "v0",
   date?: string
-): {
+): Promise<{
   entries: BenchmarkEntry[];
   dateRange?: { min: string; max: string };
   providerMetaMap: Map<string, VmMeta>;
   providerRunDateMap: Map<string, string>;
   availableDates: string[];
-} {
-  const resultsDir = getResultsDir();
+}> {
   const providerMap = new Map<string, BenchmarkEntry[]>();
   const providerMetaMap = new Map<string, VmMeta>();
   const providerRunDateMap = new Map<string, string>();
@@ -402,112 +421,83 @@ function loadEntriesFromFs(
   let dateRange: { min: string; max: string } | undefined;
 
   // Structure: results/{benchmark}/{provider}/{date}/results.jsonl
-  const benchDir = path.join(resultsDir, benchmark);
-  if (!fs.existsSync(benchDir))
-    return { entries: [], providerMetaMap, providerRunDateMap, availableDates: [] };
+  const providerDirs = (await store.list(benchmark))
+    .filter((e) => e.isDirectory && !e.name.startsWith("_"));
 
-  const providerDirs = fs.readdirSync(benchDir, { withFileTypes: true })
-    .filter((e) => e.isDirectory() && !e.name.startsWith("_"));
-
-  for (const dir of providerDirs) {
-    const providerPath = path.join(benchDir, dir.name);
-    const dateDirs = fs.readdirSync(providerPath, { withFileTypes: true })
-      .filter((e) => e.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
+  // Read providers in parallel, then merge in directory order.
+  const loaded = await Promise.all(providerDirs.map(async (dir) => {
+    const providerPath = `${benchmark}/${dir.name}`;
+    const dateDirs = (await store.list(providerPath))
+      .filter((e) => e.isDirectory && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
       .map((e) => e.name)
       .sort()
       .reverse();
-    for (const name of dateDirs) availableDateSet.add(name);
+    const entries: BenchmarkEntry[] = [];
+    let meta: string | null = null;
+    let runDate: string | undefined;
 
     if (benchmark === "hello-browser") {
       // Latest run per provider, or the requested day when that provider has it.
-      let providerName: string | undefined;
-      const latestDate = date && dateDirs.includes(date) ? date : date ? undefined : dateDirs[0];
-      if (!latestDate) continue;
-
-      const runDir = path.join(providerPath, latestDate);
-      const concDirs = fs.readdirSync(runDir, { withFileTypes: true })
-        .filter((e) => e.isDirectory() && /^c\d+$/.test(e.name))
-        .map((e) => e.name)
-        .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
-
-      if (concDirs.length === 0) {
-        const resultsFile = path.join(runDir, "results.jsonl");
-        if (fs.existsSync(resultsFile)) {
-          const content = fs.readFileSync(resultsFile, "utf-8");
-          for (const line of content.trim().split("\n")) {
-            try {
-              const entry: BenchmarkEntry = JSON.parse(line);
-              entry._runDate = latestDate;
-              providerName = entry.provider;
-              const existing = providerMap.get(entry.provider) || [];
-              existing.push(entry);
-              providerMap.set(entry.provider, existing);
-            } catch { /* skip */ }
-          }
-        }
-      } else {
-        for (const concDir of concDirs) {
-          const resultsFile = path.join(runDir, concDir, "results.jsonl");
-          if (!fs.existsSync(resultsFile)) continue;
-
-          const content = fs.readFileSync(resultsFile, "utf-8");
-          for (const line of content.trim().split("\n")) {
-            try {
-              const entry: BenchmarkEntry = JSON.parse(line);
-              entry._runDate = latestDate;
-              providerName = entry.provider;
-              const existing = providerMap.get(entry.provider) || [];
-              existing.push(entry);
-              providerMap.set(entry.provider, existing);
-            } catch { /* skip */ }
-          }
-        }
-      }
-
-      if (providerName && !providerMetaMap.has(providerName)) {
-        const metaFile = path.join(runDir, "_meta.json");
-        if (fs.existsSync(metaFile)) {
-          try {
-            providerMetaMap.set(providerName, JSON.parse(fs.readFileSync(metaFile, "utf-8")));
-          } catch { /* skip */ }
-        }
+      runDate = date && dateDirs.includes(date) ? date : date ? undefined : dateDirs[0];
+      if (runDate) {
+        const runDir = `${providerPath}/${runDate}`;
+        const concDirs = (await store.list(runDir))
+          .filter((e) => e.isDirectory && /^c\d+$/.test(e.name))
+          .map((e) => e.name)
+          .sort((a, b) => Number(a.slice(1)) - Number(b.slice(1)));
+        const files = concDirs.length === 0
+          ? [`${runDir}/results.jsonl`]
+          : concDirs.map((concDir) => `${runDir}/${concDir}/results.jsonl`);
+        const [contents, metaContent] = await Promise.all([
+          Promise.all(files.map((file) => store.read(file))),
+          store.read(`${runDir}/_meta.json`),
+        ]);
+        for (const content of contents) if (content != null) pushEntries(content, runDate, entries);
+        meta = metaContent;
       }
     } else {
       // v0 and other benchmarks: use latest date only
-      const latestDate = dateDirs[0];
-      if (!latestDate) continue;
-
-      const runDir = path.join(providerPath, latestDate);
-      const resultsFile = path.join(runDir, "results.jsonl");
-      if (!fs.existsSync(resultsFile)) continue;
-
-      let providerName: string | undefined;
-      const content = fs.readFileSync(resultsFile, "utf-8");
-      for (const line of content.trim().split("\n")) {
-        try {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const raw: any = JSON.parse(line);
-          // Normalize legacy field name
-          if (raw.total_agent_ms != null && raw.total_work_ms == null) {
-            raw.total_work_ms = raw.total_agent_ms;
+      runDate = dateDirs[0];
+      if (runDate) {
+        const runDir = `${providerPath}/${runDate}`;
+        const [content, metaContent] = await Promise.all([
+          store.read(`${runDir}/results.jsonl`),
+          store.read(`${runDir}/_meta.json`),
+        ]);
+        if (content != null) {
+          for (const line of content.trim().split("\n")) {
+            try {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              const raw: any = JSON.parse(line);
+              // Normalize legacy field name
+              if (raw.total_agent_ms != null && raw.total_work_ms == null) {
+                raw.total_work_ms = raw.total_agent_ms;
+              }
+              entries.push(raw as BenchmarkEntry);
+            } catch { /* skip */ }
           }
-          const entry: BenchmarkEntry = raw;
-          providerName = entry.provider;
-          const existing = providerMap.get(entry.provider) || [];
-          existing.push(entry);
-          providerMap.set(entry.provider, existing);
-        } catch { /* skip */ }
-      }
-
-      if (providerName) {
-        providerRunDateMap.set(providerName, latestDate);
-        const metaFile = path.join(runDir, "_meta.json");
-        if (fs.existsSync(metaFile)) {
-          try {
-            providerMetaMap.set(providerName, JSON.parse(fs.readFileSync(metaFile, "utf-8")));
-          } catch { /* skip */ }
         }
+        meta = metaContent;
       }
+    }
+    return { dateDirs, entries, meta, runDate };
+  }));
+
+  for (const { dateDirs, entries, meta, runDate } of loaded) {
+    for (const name of dateDirs) availableDateSet.add(name);
+    let providerName: string | undefined;
+    for (const entry of entries) {
+      providerName = entry.provider;
+      const existing = providerMap.get(entry.provider) || [];
+      existing.push(entry);
+      providerMap.set(entry.provider, existing);
+    }
+    if (!providerName) continue;
+    if (benchmark !== "hello-browser" && runDate) providerRunDateMap.set(providerName, runDate);
+    if (meta != null && (benchmark !== "hello-browser" || !providerMetaMap.has(providerName))) {
+      try {
+        providerMetaMap.set(providerName, JSON.parse(meta));
+      } catch { /* skip */ }
     }
   }
 
@@ -526,9 +516,10 @@ function loadEntriesFromFs(
   };
 }
 
-function readEntriesFromFsFile(filePath: string, runDate: string): BenchmarkEntry[] {
-  if (!fs.existsSync(filePath)) return [];
-  return parseJsonlLines(fs.readFileSync(filePath, "utf-8")).map((entry) => ({
+async function readEntriesFromStore(store: ResultsStore, file: string, runDate: string): Promise<BenchmarkEntry[]> {
+  const content = await store.read(file);
+  if (content == null) return [];
+  return parseJsonlLines(content).map((entry) => ({
     ...entry,
     _runDate: runDate,
   }));
@@ -622,49 +613,52 @@ function summarizeHistoricalPoint(
   };
 }
 
-function loadHistoricalLeaderboardFromFs(
+async function loadHistoricalLeaderboardFromStore(
+  store: ResultsStore,
   benchmark: "hello-browser",
   concurrency?: number
-): HistoricalLeaderboardResult {
-  const resultsDir = getResultsDir();
-  const benchDir = path.join(resultsDir, benchmark);
-  if (!fs.existsSync(benchDir)) return { dates: [], providers: [] };
-
+): Promise<HistoricalLeaderboardResult> {
   const effectiveConcurrency = concurrency ?? 1;
   const dates = new Set<string>();
-  const providers = fs
-    .readdirSync(benchDir, { withFileTypes: true })
-    .filter((e) => e.isDirectory() && !e.name.startsWith("_"));
+  const providers = (await store.list(benchmark))
+    .filter((e) => e.isDirectory && !e.name.startsWith("_"));
 
-  const series = providers.flatMap((dir) => {
-    const providerPath = path.join(benchDir, dir.name);
-    const dateDirs = fs
-      .readdirSync(providerPath, { withFileTypes: true })
-      .filter((e) => e.isDirectory() && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
+  const perProvider = await Promise.all(providers.map(async (dir) => {
+    const providerPath = `${benchmark}/${dir.name}`;
+    const dateDirs = (await store.list(providerPath))
+      .filter((e) => e.isDirectory && /^\d{4}-\d{2}-\d{2}$/.test(e.name))
       .map((e) => e.name)
       .sort();
+
+    // Every day of this provider at once; the store bounds remote requests.
+    // Each day is summarized as soon as it is read, so its sessions can be freed.
+    const days = await Promise.all(dateDirs.map(async (date) => {
+      const runDir = `${providerPath}/${date}`;
+      const hasConcDir = (await store.list(runDir)).some((e) => e.isDirectory && e.name === `c${effectiveConcurrency}`);
+      const entries = hasConcDir
+        ? await readEntriesFromStore(store, `${runDir}/c${effectiveConcurrency}/results.jsonl`, date)
+        : effectiveConcurrency === 1
+          ? await readEntriesFromStore(store, `${runDir}/results.jsonl`, date)
+          : [];
+      const filtered = entries.filter((entry) => !HIDDEN_PROVIDER_IDS.has(entry.provider));
+      if (filtered.length === 0) return null;
+      return { date, provider: filtered[0]!.provider, point: summarizeHistoricalPoint(filtered, date) };
+    }));
 
     const points: HistoricalProviderPoint[] = [];
     let providerName: string | undefined;
 
-    for (const date of dateDirs) {
-      const runDir = path.join(providerPath, date);
-      const concDir = path.join(runDir, `c${effectiveConcurrency}`);
-      const entries = fs.existsSync(concDir)
-        ? readEntriesFromFsFile(path.join(concDir, "results.jsonl"), date)
-        : effectiveConcurrency === 1
-          ? readEntriesFromFsFile(path.join(runDir, "results.jsonl"), date)
-          : [];
-      const filtered = entries.filter((entry) => !HIDDEN_PROVIDER_IDS.has(entry.provider));
-      if (filtered.length === 0) continue;
-
-      providerName = filtered[0]?.provider;
-      const point = summarizeHistoricalPoint(filtered, date);
-      if (!point) continue;
-      dates.add(date);
-      points.push(point);
+    for (const day of days) {
+      if (!day) continue;
+      providerName = day.provider;
+      if (!day.point) continue;
+      dates.add(day.date);
+      points.push(day.point);
     }
+    return { providerName, points };
+  }));
 
+  const series = perProvider.flatMap(({ providerName, points }) => {
     if (!providerName || points.length === 0 || HIDDEN_PROVIDER_IDS.has(providerName)) {
       return [];
     }
@@ -775,6 +769,20 @@ async function loadHistoricalLeaderboardFromGitHub(
 }
 
 const historicalInflight = new Map<string, Promise<HistoricalLeaderboardResult>>();
+// Bounded: concurrency comes from public request parameters.
+const remoteHistoricalCache = new Map<string, Promise<HistoricalLeaderboardResult>>();
+const REMOTE_HISTORY_CACHE_LIMIT = 8;
+
+function rememberRemoteHistory(key: string, result: Promise<HistoricalLeaderboardResult>): void {
+  remoteHistoricalCache.set(key, result);
+  if (remoteHistoricalCache.size > REMOTE_HISTORY_CACHE_LIMIT) {
+    remoteHistoricalCache.delete(remoteHistoricalCache.keys().next().value!);
+  }
+  // A failed load is retried on the next request.
+  result.catch(() => {
+    if (remoteHistoricalCache.get(key) === result) remoteHistoricalCache.delete(key);
+  });
+}
 
 export async function loadHistoricalLeaderboard(
   benchmark: "hello-browser" = "hello-browser",
@@ -789,12 +797,18 @@ export async function loadHistoricalLeaderboard(
   const key = `${source?.repo ?? ""}:${benchmark}:${concurrency ?? ""}:${strict}`;
   const pending = historicalInflight.get(key);
   if (pending) return pending;
+  const store = source ? null : localResultsStore(benchmark);
+  // A deployment's remote results are fixed to its commit, so its history never changes.
+  if (store?.kind === "remote") {
+    const memo = remoteHistoricalCache.get(key);
+    if (memo) return memo;
+  }
   const result = (async () => {
     if (source) return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency, source, strict);
-    const resultsDir = getResultsDir();
-    if (fs.existsSync(resultsDir)) return loadHistoricalLeaderboardFromFs(benchmark, concurrency);
+    if (store) return loadHistoricalLeaderboardFromStore(store, benchmark, concurrency);
     return loadHistoricalLeaderboardFromGitHub(benchmark, concurrency);
   })();
+  if (store?.kind === "remote") rememberRemoteHistory(key, result);
   historicalInflight.set(key, result);
   try {
     return await result;
@@ -847,10 +861,9 @@ export async function loadLeaderboard(
   const effectiveDate =
     benchmark === "v0" ? date || v0Dates[0] : date;
 
-  const resultsDir = getResultsDir();
-  const useFs = !source && fs.existsSync(resultsDir);
-  const fsResult = useFs ? loadEntriesFromFs(benchmark, effectiveDate) : null;
-  const ghResult = !useFs ? await loadEntriesFromGitHub(benchmark, effectiveDate, source) : null;
+  const store = source ? null : localResultsStore(benchmark);
+  const fsResult = store ? await loadEntriesFromStore(store, benchmark, effectiveDate) : null;
+  const ghResult = !store ? await loadEntriesFromGitHub(benchmark, effectiveDate, source) : null;
   const allEntries = fsResult?.entries ?? ghResult?.entries ?? [];
   const dateRange = fsResult?.dateRange ?? ghResult?.dateRange;
   const providerMetaMap = fsResult?.providerMetaMap ?? new Map<string, VmMeta>();
