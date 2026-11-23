@@ -305,6 +305,41 @@ test("us-east-2 publishes Browser Use to the website's results", () => {
   } finally { f.cleanup(); }
 });
 
+test("us-west-2 publishes Lightpanda under regions/us-west-2, outside the website's results", () => {
+  const f = fixture();
+  try {
+    for (const benchmark of ["hello-browser", "browser-throughput"]) {
+      const result = f.run(["--benchmark", benchmark], { LIGHTPANDA_API_KEY: "test-only" }, "us-west-2");
+      assert.equal(result.status, 0, result.stdout + result.stderr);
+    }
+    assert.deepEqual(f.calls().map(c => c.provider), ["lightpanda", "lightpanda"]);
+    assert.equal(f.git("rev-parse", "HEAD"), f.git("rev-parse", "origin/main"));
+    assert.equal(fs.existsSync(path.join(f.repo, "results")), false);
+    const date = f.calls()[0]["run-date"];
+    const published = f.git("ls-tree", "-r", "--name-only", "origin/main").trim().split("\n")
+      .filter(p => p.startsWith("regions/") || p.startsWith("results/"));
+    assert.deepEqual(published.sort(), [
+      `regions/us-west-2/results/browser-throughput/lightpanda/${date}/_meta.json`,
+      `regions/us-west-2/results/browser-throughput/lightpanda/${date}/c1/results.jsonl`,
+      `regions/us-west-2/results/hello-browser/lightpanda/${date}/_meta.json`,
+      `regions/us-west-2/results/hello-browser/lightpanda/${date}/c1/results.jsonl`,
+    ]);
+    assert.deepEqual(f.git("log", "-2", "--format=%s").trim().split("\n"), [
+      `results: browser-throughput us-west-2 ${date}`,
+      `results: us-west-2 ${date}`,
+    ]);
+  } finally { f.cleanup(); }
+});
+
+test("us-west still benchmarks Lightpanda for the leaderboard", () => {
+  const f = fixture();
+  try {
+    const result = f.run(["--dry-run"], { LIGHTPANDA_API_KEY: "test-only" }, "us-west");
+    assert.equal(result.status, 0, result.stdout + result.stderr);
+    assert.ok(f.calls().map(c => c.provider).includes("lightpanda"));
+  } finally { f.cleanup(); }
+});
+
 test("us-east no longer benchmarks Browser Use, which runs from us-east-2", () => {
   const f = fixture();
   try {
