@@ -3,7 +3,7 @@
 # results to main. Designed to be invoked from cron on each EC2.
 #
 # Usage:
-#   scripts/run-and-publish.sh --region us-east|us-east-2|us-west|staging [--benchmark hello-browser|browser-throughput]
+#   scripts/run-and-publish.sh --region us-east|us-east-2|us-west|us-west-2|staging [--benchmark hello-browser|browser-throughput]
 #       [--concurrency 1,10] [--runs N] [--loops N] [--provider-timeout SECONDS]
 #       [--dry-run] [--no-reset]
 #
@@ -23,6 +23,10 @@
 #
 # --region us-east-2 runs Browser Use from its own EC2 in us-east-2, next to
 # Browser Use's browsers. It is the only region that benchmarks Browser Use.
+#
+# --region us-west-2 runs Lightpanda from its own EC2 in us-west-2, next to
+# Lightpanda's browsers. It writes under regions/us-west-2/results/, which the
+# website does not read, so the leaderboard keeps using the us-west-1 runs.
 
 set -euo pipefail
 
@@ -61,9 +65,10 @@ case "$REGION" in
   us-east) PROVIDERS="steel,kernel,kernel-headful,hyperbrowser,anchorbrowser,browserbase,tilion,cloudflare,aws-agentcore" ;;
   us-east-2) PROVIDERS="browser-use" ;;
   us-west) PROVIDERS="notte,lightpanda,browserless,tinyfish" ;;
+  us-west-2) PROVIDERS="lightpanda" ;;
   staging) PROVIDERS="notte-staging" ;;
-  "")      echo "[ERROR] --region us-east|us-east-2|us-west|staging required" >&2; exit 2 ;;
-  *)       echo "[ERROR] invalid --region: $REGION (want us-east, us-east-2, us-west, or staging)" >&2; exit 2 ;;
+  "")      echo "[ERROR] --region us-east|us-east-2|us-west|us-west-2|staging required" >&2; exit 2 ;;
+  *)       echo "[ERROR] invalid --region: $REGION (want us-east, us-east-2, us-west, us-west-2, or staging)" >&2; exit 2 ;;
 esac
 
 if [[ -z "$CONCURRENCY" ]]; then
@@ -113,6 +118,7 @@ repo_slug() {
 RESULTS_REPO="$REPO_ROOT"
 # Directory the CLI writes results/ under, inside RESULTS_REPO.
 RESULTS_ROOT="$REPO_ROOT"
+[[ "$REGION" == "us-west-2" ]] && RESULTS_ROOT="$REPO_ROOT/regions/us-west-2"
 if [[ "$REGION" == "staging" ]]; then
   RESULTS_REPO="${STAGING_RESULTS_DIR:-$REPO_ROOT/../browserarena-staging-results}"
   if ! results_top="$(git -C "$RESULTS_REPO" rev-parse --show-toplevel 2>/dev/null)"; then

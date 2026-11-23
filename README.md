@@ -29,6 +29,8 @@ Create session → Connect via CDP → Navigate page → Release session
 
 The us-east-2 runner benchmarks Browser Use from the same region as its browsers. Browser Use's results come from us-east-2 since 2026-11-13; earlier days were run from us-east-1.
 
+A us-west-2 runner benchmarks Lightpanda from the same region as its browsers (`uswest.cloud.lightpanda.io` is in us-west-2). Its results are published under `regions/us-west-2/results/` and are not on the leaderboard yet; Lightpanda's leaderboard numbers still come from us-west-1.
+
 ### Providers
 
 | Provider | Region | Website |
@@ -215,7 +217,7 @@ Or deploy directly on Railway:
 
 ### Automated runs
 
-Daily results are produced by `scripts/run-and-publish.sh`, which runs one benchmark for one region's providers (c1 + c10 by default, except TinyFish at c1; 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`. Three EC2 boxes share the script; the cron lines differ in `--region`, and the browser throughput benchmark is a second invocation offset from the first:
+Daily results are produced by `scripts/run-and-publish.sh`, which runs one benchmark for one region's providers (c1 + c10 by default, except TinyFish at c1; 100 measured sessions per concurrency level), stages only that region's `results/` slice, and pushes to `main`. Four EC2 boxes share the script; the cron lines differ in `--region`, and the browser throughput benchmark is a second invocation offset from the first:
 
 ```cron
 # us-east-1 box (Steel, Kernel, Hyperbrowser, Anchor Browser)
@@ -229,6 +231,11 @@ Daily results are produced by `scripts/run-and-publish.sh`, which runs one bench
 # us-east-2 box (Browser Use), offset from the us-east-1 runs
 30 2 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east-2
 30 20 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-east-2 --benchmark browser-throughput --concurrency 1
+
+# us-west-2 box (Lightpanda), outside the us-west-1 box's Lightpanda runs so the
+# two never share the Lightpanda account at once
+0 3 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west-2
+0 9 * * * /home/ubuntu/browserarena/scripts/run-and-publish.sh --region us-west-2 --benchmark browser-throughput --concurrency 1
 ```
 
 Notte staging runs on the us-west box too, with the same script, about eight hours before the production Notte run. Its lifecycle run is c1 only: staging keeps fewer warm browsers than c10 needs, so a c10 run there would measure its pool size. `--region staging` runs only `notte-staging` (`https://us-staging.notte.cc`, key `NOTTE_STAGING_API_KEY` in `.env`) and publishes to the private repo [nottelabs/browserarena-staging-results](https://github.com/nottelabs/browserarena-staging-results), cloned next to this checkout (override with `STAGING_RESULTS_DIR`). It refuses to run if that clone is missing or shares this repo's origin, so staging results never reach the public repo. It takes the same checkout lock, so it never overlaps a production run:
