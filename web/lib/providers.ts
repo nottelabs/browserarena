@@ -99,7 +99,7 @@ export const PROVIDERS: ProviderInfo[] = [
     displayName: "Lightpanda",
     url: "https://lightpanda.io",
     logo: PROVIDER_LOGO_SRC.LIGHTPANDA,
-    browserRegion: "us-west-1",
+    browserRegion: "us-west-2",
     description: "Headless browser for machines",
     marketed: true,
   },

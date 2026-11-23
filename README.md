@@ -43,7 +43,7 @@ A us-west-2 runner benchmarks Lightpanda from the same region as its browsers (`
 | Hyperbrowser | us-east-1 | [hyperbrowser.ai](https://www.hyperbrowser.ai) |
 | Anchor Browser | us-east-1 | [anchorbrowser.io](https://www.anchorbrowser.io) |
 | Browser Use | us-east-2 | [browser-use.com](https://www.browser-use.com) |
-| Lightpanda | us-west-1 | [lightpanda.io](https://lightpanda.io) |
+| Lightpanda | us-west-2 | [lightpanda.io](https://lightpanda.io) |
 
 Missing a provider? [Open a PR](https://github.com/nottelabs/browserarena/pulls).
 
