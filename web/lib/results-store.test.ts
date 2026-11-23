@@ -3,7 +3,14 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { test } from "node:test";
-import { fsResultsStore, remoteResultsStore, type ResultsIndex } from "./results-store";
+import {
+  fsResultsStore,
+  readResultsIndex,
+  remoteResultsStore,
+  resultsStoreFor,
+  writeResultsIndex,
+  type ResultsIndex,
+} from "./results-store";
 
 const index: ResultsIndex = {
   repo: "nottelabs/browserarena",
@@ -89,6 +96,84 @@ test("fs store reads and lists the results directory", async () => {
     assert.equal(await store.read("hello-browser/notte/2026-11-23/c1/results.jsonl"), "x\n");
     assert.equal(await store.read("hello-browser/notte/2026-11-22/c1/results.jsonl"), null);
     assert.deepEqual(await store.list("hello-browser/kernel"), []);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+function tempDir(): string {
+  return fs.mkdtempSync(path.join(os.tmpdir(), "results-index-"));
+}
+
+test("the index lists lifecycle and throughput results and metadata, not logs or screenshots", () => {
+  const root = tempDir();
+  try {
+    const results = path.join(root, "results");
+    for (const file of [
+      "hello-browser/notte/2026-11-23/_meta.json",
+      "hello-browser/notte/2026-11-23/c1/results.jsonl",
+      "hello-browser/notte/2026-11-23/results.log",
+      "hello-browser/notte/2026-11-23/screenshots/fail.png",
+      "browser-throughput/steel/2026-11-23/c1/results.jsonl",
+      "captcha/2026-11-23.json",
+    ]) {
+      fs.mkdirSync(path.dirname(path.join(results, file)), { recursive: true });
+      fs.writeFileSync(path.join(results, file), "x");
+    }
+    const indexFile = path.join(root, "index.json");
+    const index = writeResultsIndex(results, indexFile, { repo: "o/r", commit: () => "abc" });
+    assert.deepEqual(index, {
+      repo: "o/r",
+      commit: "abc",
+      files: [
+        "browser-throughput/steel/2026-11-23/c1/results.jsonl",
+        "hello-browser/notte/2026-11-23/_meta.json",
+        "hello-browser/notte/2026-11-23/c1/results.jsonl",
+      ],
+    });
+    assert.deepEqual(JSON.parse(fs.readFileSync(indexFile, "utf-8")), index);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("a build without lifecycle or throughput results writes no index and removes a stale one", () => {
+  const root = tempDir();
+  try {
+    const results = path.join(root, "results");
+    fs.mkdirSync(path.join(results, "captcha"), { recursive: true });
+    const indexFile = path.join(root, "index.json");
+    fs.writeFileSync(indexFile, JSON.stringify(index));
+    const commit = () => { throw new Error("no commit needed without results"); };
+    assert.equal(writeResultsIndex(results, indexFile, { repo: "o/r", commit }), null);
+    assert.equal(fs.existsSync(indexFile), false);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("an empty index keeps the GitHub fallback instead of an empty remote store", () => {
+  const root = tempDir();
+  try {
+    const indexFile = path.join(root, "index.json");
+    fs.writeFileSync(indexFile, JSON.stringify({ ...index, files: [] }));
+    assert.equal(readResultsIndex(indexFile), null);
+    assert.equal(resultsStoreFor("hello-browser", path.join(root, "results"), indexFile), null);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("results on disk win over the index; without them the index is used", () => {
+  const root = tempDir();
+  try {
+    const indexFile = path.join(root, "index.json");
+    fs.writeFileSync(indexFile, JSON.stringify(index));
+    const results = path.join(root, "results");
+    assert.equal(resultsStoreFor("hello-browser", results, indexFile)?.kind, "remote");
+    fs.mkdirSync(path.join(results, "hello-browser"), { recursive: true });
+    assert.equal(resultsStoreFor("hello-browser", results, indexFile)?.kind, "fs");
+    assert.equal(resultsStoreFor("hello-browser", results, path.join(root, "missing.json"))?.kind, "fs");
   } finally {
     fs.rmSync(root, { recursive: true, force: true });
   }

@@ -119,28 +119,76 @@ export function remoteResultsStore(index: ResultsIndex, fetchImpl: typeof fetch 
   };
 }
 
-let cachedIndex: ResultsIndex | null | undefined;
-
-function loadIndex(): ResultsIndex | null {
-  if (cachedIndex !== undefined) return cachedIndex;
-  const file = path.join(process.cwd(), RESULTS_INDEX_FILENAME);
-  const index = fs.existsSync(file) ? (JSON.parse(fs.readFileSync(file, "utf-8")) as ResultsIndex) : null;
-  // An empty index would hide every result; without one, loaders fall back to GitHub's API.
-  cachedIndex = index && index.files.length > 0 ? index : null;
-  return cachedIndex;
+/** Every lifecycle and throughput file the site reads, relative to `results/`. */
+export function listResultsFiles(resultsDir: string): string[] {
+  // Logs are not committed; failure screenshots are only listed by path.
+  const included = /(^|\/)(results\.jsonl|_meta\.json)$/;
+  const files: string[] = [];
+  const walk = (relative: string) => {
+    for (const entry of fs.readdirSync(path.join(resultsDir, relative), { withFileTypes: true })) {
+      const child = `${relative}/${entry.name}`;
+      if (entry.isDirectory()) {
+        if (entry.name !== "screenshots") walk(child);
+      } else if (included.test(child)) {
+        files.push(child);
+      }
+    }
+  };
+  for (const benchmark of REMOTE_BENCHMARKS) {
+    if (fs.existsSync(path.join(resultsDir, benchmark))) walk(benchmark);
+  }
+  return files.sort();
 }
 
-let remoteStore: ResultsStore | undefined;
+/**
+ * Writes the index for a build, or removes a stale one when the checkout has
+ * no lifecycle or throughput results, so loaders keep their GitHub fallback.
+ */
+export function writeResultsIndex(
+  resultsDir: string,
+  indexFile: string,
+  source: { repo: string; commit: () => string }
+): ResultsIndex | null {
+  const files = listResultsFiles(resultsDir);
+  if (files.length === 0) {
+    fs.rmSync(indexFile, { force: true });
+    return null;
+  }
+  const index: ResultsIndex = { repo: source.repo, commit: source.commit(), files };
+  fs.writeFileSync(indexFile, JSON.stringify(index) + "\n");
+  return index;
+}
+
+const indexCache = new Map<string, ResultsIndex | null>();
+
+export function readResultsIndex(indexFile: string): ResultsIndex | null {
+  if (indexCache.has(indexFile)) return indexCache.get(indexFile)!;
+  const index = fs.existsSync(indexFile) ? (JSON.parse(fs.readFileSync(indexFile, "utf-8")) as ResultsIndex) : null;
+  // An empty index would hide every result; without one, loaders fall back to GitHub's API.
+  const usable = index && index.files.length > 0 ? index : null;
+  indexCache.set(indexFile, usable);
+  return usable;
+}
+
+const remoteStores = new Map<string, ResultsStore>();
 
 /**
  * The store for a benchmark: its files on disk when present, otherwise the
  * build's index and GitHub. Null when neither exists (a checkout without
  * results that was never built); callers then keep their GitHub fallback.
  */
-export function resultsStoreFor(benchmark: RemoteBenchmark, resultsDir: string): ResultsStore | null {
+export function resultsStoreFor(
+  benchmark: RemoteBenchmark,
+  resultsDir: string,
+  indexFile = path.join(process.cwd(), RESULTS_INDEX_FILENAME)
+): ResultsStore | null {
   if (fs.existsSync(path.join(resultsDir, benchmark))) return fsResultsStore(resultsDir);
-  const index = loadIndex();
+  const index = readResultsIndex(indexFile);
   if (!index) return null;
-  remoteStore ??= remoteResultsStore(index);
-  return remoteStore;
+  let store = remoteStores.get(indexFile);
+  if (!store) {
+    store = remoteResultsStore(index);
+    remoteStores.set(indexFile, store);
+  }
+  return store;
 }
