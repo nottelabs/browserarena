@@ -36,12 +36,21 @@ const nextConfig: NextConfig = {
     "/captcha": ["../results/captcha/*.json"],
     "/api/captcha": ["../results/captcha/*.json"],
     "/provider/*": ["../results/captcha/*.json"],
+    // Lists the lifecycle and throughput files that deployed functions fetch
+    // from GitHub at this commit (lib/results-store.ts).
+    "/*": [".results-index.json"],
   },
-  // Proxy loaders fetch published GitHub results on Vercel, so these files
-  // only bloat function bundles. Keep lifecycle and throughput files bundled.
+  // Deployed functions read these results from GitHub instead: proxy-get from
+  // the published branch, lifecycle and throughput at the built commit. Bundled,
+  // they would pass Vercel's 250 MB function limit.
   // Failure screenshots are never read by the site, only listed by path.
   outputFileTracingExcludes: {
-    "/*": ["../results/proxy-get/**/*", "../results/**/screenshots/**/*"],
+    "/*": [
+      "../results/proxy-get/**/*",
+      "../results/hello-browser/**/*",
+      "../results/browser-throughput/**/*",
+      "../results/**/screenshots/**/*",
+    ],
   },
   // PostHog's API paths end in a slash; do not redirect them.
   skipTrailingSlashRedirect: true,

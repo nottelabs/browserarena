@@ -1,6 +1,5 @@
-import fs from "fs";
-import path from "path";
 import { fetchFromGitHub, getResultsDir, loadHistoricalLeaderboard } from "./data";
+import { resultsStoreFor, type RemoteBenchmark } from "./results-store";
 import type { HistoricalProviderPoint } from "./data-shared";
 import { loadBrowserThroughputHistory } from "./browser-throughput-data";
 import {
@@ -93,19 +92,16 @@ function pickDate(dates: string[], requested?: string): string | null {
   return dates.at(-1) ?? null;
 }
 
-async function readDayFile(benchmark: string, providerId: string, date: string, relative: string): Promise<string | null> {
+async function readDayFile(benchmark: RemoteBenchmark, providerId: string, date: string, relative: string): Promise<string | null> {
   const folder = folderName(providerId);
-  const resultsDir = getResultsDir();
-  if (fs.existsSync(resultsDir)) {
-    const direct = path.join(resultsDir, benchmark, folder, date, relative);
-    if (fs.existsSync(direct)) return fs.readFileSync(direct, "utf-8");
-    const bench = path.join(resultsDir, benchmark);
-    if (!fs.existsSync(bench)) return null;
-    for (const dir of fs.readdirSync(bench, { withFileTypes: true })) {
-      if (!dir.isDirectory() || dir.name.startsWith("_") || dir.name === "kernel-headful") continue;
-      const file = path.join(bench, dir.name, date, relative);
-      if (!fs.existsSync(file)) continue;
-      const content = fs.readFileSync(file, "utf-8");
+  const store = resultsStoreFor(benchmark, getResultsDir());
+  if (store) {
+    const direct = await store.read(`${benchmark}/${folder}/${date}/${relative}`);
+    if (direct != null) return direct;
+    for (const dir of await store.list(benchmark)) {
+      if (!dir.isDirectory || dir.name.startsWith("_") || dir.name === "kernel-headful") continue;
+      const content = await store.read(`${benchmark}/${dir.name}/${date}/${relative}`);
+      if (content == null) continue;
       if (content.includes(`"provider":"${providerId}"`)) return content;
     }
     return null;

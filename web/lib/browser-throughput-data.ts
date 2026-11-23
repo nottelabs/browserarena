@@ -1,12 +1,13 @@
 /**
  * Loads `results/browser-throughput/<provider>/<date>/c<N>/results.jsonl` from disk,
- * or from GitHub when the results tree is not on the filesystem, and builds
- * the browser-throughput leaderboard. Latest run date per provider, like hello-browser.
+ * from GitHub at the deployed commit when a deployed function does not bundle
+ * them (lib/results-store.ts), or from GitHub's API when neither is available,
+ * and builds the browser-throughput leaderboard. Latest run date per provider,
+ * like hello-browser.
  */
 
-import fs from "fs";
-import path from "path";
 import { fetchFromGitHub, getResultsDir, listFromGitHub, PUBLIC_RESULTS_SOURCE, type ResultsSource } from "./data";
+import { resultsStoreFor, type ResultsStore } from "./results-store";
 import { calendarDates } from "./history-range";
 import { HIDDEN_PROVIDER_IDS, PROVIDERS_BY_ID } from "./providers";
 import { getPricePerHour, getUnitPricing } from "./pricing";
@@ -41,38 +42,35 @@ function parseLines(content: string, runDate: string): BrowserThroughputEntry[] 
   return entries;
 }
 
-function loadFromFs(date?: string): { entries: BrowserThroughputEntry[]; dates: string[] } {
-  const benchDir = path.join(getResultsDir(), BENCHMARK);
-  if (!fs.existsSync(benchDir)) return { entries: [], dates: [] };
-  const entries: BrowserThroughputEntry[] = [];
+async function loadFromStore(store: ResultsStore, date?: string): Promise<{ entries: BrowserThroughputEntry[]; dates: string[] }> {
   const availableDates = new Set<string>();
 
-  const providerDirs = fs
-    .readdirSync(benchDir, { withFileTypes: true })
-    .filter((e) => e.isDirectory() && !e.name.startsWith("_"));
+  const providerDirs = (await store.list(BENCHMARK))
+    .filter((e) => e.isDirectory && !e.name.startsWith("_"));
 
-  for (const dir of providerDirs) {
-    const providerPath = path.join(benchDir, dir.name);
-    const dateDirs = fs
-      .readdirSync(providerPath, { withFileTypes: true })
-      .filter((e) => e.isDirectory() && DATE_RE.test(e.name))
+  // Read providers in parallel, then merge in directory order.
+  const perProvider = await Promise.all(providerDirs.map(async (dir) => {
+    const providerPath = `${BENCHMARK}/${dir.name}`;
+    const dateDirs = (await store.list(providerPath))
+      .filter((e) => e.isDirectory && DATE_RE.test(e.name))
       .map((e) => e.name)
       .sort()
       .reverse();
-    for (const name of dateDirs) availableDates.add(name);
     const latestDate = date && dateDirs.includes(date) ? date : date ? undefined : dateDirs[0];
-    if (!latestDate) continue;
+    if (!latestDate) return { dateDirs, entries: [] };
 
-    const runDir = path.join(providerPath, latestDate);
-    const concDirs = fs
-      .readdirSync(runDir, { withFileTypes: true })
-      .filter((e) => e.isDirectory() && CONC_RE.test(e.name))
+    const runDir = `${providerPath}/${latestDate}`;
+    const concDirs = (await store.list(runDir))
+      .filter((e) => e.isDirectory && CONC_RE.test(e.name))
       .map((e) => e.name);
-    for (const concDir of concDirs) {
-      const file = path.join(runDir, concDir, "results.jsonl");
-      if (!fs.existsSync(file)) continue;
-      entries.push(...parseLines(fs.readFileSync(file, "utf-8"), latestDate));
-    }
+    const contents = await Promise.all(concDirs.map((concDir) => store.read(`${runDir}/${concDir}/results.jsonl`)));
+    return { dateDirs, entries: contents.flatMap((content) => content == null ? [] : parseLines(content, latestDate)) };
+  }));
+
+  const entries: BrowserThroughputEntry[] = [];
+  for (const provider of perProvider) {
+    for (const name of provider.dateDirs) availableDates.add(name);
+    entries.push(...provider.entries);
   }
   return { entries, dates: [...availableDates].sort() };
 }
@@ -116,9 +114,10 @@ export async function loadBrowserThroughputLeaderboard(
   /** Reads this repository instead of the bundled or public results. */
   source?: ResultsSource
 ): Promise<BrowserThroughputLeaderboardResult> {
+  const store = source ? null : resultsStoreFor(BENCHMARK, getResultsDir());
   const loaded = source
     ? await loadFromGitHub(date, source)
-    : fs.existsSync(getResultsDir()) ? loadFromFs(date) : await loadFromGitHub(date);
+    : store ? await loadFromStore(store, date) : await loadFromGitHub(date);
   const allEntries = loaded.entries;
 
   const measured = allEntries.filter(
@@ -204,22 +203,21 @@ function historyFromDays(days: { provider: string; date: string; entries: Browse
   };
 }
 
-function loadHistoryFromFs(concurrency: number): ThroughputHistory {
-  const benchDir = path.join(getResultsDir(), BENCHMARK);
-  if (!fs.existsSync(benchDir)) return { dates: [], providers: [] };
-  const days: { provider: string; date: string; entries: BrowserThroughputEntry[] }[] = [];
-  const providerDirs = fs.readdirSync(benchDir, { withFileTypes: true }).filter((entry) => entry.isDirectory() && !entry.name.startsWith("_"));
-  for (const dir of providerDirs) {
-    const providerPath = path.join(benchDir, dir.name);
-    const dateDirs = fs.readdirSync(providerPath, { withFileTypes: true }).filter((entry) => entry.isDirectory() && DATE_RE.test(entry.name)).map((entry) => entry.name);
-    for (const date of dateDirs) {
-      const file = path.join(providerPath, date, `c${concurrency}`, "results.jsonl");
-      if (!fs.existsSync(file)) continue;
-      const entries = parseLines(fs.readFileSync(file, "utf-8"), date);
-      days.push({ provider: entries.find((entry) => entry.provider)?.provider ?? dir.name, date, entries });
-    }
-  }
-  return historyFromDays(days);
+async function loadHistoryFromStore(store: ResultsStore, concurrency: number): Promise<ThroughputHistory> {
+  const providerDirs = (await store.list(BENCHMARK)).filter((entry) => entry.isDirectory && !entry.name.startsWith("_"));
+  // Every provider and day at once; the store bounds remote requests.
+  const perProvider = await Promise.all(providerDirs.map(async (dir) => {
+    const providerPath = `${BENCHMARK}/${dir.name}`;
+    const dateDirs = (await store.list(providerPath)).filter((entry) => entry.isDirectory && DATE_RE.test(entry.name)).map((entry) => entry.name);
+    const days = await Promise.all(dateDirs.map(async (date) => {
+      const content = await store.read(`${providerPath}/${date}/c${concurrency}/results.jsonl`);
+      if (content == null) return null;
+      const entries = parseLines(content, date);
+      return { provider: entries.find((entry) => entry.provider)?.provider ?? dir.name, date, entries };
+    }));
+    return days.filter((day) => day !== null);
+  }));
+  return historyFromDays(perProvider.flat());
 }
 
 async function loadHistoryFromGitHub(concurrency: number, source: ResultsSource = PUBLIC_RESULTS_SOURCE): Promise<ThroughputHistory> {
@@ -254,12 +252,16 @@ const REMOTE_HISTORY_CACHE_LIMIT = 8;
 export async function loadBrowserThroughputHistory(concurrency = 1, source?: ResultsSource): Promise<ThroughputHistory> {
   // Private results are cached by the caller, never in this shared map.
   if (source) return loadHistoryFromGitHub(concurrency, source);
+  const store = resultsStoreFor(BENCHMARK, getResultsDir());
   // Local files can change between calls (runner output and local development).
-  if (fs.existsSync(getResultsDir())) return loadHistoryFromFs(concurrency);
+  if (store?.kind === "fs") return loadHistoryFromStore(store, concurrency);
   const cached = remoteHistoryCache.get(concurrency);
   if (cached && cached.expiresAt > Date.now()) return cached.value;
 
-  const entry = { expiresAt: Infinity, value: loadHistoryFromGitHub(concurrency) };
+  const entry = {
+    expiresAt: Infinity,
+    value: store ? loadHistoryFromStore(store, concurrency) : loadHistoryFromGitHub(concurrency),
+  };
   remoteHistoryCache.delete(concurrency);
   remoteHistoryCache.set(concurrency, entry);
   if (remoteHistoryCache.size > REMOTE_HISTORY_CACHE_LIMIT) {
@@ -269,7 +271,8 @@ export async function loadBrowserThroughputHistory(concurrency = 1, source?: Res
     // The pending promise also coalesces simultaneous cold requests. Start the
     // freshness window after loading, so a slow archive gets a full minute.
     const history = await entry.value;
-    entry.expiresAt = Date.now() + REMOTE_HISTORY_TTL_MS;
+    // Results fetched at the deployed commit never change; GitHub's main branch does.
+    entry.expiresAt = store ? Infinity : Date.now() + REMOTE_HISTORY_TTL_MS;
     return history;
   } catch (error) {
     if (remoteHistoryCache.get(concurrency) === entry) remoteHistoryCache.delete(concurrency);
