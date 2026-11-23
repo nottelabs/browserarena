@@ -12,6 +12,7 @@ import { BrowserlessProvider } from "./browserless.js";
 import { CloudflareProvider } from "./cloudflare.js";
 import { AwsAgentCoreProvider } from "./aws-agentcore.js";
 import { TinyFishProvider } from "./tinyfish.js";
+import { SpecStreamProvider } from "./specstream.js";
 
 export function getRequiredEnvVarsForProvider(name: string): string[] {
   const key = name.trim().toLowerCase();
@@ -37,6 +38,7 @@ export function getRequiredEnvVarsForProvider(name: string): string[] {
     return ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"];
   // Credentials come from the standard AWS chain, which may not use env vars.
   if (key === "aws-agentcore" || key === "agentcore") return ["AWS_REGION"];
+  if (key === "specstream") return ["SPECSTREAM_API_KEY"];
   throw new Error(`Unknown provider: ${name}`);
 }
 
@@ -67,5 +69,6 @@ export function resolveProvider(name: string): ProviderClient {
   if (key === "cloudflare" || key === "cf") return new CloudflareProvider();
   if (key === "aws-agentcore" || key === "agentcore")
     return new AwsAgentCoreProvider();
+  if (key === "specstream") return new SpecStreamProvider();
   throw new Error(`Unknown provider: ${name}`);
 }
