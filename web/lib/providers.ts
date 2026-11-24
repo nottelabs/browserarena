@@ -35,7 +35,7 @@ export const PROVIDERS: ProviderInfo[] = [
     displayName: "Notte",
     url: "https://www.notte.cc",
     logo: PROVIDER_LOGO_SRC.NOTTE,
-    browserRegion: "us-west-2",
+    browserRegion: "us-west-1",
     description: "Cloud browser infrastructure built for AI agents. Creator of The Browser Arena",
     marketed: true,
   },
