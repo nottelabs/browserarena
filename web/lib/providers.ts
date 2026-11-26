@@ -114,6 +114,14 @@ export const PROVIDERS: ProviderInfo[] = [
   },
   // Adapters only so far: no published results yet, so not in marketing copy.
   {
+    id: "CLOUDBROWSER",
+    displayName: "Cloudbrowser",
+    url: "https://cloudbrowser.tv/virtual-browser",
+    logo: "/logos/cloudbrowser.svg",
+    description: "Persistent Chrome desktops with scoped CDP access",
+    marketed: false,
+  },
+  {
     id: "TINYFISH",
     displayName: "TinyFish",
     url: "https://www.tinyfish.ai/browser",
