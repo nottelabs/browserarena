@@ -13,7 +13,8 @@ export type ProviderName =
   | "BROWSERLESS"
   | "TINYFISH"
   | "CLOUDFLARE"
-  | "AWS_AGENTCORE";
+  | "AWS_AGENTCORE"
+  | "SPECSTREAM";
 
 export type ProviderSession = {
   id: string;

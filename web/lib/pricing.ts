@@ -56,6 +56,10 @@ const PRICING: Record<string, { unit: UnitPricing }> = {
   AWS_AGENTCORE: {
     unit: { ratePerHour: 0.1273, billing: "per_second", minimumSeconds: 1, perSessionCreationFee: 0 },
   },
+  // $0.10/hour billed by the second (specstream.ai/agents.md).
+  SPECSTREAM: {
+    unit: { ratePerHour: 0.1, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+  },
 };
 
 function computeUnitCost(pricing: UnitPricing, durationSeconds: number): number {

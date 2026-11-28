@@ -150,6 +150,15 @@ export const PROVIDERS: ProviderInfo[] = [
     browserRegion: "us-east-1",
     marketed: false,
   },
+  {
+    id: "SPECSTREAM",
+    displayName: "SpecStream",
+    url: "https://specstream.ai",
+    logo: "/logos/specstream.svg",
+    browserRegion: "eu-es",
+    description: "Live web data engine and cloud browser sessions for AI agents",
+    marketed: false,
+  },
 ];
 
 export const PROVIDERS_BY_ID: Record<string, ProviderInfo> = Object.fromEntries(
