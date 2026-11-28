@@ -10,6 +10,10 @@ interface UnitPricing {
 const NOTTE_UNIT: UnitPricing = { ratePerHour: 0.01, billing: "per_minute", minimumSeconds: 60, perSessionCreationFee: 0 };
 
 const PRICING: Record<string, { unit: UnitPricing }> = {
+  // Basic overage, excluding the monthly subscription and included hours.
+  CLOUDBROWSER: {
+    unit: { ratePerHour: 0.08, billing: "per_second", minimumSeconds: 0, perSessionCreationFee: 0 },
+  },
   NOTTE: { unit: NOTTE_UNIT },
   // Team-only staging rows (/internal) are priced like production Notte.
   NOTTE_STAGING: { unit: NOTTE_UNIT },
